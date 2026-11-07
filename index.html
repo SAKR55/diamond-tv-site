@@ -9,6 +9,7 @@
 <meta name="robots" content="index, follow">
 <meta name="author" content="DIAMOND TV">
 <link rel="canonical" href="https://diamond-tv.shop/">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <meta name="theme-color" content="#7c3aed">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -128,6 +129,14 @@
   .so b{width:20px;height:20px;border-radius:50%;display:inline-grid;place-items:center;color:#fff;font-weight:900;font-size:11px}
   .so .s{background:#2ba8e0}.so .o{background:#ef5f77;margin-inline-start:-6px}
   .dia path{}
+  /* social bar */
+  .social-wrap{text-align:center;margin-top:30px}
+  .social-wrap .lbl{color:var(--muted);font-weight:800;margin-bottom:14px;font-size:15px}
+  .social-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .soc{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;color:#fff;background:var(--sc,#7c3aed);text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.14);transition:transform .15s ease, box-shadow .15s ease}
+  .soc:hover{transform:translateY(-4px) scale(1.08);box-shadow:0 10px 22px rgba(0,0,0,.22)}
+  footer .social-bar{margin:4px 0 16px}
+  footer .soc{width:42px;height:42px;font-size:18px}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
@@ -267,15 +276,62 @@
 <section id="contact" style="background:var(--bg2)"><div class="wrap">
   <div class="center"><div class="eyebrow">تواصل معنا</div><h2 class="h2">جاهزون لخدمتك</h2><p class="lead">اطلب كودك أو استفسر عن الباقات — نردّ عليك بسرعة.</p></div>
   <div class="contact" style="margin-top:34px">
-    <div class="cbox"><div class="ic">📱</div><h3>واتساب</h3><p style="color:var(--muted)">الأسرع للطلب والدعم</p><a href="https://wa.me/201034740772">wa.me/201034740772</a></div>
-    <div class="cbox"><div class="ic">✉️</div><h3>البريد الإلكتروني</h3><p style="color:var(--muted)">للاستفسارات والشراكات</p><a href="mailto:sales@diamond-tv.shop">sales@diamond-tv.shop</a></div>
+    <div class="cbox"><div class="ic">📱</div><h3>واتساب</h3><p style="color:var(--muted)">الأسرع للطلب والدعم</p><a href="https://wa.me/201034740772" data-wa-text>wa.me/201034740772</a></div>
+    <div class="cbox"><div class="ic">✉️</div><h3>البريد الإلكتروني</h3><p style="color:var(--muted)">للاستفسارات والشراكات</p><a href="mailto:sales@diamond-tv.shop" data-mail-text>sales@diamond-tv.shop</a></div>
   </div>
+  <div class="social-wrap"><div class="lbl">تابعنا على مواقع التواصل</div><div class="social-bar" id="socialMain"></div></div>
 </div></section>
 
 <footer><div class="wrap">
   <a class="logo" href="#" style="justify-content:center;margin-bottom:10px"><svg width="24" viewBox="0 0 100 100"><path d="M33,34 L67,34 L84,52 L50,90 L16,52 Z" fill="#7c3aed"/></svg> DIAMOND<span class="tv">TV</span></a>
-  <p>© 2026 DIAMOND TV — جميع الحقوق محفوظة · <a href="mailto:sales@diamond-tv.shop" style="color:var(--violet2)">sales@diamond-tv.shop</a></p>
+  <div class="social-bar" id="socialFoot"></div>
+  <p>© 2026 DIAMOND TV — جميع الحقوق محفوظة · <a href="mailto:sales@diamond-tv.shop" data-mail-text style="color:var(--violet2)">sales@diamond-tv.shop</a></p>
   <p style="margin-top:8px"><span class="so"><b class="s">S</b><b class="o">O</b></span> &nbsp; تمت التقنية بواسطة SAKR OMAR</p>
 </div></footer>
+<script>
+/* Live contact links — editable from the owner panel (Supabase). */
+(function(){
+  var SUPA_URL="https://ygcgzlbozumksnebawpm.supabase.co";
+  var SUPA_KEY="sb_publishable_0H7jrAXUH1aRrTBYba8d-A_IWWC-Dyk";
+  var SOCIALS=[
+    {k:"whatsapp", icon:"fa-whatsapp",  label:"واتساب",   color:"#25D366", href:function(v){return "https://wa.me/"+v.replace(/[^0-9]/g,"");}},
+    {k:"facebook", icon:"fa-facebook-f",label:"فيسبوك",   color:"#1877F2", href:function(v){return v;}},
+    {k:"instagram",icon:"fa-instagram", label:"إنستغرام", color:"#E4405F", href:function(v){return v;}},
+    {k:"tiktok",   icon:"fa-tiktok",    label:"تيك توك",  color:"#010101", href:function(v){return v;}},
+    {k:"x",        icon:"fa-x-twitter", label:"X",         color:"#000000", href:function(v){return v;}},
+    {k:"youtube",  icon:"fa-youtube",   label:"يوتيوب",    color:"#FF0000", href:function(v){return v;}},
+    {k:"telegram", icon:"fa-telegram",  label:"تيليجرام", color:"#26A5E4", href:function(v){return v;}},
+    {k:"snapchat", icon:"fa-snapchat",  label:"سناب شات", color:"#FFFC00", href:function(v){return v;}}
+  ];
+  function build(bar,d,wa){
+    if(!bar) return; bar.innerHTML="";
+    SOCIALS.forEach(function(s){
+      var v=(s.k==="whatsapp")?wa:((d[s.k]||"").trim());
+      if(!v) return;
+      var a=document.createElement("a");
+      a.className="soc"; a.href=s.href(v); a.target="_blank"; a.rel="noopener";
+      a.title=s.label; a.setAttribute("aria-label",s.label);
+      a.style.setProperty("--sc",s.color);
+      if(s.k==="snapchat") a.style.color="#111";
+      a.innerHTML='<i class="fa-brands '+s.icon+'"></i>';
+      bar.appendChild(a);
+    });
+  }
+  function apply(d){
+    d=d||{};
+    var wa=(d.whatsapp||"201034740772").replace(/[^0-9]/g,"");
+    var email=(d.email||"sales@diamond-tv.shop").trim();
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function(a){a.href="https://wa.me/"+wa;});
+    document.querySelectorAll('a[data-wa-text]').forEach(function(a){a.textContent="wa.me/"+wa;});
+    document.querySelectorAll('a[href^="mailto:"]').forEach(function(a){a.href="mailto:"+email;});
+    document.querySelectorAll('a[data-mail-text]').forEach(function(a){a.textContent=email;});
+    build(document.getElementById("socialMain"),d,wa);
+    build(document.getElementById("socialFoot"),d,wa);
+  }
+  apply({});
+  fetch(SUPA_URL+"/rest/v1/rpc/get_site_links",{method:"POST",headers:{apikey:SUPA_KEY,Authorization:"Bearer "+SUPA_KEY,"Content-Type":"application/json"},body:"{}"})
+    .then(function(r){return r.json();}).then(function(d){apply(d);}).catch(function(){});
+})();
+</script>
 </body>
 </html>
