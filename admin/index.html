@@ -109,14 +109,29 @@ label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
     </div>
 
     <details class="card" style="margin-bottom:14px">
-      <summary style="cursor:pointer;font-weight:700;color:var(--accent)">⚙️ إعدادات الشراء / التواصل</summary>
-      <p class="hint" style="margin-top:10px">تُستخدم في زر «تواصل لشراء اشتراك» داخل التطبيق وفي صفحة البيع.</p>
+      <summary style="cursor:pointer;font-weight:700;color:var(--accent)">⚙️ بيانات التواصل وروابط السوشيال ميديا</summary>
+      <p class="hint" style="margin-top:10px">رقم الواتساب يُستخدم في زر «تواصل لشراء اشتراك» داخل التطبيق. وكل الروابط هنا تظهر كأيقونات على موقع الموقع diamond-tv.shop فور حفظها. اترك أي حقل فارغًا لإخفاء أيقونته.</p>
       <div class="grid2" style="margin-top:4px">
-        <div><label>رقم واتساب (دولي بدون +)</label><input id="c_wa" style="direction:ltr" placeholder="9665xxxxxxxx"></div>
-        <div><label>تيليجرام (@اسم أو رابط)</label><input id="c_tg" style="direction:ltr" placeholder="@username"></div>
+        <div><label>📱 رقم واتساب (دولي بدون +)</label><input id="c_wa" style="direction:ltr" placeholder="9665xxxxxxxx"></div>
+        <div><label>✈️ تيليجرام (رابط كامل)</label><input id="c_tg" style="direction:ltr" placeholder="https://t.me/username"></div>
       </div>
-      <div style="margin-top:12px"><label>رابط موقع/صفحة بيع (اختياري)</label><input id="c_web" style="direction:ltr" placeholder="https://..."></div>
-      <div class="row" style="justify-content:flex-end;margin-top:12px"><button id="c_save">حفظ بيانات التواصل</button></div>
+      <div class="grid2" style="margin-top:12px">
+        <div><label>📘 فيسبوك (رابط)</label><input id="c_fb" style="direction:ltr" placeholder="https://facebook.com/..."></div>
+        <div><label>📸 إنستغرام (رابط)</label><input id="c_ig" style="direction:ltr" placeholder="https://instagram.com/..."></div>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <div><label>🎵 تيك توك (رابط)</label><input id="c_tt" style="direction:ltr" placeholder="https://tiktok.com/@..."></div>
+        <div><label>✖️ X / تويتر (رابط)</label><input id="c_x" style="direction:ltr" placeholder="https://x.com/..."></div>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <div><label>▶️ يوتيوب (رابط)</label><input id="c_yt" style="direction:ltr" placeholder="https://youtube.com/@..."></div>
+        <div><label>👻 سناب شات (رابط)</label><input id="c_snap" style="direction:ltr" placeholder="https://snapchat.com/add/..."></div>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <div><label>✉️ البريد الإلكتروني</label><input id="c_email" style="direction:ltr" placeholder="sales@diamond-tv.shop"></div>
+        <div><label>🌐 رابط موقع/صفحة بيع (اختياري)</label><input id="c_web" style="direction:ltr" placeholder="https://..."></div>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:14px"><button id="c_save">حفظ بيانات التواصل</button></div>
     </details>
 
     <details class="card" style="margin-bottom:14px">
@@ -250,12 +265,25 @@ async function load(){
 }
 
 async function loadContact(){
-  try{ const r=await rpc("get_contact",{}); if(r.status===200){ const o=await r.json();
-    $("#c_wa").value=o.whatsapp||""; $("#c_tg").value=o.telegram||""; $("#c_web").value=o.web||""; } }catch(e){}
+  // Website social links (full set) come from get_site_links.
+  try{ const r=await rpc("get_site_links",{}); if(r.status===200){ const o=await r.json()||{};
+    $("#c_wa").value=o.whatsapp||""; $("#c_tg").value=o.telegram||"";
+    $("#c_fb").value=o.facebook||""; $("#c_ig").value=o.instagram||"";
+    $("#c_tt").value=o.tiktok||""; $("#c_x").value=o.x||"";
+    $("#c_yt").value=o.youtube||""; $("#c_snap").value=o.snapchat||"";
+    $("#c_email").value=o.email||""; } }catch(e){}
+  // Sales-page URL (web) still lives in the app contact store.
+  try{ const r2=await rpc("get_contact",{}); if(r2.status===200){ const o2=await r2.json(); $("#c_web").value=o2.web||"";
+    if(!$("#c_wa").value) $("#c_wa").value=o2.whatsapp||""; if(!$("#c_tg").value) $("#c_tg").value=o2.telegram||""; } }catch(e){}
 }
 $("#c_save").onclick=async ()=>{
-  const r=await rpc("admin_set_contact",{p_secret:SECRET,p_whatsapp:$("#c_wa").value.trim(),p_telegram:$("#c_tg").value.trim(),p_web:$("#c_web").value.trim()});
-  toast(r.status===200?"تم حفظ بيانات التواصل ✓":"فشل الحفظ");
+  const g=id=>$(id).value.trim();
+  const r=await rpc("admin_set_site_links",{p_secret:SECRET,
+    p_whatsapp:g("#c_wa"),p_facebook:g("#c_fb"),p_instagram:g("#c_ig"),p_tiktok:g("#c_tt"),
+    p_x:g("#c_x"),p_youtube:g("#c_yt"),p_telegram:g("#c_tg"),p_snapchat:g("#c_snap"),p_email:g("#c_email")});
+  // Keep the in-app purchase button in sync.
+  await rpc("admin_set_contact",{p_secret:SECRET,p_whatsapp:g("#c_wa"),p_telegram:g("#c_tg"),p_web:g("#c_web")});
+  toast(r.status===200?"تم الحفظ ✓ — ستظهر على الموقع فورًا":"فشل الحفظ");
 };
 
 // ---- resellers
