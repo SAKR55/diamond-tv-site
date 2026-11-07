@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>لوحة اشتراكات DIAMOND TV</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: login gate → stats row → add form → searchable subscriber list */
+:root{
+  --bg:#070b1a; --panel:#111a38; --panel2:#1b2652; --line:#2a3566;
+  --fg:#eef1ff; --muted:#9aa3c7; --accent:#7c3aed; --on-accent:#04241b;
+  --gold:#ffc94d; --danger:#ff5c7a; --ok:#7c3aed; --warn:#ffb020;
+  --font:"Tajawal",system-ui,"Segoe UI",Tahoma,sans-serif; color-scheme:dark;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#eef2fb; --panel:#ffffff; --panel2:#eaeefb; --line:#d4daf0;
+  --fg:#0c142e; --muted:#5a6488; --accent:#7c3aed; --on-accent:#ffffff; color-scheme:light;
+}}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);margin:0;direction:rtl}
+.wrap{max-width:900px;margin:0 auto;padding-block:20px 60px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.gem{width:46px;height:46px;flex:none}
+h1{margin:0;font-size:1.3rem;font-weight:800}
+h1 small{display:block;font-size:.78rem;color:var(--muted);font-weight:500}
+.spacer{flex:1}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:11px 16px;font-weight:700;
+  background:var(--accent);color:var(--on-accent);transition:filter .15s}
+button:hover{filter:brightness(1.08)} button:active{transform:translateY(1px)}
+button.ghost{background:transparent;color:var(--fg);border:1px solid var(--line);font-weight:500}
+button.sm{padding:7px 12px;font-size:.85rem;border-radius:8px}
+button:disabled{opacity:.5;cursor:default}
+input,select{font:inherit;width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+  padding:11px;color:var(--fg)}
+label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+.stat b{display:block;font-size:1.7rem;font-weight:800}
+.stat span{font-size:.8rem;color:var(--muted)}
+.toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar input{flex:1;min-width:160px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sub{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.sub-head{display:flex;align-items:center;gap:10px}
+.sub-head .name{font-weight:700;font-size:1.05rem;flex:1}
+.badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px}
+.b-ok{background:color-mix(in srgb,var(--ok) 22%,transparent);color:var(--ok)}
+.b-warn{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn)}
+.b-exp{background:color-mix(in srgb,var(--danger) 22%,transparent);color:var(--danger)}
+.b-off{background:color-mix(in srgb,var(--muted) 22%,transparent);color:var(--muted)}
+.meta{color:var(--muted);font-size:.85rem;margin-top:6px;display:flex;gap:14px;flex-wrap:wrap}
+.meta b{color:var(--fg);font-weight:600}
+.sub-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.hint{font-size:.82rem;color:var(--muted);line-height:1.7}
+.codebox{background:var(--panel2);border-radius:10px;padding:14px;direction:ltr;text-align:center;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.3rem;font-weight:700;letter-spacing:1px;margin:10px 0}
+.overlay{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;max-width:460px;width:100%;max-height:90vh;overflow:auto}
+.modal h3{margin:0 0 14px}
+.toast{position:fixed;inset-block-end:20px;inset-inline:0;margin:auto;width:max-content;max-width:90%;
+  background:var(--accent);color:var(--on-accent);padding:10px 18px;border-radius:999px;font-weight:700;
+  opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none;z-index:60}
+.toast.show{opacity:1;transform:none}
+.login{max-width:400px;margin:8vh auto 0;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
+.err{color:var(--danger);min-height:1.2em;font-size:.9rem}
+@media(max-width:560px){.stats{grid-template-columns:1fr 1fr}.grid2,.grid3{grid-template-columns:1fr}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- LOGIN -->
+  <div id="login" class="login">
+    <svg class="gem" width="72" height="72" viewBox="0 0 108 108">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="108" y2="108" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#7C3AED"/><stop offset=".5" stop-color="#EC4899"/><stop offset="1" stop-color="#FB923C"/></linearGradient></defs>
+      <rect width="108" height="108" rx="26" fill="url(#g)"/>
+      <path d="M44 34 78 54 44 74Z" fill="#fff" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg>
+    <h1 style="text-align:center">لوحة اشتراكات<small>DIAMOND TV</small></h1>
+    <input id="secret" type="password" placeholder="كلمة سر المالك" style="direction:ltr">
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn" style="width:100%">دخول</button>
+  </div>
+
+  <!-- APP -->
+  <div id="app" hidden>
+    <header>
+      <svg class="gem" viewBox="0 0 108 108">
+        <rect width="108" height="108" rx="26" fill="url(#g)"/>
+        <path d="M44 34 78 54 44 74Z" fill="#fff" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg>
+      <h1>الاشتراكات<small>إدارة مشتركي DIAMOND TV</small></h1>
+      <span class="spacer"></span>
+      <button class="ghost sm" id="refresh">تحديث</button>
+      <button class="ghost sm" id="logout">خروج</button>
+    </header>
+
+    <div class="stats">
+      <div class="stat"><b id="sTotal">0</b><span>الكل</span></div>
+      <div class="stat"><b id="sActive" style="color:var(--ok)">0</b><span>نشط</span></div>
+      <div class="stat"><b id="sWarn" style="color:var(--warn)">0</b><span>قارب الانتهاء</span></div>
+      <div class="stat"><b id="sExp" style="color:var(--danger)">0</b><span>منتهي</span></div>
+    </div>
+
+    <details class="card" style="margin-bottom:14px">
+      <summary style="cursor:pointer;font-weight:700;color:var(--accent)">⚙️ إعدادات الشراء / التواصل</summary>
+      <p class="hint" style="margin-top:10px">تُستخدم في زر «تواصل لشراء اشتراك» داخل التطبيق وفي صفحة البيع.</p>
+      <div class="grid2" style="margin-top:4px">
+        <div><label>رقم واتساب (دولي بدون +)</label><input id="c_wa" style="direction:ltr" placeholder="9665xxxxxxxx"></div>
+        <div><label>تيليجرام (@اسم أو رابط)</label><input id="c_tg" style="direction:ltr" placeholder="@username"></div>
+      </div>
+      <div style="margin-top:12px"><label>رابط موقع/صفحة بيع (اختياري)</label><input id="c_web" style="direction:ltr" placeholder="https://..."></div>
+      <div class="row" style="justify-content:flex-end;margin-top:12px"><button id="c_save">حفظ بيانات التواصل</button></div>
+    </details>
+
+    <details class="card" style="margin-bottom:14px">
+      <summary style="cursor:pointer;font-weight:700;color:var(--accent)">👥 الموزّعون (نظام الرصيد)</summary>
+      <p class="hint" style="margin-top:10px">أنشئ موزّعين وامنحهم رصيدًا، ولهم لوحة خاصة ينشئون فيها اشتراكات لعملائهم بخصم من رصيدهم. كل شهر لكل جهاز = نقطة.</p>
+      <div class="grid2" style="margin-top:6px">
+        <div><label>اسم المستخدم</label><input id="r_user" style="direction:ltr" placeholder="reseller1"></div>
+        <div><label>كلمة المرور</label><input id="r_pass" style="direction:ltr" placeholder="اتركها فارغة عند التعديل"></div>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <div><label>الاسم</label><input id="r_name" placeholder="اسم الموزّع"></div>
+        <div><label>الرصيد (نقاط)</label><input id="r_credits" type="number" min="0" value="0"></div>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:12px"><button id="r_save">حفظ الموزّع</button></div>
+      <div id="r_list" style="margin-top:12px"></div>
+    </details>
+
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="بحث بالاسم أو الجوال…">
+      <button id="addBtn">＋ مشترك جديد</button>
+    </div>
+
+    <div id="list"></div>
+    <div id="empty" class="hint" style="text-align:center;padding:30px" hidden>لا يوجد مشتركون بعد. اضغط «مشترك جديد».</div>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div id="modal" class="overlay" hidden>
+  <div class="modal">
+    <h3 id="modalTitle">مشترك جديد</h3>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label>الاسم</label><input id="m_name" placeholder="اسم المشترك"></div>
+      <div class="grid2">
+        <div><label>الجوال</label><input id="m_phone" style="direction:ltr" placeholder="05xxxxxxxx"></div>
+        <div><label>الباقة</label><input id="m_plan" placeholder="شهري / سنوي"></div>
+      </div>
+      <div><label>كود الدخول (يُعطى للمشترك)</label>
+        <div class="row"><input id="m_code" style="direction:ltr;flex:1" spellcheck="false"><button class="ghost sm" id="m_gen">🎲</button></div>
+      </div>
+      <div class="grid3">
+        <div><label>المدة</label>
+          <select id="m_dur">
+            <option value="30">شهر</option><option value="90">3 أشهر</option>
+            <option value="180">6 أشهر</option><option value="365">سنة</option>
+            <option value="custom">تاريخ محدد</option><option value="none">بلا انتهاء</option>
+          </select>
+        </div>
+        <div><label>تاريخ الانتهاء</label><input id="m_end" type="date"></div>
+        <div><label>عدد الأجهزة</label><input id="m_max" type="number" min="1" value="1"></div>
+      </div>
+      <label class="row" style="gap:8px;color:var(--fg)"><input type="checkbox" id="m_active" checked style="width:auto"> مُفعّل</label>
+
+      <div style="border-top:1px solid var(--line);padding-top:10px;margin-top:2px">
+        <label style="font-weight:700">حساب الـ IPTV (اختياري) — يفتح عند المشترك مباشرة</label>
+        <p class="hint" style="margin:4px 0 8px">إذا أدخلت بيانات الاشتراك هنا، يفتح التطبيق على القنوات مباشرة بمجرد إدخال الكود — دون أن يُدخل المشترك أي رابط. اتركه فارغًا ليُدخل بياناته بنفسه.</p>
+        <div class="grid2">
+          <div><label>النوع</label>
+            <select id="m_srvtype"><option value="xtream">Xtream Codes</option><option value="m3u">رابط M3U</option></select>
+          </div>
+          <div><label id="m_srvurl_lbl">رابط السيرفر</label><input id="m_srvurl" style="direction:ltr" placeholder="http://host:8080"></div>
+        </div>
+        <div class="grid2" id="m_xtream_fields" style="margin-top:8px">
+          <div><label>اسم المستخدم</label><input id="m_srvuser" style="direction:ltr" placeholder="username"></div>
+          <div><label>كلمة المرور</label><input id="m_srvpass" style="direction:ltr" placeholder="password"></div>
+        </div>
+      </div>
+
+      <div class="err" id="m_err"></div>
+      <div class="row" style="justify-content:flex-end;gap:10px">
+        <button class="ghost" id="m_cancel">إلغاء</button>
+        <button id="m_save">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL="https://ygcgzlbozumksnebawpm.supabase.co";
+const SUPA_KEY="sb_publishable_0H7jrAXUH1aRrTBYba8d-A_IWWC-Dyk";
+const $=s=>document.querySelector(s);
+let SECRET="", SUBS=[], editingHash=null;
+
+try{SECRET=localStorage.getItem("ds_secret")||"";}catch(e){}
+
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1600);}
+async function rpc(name,body){
+  const r=await fetch(SUPA_URL+"/rest/v1/rpc/"+name,{method:"POST",
+    headers:{apikey:SUPA_KEY,Authorization:"Bearer "+SUPA_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify(body)});
+  return r;
+}
+async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t.trim().toUpperCase()));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
+const AL="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+function randCode(){const a=new Uint32Array(8);crypto.getRandomValues(a);
+  const g=i=>[...a.slice(i,i+4)].map(x=>AL[x%AL.length]).join("");return "DS-"+g(0)+"-"+g(4);}
+function todayPlus(days){const d=new Date();d.setDate(d.getDate()+ +days);return d.toISOString().slice(0,10);}
+
+function statusOf(s){
+  if(!s.active) return ["off","موقوف"];
+  if(!s.end_date) return ["ok","دائم"];
+  const end=new Date(s.end_date+"T23:59:59"), now=new Date();
+  const days=(end-now)/86400000;
+  if(days<0) return ["exp","منتهي"];
+  if(days<=7) return ["warn","باقٍ "+Math.ceil(days)+" يوم"];
+  return ["ok","نشط"];
+}
+
+// ---- auth
+async function login(){
+  const sec=$("#secret").value.trim(); if(!sec) return;
+  $("#loginBtn").disabled=true; $("#loginErr").textContent="";
+  const r=await rpc("admin_subscribers",{p_secret:sec});
+  $("#loginBtn").disabled=false;
+  if(r.status===200){ SECRET=sec; try{localStorage.setItem("ds_secret",sec);}catch(e){}
+    SUBS=await r.json(); $("#login").hidden=true; $("#app").hidden=false; render(); loadContact(); loadResellers(); }
+  else $("#loginErr").textContent="كلمة السر غير صحيحة أو تعذّر الاتصال.";
+}
+$("#loginBtn").onclick=login;
+$("#secret").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+$("#logout").onclick=()=>{try{localStorage.removeItem("ds_secret");}catch(e){}SECRET="";$("#app").hidden=true;$("#login").hidden=false;$("#secret").value="";};
+$("#refresh").onclick=load;
+
+async function load(){
+  const r=await rpc("admin_subscribers",{p_secret:SECRET});
+  if(r.status===200){SUBS=await r.json();render();}else toast("تعذّر التحديث");
+  loadContact(); loadResellers();
+}
+
+async function loadContact(){
+  try{ const r=await rpc("get_contact",{}); if(r.status===200){ const o=await r.json();
+    $("#c_wa").value=o.whatsapp||""; $("#c_tg").value=o.telegram||""; $("#c_web").value=o.web||""; } }catch(e){}
+}
+$("#c_save").onclick=async ()=>{
+  const r=await rpc("admin_set_contact",{p_secret:SECRET,p_whatsapp:$("#c_wa").value.trim(),p_telegram:$("#c_tg").value.trim(),p_web:$("#c_web").value.trim()});
+  toast(r.status===200?"تم حفظ بيانات التواصل ✓":"فشل الحفظ");
+};
+
+// ---- resellers
+async function loadResellers(){
+  const r=await rpc("admin_resellers",{p_secret:SECRET}); if(r.status!==200)return;
+  const list=await r.json();
+  $("#r_list").innerHTML=list.map(x=>`<div class="sub" style="padding:10px"><div class="row">
+    <b style="flex:1">${esc(x.name||x.username)} <small style="color:var(--muted)">(${esc(x.username)})</small></b>
+    <span class="badge ${x.active?'b-ok':'b-off'}">${x.active?'نشط':'موقوف'}</span></div>
+    <div class="meta"><span>الرصيد: <b style="color:var(--accent)">${x.credits}</b></span><span>عملاؤه: ${x.subs}</span></div>
+    <div class="row" style="margin-top:8px"><input type="number" placeholder="+ نقاط" style="max-width:120px" id="cr_${esc(x.username)}">
+    <button class="ghost sm" data-addcr="${esc(x.username)}">إضافة رصيد</button>
+    <button class="ghost sm" data-togr="${esc(x.username)}">${x.active?'إيقاف':'تفعيل'}</button></div></div>`).join("")||'<p class="hint">لا يوجد موزّعون.</p>';
+}
+$("#r_save").onclick=async()=>{
+  const u=$("#r_user").value.trim(); if(!u){toast("أدخل اسم المستخدم");return;}
+  const r=await rpc("admin_save_reseller",{p_secret:SECRET,p_user:u,p_pass:$("#r_pass").value,p_name:$("#r_name").value.trim(),p_credits:parseInt($("#r_credits").value)||0,p_active:true});
+  if(r.status===200){toast("تم حفظ الموزّع ✓");$("#r_pass").value="";loadResellers();}else toast("فشل الحفظ");
+};
+$("#r_list").addEventListener("click",async e=>{
+  const b=e.target.closest("button"); if(!b)return;
+  if(b.dataset.addcr){const amt=parseInt($("#cr_"+CSS.escape(b.dataset.addcr)).value)||0; if(!amt)return;
+    const r=await rpc("admin_add_credits",{p_secret:SECRET,p_user:b.dataset.addcr,p_amount:amt}); toast(r.status===200?"تم ✓":"فشل"); loadResellers();}
+  if(b.dataset.togr){const r=await rpc("admin_resellers",{p_secret:SECRET}); const list=await r.json(); const cur=list.find(x=>x.username===b.dataset.togr);
+    const rr=await rpc("admin_save_reseller",{p_secret:SECRET,p_user:b.dataset.togr,p_pass:"",p_name:cur.name,p_credits:cur.credits,p_active:!cur.active}); toast(rr.status===200?"تم ✓":"فشل"); loadResellers();}
+});
+
+// ---- render
+function render(){
+  const q=$("#search").value.trim().toLowerCase();
+  let list=SUBS;
+  if(q) list=SUBS.filter(s=>(s.name||"").toLowerCase().includes(q)||(s.phone||"").includes(q));
+  let total=SUBS.length, active=0, warn=0, exp=0;
+  SUBS.forEach(s=>{const[k]=statusOf(s);if(k==="ok")active++;else if(k==="warn"){active++;warn++;}else if(k==="exp")exp++;});
+  $("#sTotal").textContent=total; $("#sActive").textContent=active; $("#sWarn").textContent=warn; $("#sExp").textContent=exp;
+  $("#empty").hidden=list.length>0;
+  $("#list").innerHTML=list.map(s=>{
+    const[k,label]=statusOf(s);
+    const bcl={ok:"b-ok",warn:"b-warn",exp:"b-exp",off:"b-off"}[k];
+    return `<div class="sub">
+      <div class="sub-head">
+        <span class="name">${esc(s.name||"بدون اسم")}</span>
+        <span class="badge ${bcl}">${esc(label)}</span>
+      </div>
+      <div class="meta">
+        ${s.plan?`<span>الباقة: <b>${esc(s.plan)}</b></span>`:""}
+        ${s.phone?`<span>الجوال: <b>${esc(s.phone)}</b></span>`:""}
+        <span>الأجهزة: <b>${s.devices}/${s.max_devices}</b></span>
+        <span>الانتهاء: <b>${s.end_date||"—"}</b></span>
+      </div>
+      <div class="sub-actions">
+        <button class="ghost sm" data-edit="${s.code_hash}">تعديل</button>
+        <button class="ghost sm" data-renew="${s.code_hash}">تجديد شهر</button>
+        <button class="ghost sm" data-toggle="${s.code_hash}">${s.active?"إيقاف":"تفعيل"}</button>
+        <button class="ghost sm" data-del="${s.code_hash}" style="color:var(--danger)">حذف</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+$("#search").oninput=render;
+
+// ---- actions
+$("#list").addEventListener("click",async e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  const hash=b.dataset.edit||b.dataset.renew||b.dataset.toggle||b.dataset.del;
+  const s=SUBS.find(x=>x.code_hash===hash); if(!s) return;
+  if(b.dataset.edit){ openModal(s); }
+  else if(b.dataset.renew){ const base=s.end_date&&new Date(s.end_date)>new Date()?new Date(s.end_date):new Date();
+    base.setDate(base.getDate()+30); await save(s,{end_date:base.toISOString().slice(0,10),active:true}); toast("تم التجديد شهرًا"); }
+  else if(b.dataset.toggle){ await save(s,{active:!s.active}); }
+  else if(b.dataset.del){ if(confirmDelete(s.name)){ const r=await rpc("admin_delete_subscriber",{p_secret:SECRET,p_code_hash:hash}); if(r.status===200){toast("تم الحذف");load();}else toast("فشل الحذف"); } }
+});
+function confirmDelete(name){return window.confirm("حذف المشترك «"+(name||"")+"»؟");}
+
+async function save(s,changes){
+  const body={p_secret:SECRET,p_code_hash:s.code_hash,
+    p_name:s.name,p_phone:s.phone,p_plan:s.plan,p_start:s.start_date,p_end:s.end_date,
+    p_max:s.max_devices,p_active:s.active,p_notes:s.notes,...mapChanges(changes)};
+  const r=await rpc("admin_save_subscriber",body);
+  if(r.status===200) load(); else toast("فشل الحفظ");
+}
+function mapChanges(c){const m={};if("name"in c)m.p_name=c.name;if("phone"in c)m.p_phone=c.phone;if("plan"in c)m.p_plan=c.plan;
+  if("end_date"in c)m.p_end=c.end_date;if("max_devices"in c)m.p_max=c.max_devices;if("active"in c)m.p_active=c.active;return m;}
+
+// ---- modal
+$("#addBtn").onclick=()=>openModal(null);
+$("#m_gen").onclick=()=>$("#m_code").value=randCode();
+$("#m_dur").onchange=()=>{const v=$("#m_dur").value;
+  if(v==="none"){$("#m_end").value="";$("#m_end").disabled=true;}
+  else if(v==="custom"){$("#m_end").disabled=false;}
+  else {$("#m_end").disabled=false;$("#m_end").value=todayPlus(v);}};
+$("#m_cancel").onclick=()=>$("#modal").hidden=true;
+$("#m_srvtype").onchange=()=>{const m3u=$("#m_srvtype").value==="m3u";
+  $("#m_xtream_fields").style.display=m3u?"none":"grid";
+  $("#m_srvurl_lbl").textContent=m3u?"رابط قائمة M3U":"رابط السيرفر";
+  $("#m_srvurl").placeholder=m3u?"http://host/playlist.m3u":"http://host:8080";};
+
+function openModal(s){
+  editingHash=s?s.code_hash:null;
+  $("#modalTitle").textContent=s?"تعديل مشترك":"مشترك جديد";
+  $("#m_name").value=s?.name||""; $("#m_phone").value=s?.phone||""; $("#m_plan").value=s?.plan||"";
+  $("#m_max").value=s?.max_devices||1; $("#m_active").checked=s?s.active:true;
+  // IPTV account fields — reset, then prefill from the server when editing an existing subscriber.
+  $("#m_srvtype").value="xtream"; $("#m_srvurl").value=""; $("#m_srvuser").value=""; $("#m_srvpass").value="";
+  $("#m_srvtype").onchange();
+  if(s){ rpc("get_playlist",{p_code_hash:s.code_hash,p_device_id:"dashboard"}).then(async r=>{
+    if(r.status!==200)return; const d=await r.json(); if(!d||!d.ok)return;
+    $("#m_srvtype").value=d.srv_type==="m3u"?"m3u":"xtream";
+    $("#m_srvurl").value=d.srv_url||""; $("#m_srvuser").value=d.srv_user||""; $("#m_srvpass").value=d.srv_pass||"";
+    $("#m_srvtype").onchange();
+  }).catch(()=>{}); }
+  const codeRow=$("#m_code").closest(".row");
+  if(s){ codeRow.style.display="none"; $("#m_dur").value="custom"; $("#m_end").disabled=false; $("#m_end").value=s.end_date||""; }
+  else { codeRow.style.display="flex"; $("#m_code").value=randCode(); $("#m_dur").value="30"; $("#m_end").disabled=false; $("#m_end").value=todayPlus(30); }
+  $("#m_err").textContent=""; $("#modal").hidden=false;
+}
+
+$("#m_save").onclick=async ()=>{
+  const name=$("#m_name").value.trim();
+  if(!name){$("#m_err").textContent="أدخل الاسم.";return;}
+  const end=$("#m_dur").value==="none"?null:($("#m_end").value||null);
+  const max=Math.max(1,parseInt($("#m_max").value)||1);
+  $("#m_save").disabled=true;
+  let hash=editingHash, plain=null;
+  if(!editingHash){ plain=$("#m_code").value.trim()||randCode(); hash=await sha(plain); }
+  const r=await rpc("admin_save_subscriber",{p_secret:SECRET,p_code_hash:hash,
+    p_name:name,p_phone:$("#m_phone").value.trim(),p_plan:$("#m_plan").value.trim(),
+    p_start:null,p_end:end,p_max:max,p_active:$("#m_active").checked,p_notes:""});
+  if(r.status!==200){$("#m_save").disabled=false;$("#m_err").textContent="فشل الحفظ. تأكد من الاتصال.";return;}
+  // Bind the IPTV account so the app opens straight into it (only when a URL was entered).
+  const srvUrl=$("#m_srvurl").value.trim();
+  if(srvUrl){
+    await rpc("admin_set_playlist",{p_secret:SECRET,p_code_hash:hash,
+      p_srv_type:$("#m_srvtype").value,p_srv_url:srvUrl,
+      p_srv_user:$("#m_srvuser").value.trim(),p_srv_pass:$("#m_srvpass").value});
+  }
+  $("#m_save").disabled=false;
+  $("#modal").hidden=true; await load();
+  if(plain) showCode(plain,name);
+};
+
+function showCode(code,name){
+  const m=$("#modal"); m.hidden=false;
+  m.querySelector(".modal").innerHTML=`<h3>تم إنشاء المشترك ✓</h3>
+    <p class="hint">سلّم هذا الكود للمشترك «${esc(name)}» ليُفعّل التطبيق. احفظه الآن — لن يظهر مرة أخرى.</p>
+    <div class="codebox" id="newCode">${esc(code)}</div>
+    <div class="row" style="justify-content:flex-end;gap:10px">
+      <button id="copyNew">نسخ الكود</button>
+      <button class="ghost" id="closeNew">إغلاق</button></div>`;
+  m.querySelector("#copyNew").onclick=()=>{navigator.clipboard.writeText(code).then(()=>toast("تم النسخ ✓")).catch(()=>toast("انسخ يدويًا"));};
+  m.querySelector("#closeNew").onclick=()=>{m.hidden=true; location.reload();};
+}
+
+// boot
+if(SECRET){ rpc("admin_subscribers",{p_secret:SECRET}).then(async r=>{
+  if(r.status===200){SUBS=await r.json();$("#login").hidden=true;$("#app").hidden=false;render();loadContact();loadResellers();}
+}); }
+</script>
+</body>
+</html>
