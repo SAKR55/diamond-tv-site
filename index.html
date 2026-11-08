@@ -64,6 +64,7 @@
 </main>
 
 <script src="assets/site.js"></script>
+<script src="assets/teams-ar.js"></script>
 <script>
 /* ============ إعداد البطولات والقنوات الناقلة (عدّلها بحرية) ============ */
 const LEAGUES = [
@@ -108,9 +109,9 @@ async function load(){
       const intl = [...new Set((c.broadcasts||[]).flatMap(b=>b.names||[]))];
       matches.push({
         id:e.id, L, logo, date:e.date, state:e.status?.type?.state || "pre",
-        detail:e.status?.type?.shortDetail || "", clock:e.status?.displayClock,
-        home:{n:H.team?.displayName, l:H.team?.logo, s:H.score},
-        away:{n:A.team?.displayName, l:A.team?.logo, s:A.score},
+        detail:(window.STATUS_AR||{})[e.status?.type?.shortDetail] || e.status?.type?.shortDetail || "", clock:e.status?.displayClock,
+        home:{n:(window.TEAMS_AR||{})[H.team?.displayName]||H.team?.displayName, l:H.team?.logo, s:H.score},
+        away:{n:(window.TEAMS_AR||{})[A.team?.displayName]||A.team?.displayName, l:A.team?.logo, s:A.score},
         venue:c.venue?.fullName, intl
       });
     }
