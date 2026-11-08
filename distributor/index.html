@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>لوحة التوزيع — DIAMOND TV</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M33 34h34l17 18-34 38-34-38z' fill='%237c3aed'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+:root{
+  --bg:#070b1a; --panel:#111a38; --panel2:#1b2652; --line:#2a3566;
+  --fg:#eef1ff; --muted:#9aa3c7; --accent:#7c3aed; --on-accent:#ffffff;
+  --gold:#ffc94d; --danger:#ff5c7a; --ok:#39d98a; --warn:#ffb020;
+  --font:"Tajawal",system-ui,"Segoe UI",Tahoma,sans-serif; color-scheme:dark;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#eef2fb; --panel:#ffffff; --panel2:#eaeefb; --line:#d4daf0;
+  --fg:#0c142e; --muted:#5a6488; --accent:#7c3aed; --on-accent:#ffffff; color-scheme:light;
+}}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);margin:0;direction:rtl}
+.wrap{max-width:860px;margin:0 auto;padding-block:20px 60px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.gem{width:46px;height:46px;flex:none}
+h1{margin:0;font-size:1.3rem;font-weight:800}
+h1 small{display:block;font-size:.78rem;color:var(--muted);font-weight:500}
+.spacer{flex:1}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:11px 16px;font-weight:700;
+  background:var(--accent);color:var(--on-accent);transition:filter .15s}
+button:hover{filter:brightness(1.08)} button:active{transform:translateY(1px)}
+button.ghost{background:transparent;color:var(--fg);border:1px solid var(--line);font-weight:500}
+button.sm{padding:7px 12px;font-size:.85rem;border-radius:8px}
+button:disabled{opacity:.5;cursor:default}
+input,select{font:inherit;width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px;color:var(--fg)}
+label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+.stat b{display:block;font-size:1.7rem;font-weight:800}
+.stat span{font-size:.8rem;color:var(--muted)}
+.toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar input{flex:1;min-width:160px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sub{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.sub-head{display:flex;align-items:center;gap:10px}
+.sub-head .name{font-weight:700;font-size:1.05rem;flex:1}
+.badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px}
+.b-ok{background:color-mix(in srgb,var(--ok) 22%,transparent);color:var(--ok)}
+.b-warn{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn)}
+.b-exp{background:color-mix(in srgb,var(--danger) 22%,transparent);color:var(--danger)}
+.b-off{background:color-mix(in srgb,var(--muted) 22%,transparent);color:var(--muted)}
+.meta{color:var(--muted);font-size:.85rem;margin-top:6px;display:flex;gap:14px;flex-wrap:wrap}
+.meta b{color:var(--fg);font-weight:600}
+.hint{font-size:.82rem;color:var(--muted);line-height:1.7}
+.codebox{background:var(--panel2);border-radius:10px;padding:14px;direction:ltr;text-align:center;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.3rem;font-weight:700;letter-spacing:1px;margin:10px 0}
+.overlay{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;max-width:460px;width:100%;max-height:90vh;overflow:auto}
+.modal h3{margin:0 0 14px}
+.toast{position:fixed;inset-block-end:20px;inset-inline:0;margin:auto;width:max-content;max-width:90%;
+  background:var(--accent);color:var(--on-accent);padding:10px 18px;border-radius:999px;font-weight:700;
+  opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none;z-index:60}
+.toast.show{opacity:1;transform:none}
+.login{max-width:400px;margin:8vh auto 0;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
+.err{color:var(--danger);min-height:1.2em;font-size:.9rem}
+.bell{position:relative}
+.bell .dot{position:absolute;top:-4px;inset-inline-start:-4px;background:var(--danger);color:#fff;border-radius:999px;font-size:.68rem;font-weight:800;min-width:18px;height:18px;display:grid;place-items:center;padding:0 4px}
+.noti{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px}
+.noti.unread{border-color:var(--accent)}
+.noti time{display:block;color:var(--muted);font-size:.75rem;margin-top:4px}
+@media(max-width:560px){.stats{grid-template-columns:1fr 1fr 1fr}.grid2,.grid3{grid-template-columns:1fr}}
+[hidden]{display:none!important}
+a.home{color:var(--muted);font-size:.85rem;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div id="login" class="login">
+    <svg class="gem" width="72" height="72" viewBox="0 0 108 108">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="108" y2="108" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#7C3AED"/><stop offset=".5" stop-color="#EC4899"/><stop offset="1" stop-color="#FB923C"/></linearGradient></defs>
+      <rect width="108" height="108" rx="26" fill="url(#g)"/>
+      <path d="M44 34 78 54 44 74Z" fill="#fff" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg>
+    <h1 style="text-align:center">لوحة التوزيع<small>DIAMOND TV — دخول الموزّع</small></h1>
+    <input id="u" placeholder="اسم المستخدم" style="direction:ltr" autocomplete="username">
+    <input id="p" type="password" placeholder="كلمة المرور" style="direction:ltr" autocomplete="current-password">
+    <div class="err" id="loginErr"></div>
+    <button id="loginBtn" style="width:100%">دخول</button>
+    <a class="home" href="/">→ العودة للموقع الرئيسي</a>
+  </div>
+
+  <!-- APP -->
+  <div id="app" hidden>
+    <header>
+      <svg class="gem" viewBox="0 0 108 108">
+        <rect width="108" height="108" rx="26" fill="url(#g)"/>
+        <path d="M44 34 78 54 44 74Z" fill="#fff" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg>
+      <h1>لوحة التوزيع<small id="who">—</small></h1>
+      <span class="spacer"></span>
+      <button class="ghost sm bell" id="bell" title="الإشعارات">🔔<span class="dot" id="bellDot" hidden>0</span></button>
+      <button class="ghost sm" id="refresh">تحديث</button>
+      <button class="ghost sm" id="logout">خروج</button>
+    </header>
+
+    <div class="stats">
+      <div class="stat"><b id="sCredits" style="color:var(--gold)">0</b><span>رصيدك (نقاط)</span></div>
+      <div class="stat"><b id="sTotal">0</b><span>عملاؤك</span></div>
+      <div class="stat"><b id="sActive" style="color:var(--ok)">0</b><span>نشط</span></div>
+    </div>
+
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="بحث باسم العميل…">
+      <button id="addBtn">＋ كود جديد</button>
+    </div>
+
+    <div id="list"></div>
+    <div id="empty" class="hint" style="text-align:center;padding:30px" hidden>لا يوجد عملاء بعد. اضغط «كود جديد».</div>
+  </div>
+</div>
+
+<!-- NEW CODE MODAL -->
+<div id="modal" class="overlay" hidden>
+  <div class="modal">
+    <h3>كود تفعيل جديد</h3>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div><label>اسم العميل</label><input id="m_name" placeholder="اسم العميل"></div>
+      <div class="grid2">
+        <div><label>الجوال (اختياري)</label><input id="m_phone" style="direction:ltr" placeholder="05xxxxxxxx"></div>
+        <div><label>عدد الأجهزة</label><input id="m_max" type="number" min="1" value="1"></div>
+      </div>
+      <div class="grid2">
+        <div><label>المدة</label>
+          <select id="m_dur">
+            <option value="30">شهر</option><option value="90">3 أشهر</option>
+            <option value="180">6 أشهر</option><option value="365">سنة</option>
+          </select>
+        </div>
+        <div><label>التكلفة (نقاط)</label><input id="m_cost" readonly style="direction:ltr;font-weight:800;color:var(--gold)"></div>
+      </div>
+      <p class="hint">التكلفة = (عدد الشهور × عدد الأجهزة) نقطة. تُخصم من رصيدك عند الإنشاء.</p>
+      <div class="err" id="m_err"></div>
+      <div class="row" style="justify-content:flex-end;gap:10px">
+        <button class="ghost" id="m_cancel">إلغاء</button>
+        <button id="m_save">توليد الكود</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS MODAL -->
+<div id="notiModal" class="overlay" hidden>
+  <div class="modal">
+    <h3>الإشعارات من الإدارة</h3>
+    <div id="notiList"></div>
+    <div class="row" style="justify-content:flex-end;margin-top:10px"><button class="ghost" id="noti_close">إغلاق</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL="https://ygcgzlbozumksnebawpm.supabase.co";
+const SUPA_KEY="sb_publishable_0H7jrAXUH1aRrTBYba8d-A_IWWC-Dyk";
+const $=s=>document.querySelector(s);
+let U="",P="",ME={},SUBS=[],NOTIS=[];
+
+try{U=localStorage.getItem("dtv_ru")||"";P=localStorage.getItem("dtv_rp")||"";}catch(e){}
+
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1700);}
+async function rpc(name,body){
+  const r=await fetch(SUPA_URL+"/rest/v1/rpc/"+name,{method:"POST",
+    headers:{apikey:SUPA_KEY,Authorization:"Bearer "+SUPA_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify(body||{})});
+  return r;
+}
+async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t.trim().toUpperCase()));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
+const AL="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+function randCode(){const a=new Uint32Array(8);crypto.getRandomValues(a);
+  const g=i=>[...a.slice(i,i+4)].map(x=>AL[x%AL.length]).join("");return "DS-"+g(0)+"-"+g(4);}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+function statusOf(s){
+  if(!s.active) return ["off","موقوف"];
+  if(!s.end_date) return ["ok","دائم"];
+  const end=new Date(s.end_date+"T23:59:59"), now=new Date();
+  const days=(end-now)/86400000;
+  if(days<0) return ["exp","منتهي"];
+  if(days<=7) return ["warn","باقٍ "+Math.ceil(days)+" يوم"];
+  return ["ok","نشط"];
+}
+
+// ---- auth
+async function login(){
+  const u=$("#u").value.trim(), p=$("#p").value;
+  if(!u||!p) return;
+  $("#loginBtn").disabled=true; $("#loginErr").textContent="";
+  const r=await rpc("reseller_login",{p_user:u,p_pass:p});
+  $("#loginBtn").disabled=false;
+  if(r.status===200){
+    const d=await r.json();
+    if(!d||d.ok===false){ $("#loginErr").textContent="بيانات الدخول غير صحيحة أو الحساب موقوف."; return; }
+    U=u;P=p;ME=d||{};
+    try{localStorage.setItem("dtv_ru",u);localStorage.setItem("dtv_rp",p);}catch(e){}
+    $("#login").hidden=true; $("#app").hidden=false;
+    $("#who").textContent=(ME.name||u)+" — موزّع";
+    await load();
+  } else $("#loginErr").textContent="تعذّر الاتصال أو لم تُفعّل لوحة التوزيع بعد.";
+}
+$("#loginBtn").onclick=login;
+$("#p").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+$("#logout").onclick=()=>{try{localStorage.removeItem("dtv_ru");localStorage.removeItem("dtv_rp");}catch(e){}U="";P="";$("#app").hidden=true;$("#login").hidden=false;$("#u").value="";$("#p").value="";};
+$("#refresh").onclick=load;
+
+async function load(){
+  // refresh profile (credits) + subs + notifications
+  try{ const r=await rpc("reseller_login",{p_user:U,p_pass:P}); if(r.status===200){const d=await r.json(); if(d&&d.ok!==false) ME=d;} }catch(e){}
+  $("#sCredits").textContent=ME.credits??0;
+  try{ const r=await rpc("reseller_my_subs",{p_user:U,p_pass:P}); if(r.status===200){SUBS=await r.json()||[];} }catch(e){SUBS=[];}
+  render();
+  loadNotis();
+}
+
+function render(){
+  const q=$("#search").value.trim().toLowerCase();
+  let list=SUBS;
+  if(q) list=SUBS.filter(s=>(s.name||"").toLowerCase().includes(q)||(s.phone||"").includes(q));
+  let active=0; SUBS.forEach(s=>{const[k]=statusOf(s);if(k==="ok"||k==="warn")active++;});
+  $("#sTotal").textContent=SUBS.length; $("#sActive").textContent=active;
+  $("#empty").hidden=list.length>0;
+  $("#list").innerHTML=list.map(s=>{
+    const[k,label]=statusOf(s);
+    const bcl={ok:"b-ok",warn:"b-warn",exp:"b-exp",off:"b-off"}[k];
+    return `<div class="sub"><div class="sub-head">
+      <span class="name">${esc(s.name||"بدون اسم")}</span>
+      <span class="badge ${bcl}">${esc(label)}</span></div>
+      <div class="meta">
+        ${s.phone?`<span>الجوال: <b>${esc(s.phone)}</b></span>`:""}
+        <span>الأجهزة: <b>${s.devices??0}/${s.max_devices??1}</b></span>
+        <span>الانتهاء: <b>${s.end_date||"—"}</b></span>
+      </div></div>`;
+  }).join("");
+}
+$("#search").oninput=render;
+
+// ---- new code
+function cost(){const m=Math.max(1,parseInt($("#m_max").value)||1);const months=Math.max(1,Math.round((parseInt($("#m_dur").value)||30)/30));return months*m;}
+function updCost(){$("#m_cost").value=cost()+" نقطة";}
+$("#addBtn").onclick=()=>{ $("#m_name").value="";$("#m_phone").value="";$("#m_max").value=1;$("#m_dur").value="30";$("#m_err").textContent="";updCost();$("#modal").hidden=false; };
+$("#m_dur").onchange=updCost; $("#m_max").oninput=updCost;
+$("#m_cancel").onclick=()=>$("#modal").hidden=true;
+function todayPlus(days){const d=new Date();d.setDate(d.getDate()+ +days);return d.toISOString().slice(0,10);}
+
+$("#m_save").onclick=async ()=>{
+  const name=$("#m_name").value.trim();
+  if(!name){$("#m_err").textContent="أدخل اسم العميل.";return;}
+  const c=cost();
+  if((ME.credits??0)<c){$("#m_err").textContent="رصيدك غير كافٍ. المطلوب "+c+" نقطة.";return;}
+  const days=parseInt($("#m_dur").value)||30;
+  const max=Math.max(1,parseInt($("#m_max").value)||1);
+  $("#m_save").disabled=true;
+  const plain=randCode(); const hash=await sha(plain);
+  const r=await rpc("reseller_create_code",{p_user:U,p_pass:P,p_name:name,p_phone:$("#m_phone").value.trim(),
+    p_days:days,p_max:max,p_end:todayPlus(days),p_code_hash:hash});
+  $("#m_save").disabled=false;
+  if(r.status!==200){$("#m_err").textContent="فشل الإنشاء. حدّث الصفحة وتأكد من الاتصال.";return;}
+  let d={}; try{d=await r.json();}catch(e){}
+  if(d&&d.ok===false){$("#m_err").textContent=d.error||"فشل الإنشاء — تحقّق من رصيدك.";return;}
+  if(d&&typeof d.credits!=="undefined"){ME.credits=d.credits;$("#sCredits").textContent=d.credits;}
+  $("#modal").hidden=true;
+  showCode(plain,name);
+  load();
+};
+
+function showCode(code,name){
+  const m=$("#modal"); m.hidden=false;
+  m.querySelector(".modal").innerHTML=`<h3>تم توليد الكود ✓</h3>
+    <p class="hint">سلّم هذا الكود للعميل «${esc(name)}» ليُفعّل التطبيق. احفظه الآن — لن يظهر مرة أخرى.</p>
+    <div class="codebox" id="newCode">${esc(code)}</div>
+    <div class="row" style="justify-content:flex-end;gap:10px">
+      <button id="copyNew">نسخ الكود</button>
+      <button class="ghost" id="closeNew">إغلاق</button></div>`;
+  m.querySelector("#copyNew").onclick=()=>{navigator.clipboard.writeText(code).then(()=>toast("تم النسخ ✓")).catch(()=>toast("انسخ يدويًا"));};
+  m.querySelector("#closeNew").onclick=()=>{m.hidden=true;location.reload();};
+}
+
+// ---- notifications
+async function loadNotis(){
+  try{ const r=await rpc("reseller_notifications",{p_user:U,p_pass:P}); if(r.status===200){NOTIS=await r.json()||[];} }catch(e){NOTIS=[];}
+  const unread=NOTIS.filter(n=>!n.read_at).length;
+  const dot=$("#bellDot"); if(unread>0){dot.hidden=false;dot.textContent=unread;}else dot.hidden=true;
+}
+$("#bell").onclick=async ()=>{
+  $("#notiList").innerHTML=NOTIS.length?NOTIS.map(n=>`<div class="noti ${n.read_at?'':'unread'}">${esc(n.body||n.text||"")}<time>${esc((n.created_at||"").replace("T"," ").slice(0,16))}</time></div>`).join(""):'<p class="hint">لا توجد إشعارات.</p>';
+  $("#notiModal").hidden=false;
+  // mark all read (best-effort)
+  try{ await rpc("reseller_mark_read",{p_user:U,p_pass:P}); }catch(e){}
+  $("#bellDot").hidden=true;
+};
+$("#noti_close").onclick=()=>$("#notiModal").hidden=true;
+
+// boot
+if(U&&P){ rpc("reseller_login",{p_user:U,p_pass:P}).then(async r=>{
+  if(r.status===200){const d=await r.json(); if(d&&d.ok!==false){ME=d;$("#login").hidden=true;$("#app").hidden=false;$("#who").textContent=(ME.name||U)+" — موزّع";load();}}
+}).catch(()=>{}); }
+</script>
+</body>
+</html>
