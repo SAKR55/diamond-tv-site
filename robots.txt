@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /distributor
 
 Sitemap: https://diamond-tv.shop/sitemap.xml
