@@ -101,11 +101,13 @@ label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
       <button class="ghost sm" id="logout">خروج</button>
     </header>
 
-    <div class="stats">
-      <div class="stat"><b id="sTotal">0</b><span>الكل</span></div>
+    <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat"><b id="sTotal">0</b><span>كل المستخدمين</span></div>
       <div class="stat"><b id="sActive" style="color:var(--ok)">0</b><span>نشط</span></div>
       <div class="stat"><b id="sWarn" style="color:var(--warn)">0</b><span>قارب الانتهاء</span></div>
       <div class="stat"><b id="sExp" style="color:var(--danger)">0</b><span>منتهي</span></div>
+      <div class="stat"><b id="sDevices" style="color:var(--accent)">0</b><span>الأجهزة المفعّلة</span></div>
+      <div class="stat"><b id="sResellers" style="color:var(--gold)">0</b><span>الموزّعون</span></div>
     </div>
 
     <details class="card" style="margin-bottom:14px">
@@ -296,7 +298,10 @@ async function loadResellers(){
     <div class="meta"><span>الرصيد: <b style="color:var(--accent)">${x.credits}</b></span><span>عملاؤه: ${x.subs}</span></div>
     <div class="row" style="margin-top:8px"><input type="number" placeholder="+ نقاط" style="max-width:120px" id="cr_${esc(x.username)}">
     <button class="ghost sm" data-addcr="${esc(x.username)}">إضافة رصيد</button>
-    <button class="ghost sm" data-togr="${esc(x.username)}">${x.active?'إيقاف':'تفعيل'}</button></div></div>`).join("")||'<p class="hint">لا يوجد موزّعون.</p>';
+    <button class="ghost sm" data-togr="${esc(x.username)}">${x.active?'إيقاف':'تفعيل'}</button></div>
+    <div class="row" style="margin-top:8px"><input placeholder="✉️ نص إشعار لهذا الموزّع" style="flex:1;min-width:150px" id="nt_${esc(x.username)}">
+    <button class="ghost sm" data-noti="${esc(x.username)}">📨 إرسال إشعار</button></div></div>`).join("")||'<p class="hint">لا يوجد موزّعون.</p>';
+  $("#sResellers").textContent=list.length;
 }
 $("#r_save").onclick=async()=>{
   const u=$("#r_user").value.trim(); if(!u){toast("أدخل اسم المستخدم");return;}
@@ -309,6 +314,8 @@ $("#r_list").addEventListener("click",async e=>{
     const r=await rpc("admin_add_credits",{p_secret:SECRET,p_user:b.dataset.addcr,p_amount:amt}); toast(r.status===200?"تم ✓":"فشل"); loadResellers();}
   if(b.dataset.togr){const r=await rpc("admin_resellers",{p_secret:SECRET}); const list=await r.json(); const cur=list.find(x=>x.username===b.dataset.togr);
     const rr=await rpc("admin_save_reseller",{p_secret:SECRET,p_user:b.dataset.togr,p_pass:"",p_name:cur.name,p_credits:cur.credits,p_active:!cur.active}); toast(rr.status===200?"تم ✓":"فشل"); loadResellers();}
+  if(b.dataset.noti){const el=$("#nt_"+CSS.escape(b.dataset.noti)); const txt=(el.value||"").trim(); if(!txt){toast("اكتب نص الإشعار");return;}
+    const r=await rpc("admin_send_notification",{p_secret:SECRET,p_user:b.dataset.noti,p_body:txt}); if(r.status===200){toast("تم إرسال الإشعار ✓");el.value="";}else toast("فشل الإرسال — شغّل دوال SQL أولًا");}
 });
 
 // ---- render
@@ -316,9 +323,10 @@ function render(){
   const q=$("#search").value.trim().toLowerCase();
   let list=SUBS;
   if(q) list=SUBS.filter(s=>(s.name||"").toLowerCase().includes(q)||(s.phone||"").includes(q));
-  let total=SUBS.length, active=0, warn=0, exp=0;
-  SUBS.forEach(s=>{const[k]=statusOf(s);if(k==="ok")active++;else if(k==="warn"){active++;warn++;}else if(k==="exp")exp++;});
+  let total=SUBS.length, active=0, warn=0, exp=0, devices=0;
+  SUBS.forEach(s=>{const[k]=statusOf(s);if(k==="ok")active++;else if(k==="warn"){active++;warn++;}else if(k==="exp")exp++;devices+=(+s.devices||0);});
   $("#sTotal").textContent=total; $("#sActive").textContent=active; $("#sWarn").textContent=warn; $("#sExp").textContent=exp;
+  $("#sDevices").textContent=devices;
   $("#empty").hidden=list.length>0;
   $("#list").innerHTML=list.map(s=>{
     const[k,label]=statusOf(s);
@@ -331,6 +339,7 @@ function render(){
       <div class="meta">
         ${s.plan?`<span>الباقة: <b>${esc(s.plan)}</b></span>`:""}
         ${s.phone?`<span>الجوال: <b>${esc(s.phone)}</b></span>`:""}
+        ${s.reseller?`<span>الموزّع: <b style="color:var(--accent)">${esc(s.reseller)}</b></span>`:""}
         <span>الأجهزة: <b>${s.devices}/${s.max_devices}</b></span>
         <span>الانتهاء: <b>${s.end_date||"—"}</b></span>
       </div>
