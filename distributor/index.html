@@ -185,6 +185,7 @@ const AL="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 function randCode(){const a=new Uint32Array(8);crypto.getRandomValues(a);
   const g=i=>[...a.slice(i,i+4)].map(x=>AL[x%AL.length]).join("");return "DS-"+g(0)+"-"+g(4);}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function credOf(d){return Number((d&&(d.credits??d.credit??d.balance??d.points))??0)||0;}
 
 function statusOf(s){
   if(!s.active) return ["off","موقوف"];
@@ -206,7 +207,7 @@ async function login(){
   if(r.status===200){
     const d=await r.json();
     if(!d||d.ok===false){ $("#loginErr").textContent="بيانات الدخول غير صحيحة أو الحساب موقوف."; return; }
-    U=u;P=p;ME=d||{};
+    U=u;P=p;ME=d||{};ME.credits=credOf(ME);
     try{localStorage.setItem("dtv_ru",u);localStorage.setItem("dtv_rp",p);}catch(e){}
     $("#login").hidden=true; $("#app").hidden=false;
     $("#who").textContent=(ME.name||u)+" — موزّع";
@@ -221,8 +222,9 @@ $("#refresh").onclick=load;
 async function load(){
   // refresh profile (credits) + subs + notifications
   try{ const r=await rpc("reseller_login",{p_user:U,p_pass:P}); if(r.status===200){const d=await r.json(); if(d&&d.ok!==false) ME=d;} }catch(e){}
-  $("#sCredits").textContent=ME.credits??0;
-  try{ const r=await rpc("reseller_my_subs",{p_user:U,p_pass:P}); if(r.status===200){SUBS=await r.json()||[];} }catch(e){SUBS=[];}
+  ME.credits=credOf(ME);
+  $("#sCredits").textContent=ME.credits;
+  try{ const r=await rpc("reseller_subs",{p_user:U,p_pass:P}); if(r.status===200){const s=await r.json(); SUBS=Array.isArray(s)?s:((s&&s.subs)||[]);} }catch(e){SUBS=[];}
   render();
   loadNotis();
 }
@@ -263,16 +265,18 @@ $("#m_save").onclick=async ()=>{
   const c=cost();
   if((ME.credits??0)<c){$("#m_err").textContent="رصيدك غير كافٍ. المطلوب "+c+" نقطة.";return;}
   const days=parseInt($("#m_dur").value)||30;
+  const months=Math.max(1,Math.round(days/30));
   const max=Math.max(1,parseInt($("#m_max").value)||1);
+  const planLabel={1:"شهر",3:"3 أشهر",6:"6 أشهر",12:"سنة"}[months]||(months+" أشهر");
   $("#m_save").disabled=true;
   const plain=randCode(); const hash=await sha(plain);
-  const r=await rpc("reseller_create_code",{p_user:U,p_pass:P,p_name:name,p_phone:$("#m_phone").value.trim(),
-    p_days:days,p_max:max,p_end:todayPlus(days),p_code_hash:hash});
+  const r=await rpc("reseller_create",{p_user:U,p_pass:P,p_code_hash:hash,p_name:name,
+    p_phone:$("#m_phone").value.trim(),p_plan:planLabel,p_months:months,p_max:max});
   $("#m_save").disabled=false;
-  if(r.status!==200){$("#m_err").textContent="فشل الإنشاء. حدّث الصفحة وتأكد من الاتصال.";return;}
+  if(r.status!==200){$("#m_err").textContent="فشل الإنشاء. تحقّق من رصيدك والاتصال.";return;}
   let d={}; try{d=await r.json();}catch(e){}
   if(d&&d.ok===false){$("#m_err").textContent=d.error||"فشل الإنشاء — تحقّق من رصيدك.";return;}
-  if(d&&typeof d.credits!=="undefined"){ME.credits=d.credits;$("#sCredits").textContent=d.credits;}
+  const nc=credOf(d); if(nc){ME.credits=nc;$("#sCredits").textContent=nc;}
   $("#modal").hidden=true;
   showCode(plain,name);
   load();
