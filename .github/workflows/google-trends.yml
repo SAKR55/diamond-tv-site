@@ -1,6 +1,11 @@
 name: Refresh Saudi Google Trends
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/google-trends.yml"
+      - "scripts/update-google-trends.py"
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
