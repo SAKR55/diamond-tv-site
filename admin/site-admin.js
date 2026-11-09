@@ -4,6 +4,7 @@
   const REPO = "diamond-tv-site";
   const BRANCH = "main";
   const API = "https://api.github.com/repos/" + OWNER + "/" + REPO;
+  const DRAFT_CACHE_KEY = "diamond-tv-admin-pending-v1";
   const app = document.getElementById("app");
   if (!app) return;
 
@@ -20,6 +21,24 @@
   let publishInProgress = false;
   let trendsLoaded = false;
   let trendItems = [];
+
+  function restorePendingCache() {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(DRAFT_CACHE_KEY) || "null");
+      if (!saved || typeof saved !== "object") return;
+      Object.keys(saved.pending || {}).forEach(function (path) {
+        if (/^(?:articles|pages|assets)\/[a-zA-Z0-9._/-]+$|^(?:sitemap\.xml)$/.test(path) && typeof saved.pending[path] === "string") pending[path] = saved.pending[path];
+      });
+      Object.keys(saved.binaryPending || {}).forEach(function (path) {
+        if (/^assets\/[a-zA-Z0-9._-]+\.(?:png|jpe?g|webp|gif|avif)$/i.test(path) && typeof saved.binaryPending[path] === "string") binaryPending[path] = saved.binaryPending[path];
+      });
+      Object.keys(saved.original || {}).forEach(function (path) {
+        const item = saved.original[path];
+        if (item && (item.sha === null || typeof item.sha === "string") && typeof item.content === "string") original[path] = { sha: item.sha, content: item.content };
+      });
+    } catch (_) { /* An unavailable or invalid browser cache must not block the admin. */ }
+  }
+  restorePendingCache();
 
   const subsPanel = document.createElement("section");
   subsPanel.id = "subscriptionsPanel";
@@ -87,6 +106,12 @@
     '<button id="saPublish" disabled>نشر الملفات المعلقة</button></div><div id="saPendingList" class="sa-pending-list"><p class="hint">لا توجد تعديلات معلّقة.</p></div>' +
     '<label class="sa-commit-label">وصف التحديث<input id="saCommitMessage" value="تحديث محتوى وتصميم DIAMOND TV" maxlength="120"></label><div id="saPublishError" class="sa-error" role="status"></div></div></div>' +
     '<div id="saToast" class="sa-toast" role="status" aria-live="polite"></div></div>';
+
+  const previewDialog = document.createElement("dialog");
+  previewDialog.id = "saPendingPreviewDialog";
+  previewDialog.className = "sa-preview-dialog";
+  previewDialog.innerHTML = '<div class="sa-preview-dialog-head"><b id="saPendingPreviewTitle">معاينة المقال</b><button type="button" class="ghost sm" id="saClosePendingPreview">إغلاق</button></div><iframe id="saPendingPreviewFrame" title="معاينة المحتوى المعلّق" sandbox=""></iframe>';
+  sitePanel.appendChild(previewDialog);
 
   const dashboard = document.createElement("div");
   dashboard.id = "saDashboardView";
@@ -163,8 +188,52 @@
     });
     let data = {};
     try { data = await response.json(); } catch (_) {}
-    if (!response.ok) throw new Error(data.message || ("GitHub أعاد الحالة " + response.status));
+    if (!response.ok) {
+      const error = new Error(data.message || ("GitHub أعاد الحالة " + response.status));
+      error.status = response.status;
+      error.githubMessage = data.message || "";
+      throw error;
+    }
     return data;
+  }
+  function friendlyGitHubError(error) {
+    const raw = String(error && (error.githubMessage || error.message) || "");
+    if ((error && error.status === 403) || /Resource not accessible by personal access token/i.test(raw)) {
+      return "رفض GitHub الحفظ لأن رمز الوصول لا يملك صلاحية الكتابة. أنشئ Fine-grained token للمستودع SAKR55/diamond-tv-site، وامنحه Contents: Read and write، ثم أدخله من جديد. بقيت المسودات محفوظة في هذه الجلسة.";
+    }
+    if (error && error.status === 401) return "رمز GitHub غير صالح أو منتهي. أنشئ رمزًا جديدًا للمستودع ثم اتصل به.";
+    return raw || "تعذّر النشر. بقيت التعديلات في قائمة المسودات.";
+  }
+  function persistPendingCache() {
+    const payload = { pending: pending, binaryPending: binaryPending, original: original };
+    try {
+      let serialized = JSON.stringify(payload);
+      if (serialized.length > 3_500_000) {
+        payload.binaryPending = {};
+        serialized = JSON.stringify(payload);
+      }
+      if (serialized.length > 3_500_000) {
+        Object.keys(payload.original || {}).forEach(function (path) {
+          payload.original[path] = { sha: payload.original[path].sha, content: "" };
+        });
+        serialized = JSON.stringify(payload);
+      }
+      if (serialized.length > 3_500_000) throw new Error("المسودات أكبر من المساحة المتاحة للحفظ في الجلسة.");
+      sessionStorage.setItem(DRAFT_CACHE_KEY, serialized);
+    } catch (_) { /* Keep the previous session snapshot if this update exceeds browser storage. */ }
+  }
+  function sanitizedPreview(content, path) {
+    const doc = new DOMParser().parseFromString(String(content || ""), "text/html");
+    doc.querySelectorAll("script,iframe,object,embed,form,base,meta[http-equiv='refresh'],link[rel='import']").forEach(function (node) { node.remove(); });
+    doc.querySelectorAll("*").forEach(function (node) {
+      Array.from(node.attributes).forEach(function (attr) {
+        if (/^on/i.test(attr.name) || /^(?:javascript|vbscript):/i.test(attr.value.trim()) || /^data:text\/html/i.test(attr.value.trim())) node.removeAttribute(attr.name);
+      });
+    });
+    const base = doc.createElement("base");
+    base.href = new URL(path.split("/").map(encodeURIComponent).join("/"), location.origin + "/").href;
+    doc.head.prepend(base);
+    return "<!doctype html>" + doc.documentElement.outerHTML;
   }
   function apiPath(path) {
     return path.split("/").map(encodeURIComponent).join("/");
@@ -189,6 +258,7 @@
     if (!treeFiles.length) $("#saFileList").innerHTML = '<p class="hint">لم تُعثر على ملفات نصية.</p>';
     renderFileList();
     await loadDashboardConfig();
+    renderPending();
     setStatus("متصل بالمستودع · main", true);
     $("#saWorkspace").hidden = false;
     $("#saConnect").hidden = true;
@@ -219,7 +289,8 @@
   async function fetchFile(path) {
     const data = await api("/contents/" + apiPath(path) + "?ref=" + encodeURIComponent(BRANCH));
     const content = decodeBase64(data.content || "");
-    original[path] = { sha: data.sha, content: content };
+    const hasPending = Object.prototype.hasOwnProperty.call(pending, path) || Object.prototype.hasOwnProperty.call(binaryPending, path);
+    if (!hasPending || !original[path]) original[path] = { sha: data.sha, content: content };
     return content;
   }
   async function openFile(path) {
@@ -251,6 +322,7 @@
     }
   }
   function renderPending() {
+    persistPendingCache();
     const list = $("#saPendingList");
     const paths = Array.from(new Set(Object.keys(pending).concat(Object.keys(binaryPending)))).sort();
     list.replaceChildren();
@@ -262,16 +334,33 @@
     paths.forEach(function (path) {
       const row = document.createElement("div"); row.className = "sa-pending-row";
       const name = document.createElement("span"); name.textContent = path + (binaryPending[path] ? " · صورة" : "");
+      const actions = document.createElement("div"); actions.className = "sa-pending-actions";
+      if (pending[path] && /\.html?$/i.test(path)) {
+        const preview = document.createElement("button"); preview.type = "button"; preview.className = "ghost sm"; preview.textContent = "معاينة المحتوى";
+        preview.addEventListener("click", function () {
+          $("#saPendingPreviewTitle").textContent = "معاينة: " + path;
+          $("#saPendingPreviewFrame").srcdoc = sanitizedPreview(pending[path], path);
+          if (typeof previewDialog.showModal === "function") previewDialog.showModal();
+          else previewDialog.setAttribute("open", "open");
+        });
+        actions.appendChild(preview);
+      }
       const remove = document.createElement("button"); remove.type = "button"; remove.className = "ghost sm"; remove.textContent = "إزالة";
       remove.addEventListener("click", function () {
         delete pending[path]; delete binaryPending[path];
         if (selectedPath === path) { $("#saEditor").value = original[path] ? original[path].content : ""; $("#saEditorMeta").textContent = "تمت إزالة التعديل المعلّق."; }
         renderPending(); renderFileList();
       });
-      row.append(name, remove); list.appendChild(row);
+      actions.appendChild(remove);
+      row.append(name, actions); list.appendChild(row);
     });
     $("#saPublish").disabled = false;
   }
+  $("#saClosePendingPreview").addEventListener("click", function () {
+    if (typeof previewDialog.close === "function") previewDialog.close();
+    else previewDialog.removeAttribute("open");
+    $("#saPendingPreviewFrame").srcdoc = "";
+  });
   async function waitForPublicFiles(snapshot) {
     const paths = Array.from(new Set(Object.keys(snapshot.text).concat(Object.keys(snapshot.binary))));
     if (!paths.length) return true;
@@ -312,7 +401,8 @@
   }
   async function loadDashboardConfig() {
     try {
-      const raw = await fetchFile("assets/site-config.json");
+      const committedRaw = await fetchFile("assets/site-config.json");
+      const raw = Object.prototype.hasOwnProperty.call(pending, "assets/site-config.json") ? pending["assets/site-config.json"] : committedRaw;
       siteConfig = Object.assign(defaultSiteConfig(), JSON.parse(raw));
     } catch (_) { siteConfig = siteConfig || defaultSiteConfig(); }
     siteConfig.theme = Object.assign({ accent: "#6d4aff", accent2: "#0c9fa2" }, siteConfig.theme || {});
@@ -744,7 +834,7 @@
       token = "";
       $("#saToken").value = "";
       setStatus("تعذّر الاتصال", false);
-      toast("فشل الاتصال: " + error.message);
+      toast("فشل الاتصال: " + friendlyGitHubError(error));
     } finally { $("#saConnectBtn").disabled = false; }
   });
   $("#saToken").addEventListener("keydown", function (event) {
@@ -776,9 +866,7 @@
   $("#saDisconnect").addEventListener("click", function () {
     token = "";
     treeFiles = [];
-    original = Object.create(null);
-    pending = Object.create(null);
-    binaryPending = Object.create(null);
+    persistPendingCache();
     selectedPath = "";
     $("#saWorkspace").hidden = true;
     $("#saConnect").hidden = false;
@@ -786,7 +874,7 @@
     $("#saEditor").value = "";
     setStatus("غير متصل", false);
     renderPending();
-    toast("تم فصل الاتصال ومسح التعديلات غير المنشورة.");
+    toast("تم فصل الاتصال مع الاحتفاظ بالمسودات المعلّقة في هذه الجلسة.");
   });
   $("#saStageFile").addEventListener("click", function () {
     if (!selectedPath || $("#saEditor").disabled) return;
@@ -857,7 +945,14 @@
           const li = document.createElement("li"), link = document.createElement("a");
           link.href = entry.url; link.target = "_blank"; link.rel = "noopener noreferrer";
           link.textContent = entry.title + (entry.source ? " — " + entry.source : "");
-          li.appendChild(link); sourceList.appendChild(li);
+          li.appendChild(link);
+          if (entry.description) {
+            const summary = document.createElement("p");
+            summary.className = "sa-trend-summary";
+            summary.textContent = entry.description;
+            li.appendChild(summary);
+          }
+          sourceList.appendChild(li);
         });
         row.appendChild(sourceList);
       }
@@ -898,7 +993,9 @@
     $("#saWriterTopic").value = topic;
     $("#saWriterKeyword").value = title;
     $("#saWriterBrief").value = "مؤشر الاتجاهات: " + title + (item.traffic ? " (القيمة التقريبية في خلاصة Google Trends: " + item.traffic + ")" : "") +
-      "\nعناوين منشورة للمراجعة، لا تُعامل هذه العناوين وحدها كتأكيد للخبر:\n" + validNews.map(function (entry) { return entry.title + (entry.source ? " — " + entry.source : ""); }).join("\n");
+      "\nمصادر مرتبطة بالموضوع، مع ملخص الناشر عند توفره. يجب مراجعة صفحة المصدر قبل اعتماد أي ادعاء:\n" + validNews.map(function (entry) {
+        return (entry.source || "مصدر") + ": " + entry.title + (entry.description ? "\nملخص المصدر: " + entry.description : "\nلم يتوفر ملخص آلي؛ راجع نص المصدر مباشرة.") + "\nالرابط: " + entry.url;
+      }).join("\n\n");
     form.elements.sources.value = validNews.map(function (entry) { return entry.url; }).join("\n");
     form.elements.category.value = item.category === "sports" ? "رياضة" : "مسلسلات";
     generateArticleDraft({ trend: item });
@@ -947,8 +1044,15 @@
     keywordField.value = keyword;
     const intent = $("#saWriterIntent").value;
     const prefix = intent === "list" ? "ترشيحات: " : intent === "compare" ? "مقارنة: " : intent === "explainer" ? "شرح: " : "دليل: ";
-    const title = (prefix + topic.replace(/[؟?]+$/g, "")).slice(0, 100);
-    const description = ("ملخص تحريري عن " + topic + " مع عناوين المصادر المرتبطة وطريقة التحقق من المعلومات المتغيرة.").slice(0, 160);
+    let title = (prefix + topic.replace(/[؟?]+$/g, "")).slice(0, 100);
+    let description = ("ملخص تحريري عن " + topic + " مع عناوين المصادر المرتبطة وطريقة التحقق من المعلومات المتغيرة.").slice(0, 160);
+    if (options && options.trend) {
+      const normalizedTopic = normalizeSearchText(topic);
+      title = normalizedTopic.includes("ابو تريكه")
+        ? "محمد أبو تريكة: حقيقة الغياب عن بي إن سبورتس وما نعرفه"
+        : ("آخر أخبار " + topic + ": التفاصيل الواردة في المصادر").slice(0, 100);
+      description = ("ملخص " + topic + " اعتمادًا على التغطيات المرتبطة، مع بيان ما ورد بالمصادر وما يحتاج إلى تحقق.").slice(0, 160);
+    }
     const slug = transliterateSlug(keyword || topic) || ("article-" + Date.now());
     if (form.elements.body.value.trim() && !window.confirm("ستُستبدل مسودة المقال الحالية. هل تريد المتابعة؟")) return;
     form.elements.title.value = title;
@@ -960,17 +1064,20 @@
       const news = (trend.news || []).filter(function (entry) { return entry.title && /^https:\/\//i.test(entry.url || ""); }).slice(0, 3);
       const checkedAt = trend.publishedAt ? new Date(trend.publishedAt) : null;
       const dateText = checkedAt && !Number.isNaN(checkedAt.getTime()) ? new Intl.DateTimeFormat("ar-SA", { dateStyle: "long", timeZone: "Asia/Riyadh" }).format(checkedAt) : "وقت آخر تحديث للخلاصة";
-      form.elements.body.value = "## ملخص الاتجاه\n\nظهر «" + String(trend.title).trim() + "» ضمن الموضوعات الرائجة في السعودية بحسب خلاصة Google Trends بتاريخ " + dateText + (trend.traffic ? "، مع قيمة تقريبية معروضة قدرها " + trend.traffic : "") + ". هذه الإشارة تصف الاهتمام بالبحث ولا تؤكد بحد ذاتها خبرًا أو موعدًا أو نتيجة.\n\n" +
-        "## عناوين المصادر المرتبطة\n\n" + news.map(function (entry) { return "- " + entry.title + (entry.source ? " — " + entry.source : ""); }).join("\n") + "\n\n" +
-        "## كيف تتحقق من التفاصيل؟\n\nافتح كل مصدر مرتبط واقرأ نصه كاملًا وتاريخ نشره، ثم ارجع إلى الجهة الرسمية المعنية لتأكيد الأسماء والتواريخ والنتائج. لا تعتمد على العنوان وحده، واذكر بوضوح أي اختلاف بين المصادر.\n\n" +
-        "## لماذا قد يتغير الاهتمام؟\n\nتتغير موضوعات البحث مع الأخبار والإعلانات والمباريات والعروض الجديدة. لذلك لا يعني ظهور هذا الموضوع استمرار الاهتمام أو ثبات المعلومات؛ أعد التحقق من المصادر قبل مشاركة أي تحديث.\n\n" +
-        "## خلاصة للقارئ\n\nهذا ملخص لموضوع رائج ولعناوين التغطية المرتبطة به وقت إعداد المسودة. المصدر الأصلي هو المرجع لتأكيد التفاصيل، وسيحتاج المقال إلى إضافة ملخص تحريري لما تقوله المصادر بعد قراءتها.";
+      const coverage = news.map(function (entry) {
+        return "### " + (entry.source || "مصدر إخباري") + " — " + entry.title + "\n\n" +
+          (entry.description || "لم يصل ملخص نصي من الناشر في آخر تحديث. افتح رابط المصدر واقرأ تفاصيله قبل اعتماد أي معلومة.");
+      }).join("\n\n");
+      form.elements.body.value = "## ملخص الموضوع\n\nظهر «" + String(trend.title).trim() + "» ضمن الموضوعات الرائجة في السعودية بحسب خلاصة Google Trends بتاريخ " + dateText + (trend.traffic ? "، مع قيمة تقريبية معروضة قدرها " + trend.traffic : "") + ". الترند مؤشر على الاهتمام بالبحث، وليس دليلًا على صحة تفاصيل الخبر.\n\n" +
+        "## ما ورد في التغطيات المرتبطة\n\n" + coverage + "\n\n" +
+        "## ما الذي ينبغي التحقق منه؟\n\nالمعلومات أعلاه مأخوذة من عناوين التغطية وملخصات الناشرين المتاحة وقت إعداد المسودة. راجع النص الكامل لكل مصدر، وتحقق من تاريخ النشر والسياق، ثم طابق التفاصيل المتغيرة مع تصريح الجهة أو الشخص المعني. إذا لم يتوفر ملخص للمصدر فلا تستنتج مضمونه من العنوان وحده.\n\n" +
+        "## خلاصة\n\nتجمع هذه المسودة التغطيات المنشورة المرتبطة بموضوع «" + String(trend.title).trim() + "». قبل النشر، أضف خلاصة تحريرية أصلية بعد قراءة المصادر، واحذف أي تفصيل لا يسنده نص واضح أو تأكيد رسمي.";
     }
     const topicNormalized = normalizeSearchText(topic);
     const category = /رياض|مبار|دوري|كرة|بطول/.test(topicNormalized) ? "رياضة" : /فيلم|سينما/.test(topicNormalized) ? "سينما" : /مسلسل|درام|برنامج/.test(topicNormalized) ? "مسلسلات" : /تطبيق|اشتراك|موقع/.test(topicNormalized) ? "التطبيق" : "عام";
     form.elements.category.value = category;
     $("#saWriterNotice").textContent = options && options.trend
-      ? "أُنشئت مسودة من بيانات الترند وعناوين المصادر. اقرأ المصادر وأضف خلاصة أصلية قبل النشر؛ الترند لا يثبت صحة الخبر ولا يضمن ترتيبًا."
+      ? "أُنشئت المسودة من ملخصات الناشرين المتاحة وروابطهم. راجع المصدر الكامل وأضف خلاصة تحريرية أصلية قبل النشر؛ الترند وحده لا يثبت الخبر."
       : "أُنشئت مسودة تحريرية من الموضوع والملاحظات. أضف أمثلة ومصادر أصلية قبل النشر.";
     updateSearchPreview(form);
     articleAudit(form);
@@ -1128,7 +1235,7 @@
       }
       return true;
     } catch (error) {
-      $("#saPublishError").textContent = error.message || "تعذّر النشر.";
+      $("#saPublishError").textContent = friendlyGitHubError(error);
       setStatus("تعذّر الحفظ؛ بقيت تعديلاتك محفوظة هنا", false);
       return false;
     } finally {
