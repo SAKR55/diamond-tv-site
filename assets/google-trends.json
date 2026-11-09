@@ -1,7 +1,53 @@
 {
   "country": "SA",
   "source": "https://trends.google.com/trending?geo=SA&hl=ar",
-  "updatedAt": null,
-  "trends": []
+  "updatedAt": "2026-11-09T21:32:54Z",
+  "trends": [
+    {
+      "title": "حساب مواطن",
+      "category": "entertainment",
+      "traffic": "100+",
+      "publishedAt": "Mon, 9 Nov 2026 13:20:00 -0800",
+      "news": [
+        {
+          "title": "هل المكافأة خارج الراتب تحسب من ضمن الدخل في حساب المواطن؟ البرنامج يوضح",
+          "source": "عاجل",
+          "url": "https://ajel.sa/thehour/cdmjnge85"
+        },
+        {
+          "title": "هل يلزم الإفصاح عن الضمان الاجتماعي ضمن الدخل بحساب المواطن؟ توضيح من البرنامج",
+          "source": "عاجل",
+          "url": "https://ajel.sa/thehour/ut4cs24jx"
+        },
+        {
+          "title": "حساب المواطن يبدأ إيداع دعم نوفمبر شاملًا الدعم الإضافي للمستفيدين المكتملة طلباتهم",
+          "source": "صحيفة سبق الإلكترونية",
+          "url": "https://sabq.org/article/gizl9ad"
+        }
+      ]
+    },
+    {
+      "title": "محمد أبو تريكة",
+      "category": "sports",
+      "traffic": "100+",
+      "publishedAt": "Mon, 9 Nov 2026 11:40:00 -0800",
+      "news": [
+        {
+          "title": "«سنشتاق لك».. مذيع بين سبورت يفاجئ أبوتريكة بعد قرار «التوقف»",
+          "source": "المصري اليوم",
+          "url": "https://www.almasryalyoum.com/news/details/4405625"
+        },
+        {
+          "title": "\"ستفتقدونني لفترة طويلة\".. أبو تريكة يثير الجدل حول غيابه عن \"بي إن سبورتس\"",
+          "source": "إرم نيوز",
+          "url": "https://www.eremnews.com/sports/83mxpqk"
+        },
+        {
+          "title": "\"انفجار فيرمين\" و\"دي يونغ ظهير\" و\"تردد ألفاريز\".. أبرز لحظات فوز برشلونة على أتلتيكو مدريد",
+          "source": "CNN Arabic",
+          "url": "https://arabic.cnn.com/sport/article/2026/11/09/barcelona-remontada-atletico-madrid-best-moments"
+        }
+      ]
+    }
+  ]
 }
-
