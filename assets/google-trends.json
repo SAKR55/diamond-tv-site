@@ -1,33 +1,8 @@
 {
   "country": "SA",
   "source": "https://trends.google.com/trending?geo=SA&hl=ar",
-  "updatedAt": "2026-11-09T22:33:25Z",
+  "updatedAt": "2026-11-09T22:35:20Z",
   "trends": [
-    {
-      "title": "honor 700 pro",
-      "category": "entertainment",
-      "traffic": "100+",
-      "publishedAt": "Mon, 9 Nov 2026 13:20:00 -0800",
-      "news": [
-        {
-          "title": "Honor 700 devices teased to come with an interesting feature on the rear screen - GSMArena.com news",
-          "source": "GSMArena.com",
-          "url": "https://www.gsmarena.com/honor_700_devices_teased_to_come_with_an_interesting_feature_on_the_rear_screen-news-75401.php",
-          "description": "It seems like Honor is trying to make that display as useful as possible. A few days ago, Honor officially revealed the design of the upcoming 700, 700..."
-        },
-        {
-          "title": "Honor’s Newest Phone Has an Extra Screen—And It’s Not Where You’d Expect",
-          "source": "Gizmodo",
-          "url": "https://gizmodo.com/honors-700-back-screen-2000836200",
-          "description": ""
-        },
-        {
-          "title": "Honor 700 series launch scheduled for November 13",
-          "source": "Huawei Central",
-          "url": "https://www.huaweicentral.com/honor-700-series-launch-scheduled-for-november-13/"
-        }
-      ]
-    },
     {
       "title": "محمد أبو تريكة",
       "category": "sports",
