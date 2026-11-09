@@ -1,28 +1,30 @@
 {
   "country": "SA",
   "source": "https://trends.google.com/trending?geo=SA&hl=ar",
-  "updatedAt": "2026-11-09T21:32:54Z",
+  "updatedAt": "2026-11-09T22:33:25Z",
   "trends": [
     {
-      "title": "حساب مواطن",
+      "title": "honor 700 pro",
       "category": "entertainment",
       "traffic": "100+",
       "publishedAt": "Mon, 9 Nov 2026 13:20:00 -0800",
       "news": [
         {
-          "title": "هل المكافأة خارج الراتب تحسب من ضمن الدخل في حساب المواطن؟ البرنامج يوضح",
-          "source": "عاجل",
-          "url": "https://ajel.sa/thehour/cdmjnge85"
+          "title": "Honor 700 devices teased to come with an interesting feature on the rear screen - GSMArena.com news",
+          "source": "GSMArena.com",
+          "url": "https://www.gsmarena.com/honor_700_devices_teased_to_come_with_an_interesting_feature_on_the_rear_screen-news-75401.php",
+          "description": "It seems like Honor is trying to make that display as useful as possible. A few days ago, Honor officially revealed the design of the upcoming 700, 700..."
         },
         {
-          "title": "هل يلزم الإفصاح عن الضمان الاجتماعي ضمن الدخل بحساب المواطن؟ توضيح من البرنامج",
-          "source": "عاجل",
-          "url": "https://ajel.sa/thehour/ut4cs24jx"
+          "title": "Honor’s Newest Phone Has an Extra Screen—And It’s Not Where You’d Expect",
+          "source": "Gizmodo",
+          "url": "https://gizmodo.com/honors-700-back-screen-2000836200",
+          "description": ""
         },
         {
-          "title": "حساب المواطن يبدأ إيداع دعم نوفمبر شاملًا الدعم الإضافي للمستفيدين المكتملة طلباتهم",
-          "source": "صحيفة سبق الإلكترونية",
-          "url": "https://sabq.org/article/gizl9ad"
+          "title": "Honor 700 series launch scheduled for November 13",
+          "source": "Huawei Central",
+          "url": "https://www.huaweicentral.com/honor-700-series-launch-scheduled-for-november-13/"
         }
       ]
     },
@@ -35,17 +37,14 @@
         {
           "title": "«سنشتاق لك».. مذيع بين سبورت يفاجئ أبوتريكة بعد قرار «التوقف»",
           "source": "المصري اليوم",
-          "url": "https://www.almasryalyoum.com/news/details/4405625"
+          "url": "https://www.almasryalyoum.com/news/details/4405625",
+          "description": "أثار محمد أبوتريكة، نجم الأهلي ومنتخب مصر السابق، حالة من التساؤلات، بعدما ألمح إلى احتمالية غيابه عن الظهور في الاستوديوهات التحليلية لشبكة قنوات «بي إن سبورتس» لفترة..."
         },
         {
           "title": "\"ستفتقدونني لفترة طويلة\".. أبو تريكة يثير الجدل حول غيابه عن \"بي إن سبورتس\"",
           "source": "إرم نيوز",
-          "url": "https://www.eremnews.com/sports/83mxpqk"
-        },
-        {
-          "title": "\"انفجار فيرمين\" و\"دي يونغ ظهير\" و\"تردد ألفاريز\".. أبرز لحظات فوز برشلونة على أتلتيكو مدريد",
-          "source": "CNN Arabic",
-          "url": "https://arabic.cnn.com/sport/article/2026/11/09/barcelona-remontada-atletico-madrid-best-moments"
+          "url": "https://www.eremnews.com/sports/83mxpqk",
+          "description": "أثار النجم المصري السابق محمد أبو تريكة حالة من الجدل بين الجماهير، بعدما لمح إلى إمكانية ابتعاده عن الظهور في الاستوديوهات التحليلية"
         }
       ]
     }
