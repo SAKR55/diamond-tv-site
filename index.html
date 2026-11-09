@@ -145,7 +145,7 @@ const TSDB_API = id => `https://www.thesportsdb.com/api/v1/json/123/eventsnextle
 const LEAGUE_CACHE = new Map();
 const TSDB_CACHE = new Map();
 /* ============ الحالة ============ */
-let dayOffset = 0, weekView = false, selectedDate = "", statusF = "all", leagueF = "all", lastOk = null, prevScores = {}, timer;
+let dayOffset = 0, weekView = false, selectedDate = "", statusF = "all", leagueF = "all", lastOk = null, prevScores = {}, timer, NEXT_FIXTURES = [];
 const $ = s => document.querySelector(s);
 const ymd = off => { const d = new Date(); d.setDate(d.getDate()+off);
   return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"); };
@@ -246,13 +246,19 @@ async function load(){
   const datesAvailable=dates.filter(dateKey=>LEAGUES.some(L=>LEAGUE_CACHE.has(dateKey+"|"+L.id)));
   const matches=datesAvailable.flatMap(dateKey=>LEAGUES.flatMap(L=>(LEAGUE_CACHE.get(dateKey+"|"+L.id)||{}).matches||[]));
   const upcomingKeys = new Set(dates.filter(dateKey => dateKey >= ymd(0)));
+  NEXT_FIXTURES = [];
   if (upcomingKeys.size) {
     const regional = await Promise.all(LEAGUES.filter(L => TSDB_IDS[L.id]).map(async L => ({ L, events: await loadRegionalSchedule(L, now) })));
+    const lastVisibleDate = dates[dates.length - 1];
+    regional.flatMap(item => item.events)
+      .filter(event => event.dateKey > lastVisibleDate && event.dateKey >= todayKey)
+      .sort((a,b) => a.dateKey.localeCompare(b.dateKey) || new Date(a.date) - new Date(b.date))
+      .forEach(event => { if (NEXT_FIXTURES.length < 6 && !NEXT_FIXTURES.some(match => sameFixture(match, event))) NEXT_FIXTURES.push(Object.assign({}, event, { showDate: true })); });
     regional.forEach(({ L, events }) => events.forEach(event => {
       if (upcomingKeys.has(event.dateKey) && !matches.some(match => sameFixture(match, event))) matches.push(event);
     }));
   }
-  if (!datesAvailable.length && !matches.length) throw new Error("no data");
+  if (!datesAvailable.length && !matches.length && !NEXT_FIXTURES.length) throw new Error("no data");
   matches.sort((a,b)=>weekView
     ? (a.dateKey.localeCompare(b.dateKey)||({in:0,pre:1,post:2}[a.state]-{in:0,pre:1,post:2}[b.state])||new Date(a.date)-new Date(b.date))
     : (({in:0,pre:1,post:2}[a.state]-{in:0,pre:1,post:2}[b.state])||new Date(a.date)-new Date(b.date)));
@@ -274,8 +280,9 @@ function card(m) {
   const key = String(m.id), stats = MATCH_STATS.get(key) || { open: false, status: "idle" };
   const scoreKey = m.home.s + "-" + m.away.s, changed = prevScores[m.id] && prevScores[m.id] !== scoreKey && live;
   prevScores[m.id] = scoreKey;
+  const nextDate = m.showDate ? new Date(m.date).toLocaleDateString("ar-SA",{weekday:"long",day:"numeric",month:"long"}) : "لم تبدأ";
   const status = live ? "<span class=\"st live\">● " + esc(m.detail || m.clock) + "</span>"
-    : pre ? "<span class=\"st pre\">لم تبدأ</span>" : "<span class=\"st ft\">انتهت</span>";
+    : pre ? "<span class=\"st pre\">" + esc(nextDate) + "</span>" : "<span class=\"st ft\">انتهت</span>";
   const score = pre ? "<div class=\"score pre\">" + timeAr(m.date) + "</div>"
     : "<div class=\"score " + (changed ? "flash" : "") + "\">" + esc(m.away.s) + " - " + esc(m.home.s) + "</div>";
   const team = t => "<div class=\"team\">" + (t.l ? "<img src=\"" + esc(t.l) + "\" alt=\"\" loading=\"lazy\">" : "") + "<span>" + esc(t.n) + "</span></div>";
@@ -498,8 +505,11 @@ function render(){
   if(!list.length){
     const selectedLeague=LEAGUES.find(L=>L.id===leagueF);
     const subject=selectedLeague?" لبطولة "+esc(selectedLeague.ar):"";
-    const period=weekView?"الأسبوع المحدد":"التاريخ المحدد";
-    $("#board").innerHTML="<div class=\"empty\">لا توجد مباريات"+subject+" في "+period+". جرّب تاريخًا آخر أو اختر «الأسبوع القادم» لمتابعة المواعيد القريبة.</div>";
+    const period=weekView?"الأسبوع القادم":"التاريخ المحدد";
+    const next=weekView&&(statusF==="all"||statusF==="pre")?NEXT_FIXTURES.filter(m=>leagueF==="all"||m.L.id===leagueF):[];
+    const nextMarkup=next.length?"<section class=\"match-day\"><h3 class=\"match-day-title\">أقرب المباريات المجدولة بعد هذه الفترة</h3>"+renderLeagueGroups(next)+"</section>":"";
+    const emptyText=next.length?"لا توجد مباريات خلال "+period+subject+"؛ هذه أقرب المواعيد التالية.":"لا توجد مباريات"+subject+" في "+period+". جرّب تاريخًا آخر أو اختر «الأسبوع القادم» لمتابعة المواعيد القريبة.";
+    $("#board").innerHTML="<div class=\"empty\">"+emptyText+"</div>"+nextMarkup;
     return;
   }
   if(weekView){
