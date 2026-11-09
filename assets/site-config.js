@@ -34,6 +34,9 @@
     if (sections.recommendations === false) {
       var rec = document.getElementById("recommendations");
       if (rec) rec.hidden = true;
+      var evening = document.getElementById("evening-content");
+      if (evening) evening.hidden = true;
+      document.querySelectorAll('a[href*="/evening/"], a[href="evening/"]').forEach(function (link) { link.hidden = true; });
     }
     if (sections.store === false) {
       document.querySelectorAll('a[href*="/store/"], a[href="store/"]').forEach(function (link) { link.hidden = true; });
@@ -57,3 +60,4 @@
       return config;
     });
 })();
+
