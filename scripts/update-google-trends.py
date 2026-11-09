@@ -30,7 +30,7 @@ SPORTS = re.compile(
 ENTERTAINMENT = re.compile(
     r"مسلسل|مسلسلات|فيلم|أفلام|افلام|سينما|دراما|ممثل|ممثلة|حلقة|رمضان|"
     r"برنامج\s*(?:تلفزيوني|حواري|فني|ترفيهي)|نتفلكس|شاهد|mbc|osn|نتفليكس|"
-    r"series|movie|film|actor|actress|episode|season|netflix|shahid|disney|prime video|hbo|tv show|television",
+    r"tv\s+series|television\s+series|movie|film|actor|actress|episode|season|netflix|shahid|disney|prime video|hbo|tv show|television",
     re.IGNORECASE,
 )
 STOPWORDS = {"الذي", "التي", "هذا", "هذه", "بعد", "قبل", "عبر", "حول", "ضمن", "أبرز", "اكثر", "أكثر", "اليوم", "أمس"}
