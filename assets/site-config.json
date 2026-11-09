@@ -18,6 +18,20 @@
       ]
     },
     {
+      "id": "egy.1",
+      "ar": "الدوري المصري",
+      "tv": [
+        "ON Sports"
+      ]
+    },
+    {
+      "id": "afc.champions",
+      "ar": "دوري أبطال آسيا للنخبة",
+      "tv": [
+        "beIN SPORTS"
+      ]
+    },
+    {
       "id": "uefa.champions",
       "ar": "دوري أبطال أوروبا",
       "tv": [
@@ -66,20 +80,6 @@
       "tv": [
         "beIN SPORTS"
       ]
-    },
-    {
-      "id": "egy.1",
-      "ar": "الدوري المصري",
-      "tv": [
-        "ON Sports"
-      ]
-    },
-    {
-      "id": "afc.champions",
-      "ar": "دوري أبطال آسيا للنخبة",
-      "tv": [
-        "beIN SPORTS"
-      ]
     }
   ],
   "recommendations": {
@@ -88,3 +88,4 @@
   },
   "products": []
 }
+
