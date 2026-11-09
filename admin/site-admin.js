@@ -49,15 +49,15 @@
     '<div class="sa-view" id="saArticlesView" hidden><div class="sa-intro card"><h3>إنشاء محتوى جديد</h3>' +
     '<p class="hint">يُنشأ المحتوى مع عنوان ووصف لمحركات البحث وبيانات منظمة، ويُضاف المقال تلقائيًا إلى فهرس المقالات وخريطة الموقع.</p></div>' +
     '<div class="sa-create-grid"><form id="saArticleForm" class="card sa-form"><h3>مختبر المقالات</h3>' +
-    '<section class="sa-writer-tool" id="saWriterTool"><b>اكتب الموضوع وسنجهّز مسودة منظمة</b><p class="hint">تُنشئ الأداة مسودة تلقائية قابلة للتحرير من قوالب تحريرية؛ لا تبحث في الإنترنت ولا تتحقق من الأخبار. أضف معلومات موضوعك ومصادره قبل النشر.</p>' +
+    '<section class="sa-writer-tool" id="saWriterTool"><b>اكتب الموضوع ومعلوماتك، وسنحوّلها إلى مسودة مرتبة</b><p class="hint">تعمل المسودة داخل المتصفح وتستخدم ما تدخله فقط؛ لا تبحث في الإنترنت ولا تختلق أسماء أو مواعيد. الصق نقاطك أو مسودتك الخام ليعاد تنظيمها، ثم راجع الحقائق قبل النشر.</p>' +
     '<label>موضوع المقال<textarea id="saWriterTopic" rows="2" maxlength="180" placeholder="مثال: كيف تختار مسلسلًا مناسبًا للمشاهدة العائلية؟"></textarea></label>' +
+    '<label>معلومات المقال أو نص أولي<textarea id="saWriterBrief" rows="4" maxlength="5000" placeholder="أضف النقاط والحقائق التي تحققت منها، أو الصق نصًا أوليًا ليُنظّم في أقسام. لا تضع كلمة مرور أو معلومات خاصة."></textarea></label>' +
     '<div class="sa-two-col"><label>الكلمة المفتاحية الرئيسية<input id="saWriterKeyword" maxlength="80" placeholder="مثال: مسلسلات عائلية"></label>' +
     '<label>القارئ المستهدف<select id="saWriterAudience"><option value="عام">جمهور عام</option><option value="المبتدئون">المبتدئون</option><option value="العائلات">العائلات</option><option value="عشاق الرياضة">عشاق الرياضة</option><option value="عشاق السينما">عشاق السينما</option></select></label></div>' +
     '<div class="sa-keyword-tools"><button type="button" class="ghost sm" id="saSuggestKeywords">اقتراح عبارات بحث</button><span class="hint">اقتراحات تحريرية بلا بيانات حجم بحث.</span></div><div class="sa-keyword-ideas" id="saKeywordIdeas"></div>' +
     '<div class="sa-two-col"><label>نية المقال<select id="saWriterIntent"><option value="guide">دليل عملي</option><option value="list">قائمة ترشيحات</option><option value="compare">مقارنة</option><option value="explainer">شرح مبسط</option></select></label>' +
     '<label>طول المسودة<select id="saWriterLength"><option value="short">مختصر</option><option value="standard" selected>متوسط</option><option value="long">موسع</option></select></label></div>' +
     '<button type="button" id="saGenerateArticle">تجهيز مسودة المقال</button><div id="saWriterNotice" class="hint" aria-live="polite"></div></section>' +
-    '<label>عنوان المقال<input name="title" required maxlength="100" placeholder="عنوان واضح ومفيد للقارئ"></label>' +
     '<label>عنوان المقال<input name="title" required maxlength="100" placeholder="عنوان واضح ومفيد للقارئ"></label>' +
     '<label>الرابط المختصر (إنجليزي)<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="ramadan-2027-series-guide"></label>' +
     '<label>وصف نتائج البحث<textarea name="description" required maxlength="160" rows="3" placeholder="ملخص دقيق يساعد القارئ على معرفة محتوى المقال"></textarea></label>' +
@@ -68,7 +68,7 @@
     '<label>مصادر موثوقة (اختياري؛ رابط HTTPS في كل سطر)<textarea name="sources" rows="3" placeholder="https://example.com/source"></textarea></label>' +
     '<div class="sa-editorial-checks"><label class="sa-check"><input id="saOriginalCheck" type="checkbox"> أضفت معلومة أصلية أو تحليلًا مفيدًا للقارئ</label><label class="sa-check"><input id="saFactCheck" type="checkbox"> راجعت الحقائق والأسماء والتواريخ والمصادر</label></div>' +
     '<label>محتوى المقال<textarea name="body" required rows="12" placeholder="اكتب محتوى أصليًا ومفيدًا. افصل الفقرات بسطر فارغ، واكتب ## قبل العنوان الفرعي، وابدأ كل نقطة بشرطة - ."></textarea></label>' +
-    '<div class="sa-inline-form"><button type="button" class="ghost" id="saDraftOutline">إضافة مخطط للمقال</button><button type="button" class="ghost" id="saSeoAudit">فحص SEO الآن</button></div><div id="saSeoReport" class="sa-audit-report" hidden></div>' +
+    '<div class="sa-inline-form"><button type="button" class="ghost" id="saDraftOutline">إضافة مخطط للمقال</button><button type="button" class="ghost" id="saSeoAudit">مراجعة المقال الآن</button></div><div id="saSeoReport" class="sa-audit-report" hidden></div>' +
     '<section class="sa-search-preview" id="saSearchPreview" aria-label="معاينة نتيجة البحث"><b>معاينة نتيجة البحث</b><div class="sa-search-url" id="saPreviewUrl">diamond-tv.shop/articles/</div><div class="sa-search-title" id="saPreviewTitle">سيظهر عنوان المقال هنا</div><div class="sa-search-description" id="saPreviewDescription">سيظهر وصف المقال هنا</div><button type="button" class="ghost sm" id="saCopySnippet">نسخ العنوان والوصف</button></section>' +
     '<button type="submit">إضافة المقال إلى قائمة النشر</button></form>' +
     '<form id="saPageForm" class="card sa-form"><h3>صفحة جديدة</h3>' +
@@ -77,7 +77,7 @@
     '<label>وصف نتائج البحث<textarea name="description" required maxlength="160" rows="3"></textarea></label>' +
     '<label>محتوى الصفحة<textarea name="body" required rows="16" placeholder="اكتب معلومات دقيقة وواضحة. افصل الفقرات بسطر فارغ، واكتب ## قبل العنوان الفرعي، وابدأ كل نقطة بشرطة - ."></textarea></label>' +
     '<button type="submit">إضافة الصفحة إلى قائمة النشر</button></form></div></div>' +
-    '<div class="sa-view" id="saPublishView" hidden><div class="card sa-publish-card"><div class="sa-editor-head"><div><h3>مراجعة التعديلات</h3><p class="hint">تُجمع الملفات في تحديث واحد. ستبقى النسخة المنشورة كما هي حتى نجاح النشر.</p></div>' +
+    '<div class="sa-view" id="saPublishView" hidden><div class="card sa-publish-card"><div class="sa-editor-head"><div><h3>مراجعة التعديلات</h3><p class="hint">تُجمع الملفات في تحديث واحد. بعد حفظها، ننتظر ظهور النسخة الجديدة على الموقع ونعرض نتيجة التحقق.</p></div>' +
     '<button id="saPublish" disabled>نشر التعديلات</button></div><div id="saPendingList" class="sa-pending-list"><p class="hint">لا توجد تعديلات معلّقة.</p></div>' +
     '<label class="sa-commit-label">وصف التحديث<input id="saCommitMessage" value="تحديث محتوى وتصميم DIAMOND TV" maxlength="120"></label><div id="saPublishError" class="sa-error" role="status"></div></div></div>' +
     '<div id="saToast" class="sa-toast" role="status" aria-live="polite"></div></div>';
@@ -266,6 +266,26 @@
     });
     $("#saPublish").disabled = false;
   }
+  async function waitForPublicFiles(snapshot) {
+    const paths = Array.from(new Set(Object.keys(snapshot.text).concat(Object.keys(snapshot.binary))));
+    if (!paths.length) return true;
+    for (let attempt = 0; attempt < 18; attempt += 1) {
+      const checks = await Promise.all(paths.map(async function (path) {
+        try {
+          const target = new URL(path.split("/").map(encodeURIComponent).join("/"), location.origin + "/");
+          target.searchParams.set("publish_check", String(Date.now()));
+          const isBinary = Object.prototype.hasOwnProperty.call(snapshot.binary, path);
+          const response = await fetch(target.href, { method: isBinary ? "HEAD" : "GET", cache: "no-store" });
+          if (!response.ok) return false;
+          if (isBinary) return true;
+          return (await response.text()) === snapshot.text[path];
+        } catch (_) { return false; }
+      }));
+      if (checks.every(Boolean)) return true;
+      if (attempt < 17) await new Promise(function (resolve) { window.setTimeout(resolve, 5000); });
+    }
+    return false;
+  }
   function stage(path, content, baseContent) {
     delete binaryPending[path];
     pending[path] = content;
@@ -394,27 +414,42 @@
     const safeTitle = escapeHtml(data.title);
     const safeDescription = escapeHtml(data.description);
     const safeImage = escapeHtml(data.image || "https://diamond-tv.shop/assets/og.png");
-    const articleType = isArticle ? "Article" : "WebPage";
-    const schema = {
+    const schema = isArticle ? {
       "@context": "https://schema.org",
-      "@type": articleType,
-      "headline": data.title,
-      "name": data.title,
-      "description": data.description,
-      "url": canonical,
-      "inLanguage": "ar",
-      "datePublished": now,
-      "dateModified": now
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "headline": data.title,
+          "description": data.description,
+          "url": canonical,
+          "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+          "image": [data.image || "https://diamond-tv.shop/assets/og.png"],
+          "inLanguage": "ar",
+          "articleSection": data.category || "عام",
+          "datePublished": now,
+          "dateModified": now,
+          "author": { "@type": "Organization", "name": data.author || "فريق DIAMOND TV", "url": "https://diamond-tv.shop/" },
+          "publisher": { "@type": "Organization", "name": "DIAMOND TV", "url": "https://diamond-tv.shop/", "logo": { "@type": "ImageObject", "url": "https://diamond-tv.shop/assets/og.png" } }
+        },
+        { "@type": "BreadcrumbList", "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://diamond-tv.shop/" },
+          { "@type": "ListItem", "position": 2, "name": "المقالات", "item": "https://diamond-tv.shop/articles/" },
+          { "@type": "ListItem", "position": 3, "name": data.title, "item": canonical }
+        ] }
+      ]
+    } : {
+      "@context": "https://schema.org", "@type": "WebPage", "name": data.title,
+      "description": data.description, "url": canonical, "inLanguage": "ar"
     };
-    if (data.image) schema.image = data.image;
-    if (isArticle) schema.author = { "@type": "Person", "name": data.author || "فريق DIAMOND TV" };
     return '<!doctype html>\n<html lang="ar" dir="rtl">\n<head>\n' +
       '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n' +
       '<title>' + safeTitle + ' | DIAMOND TV</title>\n' +
       '<meta name="description" content="' + safeDescription + '">\n' +
+      '<meta name="robots" content="index,follow,max-image-preview:large">\n' +
       '<link rel="canonical" href="' + escapeHtml(canonical) + '">\n' +
       '<meta property="og:type" content="' + (isArticle ? "article" : "website") + '"><meta property="og:title" content="' + safeTitle + ' | DIAMOND TV">\n' +
       '<meta property="og:description" content="' + safeDescription + '"><meta property="og:url" content="' + escapeHtml(canonical) + '"><meta property="og:image" content="' + safeImage + '">\n' +
+      (isArticle ? '<meta property="article:published_time" content="' + now + '"><meta property="article:modified_time" content="' + now + '">\n' : '') +
       '<link rel="stylesheet" href="../assets/style.css">\n' +
       '<script src="../assets/site-config.js"></script>\n' +
       '<script type="application/ld+json">' + JSON.stringify(schema).replace(/</g, "\\u003c") + '</script>\n' +
@@ -446,11 +481,32 @@
       toast("تحقق من روابط المصادر؛ اقبل روابط HTTPS صحيحة فقط.");
       return;
     }
+    if (data.image) {
+      try { if (new URL(data.image).protocol !== "https:") throw new Error("secure image required"); }
+      catch (_) { toast("رابط صورة المقال يجب أن يبدأ بـ HTTPS."); return; }
+    }
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(data.slug)) {
       toast("اكتب الرابط المختصر بأحرف إنجليزية صغيرة وأرقام وواصلات.");
       return;
     }
     const article = kind === "article";
+    if (article) {
+      articleAudit(form);
+      const rawBody = metaField(form, "body");
+      if (!$("#saWriterTopic").value.trim()) { toast("أدخل موضوع المقال حتى نراجع مطابقته."); $("#saWriterTopic").focus(); return; }
+      if (/لا تتضمن المدخلات الحالية|أضف هنا المعلومات الفعلية|أجب هنا عن السؤال الأساسي/i.test(rawBody)) {
+        toast("أكمل تعليمات المسودة بمعلومات وأمثلة حقيقية قبل إضافتها للنشر.");
+        return;
+      }
+      if (!$("#saFactCheck").checked || !$("#saOriginalCheck").checked) {
+        toast("راجع الحقائق وأضف فائدة أصلية، ثم أكمل مربعي المراجعة قبل النشر.");
+        return;
+      }
+      if (/اليوم|غد|مباراة|مباريات|تقييم|القنوات|القناة|موعد|السعر|يعرض|عرض|رمضان\s*2027|2026|2027/i.test(rawBody) && !data.sources.length) {
+        toast("أضف رابط مصدر موثوق لأن المقال يتناول معلومات قد تتغير.");
+        return;
+      }
+    }
     const path = article ? "articles/" + data.slug + ".html" : "pages/" + data.slug + ".html";
     if (treeFiles.some(function (item) { return item.path === path; }) || pending[path]) {
       toast("هذا الرابط مستخدم بالفعل.");
@@ -746,55 +802,41 @@
       ideas.appendChild(button);
     });
   }
-  function buildArticleDraft(topic, keyword, audience, intent, length) {
-    const topicText = topic.trim().replace(/[.!؟?]+$/g, "");
+  function buildArticleDraft(topic, keyword, audience, intent, length, brief) {
+    const subject = topic.trim().replace(/[.!؟?]+$/g, "");
     const audienceText = audience || "جمهور عام";
-    const common = [
-      "عند البحث عن " + topicText + "، يحتاج القارئ إلى إجابة واضحة تساعده على فهم الخيارات وتحديد ما يناسب احتياجه. يقدّم هذا المقال إطارًا عمليًا للبدء، ويجمع النقاط التي يجدر التحقق منها قبل اتخاذ قرار أو مشاركة معلومة.",
-      "تختلف التفاصيل باختلاف الوقت والمصدر والسياق؛ لذلك اعتمد في النسخة النهائية على معلومات حديثة وموثوقة، وأضف أسماء الجهات أو الأعمال أو المواعيد التي راجعتها بنفسك. الهدف أن يحصل القارئ على فائدة مباشرة، لا على قائمة كلمات متكررة.",
-      "## ما الذي ينبغي معرفته عن " + topicText + "؟",
-      "ابدأ بتعريف المقصود بالموضوع وحدوده: ما الذي يشمله، وما الذي لا يشمله؟ وضّح المصطلحات الأساسية بلغة بسيطة، ثم اربطها بالسؤال الذي جاء القارئ من أجله. إذا كان الموضوع يتضمن أعمالًا فنية أو أحداثًا أو خدمات، فاذكر أمثلة موثقة وحدد تاريخ مراجعة المعلومات.",
-      "## نقاط تساعدك على التقييم",
-      "قبل الاختيار أو التوصية، قارن المعلومات وفق معايير واضحة وملائمة للجمهور المستهدف. لا تعتمد على الانطباع وحده، ولا تعرض التقييمات كحقائق مطلقة؛ اشرح مصدرها وتاريخ الاطلاع عليها عندما تستخدمها.",
-      "- حدّد احتياج القارئ والسؤال الذي يريد حله.\n- راجع المصدر الأصلي والتاريخ، خصوصًا عند ذكر موعد أو تقييم أو سعر.\n- اذكر المزايا والقيود معًا، وبيّن لمن يناسب كل خيار.\n- استخدم أمثلة دقيقة، وأزل أي تفصيل لا تستطيع التحقق منه.",
-      "## خطوات عملية للبدء",
-      "1. اكتب الإجابة المباشرة عن السؤال الرئيسي في مقدمة قصيرة.\n2. رتّب التفاصيل من الأهم إلى الأقل أهمية، واجعل لكل عنوان فرعي فكرة واحدة.\n3. أضف روابط المصادر ذات الصلة، ثم راجع الأسماء والتواريخ والتهجئة قبل النشر.\n4. اختم بتوصية أو خلاصة تساعد القارئ على اتخاذ خطوته التالية.",
-      "## أخطاء شائعة تجنّبها",
-      "من الأخطاء الشائعة تكرار الكلمة المفتاحية بلا حاجة، وتقديم معلومات قديمة على أنها حديثة، وكتابة عنوان يعد القارئ بما لا يقدمه النص. اجعل العبارة طبيعية، وافصل بين الرأي والمعلومة، ولا تنسب تقييمًا أو تصريحًا إلى جهة من دون مصدر.",
-      "## أسئلة شائعة",
-      "### كيف أتحقق من المعلومات المتعلقة بـ " + topicText + "؟",
-      "ارجع إلى الجهة أو المصدر الأصلي، وقارن التاريخ والتفاصيل بمصدر مستقل عند الحاجة. أضف تاريخ آخر مراجعة إذا كانت المعلومات قابلة للتغيير.",
-      "### هل تناسب هذه المعلومات كل القراء؟",
-      "تختلف الاحتياجات؛ لذلك أشر بوضوح إلى الفئة التي يخدمها المقال، واذكر الحالات التي تحتاج إلى تفاصيل أو مصادر إضافية.",
-      "### ما الكلمة المفتاحية الأساسية لهذا المقال؟",
-      "المحور المقترح هو «" + (keyword || topicText) + "». استخدمه حيث يخدم المعنى، وأضف مرادفات وأسئلة قريبة بدل تكراره آليًا.",
-      "## خلاصة",
-      "يوفر موضوع " + topicText + " قيمة أكبر عندما تقدَّم معلومات دقيقة ومحدّثة، مع شرح واضح لمن يبحث عنها. راجع المسودة، وأضف الأمثلة والبيانات والمصادر الخاصة بموضوعك قبل النشر."
-    ];
-    common[0] += " يركّز الدليل أيضًا على سؤال «" + (keyword || topicText) + "» لأن هذا ما يبحث عنه القارئ.";
-    common[1] += " صيغت هذه المسودة لتكون مفهومة لـ" + audienceText + ".";
+    const notes = String(brief || "").split(/\r?\n|(?<=[.!؟])\s+/).map(function (line) {
+      return line.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim();
+    }).filter(Boolean).slice(0, 20);
+    const firstFact = notes[0] || "";
+    const intro = "يجيب هذا المقال عن سؤال «" + subject + "» ويجمع المعلومات التي يحتاجها " + audienceText + " لفهم الموضوع واتخاذ خطوة مناسبة. " +
+      (firstFact ? "وبحسب النقاط التي أدخلها المحرر: " + firstFact + "." : "المسودة التالية هي هيكل تحريري أولي؛ أضف التفاصيل والأمثلة التي تحققت منها قبل النشر.");
+    let angleHeading = "## ما الذي يحتاج القارئ إلى معرفته عن " + subject + "؟";
+    let angleText = "ابدأ بتحديد السؤال العملي الذي يقصده القارئ، ثم اشرح المصطلحات والحدود اللازمة للإجابة عنه. رتّب المعلومة الأساسية أولًا، وأضف بعدها التفاصيل التي تساعد على تطبيقها أو اتخاذ قرار على أساسها.";
     if (intent === "list") {
-      common[2] = "## كيف نختار ترشيحات مناسبة عن " + topicText + "؟";
-      common[3] = "الترشيح الجيد يشرح سبب الاختيار ولمن يناسب، ويعرض تفاصيل يمكن للقارئ التحقق منها. رتّب الخيارات وفق معيار مفهوم مثل النوع أو مدة المتابعة أو طبيعة الجمهور، وأضف أمثلة فعلية بدل الاكتفاء بأوصاف عامة.";
-      common[4] = "## معايير تقييم كل ترشيح";
+      angleHeading = "## كيف نختار ترشيحات مناسبة عن " + subject + "؟";
+      angleText = "اعرض كل اختيار مع سبب واضح للترشيح، ونوعه، ولمن يناسب، وأي ملاحظة قد تؤثر في قرار المشاهدة. اذكر أسماء الأعمال وبياناتها الفعلية بعد التحقق منها، وميّز الرأي التحريري عن التقييم المنشور لدى جهة أخرى.";
     } else if (intent === "compare") {
-      common[2] = "## ما أوجه المقارنة في " + topicText + "؟";
-      common[3] = "ابدأ بتحديد الخيارات التي تقارنها، ثم استخدم المعايير نفسها لكل خيار. اشرح الفروق التي تؤثر فعلًا في القرار، واذكر المصدر والتاريخ عند إدراج تقييم أو سعر أو موعد. لا تعلن فائزًا مطلقًا إذا كانت النتيجة تعتمد على تفضيل القارئ.";
-      common[4] = "## معايير المقارنة العادلة";
+      angleHeading = "## مقارنة الخيارات المرتبطة بـ " + subject;
+      angleText = "حدّد الخيارات التي تقارنها، ثم طبّق المعايير نفسها على كل واحد: الاستخدام أو النوع، المزايا، القيود، التكلفة أو التوفر إن انطبق. اربط كل معلومة متغيرة بمصدرها، واترك للقارئ اختيار ما يناسب أولوياته.";
     } else if (intent === "explainer") {
-      common[2] = "## ما المقصود بـ " + topicText + "؟";
-      common[3] = "قد يُستخدم المصطلح في أكثر من سياق. عرّفه بوضوح، واشرح فكرته الأساسية بكلمات مألوفة، ثم وضّح ما يرتبط به وما لا يشمله. أضف مثالًا واقعيًا بعد التحقق منه، وعرّف أي مصطلح متخصص قبل استخدامه.";
-      common[4] = "## الفكرة الأساسية خطوة بخطوة";
+      angleHeading = "## شرح " + subject + " خطوة بخطوة";
+      angleText = "عرّف الفكرة بجملة مباشرة، ثم اشرح مراحلها بالترتيب مع مثال واقعي من المعلومات التي راجعتها. عرّف أي مصطلح متخصص عند ظهوره للمرة الأولى، وافصل ما هو مؤكد عما يختلف باختلاف الحالة.";
     }
-    if (length === "short") return common.join("\n\n");
-    const extra = [
-      "## كيف تجعل المقال أوضح للقارئ؟",
-      "ابدأ كل قسم بجملة تجيب عن عنوانه، ثم أضف ما يثبتها أو يشرحها. استخدم القوائم عندما تكون هناك خطوات أو خيارات، والجداول للمقارنات التي تحتوي عناصر متشابهة. تجنّب الفقرات الطويلة والعبارات العامة التي لا تضيف معلومة.",
-      "إذا تغيرت معلومة بعد النشر، حدّث النص واذكر تاريخ المراجعة. واحتفظ بسجل للمصادر التي استخدمتها، حتى يسهل التأكد من دقة النسخة المنشورة لاحقًا."
+    const sections = [
+      intro,
+      angleHeading,
+      angleText,
+      "## التفاصيل والمعلومات الأساسية",
+      notes.length ? "فيما يلي النقاط التي زوّد بها المحرر المسودة. أعد صياغتها عند الحاجة، وأرفق مصدرًا لكل معلومة قابلة للتحقق:\n" + notes.map(function (line) { return "- " + line; }).join("\n") : "لا تتضمن المدخلات الحالية أسماء أو مواعيد أو أرقامًا موثقة. أضف هنا المعلومات الفعلية التي يحتاجها القارئ، واحذف هذا التنبيه بعد استكمال القسم.",
+      "## طريقة عملية للاستفادة من المعلومات",
+      "1. ابدأ بالإجابة المباشرة عن السؤال، ثم اشرح السبب أو الخطوات التي تدعمها.\n2. قارن الخيارات على معايير واضحة، واذكر لمن يناسب كل خيار وما حدوده.\n3. أضف مثالًا أو نتيجة عملية من خبرتك أو من مصدر موثوق، وتجنب الادعاءات التي لا يمكن إثباتها.",
+      "## ما الذي ينبغي التحقق منه قبل النشر؟",
+      "راجع تهجئة الأسماء، والتواريخ، والنتائج، والقنوات، والتقييمات، والأسعار أو مواعيد العرض بحسب موضوع المقال. اربط الادعاءات بمصادرها الأصلية، واكتب تاريخ المراجعة عندما تكون المعلومة قابلة للتغير."
     ];
-    if (length === "long") common.splice(common.length - 2, 0, extra[0], extra[1]);
-    else common.splice(common.length - 2, 0, extra[0]);
-    return common.join("\n\n");
+    if (length !== "short") sections.push("## خلاصة مفيدة للقارئ", "لخّص الإجابة في فقرتين قصيرتين: ما الذي تعلّمه القارئ، وما الخطوة التالية التي يمكنه القيام بها؟ اجعل الخلاصة مرتبطة بما ورد فعلًا في المقال، ولا تضف وعدًا أو معلومة جديدة في نهايته.");
+    if (length === "long") sections.push("## أسئلة يطرحها القراء", "### ما أهم ما يجب معرفته عن " + subject + "؟", firstFact ? "تبدأ الإجابة بالنقطة الموثقة التي أُدرجت في المقال: " + firstFact + ". أضف شرحًا قصيرًا يوضح معناها للقارئ." : "أجب هنا عن السؤال الأساسي بإيجاز، مستندًا إلى معلومة أو مثال موثق في متن المقال.", "### كيف أتحقق من حداثة المعلومات؟", "ارجع إلى المصدر الأصلي، وتأكد من تاريخ تحديثه، ثم راجع أي تغيير قبل إعادة نشر المقال.");
+    return sections.join("\n\n");
   }
   function generateArticleDraft() {
     const form = $("#saArticleForm"), topic = $("#saWriterTopic").value.trim();
@@ -802,22 +844,19 @@
     const keywordField = $("#saWriterKeyword"), keyword = keywordField.value.trim() || topic;
     keywordField.value = keyword;
     const intent = $("#saWriterIntent").value;
-    const prefix = intent === "list" ? "ترشيحات " : intent === "compare" ? "مقارنة " : intent === "explainer" ? "ما الذي تحتاج معرفته عن " : "دليل ";
-    const suffix = intent === "list" ? ": اختيارات ونصائح" : intent === "compare" ? ": أهم الفروق ومعايير الاختيار" : intent === "explainer" ? "؟ شرح مبسط" : " الشامل: خطوات ونصائح";
-    const titleSubject = keyword === topic ? topic : keyword + " حول " + topic;
-    const rawTitle = prefix + titleSubject.replace(/[؟?]+$/g, "") + suffix;
-    const title = rawTitle.length > 60 ? rawTitle.slice(0, 60).replace(/\s+\S*$/, "").trim() : rawTitle;
-    const description = ("دليل " + keyword + " و" + topic + ": معلومات مرتبة ونقاط عملية وأسئلة شائعة تساعد " + $("#saWriterAudience").value + " على تكوين صورة واضحة والتحقق من التفاصيل قبل الاختيار.").slice(0, 160);
+    const prefix = intent === "list" ? "ترشيحات: " : intent === "compare" ? "مقارنة: " : intent === "explainer" ? "شرح: " : "دليل: ";
+    const title = (prefix + topic.replace(/[؟?]+$/g, "")).slice(0, 100);
+    const description = ("دليل عملي عن " + topic + ". تعرّف على النقاط الأساسية، وما ينبغي التحقق منه، وكيف تختار أو تتابع وفق المعلومات الموثوقة.").slice(0, 160);
     const slug = transliterateSlug(keyword || topic) || ("article-" + Date.now());
     if (form.elements.body.value.trim() && !window.confirm("ستُستبدل مسودة المقال الحالية. هل تريد المتابعة؟")) return;
     form.elements.title.value = title;
     form.elements.slug.value = slug;
     form.elements.description.value = description;
-    form.elements.body.value = buildArticleDraft(topic, keyword, $("#saWriterAudience").value, intent, $("#saWriterLength").value);
+    form.elements.body.value = buildArticleDraft(topic, keyword, $("#saWriterAudience").value, intent, $("#saWriterLength").value, $("#saWriterBrief").value);
     const topicNormalized = normalizeSearchText(topic);
     const category = /رياض|مبار|دوري|كرة|بطول/.test(topicNormalized) ? "رياضة" : /فيلم|سينما/.test(topicNormalized) ? "سينما" : /مسلسل|درام|برنامج/.test(topicNormalized) ? "مسلسلات" : /تطبيق|اشتراك|موقع/.test(topicNormalized) ? "التطبيق" : "عام";
     form.elements.category.value = category;
-    $("#saWriterNotice").textContent = "أُنشئت مسودة قابلة للتحرير. أضف الحقائق والمصادر الخاصة بموضوعك قبل إدراجها للنشر.";
+    $("#saWriterNotice").textContent = $("#saWriterBrief").value.trim() ? "نُظّمت المعلومات التي أدخلتها في مسودة. راجع الصياغة وأضف روابط المصادر قبل النشر." : "أُنشئ هيكل أولي للموضوع. أضف الأسماء والبيانات والأمثلة الحقيقية ومصادرها قبل النشر.";
     updateSearchPreview(form);
     articleAudit(form);
     form.elements.body.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -826,31 +865,38 @@
   function articleAudit(form) {
     const value = function (name) { return String(new FormData(form).get(name) || "").trim(); };
     const title = value("title"), description = value("description"), body = value("body"), slug = value("slug");
-    const keyword = $("#saWriterKeyword").value.trim();
-    const normalizedKeyword = normalizeSearchText(keyword);
-    const normalizedTitle = normalizeSearchText(title), normalizedDescription = normalizeSearchText(description), normalizedBody = normalizeSearchText(body);
+    const keyword = $("#saWriterKeyword").value.trim(), topic = $("#saWriterTopic").value.trim();
+    const normalizedKeyword = normalizeSearchText(keyword), normalizedTopic = normalizeSearchText(topic);
+    const normalizedTitle = normalizeSearchText(title), normalizedBody = normalizeSearchText(body);
     const words = body.split(/\s+/).filter(Boolean).length;
-    const headings = (body.match(/^##\s+/gm) || []).length;
-    const questions = (body.match(/^###\s+.+[?؟]\s*$/gm) || []).length;
+    const headings = (body.match(/^##\s+.+$/gm) || []).length;
+    const paragraphs = body.split(/\n\s*\n/).map(function (part) { return part.trim(); }).filter(function (part) { return part && part.indexOf("## ") !== 0 && part.indexOf("### ") !== 0; });
+    const repeatedBlocks = paragraphs.length - new Set(paragraphs.map(normalizeSearchText)).size;
     const occurrences = countPhrase(normalizedBody, normalizedKeyword);
+    const sources = value("sources").split(/\r?\n/).map(function (url) { return url.trim(); }).filter(Boolean);
+    const validSources = sources.length > 0 && sources.every(function (url) { try { return new URL(url).protocol === "https:"; } catch (_) { return false; } });
+    const needsFreshSources = /اليوم|غد|مباراة|مباريات|تقييم|القنوات|القناة|موعد|السعر|يعرض|عرض|رمضان\s*2027|2026|2027/i.test(body);
+    const hasDraftInstructions = /لا تتضمن المدخلات الحالية|أضف هنا المعلومات الفعلية|أجب هنا عن السؤال الأساسي/i.test(body);
+    const earlyContent = normalizeSearchText(body.split(/\r?\n/)[0] || "");
+    const hasTopicUpFront = Boolean(normalizedTopic) && earlyContent.includes(normalizedTopic.slice(0, Math.min(normalizedTopic.length, 20)));
     const checks = [
-      ["عنوان واضح", title.length >= 30 && title.length <= 60, title.length + " حرفًا؛ راجع الوضوح والطول (30–60 حرفًا إرشاديًا)."],
-      ["وصف البحث", description.length >= 80 && description.length <= 160, description.length + " حرفًا؛ الأفضل أن يصف محتوى الصفحة بدقة."],
-      ["عبارة البحث في العنوان والوصف", Boolean(normalizedKeyword) && normalizedTitle.includes(normalizedKeyword) && normalizedDescription.includes(normalizedKeyword), normalizedKeyword ? "اجعلها طبيعية ومتوافقة مع محتوى الصفحة." : "أدخل العبارة التي يتوقع القارئ البحث بها."],
-      ["استخدام طبيعي لعبارة البحث", Boolean(normalizedKeyword) && occurrences >= 1 && occurrences <= Math.max(8, words * 0.03), occurrences + " مرات في النص؛ تجنّب التكرار الذي يضعف القراءة."],
-      ["اكتمال المسودة", words >= 250, words + " كلمة؛ هذا مؤشر تحريري فقط، ولا يوجد طول يضمن الظهور أو الترتيب."],
-      ["تنظيم العناوين", headings >= 3 && headings <= 8, headings + " عناوين رئيسية بصيغة ##؛ استخدم عنوانًا لكل فكرة."],
-      ["أسئلة شائعة", questions >= 2, questions + " أسئلة بصيغة ###؛ أضف أسئلة حقيقية يطرحها جمهورك."],
-      ["رابط مختصر", /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug), "استخدم أحرفًا صغيرة وكلمات مفصولة بشرطة."],
-      ["مصادر قابلة للتحقق", value("sources").split(/\r?\n/).filter(Boolean).length > 0 && value("sources").split(/\r?\n/).filter(Boolean).every(function (url) { try { return new URL(url).protocol === "https:"; } catch (_) { return false; } }), value("sources").split(/\r?\n/).filter(Boolean).length + " رابطًا؛ أدرج المصدر عند ذكر حقائق متغيرة."],
-      ["مراجعة الحقائق", $("#saFactCheck").checked, $("#saFactCheck").checked ? "تم تأكيد المراجعة." : "راجع الأسماء والتواريخ والتقييمات قبل النشر."],
-      ["قيمة أصلية للقارئ", $("#saOriginalCheck").checked, $("#saOriginalCheck").checked ? "تم تأكيد إضافة قيمة تحريرية." : "أضف تجربة أو تحليلًا أو تفاصيل أصلية."],
-      ["وصف الصورة", !value("image") || Boolean(value("imageAlt")), value("image") && !value("imageAlt") ? "أضف نصًا بديلًا يصف الصورة." : "مناسب."]
+      ["عنوان الصفحة", Boolean(title) && normalizedTitle.includes(normalizedTopic.slice(0, Math.min(normalizedTopic.length, 16))), title ? title.length + " حرفًا. تأكد أن العنوان يصف ما يقدمه المقال فعلًا." : "اكتب عنوانًا واضحًا يطابق المحتوى."],
+      ["وصف موجز دقيق", description.length >= 40, description.length + " حرفًا. لخص الصفحة للقارئ؛ لا يوجد طول ثابت يضمن مقتطفًا أو ترتيبًا."],
+      ["الإجابة مرتبطة بالموضوع", Boolean(normalizedTopic) && normalizedBody.includes(normalizedTopic.slice(0, Math.min(normalizedTopic.length, 20))), topic ? "تحقق أن النص يجيب عن موضوع المقال مباشرة." : "حدد موضوع المقال أولًا."],
+      ["مقدمة مباشرة", hasTopicUpFront, "اجعل أول فقرة تجيب عن السؤال وتوضح نطاق المقال."],
+      ["تفاصيل خاصة بالموضوع", !hasDraftInstructions && (Boolean($("#saWriterBrief").value.trim()) || words > 180), hasDraftInstructions ? "ما زالت هناك تعليمات تحريرية داخل النص؛ استبدلها بمعلومات وأمثلة حقيقية." : "أضف أمثلة أو أسماء أو خطوات دقيقة تخص هذا الموضوع، لا وصفًا عامًا فقط."],
+      ["تنظيم يسهل القراءة", headings >= 1 && paragraphs.length >= 3, headings + " عنوانًا فرعيًا و" + paragraphs.length + " فقرات؛ اجعل لكل عنوان فكرة واضحة."],
+      ["تكرار النص", repeatedBlocks === 0 && !(occurrences > 12 && normalizedKeyword.length < 18), repeatedBlocks ? "عُثر على فقرات مكررة؛ احذف النسخ الزائدة." : (occurrences > 12 && normalizedKeyword.length < 18 ? "تكررت عبارة البحث كثيرًا؛ أعد القراءة واجعلها طبيعية." : "لا يظهر تكرار آلي واضح؛ راجع القراءة بصوت عالٍ.")],
+      ["رابط مختصر سليم", /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug), "استخدم أحرفًا صغيرة وكلمات مفصولة بشرطة، وتأكد أنه غير مستخدم."],
+      ["مصادر HTTPS", validSources, sources.length ? "" + sources.length + " رابطًا؛ تحقق أن كل رابط يفتح المصدر الأصلي ويدعم الادعاء." : (needsFreshSources ? "المقال يتناول معلومات متغيرة؛ أضف روابط رسمية أو مصادر أصلية." : "أضف مصدرًا عند إيراد حقائق قابلة للتحقق." )],
+      ["مراجعة الحقائق", $("#saFactCheck").checked, $("#saFactCheck").checked ? "أكدت مراجعة الأسماء والأرقام والتواريخ والمصادر." : "افحص كل معلومة واقعية قبل النشر."],
+      ["فائدة أصلية", $("#saOriginalCheck").checked, $("#saOriginalCheck").checked ? "أكدت إضافة تحليل أو خبرة أو فائدة خاصة." : "أضف رأيًا تحريريًا أو مقارنة أو تجربة تخص الموقع."],
+      ["بديل الصورة", !value("image") || Boolean(value("imageAlt")), value("image") && !value("imageAlt") ? "أضف وصفًا نصيًا يشرح الصورة." : "أضف صورة فقط إذا كانت تخدم موضوع المقال."]
     ];
     const passed = checks.filter(function (check) { return check[1]; }).length;
-    $("#saSeoReport").innerHTML = '<div class="sa-audit-score">' + passed + ' من ' + checks.length + ' نقاط مكتملة</div>' +
+    $("#saSeoReport").innerHTML = '<div class="sa-audit-score">' + passed + ' من ' + checks.length + ' مراجعات مستوفاة · ' + words + ' كلمة للاستئناس فقط</div>' +
       checks.map(function (check) { return '<div class="sa-audit-row ' + (check[1] ? "good" : "needs-work") + '"><b>' + (check[1] ? "✓ " : "• ") + escapeHtml(check[0]) + '</b><span>' + escapeHtml(check[2]) + '</span></div>'; }).join("") +
-      '<p class="hint">هذا فحص تحريري، لا يضمن ترتيبًا في البحث. ركّز على محتوى أصلي موثوق يفيد القارئ؛ الطول وكثافة الكلمات لا يضمنان ترتيبًا.</p>';
+      '<p class="hint">المراجعة تفحص وضوح الصفحة وجودتها الأساسية؛ لا تضمن ترتيبًا أو ظهورًا في البحث. عدد الكلمات وكثافة الكلمة المفتاحية ليسا هدفًا بحد ذاتهما، والمعلومات التي أدخلتها تحتاج مراجعة بشرية.</p>';
     $("#saSeoReport").hidden = false;
     updateSearchPreview(form);
   }
@@ -897,6 +943,7 @@
   $("#saPublish").addEventListener("click", async function () {
     const paths = Array.from(new Set(Object.keys(pending).concat(Object.keys(binaryPending)))).sort();
     if (!paths.length) return;
+    const publishedSnapshot = { text: Object.assign({}, pending), binary: Object.assign({}, binaryPending) };
     $("#saPublish").disabled = true;
     $("#saPublishError").textContent = "";
     setStatus("جارٍ نشر التغييرات…", false);
@@ -930,13 +977,21 @@
       binaryPending = Object.create(null);
       original = Object.create(null);
       renderPending();
-      await loadTree();
+      setStatus("حُفظت التغييرات · جارٍ تحديث الموقع…", true);
+      toast("حُفظ التحديث في GitHub؛ نتحقق الآن من ظهوره على الموقع.");
+      try { await loadTree(); } catch (_) { /* The commit may be saved even if the file list refresh fails. */ }
       $("#saEditor").value = "";
       $("#saEditorMeta").textContent = "";
       $("#saEditorTitle").textContent = "اختر ملفًا للتحرير";
       selectedPath = "";
-      setStatus("تم النشر · main", true);
-      toast("نُشرت التغييرات في تحديث واحد.");
+      const appeared = await waitForPublicFiles(publishedSnapshot);
+      if (appeared) {
+        setStatus("ظهرت التغييرات على الموقع", true);
+        toast("تم التحقق: الملفات الجديدة ظاهرة على الموقع.");
+      } else {
+        setStatus("حُفظت · النشر ما زال جاريًا", true);
+        $("#saPublishError").textContent = "حُفظ التحديث على GitHub، لكن لم تظهر كل الملفات بعد. قد يحتاج GitHub Pages وقتًا إضافيًا؛ أعد التحقق بعد قليل.";
+      }
     } catch (error) {
       $("#saPublishError").textContent = error.message || "تعذّر النشر.";
       setStatus("يوجد خطأ يحتاج مراجعة", false);

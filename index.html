@@ -556,15 +556,17 @@ setInterval(()=>{ if(!lastOk) return; const s=Math.round((Date.now()-lastOk)/100
   $("#ago").textContent = s<10 ? "الآن" : `منذ ${s} ثانية`; }, 1000);
 document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) tick(); });
 
-function renderRatedSeries(config) {
+let ratedSeriesLoadId = 0;
+function renderRatedSeries(config, forceRefresh) {
   const host = $("#tvmaze-series"), group = $("#tvmaze-series-group");
+  const loadId = ++ratedSeriesLoadId;
   const ids = Array.from(new Set(((config.recommendations && config.recommendations.tvmazeIds) || []).map(Number).filter(id => Number.isInteger(id) && id > 0))).slice(0, 12);
   if (!host || !ids.length) { if (group) group.hidden = true; return; }
   group.hidden = false;
   const loadShow = async id => {
     try {
       const cached = JSON.parse(localStorage.getItem("diamond-tvmaze-" + id) || "null");
-      if (cached && Date.now() - cached.at < 12 * 60 * 60 * 1000) return cached.show;
+      if (!forceRefresh && cached && Date.now() - cached.at < 12 * 60 * 60 * 1000) return cached.show;
     } catch (_) {}
     const response = await fetch("https://api.tvmaze.com/shows/" + id, { cache: "no-cache" });
     if (!response.ok) throw new Error("TVMaze unavailable");
@@ -573,6 +575,7 @@ function renderRatedSeries(config) {
     return show;
   };
   Promise.allSettled(ids.map(loadShow)).then(results => {
+    if (loadId !== ratedSeriesLoadId) return;
     const shows = results.filter(result => result.status === "fulfilled").map(result => result.value)
       .filter(show => show && show.name && show.rating && Number(show.rating.average) > 0)
       .sort((a, b) => Number(b.rating.average) - Number(a.rating.average));
@@ -607,15 +610,19 @@ function renderManualMovies(config) {
       '<h4>' + title + '</h4>' + rating + '<p>' + esc(movie.description || "") + '</p></a>';
   }).join("");
 }
-window.DIAMOND_CONFIG_READY.then(config => {
+function applyDiamondLiveConfig(config, refreshSchedule) {
   if (Array.isArray(config.leagues) && config.leagues.length) {
     LEAGUES = config.leagues.filter(item => item && /^[a-z0-9.]+$/i.test(item.id || "") && item.ar)
       .map(item => ({ id: item.id, ar: item.ar, tv: Array.isArray(item.tv) ? item.tv : [] }));
+    LEAGUE_CACHE.clear();
+    TSDB_CACHE.clear();
   }
-  renderRatedSeries(config);
+  renderRatedSeries(config, refreshSchedule);
   renderManualMovies(config);
-  tick();
-}).catch(() => tick());
+  if (refreshSchedule) tick();
+}
+window.DIAMOND_CONFIG_READY.then(config => { applyDiamondLiveConfig(config, false); tick(); }).catch(() => tick());
+window.addEventListener("diamond:config-updated", event => applyDiamondLiveConfig(event.detail || window.DIAMOND_CONFIG || {}, true));
 
 </script>
 </body>

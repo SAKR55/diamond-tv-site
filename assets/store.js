@@ -144,9 +144,11 @@
   });
   document.getElementById("store-dialog").addEventListener("click", function (event) { if (event.target === dialog) dialog.close(); });
   readSaved();
-  window.DIAMOND_CONFIG_READY.then(function (config) {
+  function applyProducts(config) {
     products = (config.products || []).filter(function (item) { return item && item.active !== false; });
     render();
-  }).catch(function () { products = []; render(); });
+  }
+  window.DIAMOND_CONFIG_READY.then(applyProducts).catch(function () { products = []; render(); });
+  window.addEventListener("diamond:config-updated", function (event) { applyProducts(event.detail || window.DIAMOND_CONFIG || {}); });
 })();
 

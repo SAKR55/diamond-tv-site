@@ -66,7 +66,10 @@
     });
     writeSaved();
   }
-  function showRatingData(config) {
+  var ratingLoadId = 0;
+  function showRatingData(config, forceRefresh) {
+    var loadId = ++ratingLoadId;
+    items = editorial.slice();
     var rec = config.recommendations || {}, ids = Array.from(new Set((rec.tvmazeIds || []).map(Number).filter(function (id) { return Number.isInteger(id) && id > 0; }))).slice(0, 12);
     (Array.isArray(rec.movies) ? rec.movies : []).slice(0, 12).forEach(function (movie, index) {
       var rating = String(movie.rating || "").trim() ? Number(movie.rating) : NaN;
@@ -76,14 +79,14 @@
     var tasks = ids.map(async function (id, index) {
       try {
         var cached = JSON.parse(localStorage.getItem("diamond-tvmaze-" + id) || "null"), show;
-        if (cached && Date.now() - cached.at < 12 * 60 * 60 * 1000) show = cached.show;
+        if (!forceRefresh && cached && Date.now() - cached.at < 12 * 60 * 60 * 1000) show = cached.show;
         else {
           var response = await fetch("https://api.tvmaze.com/shows/" + id, { cache: "no-cache" });
           if (!response.ok) throw new Error("TVMaze unavailable");
           show = await response.json();
           try { localStorage.setItem("diamond-tvmaze-" + id, JSON.stringify({ at: Date.now(), show: show })); } catch (_) {}
         }
-        if (!show || !show.name) return;
+        if (loadId !== ratingLoadId || !show || !show.name) return;
         var rating = Number(show.rating && show.rating.average);
         items.push({ id: "tvmaze-" + id, kind: "series", type: "مسلسل · TVMaze", title: show.name, description: stripHtml(show.summary).slice(0, 230) || "تفاصيل المسلسل وتقييمه من TVMaze.", image: show.image && show.image.medium || "", imageAlt: "ملصق مسلسل " + show.name, url: /^https:\/\/www\.tvmaze\.com\//.test(show.url || "") ? show.url : "https://www.tvmaze.com/", label: "تفاصيل العمل ومصدر التقييم", rating: Number.isFinite(rating) ? rating : -1, ratingSource: "TVMaze", genres: show.genres || [], order: 10 + index });
       } catch (_) {}
@@ -108,5 +111,6 @@
   });
   readSaved();
   window.DIAMOND_CONFIG_READY.then(showRatingData).catch(render);
+  window.addEventListener("diamond:config-updated", function (event) { showRatingData(event.detail || window.DIAMOND_CONFIG || {}, true); });
 })();
 

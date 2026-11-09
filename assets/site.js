@@ -80,17 +80,16 @@ window.SITE = {
     DIAMOND TV © ${new Date().getFullYear()} — تمت التقنية بواسطة SAKR OMAR ·
     <a href="mailto:sales@diamond-tv.shop">sales@diamond-tv.shop</a></div>`;
   document.body.append(footer);
-  Promise.resolve(configReady).then(function (config) {
+  function applySiteConfig(config) {
     const theme = config && config.theme || {};
     if (/^#[0-9a-f]{6}$/i.test(theme.accent || "")) document.documentElement.style.setProperty("--accent", theme.accent);
     if (/^#[0-9a-f]{6}$/i.test(theme.accent2 || "")) document.documentElement.style.setProperty("--accent2", theme.accent2);
-    if (config && config.sections && config.sections.store === false) {
-      document.querySelectorAll('a[href*="/store/"]').forEach(function (link) { link.hidden = true; });
-    }
-    if (config && config.sections && config.sections.recommendations === false) {
-      document.querySelectorAll('a[href*="/evening/"]').forEach(function (link) { link.hidden = true; });
-    }
-  });
+    const sections = config && config.sections || {};
+    document.querySelectorAll('a[href*="/store/"], a[href="store/"]').forEach(function (link) { link.hidden = sections.store === false; });
+    document.querySelectorAll('a[href*="/evening/"], a[href="evening/"]').forEach(function (link) { link.hidden = sections.recommendations === false; });
+  }
+  Promise.resolve(configReady).then(applySiteConfig);
+  window.addEventListener("diamond:config-updated", function (event) { applySiteConfig(event.detail || window.DIAMOND_CONFIG || {}); });
 })();
 
 

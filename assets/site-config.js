@@ -22,42 +22,60 @@
     recommendations: { tvmazeIds: [], movies: [] },
     products: []
   };
+  function normalize(loaded) {
+    var config = Object.assign({}, defaults, loaded || {});
+    config.theme = Object.assign({}, defaults.theme, config.theme || {});
+    config.sections = Object.assign({}, defaults.sections, config.sections || {});
+    config.recommendations = Object.assign({}, defaults.recommendations, config.recommendations || {});
+    config.leagues = Array.isArray(config.leagues) ? config.leagues : defaults.leagues;
+    config.products = Array.isArray(config.products) ? config.products : [];
+    return config;
+  }
   function apply(config) {
     var theme = config.theme || {};
     if (/^#[0-9a-f]{6}$/i.test(theme.accent || "")) document.documentElement.style.setProperty("--accent", theme.accent);
     if (/^#[0-9a-f]{6}$/i.test(theme.accent2 || "")) document.documentElement.style.setProperty("--accent2", theme.accent2);
     var sections = config.sections || {};
-    if (sections.live === false) {
-      var live = document.getElementById("live-board-section");
-      if (live) live.hidden = true;
+    var live = document.getElementById("live-board-section");
+    if (live) live.hidden = sections.live === false;
+    var rec = document.getElementById("recommendations");
+    if (rec) rec.hidden = sections.recommendations === false;
+    var evening = document.getElementById("evening-content");
+    if (evening) evening.hidden = sections.recommendations === false;
+    document.querySelectorAll('a[href*="/evening/"], a[href="evening/"]').forEach(function (link) { link.hidden = sections.recommendations === false; });
+    document.querySelectorAll('a[href*="/store/"], a[href="store/"]').forEach(function (link) { link.hidden = sections.store === false; });
+    var store = document.getElementById("store-content");
+    if (store) store.hidden = sections.store === false;
+  }
+  function acceptConfig(loaded, notify) {
+    var config = normalize(loaded);
+    var previous = window.DIAMOND_CONFIG ? JSON.stringify(window.DIAMOND_CONFIG) : "";
+    window.DIAMOND_CONFIG = config;
+    apply(config);
+    if (notify && previous && previous !== JSON.stringify(config)) {
+      window.dispatchEvent(new CustomEvent("diamond:config-updated", { detail: config }));
     }
-    if (sections.recommendations === false) {
-      var rec = document.getElementById("recommendations");
-      if (rec) rec.hidden = true;
-      var evening = document.getElementById("evening-content");
-      if (evening) evening.hidden = true;
-      document.querySelectorAll('a[href*="/evening/"], a[href="evening/"]').forEach(function (link) { link.hidden = true; });
-    }
-    if (sections.store === false) {
-      document.querySelectorAll('a[href*="/store/"], a[href="store/"]').forEach(function (link) { link.hidden = true; });
-      var store = document.getElementById("store-content");
-      if (store) store.hidden = true;
-    }
+    return config;
   }
   window.DIAMOND_CONFIG_ROOT = assetsRoot;
   window.DIAMOND_CONFIG_READY = fetch(configUrl.href, { cache: "no-cache" })
     .then(function (response) { if (!response.ok) throw new Error("site config unavailable"); return response.json(); })
     .catch(function () { return defaults; })
-    .then(function (loaded) {
-      var config = Object.assign({}, defaults, loaded || {});
-      config.theme = Object.assign({}, defaults.theme, config.theme || {});
-      config.sections = Object.assign({}, defaults.sections, config.sections || {});
-      config.recommendations = Object.assign({}, defaults.recommendations, config.recommendations || {});
-      config.leagues = Array.isArray(config.leagues) ? config.leagues : defaults.leagues;
-      config.products = Array.isArray(config.products) ? config.products : [];
-      window.DIAMOND_CONFIG = config;
-      apply(config);
-      return config;
-    });
+    .then(function (loaded) { return acceptConfig(loaded, false); });
+  var refreshing = false;
+  async function refreshConfig() {
+    if (refreshing || document.hidden) return;
+    refreshing = true;
+    try {
+      var response = await fetch(configUrl.href + (configUrl.search ? "&" : "?") + "refresh=" + Date.now(), { cache: "no-store" });
+      if (!response.ok) return;
+      acceptConfig(await response.json(), true);
+    } catch (_) {
+      // Keep the last known configuration while offline.
+    } finally { refreshing = false; }
+  }
+  window.addEventListener("focus", refreshConfig);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) refreshConfig(); });
+  window.setInterval(refreshConfig, 60000);
 })();
 
