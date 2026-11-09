@@ -253,7 +253,7 @@ async function load(){
     regional.flatMap(item => item.events)
       .filter(event => event.dateKey > lastVisibleDate && event.dateKey >= todayKey)
       .sort((a,b) => a.dateKey.localeCompare(b.dateKey) || new Date(a.date) - new Date(b.date))
-      .forEach(event => { if (NEXT_FIXTURES.length < 6 && !NEXT_FIXTURES.some(match => sameFixture(match, event))) NEXT_FIXTURES.push(Object.assign({}, event, { showDate: true })); });
+      .forEach(event => { if (NEXT_FIXTURES.length < 10 && !NEXT_FIXTURES.some(match => sameFixture(match, event))) NEXT_FIXTURES.push(Object.assign({}, event, { showDate: true })); });
     regional.forEach(({ L, events }) => events.forEach(event => {
       if (upcomingKeys.has(event.dateKey) && !matches.some(match => sameFixture(match, event))) matches.push(event);
     }));
