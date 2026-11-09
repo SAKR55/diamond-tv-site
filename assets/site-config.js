@@ -17,7 +17,17 @@
       { id: "ita.1", ar: "الدوري الإيطالي", tv: ["STARZPLAY"] },
       { id: "ger.1", ar: "الدوري الألماني", tv: ["MBC Action", "شاهد"] },
       { id: "fra.1", ar: "الدوري الفرنسي", tv: ["beIN SPORTS"] },
-      { id: "uefa.europa", ar: "الدوري الأوروبي", tv: ["beIN SPORTS"] }
+      { id: "uefa.europa", ar: "الدوري الأوروبي", tv: ["beIN SPORTS"] },
+      { id: "uefa.europa.conf", ar: "دوري المؤتمر الأوروبي", tv: ["beIN SPORTS"] },
+      { id: "caf.champions", ar: "دوري أبطال أفريقيا", tv: [] },
+      { id: "conmebol.libertadores", ar: "كأس ليبرتادوريس", tv: [] },
+      { id: "conmebol.sudamericana", ar: "كأس سودأمريكانا", tv: [] },
+      { id: "fifa.world", ar: "كأس العالم", tv: [] },
+      { id: "caf.nations", ar: "كأس الأمم الأفريقية", tv: [] },
+      { id: "afc.asian.cup", ar: "كأس آسيا", tv: [] },
+      { id: "conmebol.america", ar: "كوبا أمريكا", tv: [] },
+      { id: "uefa.nations", ar: "دوري الأمم الأوروبية", tv: [] },
+      { id: "concacaf.gold", ar: "الكأس الذهبية لأمم كونكاكاف", tv: [] }
     ],
     recommendations: { tvmazeIds: [], movies: [] },
     products: []
@@ -76,6 +86,8 @@
   }
   window.addEventListener("focus", refreshConfig);
   document.addEventListener("visibilitychange", function () { if (!document.hidden) refreshConfig(); });
-  window.setInterval(refreshConfig, 60000);
+  window.setInterval(refreshConfig, 15000);
 })();
+
+
 

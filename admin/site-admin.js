@@ -15,6 +15,11 @@
   let selectedPath = "";
   let selectedOriginal = "";
   let siteConfig = null;
+  let autoPublishTimer = 0;
+  let autoPublishPaths = new Set();
+  let publishInProgress = false;
+  let trendsLoaded = false;
+  let trendItems = [];
 
   const subsPanel = document.createElement("section");
   subsPanel.id = "subscriptionsPanel";
@@ -38,18 +43,19 @@
     '<div class="sa-tabs" role="tablist" aria-label="أقسام إدارة الموقع">' +
     '<button class="sa-tab active" data-view="files">ملفات الموقع</button>' +
     '<button class="sa-tab" data-view="articles">إضافة مقال أو صفحة</button>' +
-    '<button class="sa-tab" data-view="publish">مراجعة ونشر</button></div>' +
+    '<button class="sa-tab" data-view="publish">حالة النشر</button></div>' +
     '<div class="sa-view" id="saFilesView"><div class="sa-toolbar card">' +
     '<div class="sa-file-search"><label for="saSearch">البحث في صفحات وملفات الموقع</label><input id="saSearch" type="search" placeholder="مثال: index.html أو style.css"></div>' +
     '<button class="ghost sm" id="saRefresh">تحديث الملفات</button><button class="ghost sm" id="saDisconnect">فصل الاتصال</button></div>' +
     '<div class="sa-editor-layout"><div class="sa-file-card card"><div class="sa-card-title">ملفات الموقع</div><label class="sa-upload-box">إضافة أو استبدال صورة للموقع<input id="saUpload" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif" multiple><span class="hint">PNG أو JPG أو WebP أو GIF أو AVIF · حتى 4 ميغابايت للصورة</span></label><div id="saFileList" class="sa-file-list"><p class="hint">جارٍ تحميل الملفات…</p></div></div>' +
-    '<div class="sa-editor-card card"><div class="sa-editor-head"><div><b id="saEditorTitle">اختر ملفًا للتحرير</b><div id="saEditorMeta" class="hint"></div></div><button class="sm" id="saStageFile" disabled>إضافة التعديل</button></div>' +
+    '<div class="sa-editor-card card"><div class="sa-editor-head"><div><b id="saEditorTitle">اختر ملفًا للتحرير</b><div id="saEditorMeta" class="hint"></div></div><button class="sm" id="saStageFile" disabled>حفظ ونشر التعديل</button></div>' +
     '<textarea id="saEditor" spellcheck="false" aria-label="محتوى الملف" placeholder="اختر ملفًا من القائمة"></textarea>' +
-    '<div class="hint sa-editor-note">تظهر التعديلات في قائمة المراجعة أولًا، ولا تُنشر إلا عند الضغط على زر النشر.</div></div></div></div>' +
+    '<div class="hint sa-editor-note">يحفظ التعديل مباشرة ثم يتحقق من ظهوره. تبقى الصور المختارة في قائمة النشر إلى أن تحفظها.</div></div></div></div>' +
     '<div class="sa-view" id="saArticlesView" hidden><div class="sa-intro card"><h3>إنشاء محتوى جديد</h3>' +
     '<p class="hint">يُنشأ المحتوى مع عنوان ووصف لمحركات البحث وبيانات منظمة، ويُضاف المقال تلقائيًا إلى فهرس المقالات وخريطة الموقع.</p></div>' +
     '<div class="sa-create-grid"><form id="saArticleForm" class="card sa-form"><h3>مختبر المقالات</h3>' +
-    '<section class="sa-writer-tool" id="saWriterTool"><b>اكتب الموضوع ومعلوماتك، وسنحوّلها إلى مسودة مرتبة</b><p class="hint">تعمل المسودة داخل المتصفح وتستخدم ما تدخله فقط؛ لا تبحث في الإنترنت ولا تختلق أسماء أو مواعيد. الصق نقاطك أو مسودتك الخام ليعاد تنظيمها، ثم راجع الحقائق قبل النشر.</p>' +
+    '<section class="sa-trend-panel"><div class="sa-editor-head"><div><b>الموضوعات الرائجة في السعودية</b><p class="hint">تتحدث القائمة تلقائيًا كل 6 ساعات من Google Trends، وتُصفّى لموضوعات الرياضة والترفيه.</p></div><button type="button" class="ghost sm" id="saRefreshTrends">تحديث القائمة</button></div><div id="saTrendStatus" class="hint" aria-live="polite">جارٍ تحميل الترندات…</div><div id="saTrendList" class="sa-trend-list"></div><a class="sa-trend-source" href="https://trends.google.com/trending?geo=SA&amp;hl=ar" target="_blank" rel="noopener noreferrer">فتح مؤشرات Google Trends السعودية ↗</a></section>' +
+    '<section class="sa-writer-tool" id="saWriterTool"><b>مسودة تلقائية من الترند مع فحص قبل النشر</b><p class="hint">اختر موضوعًا رائجًا لتجهيز العنوان والوصف والمقال والمصادر وفحصها تلقائيًا. لا يُدرج النظام نتيجة مباراة أو موعد عرض ما لم يرد في مصدر واضح.</p>' +
     '<label>موضوع المقال<textarea id="saWriterTopic" rows="2" maxlength="180" placeholder="مثال: كيف تختار مسلسلًا مناسبًا للمشاهدة العائلية؟"></textarea></label>' +
     '<label>معلومات المقال أو نص أولي<textarea id="saWriterBrief" rows="4" maxlength="5000" placeholder="أضف النقاط والحقائق التي تحققت منها، أو الصق نصًا أوليًا ليُنظّم في أقسام. لا تضع كلمة مرور أو معلومات خاصة."></textarea></label>' +
     '<div class="sa-two-col"><label>الكلمة المفتاحية الرئيسية<input id="saWriterKeyword" maxlength="80" placeholder="مثال: مسلسلات عائلية"></label>' +
@@ -57,7 +63,7 @@
     '<div class="sa-keyword-tools"><button type="button" class="ghost sm" id="saSuggestKeywords">اقتراح عبارات بحث</button><span class="hint">اقتراحات تحريرية بلا بيانات حجم بحث.</span></div><div class="sa-keyword-ideas" id="saKeywordIdeas"></div>' +
     '<div class="sa-two-col"><label>نية المقال<select id="saWriterIntent"><option value="guide">دليل عملي</option><option value="list">قائمة ترشيحات</option><option value="compare">مقارنة</option><option value="explainer">شرح مبسط</option></select></label>' +
     '<label>طول المسودة<select id="saWriterLength"><option value="short">مختصر</option><option value="standard" selected>متوسط</option><option value="long">موسع</option></select></label></div>' +
-    '<button type="button" id="saGenerateArticle">تجهيز مسودة المقال</button><div id="saWriterNotice" class="hint" aria-live="polite"></div></section>' +
+    '<button type="button" id="saGenerateArticle">تجهيز مسودة من الموضوع المكتوب</button><div id="saWriterNotice" class="hint" aria-live="polite"></div></section>' +
     '<label>عنوان المقال<input name="title" required maxlength="100" placeholder="عنوان واضح ومفيد للقارئ"></label>' +
     '<label>الرابط المختصر (إنجليزي)<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="ramadan-2027-series-guide"></label>' +
     '<label>وصف نتائج البحث<textarea name="description" required maxlength="160" rows="3" placeholder="ملخص دقيق يساعد القارئ على معرفة محتوى المقال"></textarea></label>' +
@@ -70,15 +76,15 @@
     '<label>محتوى المقال<textarea name="body" required rows="12" placeholder="اكتب محتوى أصليًا ومفيدًا. افصل الفقرات بسطر فارغ، واكتب ## قبل العنوان الفرعي، وابدأ كل نقطة بشرطة - ."></textarea></label>' +
     '<div class="sa-inline-form"><button type="button" class="ghost" id="saDraftOutline">إضافة مخطط للمقال</button><button type="button" class="ghost" id="saSeoAudit">مراجعة المقال الآن</button></div><div id="saSeoReport" class="sa-audit-report" hidden></div>' +
     '<section class="sa-search-preview" id="saSearchPreview" aria-label="معاينة نتيجة البحث"><b>معاينة نتيجة البحث</b><div class="sa-search-url" id="saPreviewUrl">diamond-tv.shop/articles/</div><div class="sa-search-title" id="saPreviewTitle">سيظهر عنوان المقال هنا</div><div class="sa-search-description" id="saPreviewDescription">سيظهر وصف المقال هنا</div><button type="button" class="ghost sm" id="saCopySnippet">نسخ العنوان والوصف</button></section>' +
-    '<button type="submit">إضافة المقال إلى قائمة النشر</button></form>' +
+    '<button type="submit">نشر المقال بعد المراجعة</button><p class="hint">بعد مراجعة المسودة ومصادرها، ينشر هذا الزر المقال وفهرسه وخريطة الموقع في تحديث واحد.</p></form>' +
     '<form id="saPageForm" class="card sa-form"><h3>صفحة جديدة</h3>' +
     '<label>عنوان الصفحة<input name="title" required maxlength="100" placeholder="عنوان الصفحة"></label>' +
     '<label>الرابط المختصر (إنجليزي)<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="about-our-service"></label>' +
     '<label>وصف نتائج البحث<textarea name="description" required maxlength="160" rows="3"></textarea></label>' +
     '<label>محتوى الصفحة<textarea name="body" required rows="16" placeholder="اكتب معلومات دقيقة وواضحة. افصل الفقرات بسطر فارغ، واكتب ## قبل العنوان الفرعي، وابدأ كل نقطة بشرطة - ."></textarea></label>' +
     '<button type="submit">إضافة الصفحة إلى قائمة النشر</button></form></div></div>' +
-    '<div class="sa-view" id="saPublishView" hidden><div class="card sa-publish-card"><div class="sa-editor-head"><div><h3>مراجعة التعديلات</h3><p class="hint">تُجمع الملفات في تحديث واحد. بعد حفظها، ننتظر ظهور النسخة الجديدة على الموقع ونعرض نتيجة التحقق.</p></div>' +
-    '<button id="saPublish" disabled>نشر التعديلات</button></div><div id="saPendingList" class="sa-pending-list"><p class="hint">لا توجد تعديلات معلّقة.</p></div>' +
+    '<div class="sa-view" id="saPublishView" hidden><div class="card sa-publish-card"><div class="sa-editor-head"><div><h3>حالة النشر</h3><p class="hint">تُنشر إعدادات الألوان والأقسام والبطولات والترشيحات والمنتجات تلقائيًا عند حفظها. استخدم الزر هنا للصور أو الملفات المعلقة.</p></div>' +
+    '<button id="saPublish" disabled>نشر الملفات المعلقة</button></div><div id="saPendingList" class="sa-pending-list"><p class="hint">لا توجد تعديلات معلّقة.</p></div>' +
     '<label class="sa-commit-label">وصف التحديث<input id="saCommitMessage" value="تحديث محتوى وتصميم DIAMOND TV" maxlength="120"></label><div id="saPublishError" class="sa-error" role="status"></div></div></div>' +
     '<div id="saToast" class="sa-toast" role="status" aria-live="polite"></div></div>';
 
@@ -86,12 +92,12 @@
   dashboard.id = "saDashboardView";
   dashboard.className = "sa-view";
   dashboard.innerHTML =
-    '<div class="sa-dashboard-intro card"><span class="sa-eyebrow">إدارة سهلة</span><h3>لوحة الموقع</h3><p class="hint">عدّل الألوان والأقسام والبطولات، وأضف الترشيحات والمنتجات. راجع التغييرات ثم انشرها مرة واحدة.</p></div>' +
-    '<div class="sa-dashboard-actions card"><div><b>أدوات سريعة</b><p class="hint">ابدأ كتابة مقال أو راجع التغييرات المجهزة للنشر.</p></div><button type="button" id="saQuickArticle">كاتب المقالات</button><button type="button" class="ghost" id="saQuickPublish">مراجعة ونشر</button></div>' +
+    '<div class="sa-dashboard-intro card"><span class="sa-eyebrow">إدارة سهلة</span><h3>لوحة الموقع</h3><p class="hint">احفظ الألوان والأقسام والبطولات والترشيحات والمنتجات؛ تُنشر إعداداتها تلقائيًا، ثم يتحقق الموقع من ظهورها.</p></div>' +
+    '<div class="sa-dashboard-actions card"><div><b>أدوات سريعة</b><p class="hint">جهّز مقالًا من الترند أو راجع الصور والملفات التي ما زالت معلّقة.</p></div><button type="button" id="saQuickArticle">كاتب المقالات</button><button type="button" class="ghost" id="saQuickPublish">حالة النشر</button></div>' +
     '<div class="sa-dashboard-grid">' +
-    '<section class="card sa-manager-card"><h3>ألوان الموقع</h3><label>اللون الرئيسي<input id="saAccent" type="color"></label><label>اللون المساند<input id="saAccent2" type="color"></label><button type="button" id="saSaveTheme">حفظ الألوان</button></section>' +
-    '<section class="card sa-manager-card"><h3>أقسام الصفحة الرئيسية</h3><label class="sa-check"><input id="saLiveEnabled" type="checkbox"> المباريات المباشرة</label><label class="sa-check"><input id="saRecommendationsEnabled" type="checkbox"> ترشيحات السهرة</label><label class="sa-check"><input id="saStoreEnabled" type="checkbox"> المتجر</label><button type="button" id="saSaveSections">حفظ الأقسام</button></section>' +
-    '<section class="card sa-manager-card sa-manager-wide"><h3>البطولات والقنوات</h3><p class="hint">سطر لكل بطولة: رمز البطولة | الاسم بالعربية | القنوات المعتادة مفصولة بفواصل.</p><textarea id="saLeagueEditor" rows="8" dir="auto"></textarea><button type="button" id="saSaveLeagues">حفظ البطولات</button></section>' +
+    '<section class="card sa-manager-card"><h3>ألوان الموقع</h3><label>اللون الرئيسي<input id="saAccent" type="color"></label><label>اللون المساند<input id="saAccent2" type="color"></label><button type="button" id="saSaveTheme">حفظ ونشر الألوان</button></section>' +
+    '<section class="card sa-manager-card"><h3>أقسام الصفحة الرئيسية</h3><label class="sa-check"><input id="saLiveEnabled" type="checkbox"> المباريات المباشرة</label><label class="sa-check"><input id="saRecommendationsEnabled" type="checkbox"> ترشيحات السهرة</label><label class="sa-check"><input id="saStoreEnabled" type="checkbox"> المتجر</label><button type="button" id="saSaveSections">حفظ ونشر الأقسام</button></section>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>البطولات والقنوات</h3><p class="hint">تشمل الدوريات المحلية والمنافسات الدولية. سطر لكل بطولة: رمز المصدر | الاسم بالعربية | القنوات المؤكدة إن وُجدت.</p><textarea id="saLeagueEditor" rows="12" dir="auto"></textarea><button type="button" id="saSaveLeagues">حفظ ونشر البطولات</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>مسلسلات TVMaze</h3><p class="hint">ابحث عن مسلسل وأضفه؛ تُحدّث تقييماته تلقائيًا من المصدر.</p><div class="sa-inline-form"><input id="saTvSearch" placeholder="اسم المسلسل"><button type="button" id="saTvSearchBtn">بحث</button></div><div id="saTvResults" class="sa-manager-list"></div><h4>المسلسلات المختارة</h4><div id="saTvSelected" class="sa-manager-list"></div></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>ترشيحات الأفلام اليدوية</h3><p class="hint">تقييم أو وصف الأفلام هنا تحريري، وليس من مصدر خارجي.</p><form id="saMovieForm" class="sa-manager-form"><input name="title" required maxlength="100" placeholder="اسم الفيلم"><input name="image" type="url" placeholder="رابط صورة HTTPS (اختياري)"><input name="url" type="url" placeholder="رابط التفاصيل HTTPS (اختياري)"><textarea name="description" required rows="2" maxlength="260" placeholder="لماذا ترشحه؟"></textarea><button type="submit">إضافة الفيلم</button></form><div id="saMovieList" class="sa-manager-list"></div></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>استوديو المنتجات</h3><p class="hint">أنشئ بطاقة منتج كاملة مع الصورة والسعر السابق والحالة والمواصفات، ثم عاينها قبل إضافتها للنشر. الطلب يتم عبر الرابط الذي تحدده.</p>' +
@@ -108,7 +114,7 @@
     '<div class="sa-product-form-actions"><button type="submit">حفظ المنتج</button><button type="button" class="ghost" id="saProductClear">منتج جديد</button></div></form>' +
     '<aside class="sa-product-preview"><b>معاينة البطاقة</b><div id="saProductPreviewCard" class="sa-product-preview-card"><div class="sa-product-preview-image">DIAMOND</div><div class="sa-product-preview-copy"><span class="hint">ستظهر المعاينة هنا</span></div></div><p class="hint">السعر والخصم والتوفر يعكسان البيانات التي أدخلتها فقط.</p></aside></div>' +
     '<div class="sa-product-list-head"><b>المنتجات المحفوظة</b><span class="hint" id="saProductCount"></span></div><div id="saProductList" class="sa-manager-list"></div></section>' +
-    '</div><div class="sa-manager-footer card"><span>كل تغيير يضاف لقائمة المراجعة؛ النشر يبدأ عند الضغط على «نشر التعديلات».</span><button type="button" class="ghost sm" id="saStageConfig">حفظ تغييرات لوحة الموقع</button></div>';
+    '</div><div class="sa-manager-footer card"><span>تُنشر إعدادات الألوان والأقسام والبطولات والترشيحات والمنتجات تلقائيًا بعد حفظها.</span><button type="button" class="ghost sm" id="saStageConfig">إعادة نشر الإعدادات</button></div>';
   sitePanel.querySelector(".sa-tabs").innerHTML =
     '<button class="sa-tab active" data-view="dashboard">لوحة الموقع</button>' +
     '<button class="sa-tab" data-view="articles">المقالات وفحص SEO</button>' +
@@ -340,9 +346,19 @@
     $("#saProductCount").textContent = siteConfig.products.length + " منتج";
     renderProductPreview();
   }
-  function stageDashboardConfig(message) {
+  function queueAutoPublish(paths) {
+    (paths || []).forEach(function (path) { autoPublishPaths.add(path); });
+    window.clearTimeout(autoPublishTimer);
+    autoPublishTimer = window.setTimeout(function () {
+      const queued = Array.from(autoPublishPaths);
+      autoPublishPaths.clear();
+      publishPendingPaths(queued);
+    }, 350);
+  }
+  function stageDashboardConfig(message, extraPaths) {
     stage("assets/site-config.json", JSON.stringify(siteConfig, null, 2) + "\n", original["assets/site-config.json"] && original["assets/site-config.json"].content);
     if (message) toast(message);
+    queueAutoPublish(["assets/site-config.json"].concat(extraPaths || []));
   }
   function safeDashboardUrl(value) {
     const text = String(value || "").trim();
@@ -449,6 +465,7 @@
       '<link rel="canonical" href="' + escapeHtml(canonical) + '">\n' +
       '<meta property="og:type" content="' + (isArticle ? "article" : "website") + '"><meta property="og:title" content="' + safeTitle + ' | DIAMOND TV">\n' +
       '<meta property="og:description" content="' + safeDescription + '"><meta property="og:url" content="' + escapeHtml(canonical) + '"><meta property="og:image" content="' + safeImage + '">\n' +
+      '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="' + safeTitle + ' | DIAMOND TV"><meta name="twitter:description" content="' + safeDescription + '"><meta name="twitter:image" content="' + safeImage + '">\n' +
       (isArticle ? '<meta property="article:published_time" content="' + now + '"><meta property="article:modified_time" content="' + now + '">\n' : '') +
       '<link rel="stylesheet" href="../assets/style.css">\n' +
       '<script src="../assets/site-config.js"></script>\n' +
@@ -490,6 +507,7 @@
       return;
     }
     const article = kind === "article";
+    const publishPaths = [];
     if (article) {
       articleAudit(form);
       const rawBody = metaField(form, "body");
@@ -514,6 +532,7 @@
     }
     const content = articleTemplate(data, path, article);
     stage(path, content, "");
+    publishPaths.push(path);
     const today = new Date().toISOString().slice(0, 10);
     const canonical = "https://diamond-tv.shop/" + path;
     if (article) {
@@ -544,6 +563,7 @@
           }
         }
         stage("articles/index.html", listing, original["articles/index.html"] && original["articles/index.html"].content);
+        publishPaths.push("articles/index.html");
       } catch (error) {
         delete pending[path];
         renderPending();
@@ -560,6 +580,7 @@
         sitemap = sitemap.slice(0, at) + "  <url><loc>" + canonical + "</loc><lastmod>" + today +
           "</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>\n" + sitemap.slice(at);
         stage("sitemap.xml", sitemap, original["sitemap.xml"] && original["sitemap.xml"].content);
+        publishPaths.push("sitemap.xml");
       }
     } catch (error) {
       delete pending[path];
@@ -569,8 +590,13 @@
       return;
     }
     form.reset();
-    toast(article ? "أُضيف المقال مع الفهرس وخريطة الموقع." : "أُضيفت الصفحة مع خريطة الموقع.");
-    switchView("publish");
+    if (article) {
+      toast("اكتملت المراجعة؛ جارٍ نشر المقال والفهرس وخريطة الموقع.");
+      await publishPendingPaths(publishPaths);
+    } else {
+      toast("أُضيفت الصفحة مع خريطة الموقع إلى قائمة النشر.");
+      switchView("publish");
+    }
   }
   function switchMainPanel(panelId) {
     nav.querySelectorAll(".site-main-tab").forEach(function (button) {
@@ -802,6 +828,81 @@
       ideas.appendChild(button);
     });
   }
+  function renderTrendItems() {
+    const list = $("#saTrendList");
+    list.replaceChildren();
+    if (!trendItems.length) {
+      list.innerHTML = '<p class="hint">لا توجد موضوعات رياضية أو ترفيهية في آخر تحديث. حدّث القائمة لاحقًا.</p>';
+      return;
+    }
+    trendItems.slice(0, 20).forEach(function (item, index) {
+      const row = document.createElement("article");
+      row.className = "sa-trend-item";
+      const headline = document.createElement("b");
+      headline.textContent = item.title;
+      const details = document.createElement("span");
+      details.className = "hint";
+      details.textContent = (item.category === "sports" ? "رياضة" : "ترفيه") + (item.traffic ? " · " + item.traffic : "") + (item.publishedAt ? " · " + item.publishedAt : "");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "ghost sm";
+      button.dataset.trendIndex = String(index);
+      button.textContent = "إعداد مقال لهذا الموضوع";
+      row.append(headline, details, button);
+      const news = (item.news || []).filter(function (entry) { return entry.title && /^https:\/\//i.test(entry.url || ""); }).slice(0, 3);
+      if (news.length) {
+        const sourceList = document.createElement("ul");
+        sourceList.className = "sa-trend-headlines";
+        news.forEach(function (entry) {
+          const li = document.createElement("li"), link = document.createElement("a");
+          link.href = entry.url; link.target = "_blank"; link.rel = "noopener noreferrer";
+          link.textContent = entry.title + (entry.source ? " — " + entry.source : "");
+          li.appendChild(link); sourceList.appendChild(li);
+        });
+        row.appendChild(sourceList);
+      }
+      list.appendChild(row);
+    });
+  }
+  async function loadTrendSnapshot(force) {
+    const status = $("#saTrendStatus"), button = $("#saRefreshTrends");
+    if (!force && trendsLoaded) return;
+    button.disabled = true;
+    status.textContent = "جارٍ تحميل آخر بيانات Google Trends…";
+    try {
+      const response = await fetch("../assets/google-trends.json?refresh=" + Date.now(), { cache: "no-store" });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const data = await response.json();
+      trendItems = Array.isArray(data.trends) ? data.trends.filter(function (item) { return item && item.title; }) : [];
+      trendsLoaded = true;
+      const updated = data.updatedAt ? new Date(data.updatedAt) : null;
+      status.textContent = updated && !Number.isNaN(updated.getTime())
+        ? "آخر تحديث: " + new Intl.DateTimeFormat("ar-SA", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Riyadh" }).format(updated) + " · " + trendItems.length + " موضوعًا"
+        : "لم يصل تحديث الترند بعد؛ يبدأ التحديث الدوري بعد تشغيل مهمة GitHub Actions.";
+      renderTrendItems();
+    } catch (_) {
+      status.textContent = "تعذّر تحميل القائمة الآن. يمكنك تحديثها أو فتح Google Trends يدويًا.";
+      trendItems = [];
+      renderTrendItems();
+    } finally { button.disabled = false; }
+  }
+  function useTrendItem(item) {
+    const form = $("#saArticleForm");
+    const title = String(item.title || "").trim();
+    const validNews = (item.news || []).filter(function (entry) { return entry.title && /^https:\/\//i.test(entry.url || ""); }).slice(0, 3);
+    if (!title || !validNews.length) {
+      toast("لا تتوفر روابط أخبار موثوقة لهذا الموضوع بعد؛ اختر موضوعًا آخر أو أضف مصادر يدويًا.");
+      return;
+    }
+    const topic = title;
+    $("#saWriterTopic").value = topic;
+    $("#saWriterKeyword").value = title;
+    $("#saWriterBrief").value = "مؤشر الاتجاهات: " + title + (item.traffic ? " (القيمة التقريبية في خلاصة Google Trends: " + item.traffic + ")" : "") +
+      "\nعناوين منشورة للمراجعة، لا تُعامل هذه العناوين وحدها كتأكيد للخبر:\n" + validNews.map(function (entry) { return entry.title + (entry.source ? " — " + entry.source : ""); }).join("\n");
+    form.elements.sources.value = validNews.map(function (entry) { return entry.url; }).join("\n");
+    form.elements.category.value = item.category === "sports" ? "رياضة" : "مسلسلات";
+    generateArticleDraft({ trend: item });
+  }
   function buildArticleDraft(topic, keyword, audience, intent, length, brief) {
     const subject = topic.trim().replace(/[.!؟?]+$/g, "");
     const audienceText = audience || "جمهور عام";
@@ -809,8 +910,8 @@
       return line.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim();
     }).filter(Boolean).slice(0, 20);
     const firstFact = notes[0] || "";
-    const intro = "يجيب هذا المقال عن سؤال «" + subject + "» ويجمع المعلومات التي يحتاجها " + audienceText + " لفهم الموضوع واتخاذ خطوة مناسبة. " +
-      (firstFact ? "وبحسب النقاط التي أدخلها المحرر: " + firstFact + "." : "المسودة التالية هي هيكل تحريري أولي؛ أضف التفاصيل والأمثلة التي تحققت منها قبل النشر.");
+    const intro = "يتناول هذا التحديث موضوع «" + subject + "» للقراء المهتمين بـ" + audienceText + ". نعرض ما توفر من عناوين ومصادر مرتبطة، ونفصل بين مؤشر الاهتمام وبين الوقائع التي تؤكدها المصادر الأصلية." +
+      (firstFact ? " وتشمل ملاحظات التحرير: " + firstFact + "." : "");
     let angleHeading = "## ما الذي يحتاج القارئ إلى معرفته عن " + subject + "؟";
     let angleText = "ابدأ بتحديد السؤال العملي الذي يقصده القارئ، ثم اشرح المصطلحات والحدود اللازمة للإجابة عنه. رتّب المعلومة الأساسية أولًا، وأضف بعدها التفاصيل التي تساعد على تطبيقها أو اتخاذ قرار على أساسها.";
     if (intent === "list") {
@@ -827,18 +928,19 @@
       intro,
       angleHeading,
       angleText,
-      "## التفاصيل والمعلومات الأساسية",
-      notes.length ? "فيما يلي النقاط التي زوّد بها المحرر المسودة. أعد صياغتها عند الحاجة، وأرفق مصدرًا لكل معلومة قابلة للتحقق:\n" + notes.map(function (line) { return "- " + line; }).join("\n") : "لا تتضمن المدخلات الحالية أسماء أو مواعيد أو أرقامًا موثقة. أضف هنا المعلومات الفعلية التي يحتاجها القارئ، واحذف هذا التنبيه بعد استكمال القسم.",
-      "## طريقة عملية للاستفادة من المعلومات",
-      "1. ابدأ بالإجابة المباشرة عن السؤال، ثم اشرح السبب أو الخطوات التي تدعمها.\n2. قارن الخيارات على معايير واضحة، واذكر لمن يناسب كل خيار وما حدوده.\n3. أضف مثالًا أو نتيجة عملية من خبرتك أو من مصدر موثوق، وتجنب الادعاءات التي لا يمكن إثباتها.",
-      "## ما الذي ينبغي التحقق منه قبل النشر؟",
-      "راجع تهجئة الأسماء، والتواريخ، والنتائج، والقنوات، والتقييمات، والأسعار أو مواعيد العرض بحسب موضوع المقال. اربط الادعاءات بمصادرها الأصلية، واكتب تاريخ المراجعة عندما تكون المعلومة قابلة للتغير."
+      "## ما الذي نعرفه من المعلومات المتاحة؟",
+      notes.length ? "تسجل خلاصة Google Trends هذا الموضوع ضمن الاتجاهات المتابعة في السعودية. ويعرض المصدر قيمة تقريبية للاتجاه عند توفرها؛ وهي إشارة إلى الاهتمام وليست إثباتًا لصحة خبر أو نتيجة أو تقييم.\n\nعناوين التغطية التي جُمعت للمراجعة:\n" + notes.map(function (line) { return "- " + line; }).join("\n") : "لم تُرفق تفاصيل أو عناوين مصادر بعد. أضف هنا معلومة أصلية محددة مع رابط المصدر الذي يؤيدها.",
+      "## كيف نقرأ هذا الاتجاه؟",
+      "ظهور موضوع في قائمة الاتجاهات يصف اهتمامًا آنيًا لدى الباحثين، وقد يتغير سريعًا. لفهم سبب الاهتمام، افتح المصادر المرتبطة واقرأ تفاصيلها وتاريخها، ثم قارن ما تقوله بالمصدر الرسمي أو صاحب الإعلان. لا يكفي عنوان الخبر وحده لتأكيد تفاصيل الحدث.",
+      "## ما الذي يفيد القارئ؟",
+      "للوصول إلى معلومة دقيقة، حدّد السؤال الذي تريد إجابته عن هذا الموضوع، ثم ارجع إلى الجهة صاحبة المعلومة وتحقق من التاريخ والسياق. عند وجود اختلاف بين التغطيات، اذكر الاختلاف بوضوح ولا تدمج روايات متعارضة في حقيقة واحدة.",
+      "## خلاصة",
+      "يعرض المقال سبب متابعة الموضوع والمصادر المتاحة له حتى وقت التحديث. راجع روابط المصادر قبل الاعتماد على أي معلومة متغيرة، وتابع الصفحة عند ظهور معلومات مؤكدة جديدة."
     ];
-    if (length !== "short") sections.push("## خلاصة مفيدة للقارئ", "لخّص الإجابة في فقرتين قصيرتين: ما الذي تعلّمه القارئ، وما الخطوة التالية التي يمكنه القيام بها؟ اجعل الخلاصة مرتبطة بما ورد فعلًا في المقال، ولا تضف وعدًا أو معلومة جديدة في نهايته.");
-    if (length === "long") sections.push("## أسئلة يطرحها القراء", "### ما أهم ما يجب معرفته عن " + subject + "؟", firstFact ? "تبدأ الإجابة بالنقطة الموثقة التي أُدرجت في المقال: " + firstFact + ". أضف شرحًا قصيرًا يوضح معناها للقارئ." : "أجب هنا عن السؤال الأساسي بإيجاز، مستندًا إلى معلومة أو مثال موثق في متن المقال.", "### كيف أتحقق من حداثة المعلومات؟", "ارجع إلى المصدر الأصلي، وتأكد من تاريخ تحديثه، ثم راجع أي تغيير قبل إعادة نشر المقال.");
+    if (length === "long") sections.push("## أسئلة شائعة", "### هل يعني تصدر الترند أن الخبر مؤكد؟", "لا. الترند مؤشر اهتمام بالبحث، أما تأكيد التفاصيل فيحتاج إلى مصدر أصلي موثوق.", "### كيف أتابع أي تحديث جديد؟", "راجع المصادر المرتبطة وتواريخ تحديثها، وحدّث المقال عند ظهور معلومة مؤكدة مع الإشارة إلى تاريخ المراجعة.");
     return sections.join("\n\n");
   }
-  function generateArticleDraft() {
+  function generateArticleDraft(options) {
     const form = $("#saArticleForm"), topic = $("#saWriterTopic").value.trim();
     if (!topic) { toast("اكتب موضوع المقال أولًا."); $("#saWriterTopic").focus(); return; }
     const keywordField = $("#saWriterKeyword"), keyword = keywordField.value.trim() || topic;
@@ -846,17 +948,30 @@
     const intent = $("#saWriterIntent").value;
     const prefix = intent === "list" ? "ترشيحات: " : intent === "compare" ? "مقارنة: " : intent === "explainer" ? "شرح: " : "دليل: ";
     const title = (prefix + topic.replace(/[؟?]+$/g, "")).slice(0, 100);
-    const description = ("دليل عملي عن " + topic + ". تعرّف على النقاط الأساسية، وما ينبغي التحقق منه، وكيف تختار أو تتابع وفق المعلومات الموثوقة.").slice(0, 160);
+    const description = ("ملخص تحريري عن " + topic + " مع عناوين المصادر المرتبطة وطريقة التحقق من المعلومات المتغيرة.").slice(0, 160);
     const slug = transliterateSlug(keyword || topic) || ("article-" + Date.now());
     if (form.elements.body.value.trim() && !window.confirm("ستُستبدل مسودة المقال الحالية. هل تريد المتابعة؟")) return;
     form.elements.title.value = title;
     form.elements.slug.value = slug;
     form.elements.description.value = description;
     form.elements.body.value = buildArticleDraft(topic, keyword, $("#saWriterAudience").value, intent, $("#saWriterLength").value, $("#saWriterBrief").value);
+    if (options && options.trend) {
+      const trend = options.trend;
+      const news = (trend.news || []).filter(function (entry) { return entry.title && /^https:\/\//i.test(entry.url || ""); }).slice(0, 3);
+      const checkedAt = trend.publishedAt ? new Date(trend.publishedAt) : null;
+      const dateText = checkedAt && !Number.isNaN(checkedAt.getTime()) ? new Intl.DateTimeFormat("ar-SA", { dateStyle: "long", timeZone: "Asia/Riyadh" }).format(checkedAt) : "وقت آخر تحديث للخلاصة";
+      form.elements.body.value = "## ملخص الاتجاه\n\nظهر «" + String(trend.title).trim() + "» ضمن الموضوعات الرائجة في السعودية بحسب خلاصة Google Trends بتاريخ " + dateText + (trend.traffic ? "، مع قيمة تقريبية معروضة قدرها " + trend.traffic : "") + ". هذه الإشارة تصف الاهتمام بالبحث ولا تؤكد بحد ذاتها خبرًا أو موعدًا أو نتيجة.\n\n" +
+        "## عناوين المصادر المرتبطة\n\n" + news.map(function (entry) { return "- " + entry.title + (entry.source ? " — " + entry.source : ""); }).join("\n") + "\n\n" +
+        "## كيف تتحقق من التفاصيل؟\n\nافتح كل مصدر مرتبط واقرأ نصه كاملًا وتاريخ نشره، ثم ارجع إلى الجهة الرسمية المعنية لتأكيد الأسماء والتواريخ والنتائج. لا تعتمد على العنوان وحده، واذكر بوضوح أي اختلاف بين المصادر.\n\n" +
+        "## لماذا قد يتغير الاهتمام؟\n\nتتغير موضوعات البحث مع الأخبار والإعلانات والمباريات والعروض الجديدة. لذلك لا يعني ظهور هذا الموضوع استمرار الاهتمام أو ثبات المعلومات؛ أعد التحقق من المصادر قبل مشاركة أي تحديث.\n\n" +
+        "## خلاصة للقارئ\n\nهذا ملخص لموضوع رائج ولعناوين التغطية المرتبطة به وقت إعداد المسودة. المصدر الأصلي هو المرجع لتأكيد التفاصيل، وسيحتاج المقال إلى إضافة ملخص تحريري لما تقوله المصادر بعد قراءتها.";
+    }
     const topicNormalized = normalizeSearchText(topic);
     const category = /رياض|مبار|دوري|كرة|بطول/.test(topicNormalized) ? "رياضة" : /فيلم|سينما/.test(topicNormalized) ? "سينما" : /مسلسل|درام|برنامج/.test(topicNormalized) ? "مسلسلات" : /تطبيق|اشتراك|موقع/.test(topicNormalized) ? "التطبيق" : "عام";
     form.elements.category.value = category;
-    $("#saWriterNotice").textContent = $("#saWriterBrief").value.trim() ? "نُظّمت المعلومات التي أدخلتها في مسودة. راجع الصياغة وأضف روابط المصادر قبل النشر." : "أُنشئ هيكل أولي للموضوع. أضف الأسماء والبيانات والأمثلة الحقيقية ومصادرها قبل النشر.";
+    $("#saWriterNotice").textContent = options && options.trend
+      ? "أُنشئت مسودة من بيانات الترند وعناوين المصادر. اقرأ المصادر وأضف خلاصة أصلية قبل النشر؛ الترند لا يثبت صحة الخبر ولا يضمن ترتيبًا."
+      : "أُنشئت مسودة تحريرية من الموضوع والملاحظات. أضف أمثلة ومصادر أصلية قبل النشر.";
     updateSearchPreview(form);
     articleAudit(form);
     form.elements.body.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -877,7 +992,8 @@
     const validSources = sources.length > 0 && sources.every(function (url) { try { return new URL(url).protocol === "https:"; } catch (_) { return false; } });
     const needsFreshSources = /اليوم|غد|مباراة|مباريات|تقييم|القنوات|القناة|موعد|السعر|يعرض|عرض|رمضان\s*2027|2026|2027/i.test(body);
     const hasDraftInstructions = /لا تتضمن المدخلات الحالية|أضف هنا المعلومات الفعلية|أجب هنا عن السؤال الأساسي/i.test(body);
-    const earlyContent = normalizeSearchText(body.split(/\r?\n/)[0] || "");
+    const firstBodyParagraph = body.split(/\n\s*\n/).map(function (part) { return part.trim(); }).find(function (part) { return part && part.indexOf("## ") !== 0 && part.indexOf("### ") !== 0; }) || "";
+    const earlyContent = normalizeSearchText(firstBodyParagraph);
     const hasTopicUpFront = Boolean(normalizedTopic) && earlyContent.includes(normalizedTopic.slice(0, Math.min(normalizedTopic.length, 20)));
     const checks = [
       ["عنوان الصفحة", Boolean(title) && normalizedTitle.includes(normalizedTopic.slice(0, Math.min(normalizedTopic.length, 16))), title ? title.length + " حرفًا. تأكد أن العنوان يصف ما يقدمه المقال فعلًا." : "اكتب عنوانًا واضحًا يطابق المحتوى."],
@@ -901,6 +1017,14 @@
     updateSearchPreview(form);
   }
   $("#saGenerateArticle").addEventListener("click", generateArticleDraft);
+  $("#saRefreshTrends").addEventListener("click", function () { loadTrendSnapshot(true); });
+  $("#saTrendList").addEventListener("click", function (event) {
+    const button = event.target.closest("[data-trend-index]");
+    if (!button) return;
+    const item = trendItems[Number(button.dataset.trendIndex)];
+    if (item) useTrendItem(item);
+  });
+  loadTrendSnapshot(false);
   $("#saWriterTopic").addEventListener("input", renderKeywordIdeas);
   $("#saSuggestKeywords").addEventListener("click", renderKeywordIdeas);
   $("#saKeywordIdeas").addEventListener("click", function (event) {
@@ -940,10 +1064,20 @@
     event.preventDefault();
     prepareNewContent(event.currentTarget, "page");
   });
-  $("#saPublish").addEventListener("click", async function () {
-    const paths = Array.from(new Set(Object.keys(pending).concat(Object.keys(binaryPending)))).sort();
-    if (!paths.length) return;
-    const publishedSnapshot = { text: Object.assign({}, pending), binary: Object.assign({}, binaryPending) };
+  async function publishPendingPaths(requestedPaths) {
+    if (publishInProgress) {
+      (requestedPaths || []).forEach(function (path) { autoPublishPaths.add(path); });
+      return false;
+    }
+    const allPaths = Array.from(new Set(Object.keys(pending).concat(Object.keys(binaryPending)))).sort();
+    const paths = requestedPaths ? Array.from(new Set(requestedPaths)).filter(function (path) { return allPaths.includes(path); }).sort() : allPaths;
+    if (!paths.length) return false;
+    const publishedSnapshot = { text: Object.create(null), binary: Object.create(null) };
+    paths.forEach(function (path) {
+      if (Object.prototype.hasOwnProperty.call(binaryPending, path)) publishedSnapshot.binary[path] = binaryPending[path];
+      else publishedSnapshot.text[path] = pending[path];
+    });
+    publishInProgress = true;
     $("#saPublish").disabled = true;
     $("#saPublishError").textContent = "";
     setStatus("جارٍ نشر التغييرات…", false);
@@ -957,50 +1091,59 @@
       for (const path of paths) {
         const expected = original[path] ? original[path].sha : null;
         const latest = currentMap[path] || null;
-        if (expected !== latest) throw new Error("تغيّر الملف " + path + " على GitHub منذ فتحه. حدّثه وراجع التعديل مجددًا.");
+        if (expected !== latest) throw new Error("تغيّر الملف " + path + " على GitHub منذ تحميله. حدّث الملف ثم أعد الحفظ.");
       }
       const treeEntries = [];
       for (const path of paths) {
-        if (binaryPending[path]) {
+        if (Object.prototype.hasOwnProperty.call(binaryPending, path)) {
           const blob = await api("/git/blobs", { method: "POST", body: { content: binaryPending[path], encoding: "base64" } });
           treeEntries.push({ path: path, mode: "100644", type: "blob", sha: blob.sha });
         } else treeEntries.push({ path: path, mode: "100644", type: "blob", content: pending[path] });
       }
       const newTree = await api("/git/trees", { method: "POST", body: { base_tree: baseTree, tree: treeEntries } });
       const commit = await api("/git/commits", { method: "POST", body: {
-        message: ($("#saCommitMessage").value || "تحديث محتوى DIAMOND TV").trim(),
+        message: ($("#saCommitMessage").value || "تحديث موقع DIAMOND TV").trim(),
         tree: newTree.sha,
         parents: [baseCommit]
       } });
       await api("/git/refs/heads/" + BRANCH, { method: "PATCH", body: { sha: commit.sha, force: false } });
-      pending = Object.create(null);
-      binaryPending = Object.create(null);
-      original = Object.create(null);
+      paths.forEach(function (path) { delete pending[path]; delete binaryPending[path]; delete original[path]; });
       renderPending();
       setStatus("حُفظت التغييرات · جارٍ تحديث الموقع…", true);
-      toast("حُفظ التحديث في GitHub؛ نتحقق الآن من ظهوره على الموقع.");
-      try { await loadTree(); } catch (_) { /* The commit may be saved even if the file list refresh fails. */ }
-      $("#saEditor").value = "";
-      $("#saEditorMeta").textContent = "";
-      $("#saEditorTitle").textContent = "اختر ملفًا للتحرير";
-      selectedPath = "";
+      toast("حُفظ التحديث؛ نتحقق الآن من ظهوره على الموقع.");
+      try { await loadTree(); } catch (_) { /* A saved commit remains valid if the list refresh fails. */ }
+      if (paths.includes(selectedPath)) {
+        $("#saEditor").value = "";
+        $("#saEditorMeta").textContent = "";
+        $("#saEditorTitle").textContent = "اختر ملفًا للتحرير";
+        selectedPath = "";
+      }
       const appeared = await waitForPublicFiles(publishedSnapshot);
       if (appeared) {
         setStatus("ظهرت التغييرات على الموقع", true);
-        toast("تم التحقق: الملفات الجديدة ظاهرة على الموقع.");
+        toast("تم التحقق: الملفات المحفوظة ظاهرة على الموقع.");
       } else {
         setStatus("حُفظت · النشر ما زال جاريًا", true);
-        $("#saPublishError").textContent = "حُفظ التحديث على GitHub، لكن لم تظهر كل الملفات بعد. قد يحتاج GitHub Pages وقتًا إضافيًا؛ أعد التحقق بعد قليل.";
+        $("#saPublishError").textContent = "حُفظ التحديث في GitHub وما زال GitHub Pages ينشره. سيظهر على الموقع بعد اكتمال النشر.";
       }
+      return true;
     } catch (error) {
       $("#saPublishError").textContent = error.message || "تعذّر النشر.";
-      setStatus("يوجد خطأ يحتاج مراجعة", false);
-    } finally { $("#saPublish").disabled = Object.keys(pending).length + Object.keys(binaryPending).length === 0; }
-  });
+      setStatus("تعذّر الحفظ؛ بقيت تعديلاتك محفوظة هنا", false);
+      return false;
+    } finally {
+      publishInProgress = false;
+      renderPending();
+      if (autoPublishPaths.size) queueAutoPublish(Array.from(autoPublishPaths));
+    }
+  }
+  $("#saPublish").addEventListener("click", function () { publishPendingPaths(); });
   window.addEventListener("beforeunload", function () {
     token = "";
   });
   switchMainPanel(sitePanel.id);
   switchView("dashboard");
 })();
+
+
 

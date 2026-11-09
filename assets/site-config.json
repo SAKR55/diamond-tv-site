@@ -80,6 +80,58 @@
       "tv": [
         "beIN SPORTS"
       ]
+    },
+    {
+      "id": "uefa.europa.conf",
+      "ar": "دوري المؤتمر الأوروبي",
+      "tv": [
+        "beIN SPORTS"
+      ]
+    },
+    {
+      "id": "caf.champions",
+      "ar": "دوري أبطال أفريقيا",
+      "tv": []
+    },
+    {
+      "id": "conmebol.libertadores",
+      "ar": "كأس ليبرتادوريس",
+      "tv": []
+    },
+    {
+      "id": "conmebol.sudamericana",
+      "ar": "كأس سودأمريكانا",
+      "tv": []
+    },
+    {
+      "id": "fifa.world",
+      "ar": "كأس العالم",
+      "tv": []
+    },
+    {
+      "id": "caf.nations",
+      "ar": "كأس الأمم الأفريقية",
+      "tv": []
+    },
+    {
+      "id": "afc.asian.cup",
+      "ar": "كأس آسيا",
+      "tv": []
+    },
+    {
+      "id": "conmebol.america",
+      "ar": "كوبا أمريكا",
+      "tv": []
+    },
+    {
+      "id": "uefa.nations",
+      "ar": "دوري الأمم الأوروبية",
+      "tv": []
+    },
+    {
+      "id": "concacaf.gold",
+      "ar": "الكأس الذهبية لأمم كونكاكاف",
+      "tv": []
     }
   ],
   "recommendations": {
@@ -88,4 +140,6 @@
   },
   "products": []
 }
+
+
 
