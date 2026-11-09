@@ -35,7 +35,7 @@
   <section class="hero">
     <span class="pill"><span class="dot"></span> تحديث تلقائي <b id="ago">الآن</b></span>
     <h1 style="margin-top:10px">مباريات اليوم مباشر: جدول النتائج والقنوات الناقلة</h1>
-    <p>تابع مواعيد مباريات كرة القدم اليوم، والنتائج المباشرة، وحالة كل مباراة والقنوات الناقلة للبطولات الكبرى. تتحدّث بيانات اللعب كل 15 ثانية، وقد يتأخر مصدر النتائج قليلًا.</p>
+    <p>تابع مباريات دوري روشن السعودي والدوري المصري، إلى جانب أهم البطولات العربية والأوروبية. استعرض المواعيد والنتائج المباشرة والقنوات الناقلة، واختر تاريخًا أو بطولة لمتابعة المباريات القادمة.</p>
   </section>
 
   <div class="stats">
@@ -89,7 +89,7 @@
       </div>
     </div>
   </section>
-  <p class="note">تُعرض جهات البث المعتادة في الشرق الأوسط وشمال أفريقيا، بينما تتغير قناة المباراة المحددة حسب البطولة والدولة. النتائج من مصدر رياضي عام؛ قد يتأخر التحديث قليلًا.</p>
+  <p class="note">يجمع الجدول بين <a href="https://www.espn.com/soccer/" target="_blank" rel="noopener noreferrer">ESPN</a> و<a href="https://www.thesportsdb.com/docs/api" target="_blank" rel="noopener noreferrer">TheSportsDB</a>: نتائج وإحصاءات مباشرة من المصدر الأول، ومواعيد احتياطية لدوري روشن والدوري المصري تُحدّث كل 15 دقيقة من المصدر الثاني. قد تتغير المواعيد؛ راجع إعلان البطولة والناقل الرسمي.</p>
 
   <section class="seo" aria-labelledby="live-seo-title">
     <h2 id="live-seo-title">مواعيد ونتائج مباريات اليوم في البطولات الكبرى</h2>
@@ -124,6 +124,8 @@
 /* ============ إعداد البطولات والقنوات الناقلة (عدّلها بحرية) ============ */
 let LEAGUES = [
   { id:"ksa.1",           ar:"دوري روشن السعودي",     tv:["ثمانية"] },
+  { id:"egy.1",           ar:"الدوري المصري",          tv:["ON Sports"] },
+  { id:"afc.champions",   ar:"دوري أبطال آسيا للنخبة", tv:["beIN SPORTS"] },
   { id:"uefa.champions",  ar:"دوري أبطال أوروبا",      tv:["beIN SPORTS"] },
   { id:"eng.1",           ar:"الدوري الإنجليزي",       tv:["beIN SPORTS"] },
   { id:"esp.1",           ar:"الدوري الإسباني",        tv:["beIN SPORTS"] },
@@ -131,12 +133,13 @@ let LEAGUES = [
   { id:"ger.1",           ar:"الدوري الألماني",        tv:["MBC Action","شاهد"] },
   { id:"fra.1",           ar:"الدوري الفرنسي",         tv:["beIN SPORTS"] },
   { id:"uefa.europa",     ar:"الدوري الأوروبي",        tv:["beIN SPORTS"] },
-  { id:"egy.1",           ar:"الدوري المصري",          tv:["ON Sports"] },
-  { id:"afc.champions",   ar:"دوري أبطال آسيا للنخبة", tv:["beIN SPORTS"] },
 ];
 const API = (lg, d) => `https://site.api.espn.com/apis/site/v2/sports/soccer/${lg}/scoreboard?dates=${d}`;
+const TSDB_IDS = { "ksa.1": "4668", "egy.1": "4829" };
+const TSDB_API = id => `https://www.thesportsdb.com/api/v1/json/123/eventsnextleague.php?id=${encodeURIComponent(id)}`;
 
 const LEAGUE_CACHE = new Map();
+const TSDB_CACHE = new Map();
 /* ============ الحالة ============ */
 let dayOffset = 0, weekView = false, selectedDate = "", statusF = "all", leagueF = "all", lastOk = null, prevScores = {}, timer;
 const $ = s => document.querySelector(s);
@@ -154,6 +157,51 @@ function visibleDateKeys() {
 }
 const timeAr = iso => new Date(iso).toLocaleTimeString("ar-SA",{hour:"numeric",minute:"2-digit"});
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const normalizeTeam = name => String(name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+function arabicTeamName(name) {
+  const map = window.TEAMS_AR || {};
+  if (map[name]) return map[name];
+  const key = normalizeTeam(name);
+  const found = Object.keys(map).find(candidate => normalizeTeam(candidate) === key);
+  return found ? map[found] : name;
+}
+function sameFixture(a, b) {
+  if (a.L.id !== b.L.id || a.dateKey !== b.dateKey) return false;
+  const sides = [a.home.sourceName || a.home.n, a.away.sourceName || a.away.n].map(normalizeTeam).sort();
+  const other = [b.home.sourceName || b.home.n, b.away.sourceName || b.away.n].map(normalizeTeam).sort();
+  return Boolean(sides[0] && sides[1]) && sides[0] === other[0] && sides[1] === other[1];
+}
+async function loadRegionalSchedule(L, now) {
+  const leagueId = TSDB_IDS[L.id];
+  if (!leagueId) return [];
+  const cached = TSDB_CACHE.get(L.id);
+  if (cached && now - cached.at < 15 * 60 * 1000) return cached.matches;
+  try {
+    const response = await fetch(TSDB_API(leagueId), { cache: "no-store" });
+    if (!response.ok) throw new Error("schedule source unavailable");
+    const data = await response.json();
+    const matches = (data.events || []).filter(event => event.dateEvent && event.strHomeTeam && event.strAwayTeam)
+      .map(event => {
+        const dateKey = String(event.dateEvent).replace(/-/g, "");
+        const stamp = event.strTimestamp || (event.dateEvent + "T" + (event.strTime || "00:00:00"));
+        const stateText = String(event.strStatus || "");
+        const state = /live|in progress|1h|2h|half time/i.test(stateText) ? "in"
+          : /finished|full.?time|ft|aet|pens/i.test(stateText) ? "post" : "pre";
+        return {
+          id: "tsdb-" + event.idEvent, L, logo: event.strLeagueBadge || "", dateKey,
+          date: new Date(stamp).toISOString(), state, detail: state === "pre" ? "موعد قادم" : stateText,
+          clock: "", source: "TheSportsDB", sourceName: "TheSportsDB", sourceUrl: "https://www.thesportsdb.com/",
+          home: { id: event.idHomeTeam, sourceName: event.strHomeTeam, n: arabicTeamName(event.strHomeTeam), l: event.strHomeTeamBadge || "", s: event.intHomeScore ?? "—", stats: [] },
+          away: { id: event.idAwayTeam, sourceName: event.strAwayTeam, n: arabicTeamName(event.strAwayTeam), l: event.strAwayTeamBadge || "", s: event.intAwayScore ?? "—", stats: [] },
+          venue: event.strVenue || "", intl: []
+        };
+      }).filter(event => Number.isFinite(Date.parse(event.date)));
+    TSDB_CACHE.set(L.id, { at: now, matches });
+    return matches;
+  } catch (error) {
+    return cached ? cached.matches : [];
+  }
+}
 
 function chips(el, items, cur, cb){
   el.innerHTML = items.map(([v,t,n]) => `<button class="chip ${v===cur?"on":""}" data-v="${v}">${t}${n!=null?`<span class="n">${n}</span>`:""}</button>`).join("");
@@ -182,18 +230,25 @@ async function load(){
         const c=e.competitions?.[0]||{};
         const H=c.competitors?.find(x=>x.homeAway==="home")||{}, A=c.competitors?.find(x=>x.homeAway==="away")||{};
         const intl=[...new Set((c.broadcasts||[]).flatMap(b=>b.names||[]))];
-        matches.push({id:e.id,L,logo,dateKey,date:e.date,state:e.status?.type?.state||"pre",
+        matches.push({id:e.id,L,logo,dateKey,date:e.date,state:e.status?.type?.state||"pre",source:"ESPN",sourceName:"ESPN",sourceUrl:"https://www.espn.com/soccer/",
           detail:(window.STATUS_AR||{})[e.status?.type?.shortDetail]||e.status?.type?.shortDetail||"",clock:e.status?.displayClock,
-          home:{id:H.team?.id,n:(window.TEAMS_AR||{})[H.team?.displayName]||H.team?.displayName,l:H.team?.logo,s:H.score,stats:H.statistics||[],homeAway:"home"},
-          away:{id:A.team?.id,n:(window.TEAMS_AR||{})[A.team?.displayName]||A.team?.displayName,l:A.team?.logo,s:A.score,stats:A.statistics||[],homeAway:"away"},
+          home:{id:H.team?.id,sourceName:H.team?.displayName,n:(window.TEAMS_AR||{})[H.team?.displayName]||H.team?.displayName,l:H.team?.logo,s:H.score,stats:H.statistics||[],homeAway:"home"},
+          away:{id:A.team?.id,sourceName:A.team?.displayName,n:(window.TEAMS_AR||{})[A.team?.displayName]||A.team?.displayName,l:A.team?.logo,s:A.score,stats:A.statistics||[],homeAway:"away"},
           venue:c.venue?.fullName,intl});
       }
       LEAGUE_CACHE.set(dateKey+"|"+L.id,{at:now,matches});
     }
   }
   const datesAvailable=dates.filter(dateKey=>LEAGUES.some(L=>LEAGUE_CACHE.has(dateKey+"|"+L.id)));
-  if(!datesAvailable.length) throw new Error("no data");
   const matches=datesAvailable.flatMap(dateKey=>LEAGUES.flatMap(L=>(LEAGUE_CACHE.get(dateKey+"|"+L.id)||{}).matches||[]));
+  const upcomingKeys = new Set(dates.filter(dateKey => dateKey >= ymd(0)));
+  if (upcomingKeys.size) {
+    const regional = await Promise.all(LEAGUES.filter(L => TSDB_IDS[L.id]).map(async L => ({ L, events: await loadRegionalSchedule(L, now) })));
+    regional.forEach(({ L, events }) => events.forEach(event => {
+      if (upcomingKeys.has(event.dateKey) && !matches.some(match => sameFixture(match, event))) matches.push(event);
+    }));
+  }
+  if (!datesAvailable.length && !matches.length) throw new Error("no data");
   matches.sort((a,b)=>weekView
     ? (a.dateKey.localeCompare(b.dateKey)||({in:0,pre:1,post:2}[a.state]-{in:0,pre:1,post:2}[b.state])||new Date(a.date)-new Date(b.date))
     : (({in:0,pre:1,post:2}[a.state]-{in:0,pre:1,post:2}[b.state])||new Date(a.date)-new Date(b.date)));
@@ -222,6 +277,7 @@ function card(m) {
   const team = t => "<div class=\"team\">" + (t.l ? "<img src=\"" + esc(t.l) + "\" alt=\"\" loading=\"lazy\">" : "") + "<span>" + esc(t.n) + "</span></div>";
   const tv = m.L.tv.map(c => "<span class=\"ch\">" + esc(c) + "</span>").join("");
   const intl = m.intl.map(c => "<span class=\"ch intl\">" + esc(c) + "</span>").join("");
+  const source = m.sourceUrl ? "<a class=\"match-source\" href=\"" + esc(m.sourceUrl) + "\" target=\"_blank\" rel=\"noopener noreferrer\">مصدر الموعد: " + esc(m.sourceName || m.source) + "</a>" : "";
   const statsLabel = pre ? "الإحصاءات بعد بداية المباراة" : stats.open ? "إخفاء الإحصاءات" : "عرض إحصاءات المباراة";
   return "<article class=\"m " + (live ? "is-live" : "") + "\" id=\"match-" + esc(m.id) + "\">" +
     "<div class=\"m-head\"><span>" + esc(m.L.ar) + "</span>" + status + "</div>" +
@@ -229,8 +285,9 @@ function card(m) {
     (m.venue ? "<div class=\"venue\">🏟 " + esc(m.venue) + "</div>" : "") +
     "<div class=\"tv\"><em>جهات العرض المعتادة في المنطقة:</em>" + (tv || "<span class=\"venue\">لم تتوفر معلومة مؤكدة</span>") + "</div>" +
     (intl ? "<div class=\"tv\"><em>قنوات مسجلة في بيانات الحدث:</em>" + intl + "</div>" : "") +
-    "<button class=\"stats-toggle\" type=\"button\" data-stats=\"" + esc(m.id) + "\" aria-expanded=\"" + (stats.open ? "true" : "false") + "\"" + (pre ? " disabled" : "") + ">" + statsLabel + "</button>" +
-    "<div class=\"match-stats\" id=\"stats-" + esc(m.id) + "\"" + (stats.open ? "" : " hidden") + " aria-live=\"polite\">" + renderMatchStats(m, stats) + "</div>" +
+    source +
+    (m.source === "ESPN" ? "<button class=\"stats-toggle\" type=\"button\" data-stats=\"" + esc(m.id) + "\" aria-expanded=\"" + (stats.open ? "true" : "false") + "\"" + (pre ? " disabled" : "") + ">" + statsLabel + "</button>" +
+    "<div class=\"match-stats\" id=\"stats-" + esc(m.id) + "\"" + (stats.open ? "" : " hidden") + " aria-live=\"polite\">" + renderMatchStats(m, stats) + "</div>" : "") +
     "</article>";
 }
 
@@ -241,7 +298,7 @@ function renderRecommendations(matches){
   if(!host) return;
   const picks = matches.filter(m=>m.state==="in"||m.state==="pre").slice(0,2);
   if(!picks.length){
-    host.innerHTML = `<a class="recommend-card recommend-sport" href="#board"><span class="recommend-type">جدول المباريات</span><h4>لا توجد مباراة مباشرة أو قادمة ضمن البيانات الحالية</h4><p>استخدم خيارات اليوم أو الغد لمتابعة المواعيد والنتائج.</p><span class="recommend-link">افتح الجدول ↑</span></a>`;
+    host.innerHTML = `<a class="recommend-card recommend-sport" href="#board"><span class="recommend-type">جدول المباريات</span><h4>لا توجد مباراة مباشرة أو قادمة في الاختيار الحالي</h4><p>اختر «الأسبوع القادم» أو صفِّ الجدول على دوري روشن أو الدوري المصري.</p><span class="recommend-link">افتح الجدول ↑</span></a>`;
     return;
   }
   host.innerHTML = picks.map(m=>{
@@ -430,12 +487,17 @@ function render(){
 
   chips($("#filters"),[["all","الكل",ALL.length],["in","🔴 مباشر",cnt("in")],["pre","القادمة",cnt("pre")],["post","المنتهية",cnt("post")]],
     statusF,v=>{statusF=v;render();});
-  const used=LEAGUES.filter(L=>ALL.some(m=>m.L.id===L.id));
-  chips($("#leagues"),[["all","كل البطولات"],...used.map(L=>[L.id,L.ar,ALL.filter(m=>m.L.id===L.id).length])],
+  chips($("#leagues"),[["all","كل البطولات"],...LEAGUES.map(L=>[L.id,L.ar,ALL.filter(m=>m.L.id===L.id).length])],
     leagueF,v=>{leagueF=v;render();});
 
   const list=ALL.filter(m=>(statusF==="all"||m.state===statusF)&&(leagueF==="all"||m.L.id===leagueF));
-  if(!list.length){$("#board").innerHTML="<div class=\"empty\">لا توجد مباريات ضمن هذا الاختيار في هذا اليوم.</div>";return;}
+  if(!list.length){
+    const selectedLeague=LEAGUES.find(L=>L.id===leagueF);
+    const subject=selectedLeague?" لبطولة "+esc(selectedLeague.ar):"";
+    const period=weekView?"الأسبوع المحدد":"التاريخ المحدد";
+    $("#board").innerHTML="<div class=\"empty\">لا توجد مباريات"+subject+" في "+period+". جرّب تاريخًا آخر أو اختر «الأسبوع القادم» لمتابعة المواعيد القريبة.</div>";
+    return;
+  }
   if(weekView){
     const keys=Array.from(new Set(list.map(m=>m.dateKey))).sort();
     $("#board").innerHTML=keys.map(key=>{
@@ -454,7 +516,7 @@ async function tick(){
   timer = setTimeout(tick, anyLive ? 15000 : nearKickoff ? 30000 : 120000);
 }
 
-const DAYS = [["-1","أمس"],["0","اليوم"],["1","غداً"],["2","بعد غد"],["week","الأيام السبعة"]];
+const DAYS = [["-1","أمس"],["0","اليوم"],["1","غداً"],["2","بعد غد"],["week","الأسبوع القادم"]];
 function onDay(value){
   weekView=value==="week";
   selectedDate="";
