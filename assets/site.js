@@ -12,15 +12,18 @@ window.SITE = {
 (function () {
   // جذر الموقع محسوب من مكان هذا الملف، فتعمل الروابط من أي مجلد (مثل /articles/)
   const ROOT = (document.currentScript && document.currentScript.src || "").replace(/assets\/site\.js.*$/, "");
+  const configReady = window.DIAMOND_CONFIG_READY || fetch(ROOT + "assets/site-config.json", { cache: "no-cache" }).then(function (response) { return response.ok ? response.json() : {}; }).catch(function () { return {}; });
   const parts = location.pathname.split("/").filter(Boolean);
   const inArticles = parts.includes("articles");
-  const page = inArticles ? "articles" : parts.includes("download") ? "download" : ((parts.pop() || "index.html").replace(".html", "") || "index");
+  const inStore = parts.includes("store");
+  const page = inArticles ? "articles" : inStore ? "store" : parts.includes("download") ? "download" : ((parts.pop() || "index.html").replace(".html", "") || "index");
   const links = [
     ["index", "index.html#board-heading", "⚽ المباريات مباشر"],
     ["movies", "movies.html", "🎬 أفضل الأفلام"],
     ["series", "series.html", "📺 أفضل المسلسلات"],
     ["arabic", "arabic.html", "🌙 الأفضل عربياً"],
     ["articles", "articles/", "📰 المقالات"],
+    ["store", "store/", "🛍️ المتجر"],
     ["download", "download/", "📱 التطبيق"],
   ];
   const header = document.createElement("header");
@@ -40,5 +43,13 @@ window.SITE = {
     DIAMOND TV © ${new Date().getFullYear()} — تمت التقنية بواسطة SAKR OMAR ·
     <a href="mailto:sales@diamond-tv.shop">sales@diamond-tv.shop</a></div>`;
   document.body.append(footer);
+  Promise.resolve(configReady).then(function (config) {
+    const theme = config && config.theme || {};
+    if (/^#[0-9a-f]{6}$/i.test(theme.accent || "")) document.documentElement.style.setProperty("--accent", theme.accent);
+    if (/^#[0-9a-f]{6}$/i.test(theme.accent2 || "")) document.documentElement.style.setProperty("--accent2", theme.accent2);
+    if (config && config.sections && config.sections.store === false) {
+      document.querySelectorAll('a[href*="/store/"]').forEach(function (link) { link.hidden = true; });
+    }
+  });
 })();
 

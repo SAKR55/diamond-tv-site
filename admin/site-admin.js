@@ -14,6 +14,7 @@
   let binaryPending = Object.create(null);
   let selectedPath = "";
   let selectedOriginal = "";
+  let siteConfig = null;
 
   const subsPanel = document.createElement("section");
   subsPanel.id = "subscriptionsPanel";
@@ -56,6 +57,7 @@
     '<label>رابط صورة الغلاف (اختياري)<input name="image" type="url" placeholder="https://..."></label>' +
     '<label>وصف الصورة البديل<input name="imageAlt" maxlength="150" placeholder="وصف موجز للصورة"></label>' +
     '<label>محتوى المقال<textarea name="body" required rows="12" placeholder="اكتب محتوى أصليًا ومفيدًا. افصل الفقرات بسطر فارغ، واكتب ## قبل العنوان الفرعي، وابدأ كل نقطة بشرطة - ."></textarea></label>' +
+    '<div class="sa-inline-form"><button type="button" class="ghost" id="saDraftOutline">إنشاء مخطط قابل للتحرير</button><button type="button" class="ghost" id="saSeoAudit">فحص المقال لمحركات البحث</button></div><div id="saSeoReport" class="sa-audit-report" hidden></div>' +
     '<button type="submit">إضافة المقال إلى قائمة النشر</button></form>' +
     '<form id="saPageForm" class="card sa-form"><h3>صفحة جديدة</h3>' +
     '<label>عنوان الصفحة<input name="title" required maxlength="100" placeholder="عنوان الصفحة"></label>' +
@@ -67,6 +69,26 @@
     '<button id="saPublish" disabled>نشر التعديلات</button></div><div id="saPendingList" class="sa-pending-list"><p class="hint">لا توجد تعديلات معلّقة.</p></div>' +
     '<label class="sa-commit-label">وصف التحديث<input id="saCommitMessage" value="تحديث محتوى وتصميم DIAMOND TV" maxlength="120"></label><div id="saPublishError" class="sa-error" role="status"></div></div></div>' +
     '<div id="saToast" class="sa-toast" role="status" aria-live="polite"></div></div>';
+
+  const dashboard = document.createElement("div");
+  dashboard.id = "saDashboardView";
+  dashboard.className = "sa-view";
+  dashboard.innerHTML =
+    '<div class="sa-dashboard-intro card"><span class="sa-eyebrow">إدارة سهلة</span><h3>لوحة الموقع</h3><p class="hint">عدّل الألوان والأقسام والبطولات، وأضف الترشيحات والمنتجات. راجع التغييرات ثم انشرها مرة واحدة.</p></div>' +
+    '<div class="sa-dashboard-grid">' +
+    '<section class="card sa-manager-card"><h3>ألوان الموقع</h3><label>اللون الرئيسي<input id="saAccent" type="color"></label><label>اللون المساند<input id="saAccent2" type="color"></label><button type="button" id="saSaveTheme">حفظ الألوان</button></section>' +
+    '<section class="card sa-manager-card"><h3>أقسام الصفحة الرئيسية</h3><label class="sa-check"><input id="saLiveEnabled" type="checkbox"> المباريات المباشرة</label><label class="sa-check"><input id="saRecommendationsEnabled" type="checkbox"> ترشيحات السهرة</label><label class="sa-check"><input id="saStoreEnabled" type="checkbox"> المتجر</label><button type="button" id="saSaveSections">حفظ الأقسام</button></section>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>البطولات والقنوات</h3><p class="hint">سطر لكل بطولة: رمز البطولة | الاسم بالعربية | القنوات المعتادة مفصولة بفواصل.</p><textarea id="saLeagueEditor" rows="8" dir="auto"></textarea><button type="button" id="saSaveLeagues">حفظ البطولات</button></section>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>مسلسلات TVMaze</h3><p class="hint">ابحث عن مسلسل وأضفه؛ تُحدّث تقييماته تلقائيًا من المصدر.</p><div class="sa-inline-form"><input id="saTvSearch" placeholder="اسم المسلسل"><button type="button" id="saTvSearchBtn">بحث</button></div><div id="saTvResults" class="sa-manager-list"></div><h4>المسلسلات المختارة</h4><div id="saTvSelected" class="sa-manager-list"></div></section>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>ترشيحات الأفلام اليدوية</h3><p class="hint">تقييم أو وصف الأفلام هنا تحريري، وليس من مصدر خارجي.</p><form id="saMovieForm" class="sa-manager-form"><input name="title" required maxlength="100" placeholder="اسم الفيلم"><input name="image" type="url" placeholder="رابط صورة HTTPS (اختياري)"><input name="url" type="url" placeholder="رابط التفاصيل HTTPS (اختياري)"><textarea name="description" required rows="2" maxlength="260" placeholder="لماذا ترشحه؟"></textarea><button type="submit">إضافة الفيلم</button></form><div id="saMovieList" class="sa-manager-list"></div></section>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>منتجات المتجر</h3><p class="hint">أضف وصف المنتج والسعر ورابط الطلب. الدفع الإلكتروني يحتاج مزود دفع منفصل.</p><form id="saProductForm" class="sa-manager-form"><input name="id" type="hidden"><div class="sa-manager-two"><input name="title" required maxlength="100" placeholder="اسم المنتج"><input name="category" maxlength="50" placeholder="القسم"></div><textarea name="description" required rows="2" maxlength="300" placeholder="وصف المنتج"></textarea><div class="sa-manager-two"><input name="price" maxlength="40" placeholder="السعر (اختياري)"><input name="currency" maxlength="12" value="ر.س" placeholder="العملة"></div><div class="sa-manager-two"><input name="image" type="url" placeholder="رابط صورة HTTPS (اختياري)"><input name="imageAlt" maxlength="140" placeholder="وصف الصورة"></div><input name="url" type="url" placeholder="رابط التفاصيل أو الطلب HTTPS"><label class="sa-check"><input name="active" type="checkbox" checked> المنتج متاح للعرض</label><button type="submit">حفظ المنتج</button></form><div id="saProductList" class="sa-manager-list"></div></section>' +
+    '</div><div class="sa-manager-footer card"><span>كل تغيير يضاف لقائمة المراجعة؛ النشر يبدأ عند الضغط على «نشر التعديلات».</span><button type="button" class="ghost sm" id="saStageConfig">حفظ تغييرات لوحة الموقع</button></div>';
+  sitePanel.querySelector(".sa-tabs").innerHTML =
+    '<button class="sa-tab active" data-view="dashboard">لوحة الموقع</button>' +
+    '<button class="sa-tab" data-view="articles">المقالات وفحص SEO</button>' +
+    '<button class="sa-tab" data-view="publish">مراجعة ونشر</button>' +
+    '<button class="sa-tab" data-view="files">ملفات متقدمة</button>';
+  sitePanel.querySelector("#saFilesView").before(dashboard);
 
   const nav = document.createElement("nav");
   nav.className = "site-main-tabs";
@@ -134,6 +156,7 @@
     $("#saFileList").replaceChildren();
     if (!treeFiles.length) $("#saFileList").innerHTML = '<p class="hint">لم تُعثر على ملفات نصية.</p>';
     renderFileList();
+    await loadDashboardConfig();
     setStatus("متصل بالمستودع · main", true);
     $("#saWorkspace").hidden = false;
     $("#saConnect").hidden = true;
@@ -225,10 +248,81 @@
     renderFileList();
     toast("أُضيف " + path + " إلى قائمة النشر.");
   }
+  function defaultSiteConfig() {
+    return {
+      version: 1,
+      theme: { accent: "#6d4aff", accent2: "#0c9fa2" },
+      sections: { live: true, recommendations: true, store: true },
+      leagues: [],
+      recommendations: { tvmazeIds: [], movies: [] },
+      products: []
+    };
+  }
+  async function loadDashboardConfig() {
+    try {
+      const raw = await fetchFile("assets/site-config.json");
+      siteConfig = Object.assign(defaultSiteConfig(), JSON.parse(raw));
+    } catch (_) { siteConfig = siteConfig || defaultSiteConfig(); }
+    siteConfig.theme = Object.assign({ accent: "#6d4aff", accent2: "#0c9fa2" }, siteConfig.theme || {});
+    siteConfig.sections = Object.assign({ live: true, recommendations: true, store: true }, siteConfig.sections || {});
+    siteConfig.recommendations = Object.assign({ tvmazeIds: [], movies: [] }, siteConfig.recommendations || {});
+    siteConfig.leagues = Array.isArray(siteConfig.leagues) ? siteConfig.leagues : [];
+    siteConfig.products = Array.isArray(siteConfig.products) ? siteConfig.products : [];
+    renderDashboard();
+  }
+  function renderDashboard() {
+    if (!siteConfig) return;
+    $("#saAccent").value = /^#[0-9a-f]{6}$/i.test(siteConfig.theme.accent || "") ? siteConfig.theme.accent : "#6d4aff";
+    $("#saAccent2").value = /^#[0-9a-f]{6}$/i.test(siteConfig.theme.accent2 || "") ? siteConfig.theme.accent2 : "#0c9fa2";
+    $("#saLiveEnabled").checked = siteConfig.sections.live !== false;
+    $("#saRecommendationsEnabled").checked = siteConfig.sections.recommendations !== false;
+    $("#saStoreEnabled").checked = siteConfig.sections.store !== false;
+    $("#saLeagueEditor").value = siteConfig.leagues.map(function (league) {
+      return [league.id, league.ar, (league.tv || []).join("، ")].join(" | ");
+    }).join("\n");
+    $("#saTvSelected").innerHTML = siteConfig.recommendations.tvmazeIds.map(function (id) {
+      return '<div class="sa-manager-row"><span>مسلسل TVMaze رقم ' + escapeHtml(id) + '</span><button type="button" class="ghost sm" data-remove-show="' + escapeHtml(id) + '">حذف</button></div>';
+    }).join("") || '<p class="hint">لم تُضف مسلسلات بعد.</p>';
+    $("#saMovieList").innerHTML = siteConfig.recommendations.movies.map(function (movie, index) {
+      return '<div class="sa-manager-row"><span><b>' + escapeHtml(movie.title) + '</b><small>' + escapeHtml(movie.description) + '</small></span><button type="button" class="ghost sm" data-remove-movie="' + index + '">حذف</button></div>';
+    }).join("") || '<p class="hint">لم تُضف أفلامًا بعد.</p>';
+    $("#saProductList").innerHTML = siteConfig.products.map(function (product, index) {
+      return '<div class="sa-manager-row"><span><b>' + escapeHtml(product.title) + '</b><small>' + escapeHtml(product.price || "بدون سعر") + (product.active === false ? " · مخفي" : " · ظاهر") + '</small></span>' +
+        '<span class="sa-manager-actions"><button type="button" class="ghost sm" data-edit-product="' + index + '">تعديل</button><button type="button" class="ghost sm" data-remove-product="' + index + '">حذف</button></span></div>';
+    }).join("") || '<p class="hint">المتجر فارغ؛ أضف أول منتج من النموذج.</p>';
+  }
+  function stageDashboardConfig(message) {
+    stage("assets/site-config.json", JSON.stringify(siteConfig, null, 2) + "\n", original["assets/site-config.json"] && original["assets/site-config.json"].content);
+    if (message) toast(message);
+  }
+  function safeDashboardUrl(value) {
+    const text = String(value || "").trim();
+    if (!text) return "";
+    try { const url = new URL(text); return url.protocol === "https:" ? url.href : ""; } catch (_) { return ""; }
+  }
+  async function searchTvMaze() {
+    const query = $("#saTvSearch").value.trim();
+    if (query.length < 2) { toast("اكتب اسم مسلسل للبحث."); return; }
+    $("#saTvSearchBtn").disabled = true;
+    $("#saTvResults").innerHTML = '<p class="hint">جارٍ البحث في TVMaze…</p>';
+    try {
+      const response = await fetch("https://api.tvmaze.com/search/shows?q=" + encodeURIComponent(query));
+      if (!response.ok) throw new Error("تعذّر الاتصال بمصدر المسلسلات.");
+      const results = await response.json();
+      $("#saTvResults").innerHTML = results.slice(0, 8).map(function (result) {
+        const show = result.show || {};
+        const rating = show.rating && show.rating.average ? " · ★ " + show.rating.average : "";
+        return '<div class="sa-manager-row"><span><b>' + escapeHtml(show.name || "مسلسل") + '</b><small>' + escapeHtml(show.premiered || "") + escapeHtml(rating) + '</small></span><button type="button" class="ghost sm" data-add-show="' + Number(show.id) + '">إضافة</button></div>';
+      }).join("") || '<p class="hint">لا توجد نتائج بهذا الاسم.</p>';
+    } catch (error) {
+      $("#saTvResults").innerHTML = '<p class="hint">' + escapeHtml(error.message || "تعذّر البحث.") + '</p>';
+    } finally { $("#saTvSearchBtn").disabled = false; }
+  }
   function switchView(name) {
     sitePanel.querySelectorAll(".sa-tab").forEach(function (button) {
       button.classList.toggle("active", button.dataset.view === name);
     });
+    $("#saDashboardView").hidden = name !== "dashboard";
     $("#saFilesView").hidden = name !== "files";
     $("#saArticlesView").hidden = name !== "articles";
     $("#saPublishView").hidden = name !== "publish";
@@ -272,6 +366,7 @@
       '<meta property="og:type" content="' + (isArticle ? "article" : "website") + '"><meta property="og:title" content="' + safeTitle + ' | DIAMOND TV">\n' +
       '<meta property="og:description" content="' + safeDescription + '"><meta property="og:url" content="' + escapeHtml(canonical) + '"><meta property="og:image" content="' + safeImage + '">\n' +
       '<link rel="stylesheet" href="../assets/style.css">\n' +
+      '<script src="../assets/site-config.js"></script>\n' +
       '<script type="application/ld+json">' + JSON.stringify(schema).replace(/</g, "\\u003c") + '</script>\n' +
       '</head>\n<body>\n<main class="wrap sa-content-page">\n' +
       '<nav class="sa-breadcrumb"><a href="../index.html">الرئيسية</a> / ' + (isArticle ? '<a href="./">المقالات</a> / ' : "") + safeTitle + '</nav>\n' +
@@ -380,6 +475,68 @@
     const tab = event.target.closest(".sa-tab");
     if (tab) switchView(tab.dataset.view);
   });
+  $("#saSaveTheme").addEventListener("click", function () {
+    siteConfig.theme = { accent: $("#saAccent").value, accent2: $("#saAccent2").value };
+    stageDashboardConfig("تم حفظ الألوان للمراجعة.");
+  });
+  $("#saSaveSections").addEventListener("click", function () {
+    siteConfig.sections = { live: $("#saLiveEnabled").checked, recommendations: $("#saRecommendationsEnabled").checked, store: $("#saStoreEnabled").checked };
+    stageDashboardConfig("تم حفظ إعدادات الأقسام للمراجعة.");
+  });
+  $("#saSaveLeagues").addEventListener("click", function () {
+    const rows = $("#saLeagueEditor").value.split(/\r?\n/).map(function (line) { return line.split("|").map(function (part) { return part.trim(); }); }).filter(function (parts) { return parts.length >= 2 && parts[0] && parts[1]; });
+    if (!rows.length) { toast("أدخل بطولة واحدة على الأقل."); return; }
+    if (rows.some(function (parts) { return !/^[a-z0-9.]+$/i.test(parts[0]); })) { toast("رمز البطولة يجب أن يتكوّن من أحرف إنجليزية وأرقام ونقاط."); return; }
+    siteConfig.leagues = rows.map(function (parts) { return { id: parts[0], ar: parts[1], tv: (parts[2] || "").split(/[،,]/).map(function (name) { return name.trim(); }).filter(Boolean) }; });
+    stageDashboardConfig("تم حفظ البطولات والقنوات للمراجعة.");
+  });
+  $("#saStageConfig").addEventListener("click", function () { stageDashboardConfig("أُضيفت إعدادات الموقع إلى قائمة النشر."); });
+  $("#saTvSearchBtn").addEventListener("click", searchTvMaze);
+  $("#saTvSearch").addEventListener("keydown", function (event) { if (event.key === "Enter") { event.preventDefault(); searchTvMaze(); } });
+  $("#saTvResults").addEventListener("click", function (event) {
+    const button = event.target.closest("[data-add-show]");
+    if (!button) return;
+    const id = Number(button.dataset.addShow), ids = siteConfig.recommendations.tvmazeIds || [];
+    if (!Number.isInteger(id) || id <= 0 || ids.includes(id)) return;
+    siteConfig.recommendations.tvmazeIds = ids.concat([id]).slice(0, 12);
+    renderDashboard(); stageDashboardConfig("أُضيف المسلسل إلى الترشيحات.");
+  });
+  dashboard.addEventListener("click", function (event) {
+    const show = event.target.closest("[data-remove-show]");
+    if (show) { siteConfig.recommendations.tvmazeIds = siteConfig.recommendations.tvmazeIds.filter(function (id) { return String(id) !== show.dataset.removeShow; }); renderDashboard(); stageDashboardConfig("حُذف المسلسل من الترشيحات."); return; }
+    const movie = event.target.closest("[data-remove-movie]");
+    if (movie) { siteConfig.recommendations.movies.splice(Number(movie.dataset.removeMovie), 1); renderDashboard(); stageDashboardConfig("حُذف الفيلم من الترشيحات."); return; }
+    const remove = event.target.closest("[data-remove-product]");
+    if (remove) { siteConfig.products.splice(Number(remove.dataset.removeProduct), 1); renderDashboard(); stageDashboardConfig("حُذف المنتج من قائمة العرض."); return; }
+    const edit = event.target.closest("[data-edit-product]");
+    if (edit) {
+      const item = siteConfig.products[Number(edit.dataset.editProduct)], form = $("#saProductForm");
+      if (!item) return;
+      Object.keys(item).forEach(function (key) { if (form.elements[key]) form.elements[key].value = item[key] == null ? "" : item[key]; });
+      form.elements.active.checked = item.active !== false;
+      form.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
+  $("#saMovieForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    const form = event.currentTarget, data = new FormData(form), title = String(data.get("title") || "").trim(), description = String(data.get("description") || "").trim();
+    if (!title || !description) return;
+    function safeUrl(value) { try { const url = new URL(String(value || "").trim()); return url.protocol === "https:" ? url.href : ""; } catch (_) { return ""; } }
+    siteConfig.recommendations.movies = siteConfig.recommendations.movies.concat([{ title: title, description: description, image: safeUrl(data.get("image")), url: safeUrl(data.get("url")) }]).slice(0, 12);
+    form.reset(); renderDashboard(); stageDashboardConfig("أُضيف الفيلم إلى الترشيحات اليدوية.");
+  });
+  $("#saProductForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    const form = event.currentTarget, data = new FormData(form), title = String(data.get("title") || "").trim(), description = String(data.get("description") || "").trim();
+    if (!title || !description) return;
+    function safeUrl(value) { try { const url = new URL(String(value || "").trim()); return url.protocol === "https:" ? url.href : ""; } catch (_) { return ""; } }
+    const currentId = String(data.get("id") || "");
+    const product = { id: currentId || "product-" + Date.now(), title: title, category: String(data.get("category") || "").trim(), description: description, price: String(data.get("price") || "").trim(), currency: String(data.get("currency") || "").trim(), image: safeUrl(data.get("image")), imageAlt: String(data.get("imageAlt") || "").trim(), url: safeUrl(data.get("url")), active: form.elements.active.checked };
+    const index = siteConfig.products.findIndex(function (item) { return item.id === currentId; });
+    if (index >= 0) siteConfig.products[index] = product; else siteConfig.products.push(product);
+    form.reset(); form.elements.currency.value = "ر.س"; form.elements.active.checked = true;
+    renderDashboard(); stageDashboardConfig("تم حفظ المنتج في قائمة النشر.");
+  });
   $("#saConnectBtn").addEventListener("click", async function () {
     token = $("#saToken").value.trim();
     if (!token) { toast("أدخل رمز الوصول أولًا."); return; }
@@ -437,6 +594,36 @@
     if (!selectedPath || $("#saEditor").disabled) return;
     stage(selectedPath, $("#saEditor").value, selectedOriginal);
     $("#saEditorMeta").textContent = "التعديل جاهز للمراجعة والنشر.";
+  });
+  function articleAudit(form) {
+    const value = function (name) { return String(new FormData(form).get(name) || "").trim(); };
+    const title = value("title"), description = value("description"), body = value("body");
+    const words = body.split(/\s+/).filter(Boolean).length;
+    const headings = (body.match(/^#{2,3}\s+/gm) || []).length;
+    const checks = [
+      ["العنوان", title.length >= 30 && title.length <= 60, title.length + " حرفًا؛ استهدف عادةً 30–60."],
+      ["وصف نتائج البحث", description.length >= 80 && description.length <= 160, description.length + " حرفًا؛ اجعله واضحًا ومحددًا."],
+      ["محتوى مفيد", words >= 300, words + " كلمة؛ أضف معلومات أصلية ومصادر موثوقة."],
+      ["عناوين فرعية", headings >= 2, headings + " عنوانًا بصيغة ## أو ###."],
+      ["رابط مختصر", /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value("slug")), "استخدم رابطًا قصيرًا يسهل قراءته."],
+      ["وصف الصورة", !value("image") || Boolean(value("imageAlt")), value("image") && !value("imageAlt") ? "أضف نصًا بديلًا للصورة." : "مناسب."]
+    ];
+    const passed = checks.filter(function (check) { return check[1]; }).length;
+    $("#saSeoReport").innerHTML = '<div class="sa-audit-score">' + passed + ' من ' + checks.length + ' نقاط مكتملة</div>' +
+      checks.map(function (check) { return '<div class="sa-audit-row ' + (check[1] ? "good" : "needs-work") + '"><b>' + (check[1] ? "✓ " : "• ") + escapeHtml(check[0]) + '</b><span>' + escapeHtml(check[2]) + '</span></div>'; }).join("") +
+      '<p class="hint">هذا فحص تحريري إرشادي ولا يضمن ترتيبًا في نتائج البحث.</p>';
+    $("#saSeoReport").hidden = false;
+  }
+  $("#saSeoAudit").addEventListener("click", function () { articleAudit($("#saArticleForm")); });
+  $("#saDraftOutline").addEventListener("click", function () {
+    const form = $("#saArticleForm"), title = metaField(form, "title"), description = metaField(form, "description");
+    if (!title || !description) { toast("أدخل العنوان والوصف أولًا لصنع مخطط المقال."); return; }
+    const body = form.elements.body;
+    if (body.value.trim() && !window.confirm("سيُستبدل النص الحالي بمخطط قابل للتحرير. متابعة؟")) return;
+    body.value = description + "\n\n## ما الذي يحتاج القارئ إلى معرفته؟\n\nاكتب إجابة مباشرة ومدعومة بمعلومات دقيقة عن: " + title +
+      "\n\n## التفاصيل الأساسية\n\nأضف الحقائق والأسماء والتواريخ والمصادر التي راجعتها.\n\n## نقاط المقارنة أو الاختيار\n\nاشرح الخيارات والفروق العملية بوضوح، مع تجنب التكرار.\n\n## أسئلة شائعة\n\n### ما أهم سؤال يطرحه القارئ؟\n\nأجب بإيجاز، ثم أضف أسئلة مرتبطة بالموضوع.\n\n## خلاصة\n\nلخّص ما يحتاج القارئ إلى تذكره.";
+    articleAudit(form);
+    toast("أُنشئ مخطط قابل للتحرير. راجع الحقائق واكتب محتوى أصليًا قبل النشر.");
   });
   $("#saArticleForm").addEventListener("submit", function (event) {
     event.preventDefault();
@@ -498,4 +685,5 @@
     token = "";
   });
   switchMainPanel(sitePanel.id);
+  switchView("dashboard");
 })();

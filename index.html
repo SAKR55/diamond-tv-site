@@ -9,7 +9,7 @@
 <link rel="canonical" href="https://diamond-tv.shop/">
 <link rel="alternate" hreflang="ar" href="https://diamond-tv.shop/">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="theme-color" content="#070b16">
+<meta name="theme-color" content="#f6f8fc">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/og.png">
 <meta property="og:type" content="website">
@@ -46,10 +46,11 @@
   </div>
 
   <div class="bar" id="days"></div>
+  <div class="date-picker-bar"><label for="customDate">اختيار تاريخ آخر</label><input id="customDate" type="date" aria-label="اختيار تاريخ جدول المباريات"></div>
   <div class="bar" id="filters"></div>
   <div class="bar" id="leagues"></div>
 
-  <section class="live-board" aria-labelledby="board-heading">
+  <section class="live-board" id="live-board-section" aria-labelledby="board-heading">
     <h2 id="board-heading">جدول مباريات اليوم مباشر الآن</h2>
     <p class="live-board-intro">اختر اليوم أو البطولة، ثم افتح إحصاءات المباراة لمعرفة التفاصيل المتاحة. تظهر حالة اللقاء والنتيجة والقنوات المسجلة؛ وقد تختلف حقوق النقل بحسب بلدك.</p>
     <div id="board"><div class="grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div>
@@ -78,6 +79,8 @@
         </a>
       </div>
     </div>
+    <div class="recommend-group" id="tvmaze-series-group" hidden><h3>مسلسلات بحسب تقييمات TVMaze</h3><div class="recommend-grid" id="tvmaze-series"></div><p class="tvmaze-credit">التقييمات من TVMaze؛ تُحدّث تلقائيًا. <a href="https://www.tvmaze.com/api" target="_blank" rel="noopener">مصدر البيانات</a>.</p></div>
+    <div class="recommend-group" id="manual-movies-group" hidden><h3>أفلام مختارة</h3><div class="recommend-grid" id="manual-movies"></div></div>
     <div class="recommend-group">
       <h3>أحداث رياضية</h3>
       <div class="recommend-grid" id="sports-recommendations">
@@ -113,11 +116,12 @@
   </section>
 </main>
 
+<script src="assets/site-config.js"></script>
 <script src="assets/site.js"></script>
 <script src="assets/teams-ar.js"></script>
 <script>
 /* ============ إعداد البطولات والقنوات الناقلة (عدّلها بحرية) ============ */
-const LEAGUES = [
+let LEAGUES = [
   { id:"ksa.1",           ar:"دوري روشن السعودي",     tv:["ثمانية"] },
   { id:"uefa.champions",  ar:"دوري أبطال أوروبا",      tv:["beIN SPORTS"] },
   { id:"eng.1",           ar:"الدوري الإنجليزي",       tv:["beIN SPORTS"] },
@@ -133,10 +137,20 @@ const API = (lg, d) => `https://site.api.espn.com/apis/site/v2/sports/soccer/${l
 
 const LEAGUE_CACHE = new Map();
 /* ============ الحالة ============ */
-let dayOffset = 0, statusF = "all", leagueF = "all", lastOk = null, prevScores = {}, timer;
+let dayOffset = 0, weekView = false, selectedDate = "", statusF = "all", leagueF = "all", lastOk = null, prevScores = {}, timer;
 const $ = s => document.querySelector(s);
 const ymd = off => { const d = new Date(); d.setDate(d.getDate()+off);
   return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"); };
+function addDateKey(base, offset) {
+  const d = new Date(Number(base.slice(0,4)), Number(base.slice(4,6))-1, Number(base.slice(6,8)), 12);
+  d.setDate(d.getDate()+offset);
+  return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+}
+function dateInputValue(key) { return key.slice(0,4)+"-"+key.slice(4,6)+"-"+key.slice(6,8); }
+function visibleDateKeys() {
+  const base = selectedDate || ymd(dayOffset);
+  return weekView ? Array.from({length:7},(_,i)=>addDateKey(base,i)) : [base];
+}
 const timeAr = iso => new Date(iso).toLocaleTimeString("ar-SA",{hour:"numeric",minute:"2-digit"});
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -146,60 +160,80 @@ function chips(el, items, cur, cb){
 }
 
 async function load(){
-  const dateKey = ymd(dayOffset), now = Date.now();
-  const due = LEAGUES.filter(L => {
-    const entry = LEAGUE_CACHE.get(dateKey+"|"+L.id);
-    const live = entry && entry.matches.some(m=>m.state==="in");
-    return !entry || now-entry.at >= (live ? 15000 : 120000);
-  });
-  const res = await Promise.allSettled(due.map(L =>
-    fetch(API(L.id,dateKey),{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(j=>({L,j}))));
+  const dates = visibleDateKeys(), todayKey = ymd(0), now = Date.now();
   let updated = 0;
-  for(const result of res){
-    if(result.status!=="fulfilled") continue;
-    updated++;
-    const {L,j}=result.value, logo=j.leagues?.[0]?.logos?.[0]?.href, matches=[];
-    for(const e of (j.events||[])){
-      const c=e.competitions?.[0]||{};
-      const H=c.competitors?.find(x=>x.homeAway==="home")||{}, A=c.competitors?.find(x=>x.homeAway==="away")||{};
-      const intl=[...new Set((c.broadcasts||[]).flatMap(b=>b.names||[]))];
-      matches.push({id:e.id,L,logo,date:e.date,state:e.status?.type?.state||"pre",
-        detail:(window.STATUS_AR||{})[e.status?.type?.shortDetail]||e.status?.type?.shortDetail||"",clock:e.status?.displayClock,
-        home:{id:H.team?.id,n:(window.TEAMS_AR||{})[H.team?.displayName]||H.team?.displayName,l:H.team?.logo,s:H.score},
-        away:{id:A.team?.id,n:(window.TEAMS_AR||{})[A.team?.displayName]||A.team?.displayName,l:A.team?.logo,s:A.score},
-        venue:c.venue?.fullName,intl});
+  for (const dateKey of dates) {
+    const due = LEAGUES.filter(L => {
+      const entry = LEAGUE_CACHE.get(dateKey+"|"+L.id);
+      const live = entry && entry.matches.some(m=>m.state==="in");
+      const nearKickoff = entry && entry.matches.some(m=>m.state==="pre" &&
+        (new Date(m.date).getTime()-now)<=300000 && (new Date(m.date).getTime()-now)>=-30000);
+      const staleAfter = live ? 15000 : nearKickoff ? 30000 : (weekView && dateKey!==todayKey ? 900000 : 120000);
+      return !entry || now-entry.at >= staleAfter;
+    });
+    const res = await Promise.allSettled(due.map(L =>
+      fetch(API(L.id,dateKey),{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(j=>({L,j}))));
+    for(const result of res){
+      if(result.status!=="fulfilled") continue;
+      updated++;
+      const {L,j}=result.value, logo=j.leagues?.[0]?.logos?.[0]?.href, matches=[];
+      for(const e of (j.events||[])){
+        const c=e.competitions?.[0]||{};
+        const H=c.competitors?.find(x=>x.homeAway==="home")||{}, A=c.competitors?.find(x=>x.homeAway==="away")||{};
+        const intl=[...new Set((c.broadcasts||[]).flatMap(b=>b.names||[]))];
+        matches.push({id:e.id,L,logo,dateKey,date:e.date,state:e.status?.type?.state||"pre",
+          detail:(window.STATUS_AR||{})[e.status?.type?.shortDetail]||e.status?.type?.shortDetail||"",clock:e.status?.displayClock,
+          home:{id:H.team?.id,n:(window.TEAMS_AR||{})[H.team?.displayName]||H.team?.displayName,l:H.team?.logo,s:H.score,stats:H.statistics||[],homeAway:"home"},
+          away:{id:A.team?.id,n:(window.TEAMS_AR||{})[A.team?.displayName]||A.team?.displayName,l:A.team?.logo,s:A.score,stats:A.statistics||[],homeAway:"away"},
+          venue:c.venue?.fullName,intl});
+      }
+      LEAGUE_CACHE.set(dateKey+"|"+L.id,{at:now,matches});
     }
-    LEAGUE_CACHE.set(dateKey+"|"+L.id,{at:now,matches});
   }
-  const available=LEAGUES.some(L=>LEAGUE_CACHE.has(dateKey+"|"+L.id));
-  if(!available||(!updated&&!ALL.length)) throw new Error("no data");
-  const matches=LEAGUES.flatMap(L=>(LEAGUE_CACHE.get(dateKey+"|"+L.id)||{}).matches||[]);
-  matches.sort((a,b)=>({in:0,pre:1,post:2}[a.state]-({in:0,pre:1,post:2}[b.state]))||new Date(a.date)-new Date(b.date));
+  const datesAvailable=dates.filter(dateKey=>LEAGUES.some(L=>LEAGUE_CACHE.has(dateKey+"|"+L.id)));
+  if(!datesAvailable.length) throw new Error("no data");
+  const matches=datesAvailable.flatMap(dateKey=>LEAGUES.flatMap(L=>(LEAGUE_CACHE.get(dateKey+"|"+L.id)||{}).matches||[]));
+  matches.sort((a,b)=>weekView
+    ? (a.dateKey.localeCompare(b.dateKey)||({in:0,pre:1,post:2}[a.state]-{in:0,pre:1,post:2}[b.state])||new Date(a.date)-new Date(b.date))
+    : (({in:0,pre:1,post:2}[a.state]-{in:0,pre:1,post:2}[b.state])||new Date(a.date)-new Date(b.date)));
   return matches;
 }
-function card(m){
-  const live = m.state==="in", pre = m.state==="pre";
-  const key = m.home.s+"-"+m.away.s, changed = prevScores[m.id] && prevScores[m.id]!==key && live;
-  prevScores[m.id] = key;
-  const st = live ? `<span class="st live">● ${esc(m.detail || m.clock)}</span>`
-           : pre ? `<span class="st pre">لم تبدأ</span>`
-           : `<span class="st ft">انتهت</span>`;
-  const score = pre ? `<div class="score pre">${timeAr(m.date)}</div>`
-                    : `<div class="score ${changed?"flash":""}">${esc(m.away.s)} - ${esc(m.home.s)}</div>`;
-  const team = t => `<div class="team">${t.l?`<img src="${esc(t.l)}" alt="" loading="lazy">`:""}<span>${esc(t.n)}</span></div>`;
-  const tv = m.L.tv.map(c=>`<span class="ch">${esc(c)}</span>`).join("");
-  const intl = m.intl.map(c=>`<span class="ch intl">${esc(c)}</span>`).join("");
-  return `<article class="m ${live?"is-live":""}" id="match-${esc(m.id)}">
-    <div class="m-head"><span>${esc(m.L.ar)}</span>${st}</div>
-    <div class="teams">${team(m.home)}${score}${team(m.away)}</div>
-    ${m.venue?`<div class="venue">🏟 ${esc(m.venue)}</div>`:""}
-    <div class="tv"><em>جهات العرض المعتادة في المنطقة:</em>${tv || `<span class="venue">لم تتوفر معلومة مؤكدة</span>`}</div>
-    ${intl?`<div class="tv"><em>قنوات مسجلة في بيانات الحدث:</em>${intl}</div>`:""}
-    <button class="stats-toggle" type="button" data-stats="${esc(m.id)}" aria-expanded="false">عرض إحصاءات المباراة</button>
-    <div class="match-stats" id="stats-${esc(m.id)}" hidden aria-live="polite"><p>اضغط لعرض الإحصاءات المتاحة من مصدر المباراة.</p></div>
-  </article>`;
+
+function renderMatchStats(m, state) {
+  if (state.status === "loading") return "<p>جارٍ تحميل إحصاءات المباراة…</p>";
+  if (state.status === "error") return "<p>لم يرسل مصدر النتائج إحصاءات لهذا اللقاء حتى الآن. جرّب مرة أخرى أثناء المباراة أو بعدها.</p><button class=\"ghost sm\" type=\"button\" data-stats-retry=\"" + esc(m.id) + "\">إعادة المحاولة</button>";
+  if (state.status === "ready" && state.data) {
+    return "<table><thead><tr><th scope=\"col\">الإحصائية</th><th scope=\"col\">" + esc(state.data.home) + "</th><th scope=\"col\">" + esc(state.data.away) + "</th></tr></thead><tbody>" +
+      state.data.rows.map(row => "<tr><td>" + esc(row[0]) + "</td><td>" + esc(row[1]) + "</td><td>" + esc(row[2]) + "</td></tr>").join("") + "</tbody></table>";
+  }
+  return "<p>اضغط لعرض الإحصاءات التي يوفرها مصدر المباراة.</p>";
 }
 
+function card(m) {
+  const live = m.state === "in", pre = m.state === "pre";
+  const key = String(m.id), stats = MATCH_STATS.get(key) || { open: false, status: "idle" };
+  const scoreKey = m.home.s + "-" + m.away.s, changed = prevScores[m.id] && prevScores[m.id] !== scoreKey && live;
+  prevScores[m.id] = scoreKey;
+  const status = live ? "<span class=\"st live\">● " + esc(m.detail || m.clock) + "</span>"
+    : pre ? "<span class=\"st pre\">لم تبدأ</span>" : "<span class=\"st ft\">انتهت</span>";
+  const score = pre ? "<div class=\"score pre\">" + timeAr(m.date) + "</div>"
+    : "<div class=\"score " + (changed ? "flash" : "") + "\">" + esc(m.away.s) + " - " + esc(m.home.s) + "</div>";
+  const team = t => "<div class=\"team\">" + (t.l ? "<img src=\"" + esc(t.l) + "\" alt=\"\" loading=\"lazy\">" : "") + "<span>" + esc(t.n) + "</span></div>";
+  const tv = m.L.tv.map(c => "<span class=\"ch\">" + esc(c) + "</span>").join("");
+  const intl = m.intl.map(c => "<span class=\"ch intl\">" + esc(c) + "</span>").join("");
+  const statsLabel = pre ? "الإحصاءات بعد بداية المباراة" : stats.open ? "إخفاء الإحصاءات" : "عرض إحصاءات المباراة";
+  return "<article class=\"m " + (live ? "is-live" : "") + "\" id=\"match-" + esc(m.id) + "\">" +
+    "<div class=\"m-head\"><span>" + esc(m.L.ar) + "</span>" + status + "</div>" +
+    "<div class=\"teams\">" + team(m.home) + score + team(m.away) + "</div>" +
+    (m.venue ? "<div class=\"venue\">🏟 " + esc(m.venue) + "</div>" : "") +
+    "<div class=\"tv\"><em>جهات العرض المعتادة في المنطقة:</em>" + (tv || "<span class=\"venue\">لم تتوفر معلومة مؤكدة</span>") + "</div>" +
+    (intl ? "<div class=\"tv\"><em>قنوات مسجلة في بيانات الحدث:</em>" + intl + "</div>" : "") +
+    "<button class=\"stats-toggle\" type=\"button\" data-stats=\"" + esc(m.id) + "\" aria-expanded=\"" + (stats.open ? "true" : "false") + "\"" + (pre ? " disabled" : "") + ">" + statsLabel + "</button>" +
+    "<div class=\"match-stats\" id=\"stats-" + esc(m.id) + "\"" + (stats.open ? "" : " hidden") + " aria-live=\"polite\">" + renderMatchStats(m, stats) + "</div>" +
+    "</article>";
+}
+
+const MATCH_STATS = new Map();
 let ALL = [];
 function renderRecommendations(matches){
   const host = $("#sports-recommendations");
@@ -219,72 +253,197 @@ function renderRecommendations(matches){
   }).join("");
 }
 
-async function fetchMatchStats(m){
-  const url=`https://site.api.espn.com/apis/site/v2/sports/soccer/${encodeURIComponent(m.L.id)}/summary?event=${encodeURIComponent(m.id)}`;
-  const res=await fetch(url,{cache:"no-store"});
-  if(!res.ok) throw new Error("stats unavailable");
-  const data=await res.json();
-  let teams=data.boxscore?.teams||[];
-  if(!teams.length){
-    teams=(data.competitions?.[0]?.competitors||[]).map(c=>({team:c.team,statistics:c.statistics||[]}));
+const STAT_LABELS = {
+  possessionpct: "الاستحواذ", totalshots: "إجمالي التسديدات", shots: "التسديدات",
+  shotsontarget: "التسديدات على المرمى",
+  foulscommitted: "الأخطاء", woncorners: "الركنيات", corners: "الركنيات",
+  yellowcards: "البطاقات الصفراء", redcards: "البطاقات الحمراء",
+  saves: "التصديات", offsides: "حالات التسلل", totalpasses: "التمريرات",
+  tackles: "الافتكاكات", blockedshots: "التسديدات المحجوبة"
+};
+
+function statRows(input) {
+  if (Array.isArray(input)) {
+    return input.flatMap(item => Array.isArray(item && item.stats)
+      ? item.stats.map(stat => Object.assign({ category: item.name || item.label || "" }, stat))
+      : [item]);
   }
-  const normalizeTeam=t=>({id:String(t.team?.id||""),name:t.team?.displayName||t.team?.shortDisplayName||"",stats:t.statistics||[]});
-  const list=teams.map(normalizeTeam).filter(t=>t.stats.length);
-  if(list.length<2) throw new Error("stats unavailable");
-  const home=list.find(t=>t.id&&t.id===String(m.home.id))||list[0];
-  const away=list.find(t=>t.id&&t.id===String(m.away.id))||list.find(t=>t!==home)||list[1];
-  const toMap=team=>new Map(team.stats.map(s=>[String(s.name||s.abbreviation||s.label||"إحصائية"),String(s.displayValue??s.value??"—")]));
-  const h=toMap(home), a=toMap(away), names=[...new Set([...h.keys(),...a.keys()])];
-  if(!names.length) throw new Error("stats unavailable");
-  return {home:home.name||m.home.n,away:away.name||m.away.n,rows:names.map(n=>[n,h.get(n)||"—",a.get(n)||"—"])};
+  if (input && typeof input === "object") {
+    if (Array.isArray(input.statistics)) return statRows(input.statistics);
+    if (Array.isArray(input.stats)) return statRows(input.stats);
+    return Object.keys(input).map(name => ({ name, value: input[name] }));
+  }
+  return [];
 }
 
-function showMatchStats(id,button){
-  const match=ALL.find(m=>String(m.id)===String(id));
-  const panel=document.getElementById(`stats-${CSS.escape(String(id))}`);
-  if(!match||!panel) return;
-  if(!panel.hidden){panel.hidden=true;button.setAttribute("aria-expanded","false");button.textContent="عرض إحصاءات المباراة";return;}
-  panel.hidden=false;button.setAttribute("aria-expanded","true");button.textContent="إخفاء الإحصاءات";
-  panel.innerHTML="<p>جارٍ جلب إحصاءات المباراة…</p>";
-  fetchMatchStats(match).then(data=>{
-    panel.innerHTML=`<table><thead><tr><th scope="col">الإحصائية</th><th scope="col">${esc(data.home)}</th><th scope="col">${esc(data.away)}</th></tr></thead><tbody>${data.rows.map(row=>`<tr><td>${esc(row[0])}</td><td>${esc(row[1])}</td><td>${esc(row[2])}</td></tr>`).join("")}</tbody></table>`;
-  }).catch(()=>{panel.innerHTML="<p>لا تتوفر إحصاءات لهذه المباراة من مصدر البيانات حاليًا. سنعرضها عند توفرها.</p>";});
+function listify(value) {
+  if (Array.isArray(value)) return value;
+  if (value && typeof value === "object") return Object.values(value);
+  return [];
+}
+
+function formatStatName(stat) {
+  const raw = String(stat.label || stat.displayName || stat.name || stat.abbreviation || stat.category || "إحصائية");
+  const key = raw.toLowerCase().replace(/[^a-z]/g, "");
+  return STAT_LABELS[key] || raw.replace(/([a-z])([A-Z])/g, "$1 $2");
+}
+
+async function fetchMatchStats(match) {
+  const url = "https://site.api.espn.com/apis/site/v2/sports/soccer/" +
+    encodeURIComponent(match.L.id) + "/summary?event=" + encodeURIComponent(match.id);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+  let response, data;
+  try {
+    response = await fetch(url, { cache: "no-store", signal: controller.signal });
+    if (!response.ok) throw new Error("summary unavailable");
+    data = await response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  const candidates = [
+    data.boxscore && data.boxscore.teams,
+    data.boxscore && data.boxscore.teamStats,
+    data.boxscore && data.boxscore.competitors,
+    data.competitions && data.competitions[0] && data.competitions[0].competitors,
+    data.header && data.header.competitions && data.header.competitions[0] && data.header.competitions[0].competitors,
+    data.gamepackageJSON && data.gamepackageJSON.boxscore && data.gamepackageJSON.boxscore.teams,
+    [
+      { team: { id: match.home.id, displayName: match.home.n }, homeAway: "home", statistics: match.home.stats || [] },
+      { team: { id: match.away.id, displayName: match.away.n }, homeAway: "away", statistics: match.away.stats || [] }
+    ]
+  ];
+  const teams = new Map();
+  for (const candidate of candidates) {
+    for (const item of listify(candidate)) {
+      if (!item || typeof item !== "object") continue;
+      const team = item.team || item;
+      const id = String(team.id || item.id || "");
+      const statistics = statRows(item.statistics || item.stats || item.statisticsItems || []);
+      if (!statistics.length) continue;
+      const key = id || String(item.homeAway || item.name || teams.size);
+      const previous = teams.get(key);
+      if (!previous || statistics.length > previous.statistics.length) {
+        teams.set(key, {
+          id,
+          homeAway: String(item.homeAway || item.side || "").toLowerCase(),
+          name: team.displayName || team.shortDisplayName || team.name || item.displayName || "",
+          statistics
+        });
+      }
+    }
+  }
+
+  const list = Array.from(teams.values());
+  const home = list.find(team => team.homeAway === "home") ||
+    list.find(team => team.id && team.id === String(match.home.id)) || list[0];
+  const away = list.find(team => team.homeAway === "away") ||
+    list.find(team => team.id && team.id === String(match.away.id)) || list.find(team => team !== home);
+  if (!home || !away) throw new Error("No team statistics");
+
+  const toMap = team => new Map(team.statistics.map(stat => {
+    const rawValue = stat.displayValue ?? stat.value ?? stat.displayValueText ?? "—";
+    const name = formatStatName(stat);
+    return [name, String(rawValue)];
+  }));
+  const homeStats = toMap(home), awayStats = toMap(away);
+  const names = Array.from(new Set([...homeStats.keys(), ...awayStats.keys()]));
+  if (!names.length) throw new Error("No match statistics");
+  return {
+    home: home.name || match.home.n,
+    away: away.name || match.away.n,
+    rows: names.map(name => [name, homeStats.get(name) || "—", awayStats.get(name) || "—"])
+  };
+}
+
+function updateMatchStats(id) {
+  const match = ALL.find(item => String(item.id) === String(id));
+  const state = MATCH_STATS.get(String(id));
+  const article = document.getElementById("match-" + id);
+  if (!match || !state || !article) return;
+  const button = article.querySelector("[data-stats]");
+  const panel = document.getElementById("stats-" + id);
+  if (!button || !panel) return;
+  button.setAttribute("aria-expanded", state.open ? "true" : "false");
+  button.textContent = match.state === "pre" ? "الإحصاءات بعد بداية المباراة" : state.open ? "إخفاء الإحصاءات" : "عرض إحصاءات المباراة";
+  button.disabled = match.state === "pre";
+  panel.hidden = !state.open;
+  panel.innerHTML = renderMatchStats(match, state);
+}
+
+function requestMatchStats(match, state) {
+  state.status = "loading";
+  state.error = null;
+  MATCH_STATS.set(String(match.id), state);
+  updateMatchStats(match.id);
+  fetchMatchStats(match).then(data => {
+    state.status = "ready";
+    state.data = data;
+    updateMatchStats(match.id);
+  }).catch(() => {
+    state.status = "error";
+    state.data = null;
+    updateMatchStats(match.id);
+  });
+}
+
+function showMatchStats(id) {
+  const match = ALL.find(item => String(item.id) === String(id));
+  if (!match || match.state === "pre") return;
+  const key = String(id);
+  const state = MATCH_STATS.get(key) || { open: false, status: "idle" };
+  state.open = !state.open;
+  MATCH_STATS.set(key, state);
+  if (state.open && state.status !== "ready" && state.status !== "loading") {
+    requestMatchStats(match, state);
+  } else updateMatchStats(id);
 }
 
 document.addEventListener("click",e=>{
+  const retry=e.target.closest("[data-stats-retry]");
+  if(retry){const match=ALL.find(item=>String(item.id)===String(retry.dataset.statsRetry));if(match){const state=MATCH_STATS.get(String(match.id))||{open:true,status:"idle"};state.open=true;requestMatchStats(match,state);}return;}
   const stats=e.target.closest("[data-stats]");
-  if(stats){showMatchStats(stats.dataset.stats,stats);return;}
+  if(stats){showMatchStats(stats.dataset.stats);return;}
   const pick=e.target.closest("[data-open-match]");
   if(pick){statusF="all";leagueF="all";render();requestAnimationFrame(()=>document.getElementById(`match-${CSS.escape(pick.dataset.openMatch)}`)?.scrollIntoView({behavior:"smooth",block:"center"}));}
 });
 
-function render(){
-  const cnt = s => ALL.filter(m=>m.state===s).length;
-  $("#sLive").textContent = cnt("in"); $("#sPre").textContent = cnt("pre");
-  $("#sPost").textContent = cnt("post"); $("#sAll").textContent = ALL.length;
-  renderRecommendations(ALL);
-
-  chips($("#filters"), [["all","الكل",ALL.length],["in","🔴 مباشر",cnt("in")],["pre","القادمة",cnt("pre")],["post","المنتهية",cnt("post")]],
-    statusF, v=>{statusF=v;render();});
-  const used = LEAGUES.filter(L=>ALL.some(m=>m.L.id===L.id));
-  chips($("#leagues"), [["all","كل البطولات"], ...used.map(L=>[L.id,L.ar,ALL.filter(m=>m.L.id===L.id).length])],
-    leagueF, v=>{leagueF=v;render();});
-
-  const list = ALL.filter(m=>(statusF==="all"||m.state===statusF)&&(leagueF==="all"||m.L.id===leagueF));
-  if (!list.length){ $("#board").innerHTML = `<div class="empty">لا توجد مباريات ضمن هذا الاختيار في هذا اليوم.</div>`; return; }
-  // تجميع حسب البطولة
+function renderLeagueGroups(list) {
   const groups = {};
   list.forEach(m=>(groups[m.L.id] ??= []).push(m));
   const order = LEAGUES.map(L=>L.id).filter(id=>groups[id]);
-  // البطولات التي فيها مباريات مباشرة تظهر أولاً
-  order.sort((a,b)=> (groups[b].some(m=>m.state==="in")) - (groups[a].some(m=>m.state==="in")));
-  $("#board").innerHTML = order.map(id=>{
-    const g = groups[id], L = g[0].L;
-    return `<div class="league">${g[0].logo?`<img src="${esc(g[0].logo)}" alt="">`:""}${esc(L.ar)} <small>· ${g.length} مباراة</small></div>
-      <div class="grid">${g.map(card).join("")}</div>`;
+  order.sort((a,b)=>(groups[b].some(m=>m.state==="in"))-(groups[a].some(m=>m.state==="in")));
+  return order.map(id=>{
+    const g=groups[id], L=g[0].L;
+    return "<div class=\"league\">"+(g[0].logo?"<img src=\""+esc(g[0].logo)+"\" alt=\"\">":"")+esc(L.ar)+" <small>· "+g.length+" مباراة</small></div>" +
+      "<div class=\"grid\">"+g.map(card).join("")+"</div>";
   }).join("");
 }
 
+function render(){
+  const cnt=s=>ALL.filter(m=>m.state===s).length;
+  $("#sLive").textContent=cnt("in"); $("#sPre").textContent=cnt("pre");
+  $("#sPost").textContent=cnt("post"); $("#sAll").textContent=ALL.length;
+  renderRecommendations(ALL);
+
+  chips($("#filters"),[["all","الكل",ALL.length],["in","🔴 مباشر",cnt("in")],["pre","القادمة",cnt("pre")],["post","المنتهية",cnt("post")]],
+    statusF,v=>{statusF=v;render();});
+  const used=LEAGUES.filter(L=>ALL.some(m=>m.L.id===L.id));
+  chips($("#leagues"),[["all","كل البطولات"],...used.map(L=>[L.id,L.ar,ALL.filter(m=>m.L.id===L.id).length])],
+    leagueF,v=>{leagueF=v;render();});
+
+  const list=ALL.filter(m=>(statusF==="all"||m.state===statusF)&&(leagueF==="all"||m.L.id===leagueF));
+  if(!list.length){$("#board").innerHTML="<div class=\"empty\">لا توجد مباريات ضمن هذا الاختيار في هذا اليوم.</div>";return;}
+  if(weekView){
+    const keys=Array.from(new Set(list.map(m=>m.dateKey))).sort();
+    $("#board").innerHTML=keys.map(key=>{
+      const label=new Date(Number(key.slice(0,4)),Number(key.slice(4,6))-1,Number(key.slice(6,8)),12)
+        .toLocaleDateString("ar-SA",{weekday:"long",day:"numeric",month:"long"});
+      return "<section class=\"match-day\"><h3 class=\"match-day-title\">"+esc(label)+"</h3>"+renderLeagueGroups(list.filter(m=>m.dateKey===key))+"</section>";
+    }).join("");
+  }else $("#board").innerHTML=renderLeagueGroups(list);
+}
 async function tick(){
   clearTimeout(timer);
   try { ALL = await load(); lastOk = Date.now(); render(); }
@@ -294,19 +453,93 @@ async function tick(){
   timer = setTimeout(tick, anyLive ? 15000 : nearKickoff ? 30000 : 120000);
 }
 
-const DAYS = [["-1","أمس"],["0","اليوم"],["1","غداً"],["2","بعد غد"]];
-function onDay(v){
-  dayOffset=+v; statusF="all"; leagueF="all"; prevScores={}; LEAGUE_CACHE.clear();
-  chips($("#days"), DAYS, v, onDay);
-  $("#board").innerHTML = `<div class="grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>`;
+const DAYS = [["-1","أمس"],["0","اليوم"],["1","غداً"],["2","بعد غد"],["week","الأيام السبعة"]];
+function onDay(value){
+  weekView=value==="week";
+  selectedDate="";
+  dayOffset=weekView?0:Number(value);
+  statusF="all"; leagueF="all"; prevScores={}; MATCH_STATS.clear(); LEAGUE_CACHE.clear();
+  chips($("#days"),DAYS,value,onDay);
+  $("#customDate").value=dateInputValue(ymd(dayOffset));
+  ALL=[];
+  $("#board").innerHTML="<div class=\"grid\"><div class=\"skel\"></div><div class=\"skel\"></div><div class=\"skel\"></div></div>";
   tick();
 }
-chips($("#days"), DAYS, "0", onDay);
-
+chips($("#days"),DAYS,"0",onDay);
+$("#customDate").value=dateInputValue(ymd(0));
+$("#customDate").addEventListener("change",()=>{
+  if(!$("#customDate").value)return;
+  selectedDate=$("#customDate").value.replace(/-/g,"");
+  weekView=false; dayOffset=0; statusF="all"; leagueF="all"; prevScores={}; MATCH_STATS.clear(); LEAGUE_CACHE.clear(); ALL=[];
+  chips($("#days"),DAYS,"custom",onDay);
+  $("#board").innerHTML="<div class=\"grid\"><div class=\"skel\"></div><div class=\"skel\"></div><div class=\"skel\"></div></div>";
+  tick();
+});
 setInterval(()=>{ if(!lastOk) return; const s=Math.round((Date.now()-lastOk)/1000);
   $("#ago").textContent = s<10 ? "الآن" : `منذ ${s} ثانية`; }, 1000);
 document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) tick(); });
-tick();
+
+function renderRatedSeries(config) {
+  const host = $("#tvmaze-series"), group = $("#tvmaze-series-group");
+  const ids = Array.from(new Set(((config.recommendations && config.recommendations.tvmazeIds) || []).map(Number).filter(id => Number.isInteger(id) && id > 0))).slice(0, 12);
+  if (!host || !ids.length) { if (group) group.hidden = true; return; }
+  group.hidden = false;
+  const loadShow = async id => {
+    try {
+      const cached = JSON.parse(localStorage.getItem("diamond-tvmaze-" + id) || "null");
+      if (cached && Date.now() - cached.at < 12 * 60 * 60 * 1000) return cached.show;
+    } catch (_) {}
+    const response = await fetch("https://api.tvmaze.com/shows/" + id, { cache: "no-cache" });
+    if (!response.ok) throw new Error("TVMaze unavailable");
+    const show = await response.json();
+    try { localStorage.setItem("diamond-tvmaze-" + id, JSON.stringify({ at: Date.now(), show: show })); } catch (_) {}
+    return show;
+  };
+  Promise.allSettled(ids.map(loadShow)).then(results => {
+    const shows = results.filter(result => result.status === "fulfilled").map(result => result.value)
+      .filter(show => show && show.name && show.rating && Number(show.rating.average) > 0)
+      .sort((a, b) => Number(b.rating.average) - Number(a.rating.average));
+    if (!shows.length) {
+      host.innerHTML = '<p class="store-empty">تعذّر تحميل تقييمات المسلسلات الآن.</p>';
+      return;
+    }
+    host.innerHTML = shows.slice(0, 6).map(show => {
+      const title = esc(show.name), rating = Number(show.rating.average).toFixed(1);
+      const summary = String(show.summary || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 190);
+      const image = show.image && show.image.medium ? esc(show.image.medium) : "";
+      const href = /^https:\/\/www\.tvmaze\.com\//.test(show.url || "") ? esc(show.url) : "https://www.tvmaze.com/";
+      return '<a class="recommend-card" href="' + href + '" target="_blank" rel="noopener noreferrer">' +
+        (image ? '<img class="recommend-cover" src="' + image + '" alt="ملصق مسلسل ' + title + '" loading="lazy">' : "") +
+        '<span class="recommend-type">مسلسل · TVMaze</span><h4>' + title + '</h4>' +
+        '<span class="tvmaze-rating">★ ' + rating + ' / 10</span><p>' + esc(summary || "تفاصيل العمل وتقييمه من TVMaze.") + '</p>' +
+        '<span class="recommend-link">تفاصيل العمل ومصدر التقييم ←</span></a>';
+    }).join("");
+  });
+}
+function renderManualMovies(config) {
+  const host = $("#manual-movies"), group = $("#manual-movies-group");
+  const movies = config.recommendations && Array.isArray(config.recommendations.movies) ? config.recommendations.movies : [];
+  if (!host || !movies.length) { if (group) group.hidden = true; return; }
+  group.hidden = false;
+  host.innerHTML = movies.slice(0, 12).map(movie => {
+    const title = esc(movie.title || "فيلم");
+    const link = /^https:\/\//.test(movie.url || "") ? esc(movie.url) : "#recommendations";
+    const image = /^https:\/\//.test(movie.image || "") ? '<img class="recommend-cover" src="' + esc(movie.image) + '" alt="' + esc(movie.imageAlt || title) + '" loading="lazy">' : "";
+    const rating = movie.rating ? '<span class="tvmaze-rating">ترشيح تحريري · ' + esc(movie.rating) + '</span>' : "";
+    return '<a class="recommend-card" href="' + link + '"><span class="recommend-type">فيلم · اختيار يدوي</span>' + image +
+      '<h4>' + title + '</h4>' + rating + '<p>' + esc(movie.description || "") + '</p></a>';
+  }).join("");
+}
+window.DIAMOND_CONFIG_READY.then(config => {
+  if (Array.isArray(config.leagues) && config.leagues.length) {
+    LEAGUES = config.leagues.filter(item => item && /^[a-z0-9.]+$/i.test(item.id || "") && item.ar)
+      .map(item => ({ id: item.id, ar: item.ar, tv: Array.isArray(item.tv) ? item.tv : [] }));
+  }
+  renderRatedSeries(config);
+  renderManualMovies(config);
+  tick();
+}).catch(() => tick());
+
 </script>
 </body>
 </html>
