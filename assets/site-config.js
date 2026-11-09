@@ -9,15 +9,15 @@
     sections: { live: true, recommendations: true, store: true },
     leagues: [
       { id: "ksa.1", ar: "دوري روشن السعودي", tv: ["ثمانية"] },
+      { id: "egy.1", ar: "الدوري المصري", tv: ["ON Sports"] },
+      { id: "afc.champions", ar: "دوري أبطال آسيا للنخبة", tv: ["beIN SPORTS"] },
       { id: "uefa.champions", ar: "دوري أبطال أوروبا", tv: ["beIN SPORTS"] },
       { id: "eng.1", ar: "الدوري الإنجليزي", tv: ["beIN SPORTS"] },
       { id: "esp.1", ar: "الدوري الإسباني", tv: ["beIN SPORTS"] },
       { id: "ita.1", ar: "الدوري الإيطالي", tv: ["STARZPLAY"] },
       { id: "ger.1", ar: "الدوري الألماني", tv: ["MBC Action", "شاهد"] },
       { id: "fra.1", ar: "الدوري الفرنسي", tv: ["beIN SPORTS"] },
-      { id: "uefa.europa", ar: "الدوري الأوروبي", tv: ["beIN SPORTS"] },
-      { id: "egy.1", ar: "الدوري المصري", tv: ["ON Sports"] },
-      { id: "afc.champions", ar: "دوري أبطال آسيا للنخبة", tv: ["beIN SPORTS"] }
+      { id: "uefa.europa", ar: "الدوري الأوروبي", tv: ["beIN SPORTS"] }
     ],
     recommendations: { tvmazeIds: [], movies: [] },
     products: []
