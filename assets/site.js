@@ -16,7 +16,7 @@ window.SITE = {
   const inArticles = parts.includes("articles");
   const page = inArticles ? "articles" : parts.includes("download") ? "download" : ((parts.pop() || "index.html").replace(".html", "") || "index");
   const links = [
-    ["index", "index.html", "⚽ المباريات مباشر"],
+    ["index", "index.html#board-heading", "⚽ المباريات مباشر"],
     ["movies", "movies.html", "🎬 أفضل الأفلام"],
     ["series", "series.html", "📺 أفضل المسلسلات"],
     ["arabic", "arabic.html", "🌙 الأفضل عربياً"],
@@ -41,3 +41,4 @@ window.SITE = {
     <a href="mailto:sales@diamond-tv.shop">sales@diamond-tv.shop</a></div>`;
   document.body.append(footer);
 })();
+

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex,nofollow">
 <title>لوحة اشتراكات DIAMOND TV</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
 <style>
@@ -72,6 +73,7 @@ label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
 @media(max-width:560px){.stats{grid-template-columns:1fr 1fr}.grid2,.grid3{grid-template-columns:1fr}}
 [hidden]{display:none!important}
 </style>
+<link rel="stylesheet" href="site-admin.css">
 </head>
 <body>
 
@@ -83,7 +85,7 @@ label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
         <stop offset="0" stop-color="#7C3AED"/><stop offset=".5" stop-color="#EC4899"/><stop offset="1" stop-color="#FB923C"/></linearGradient></defs>
       <rect width="108" height="108" rx="26" fill="url(#g)"/>
       <path d="M44 34 78 54 44 74Z" fill="#fff" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg>
-    <h1 style="text-align:center">لوحة اشتراكات<small>DIAMOND TV</small></h1>
+    <h1 style="text-align:center">لوحة إدارة DIAMOND TV<small>إدارة الموقع والاشتراكات</small></h1>
     <input id="secret" type="password" placeholder="كلمة سر المالك" style="direction:ltr">
     <div class="err" id="loginErr"></div>
     <button id="loginBtn" style="width:100%">دخول</button>
@@ -452,5 +454,7 @@ if(SECRET){ rpc("admin_subscribers",{p_secret:SECRET}).then(async r=>{
   if(r.status===200){SUBS=await r.json();$("#login").hidden=true;$("#app").hidden=false;render();loadContact();loadResellers();}
 }); }
 </script>
+<script src="site-admin.js"></script>
 </body>
 </html>
+

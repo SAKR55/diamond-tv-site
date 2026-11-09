@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">أجواء البرامج الرمضانية</title>
+  <desc id="desc">ميكروفون وشاشة وفانوس وهلال على خلفية خضراء مزخرفة.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0a302f"/><stop offset=".58" stop-color="#14504a"/><stop offset="1" stop-color="#193a56"/></linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0bb"/><stop offset=".5" stop-color="#e7b95b"/><stop offset="1" stop-color="#9f6d38"/></linearGradient>
+    <radialGradient id="warm"><stop stop-color="#ffd47a" stop-opacity=".33"/><stop offset="1" stop-color="#ffd47a" stop-opacity="0"/></radialGradient>
+    <pattern id="stars" width="90" height="90" patternUnits="userSpaceOnUse">
+      <path d="m45 9 7 27 27 9-27 7-7 29-7-29-27-7 27-9Z" fill="none" stroke="#c2e2b6" stroke-opacity=".14" stroke-width="2"/>
+      <circle cx="45" cy="45" r="4" fill="#f5d681" fill-opacity=".28"/>
+    </pattern>
+    <mask id="moon"><rect width="1200" height="675" fill="#fff"/><circle cx="882" cy="142" r="55" fill="#000"/></mask>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect width="1200" height="675" fill="url(#stars)"/>
+  <circle cx="900" cy="165" r="205" fill="url(#warm)"/>
+  <circle cx="882" cy="142" r="65" fill="url(#metal)" mask="url(#moon)"/>
+  <g fill="#f7e8bc" opacity=".9">
+    <path d="m772 97 5 14 15 1-12 9 4 15-12-8-13 8 5-15-12-9 15-1Z"/>
+    <path d="m1018 233 4 11 12 1-9 7 3 12-10-7-10 7 4-12-9-7 12-1Z"/>
+    <circle cx="705" cy="188" r="3"/><circle cx="1064" cy="83" r="3"/><circle cx="1110" cy="170" r="2"/>
+  </g>
+  <g transform="translate(152 62)">
+    <path d="M52 0v89M51 89h163M132 89v52" fill="none" stroke="url(#metal)" stroke-width="4"/>
+    <path d="M106 141h53l-8 22 20 24-10 75h-58l-10-75 20-24Z" fill="#f3ca71" fill-opacity=".1" stroke="url(#metal)" stroke-width="4"/>
+    <path d="M117 163h31m-41 24h51m-48 62h43m-28-108v-14m-26 111h55" fill="none" stroke="url(#metal)" stroke-width="3"/>
+    <path d="M136 193c-19 14-13 40 0 45 14-5 19-31 0-45Z" fill="#ffe5a1"/>
+    <circle cx="136" cy="211" r="74" fill="url(#warm)" opacity=".6"/>
+  </g>
+  <g transform="translate(676 303)">
+    <rect x="0" y="0" width="384" height="238" rx="26" fill="#102b33" stroke="url(#metal)" stroke-width="8"/>
+    <rect x="22" y="22" width="340" height="192" rx="13" fill="#0c1d2d"/>
+    <path d="M54 169c43-49 83-47 121-6 32-61 72-86 137-32v63H54Z" fill="#14514a"/>
+    <path d="M60 146h261" stroke="#e5c56c" stroke-opacity=".45" stroke-width="3"/>
+    <circle cx="285" cy="72" r="24" fill="url(#metal)"/>
+    <circle cx="298" cy="63" r="22" fill="#0c1d2d"/>
+    <circle cx="326" cy="103" r="7" fill="#e8c875"/>
+    <path d="M139 237v35m-53 8h160m-107-8h53" fill="none" stroke="url(#metal)" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="341" cy="224" r="6" fill="#7ae5a8"/>
+  </g>
+  <g transform="translate(340 322)">
+    <path d="M82 0c-39 0-66 30-66 70v63c0 40 27 69 66 69s66-29 66-69V70C148 30 121 0 82 0Z" fill="#19384a" stroke="url(#metal)" stroke-width="8"/>
+    <path d="M25 54h114M17 86h130M18 119h128M32 153h100" stroke="#c8d8d1" stroke-opacity=".65" stroke-width="5"/>
+    <path d="M82 202v71m-35 0h70m-56 14h42" stroke="url(#metal)" stroke-width="9" stroke-linecap="round"/>
+    <path d="M18 45C-2 83-2 118 17 153m130-108c20 38 20 73 1 108" fill="none" stroke="#a8c8bd" stroke-opacity=".45" stroke-width="4"/>
+  </g>
+  <path d="M0 619c151-49 282-41 415-8 105 26 198 19 293-12 143-47 315-18 492 22v54H0Z" fill="#092524" opacity=".7"/>
+  <path d="M0 649c194-38 342-8 485 9 149 18 255-27 394-35 139-8 225 12 321 34v18H0Z" fill="#071d21" opacity=".7"/>
+  <g fill="#f7d982" opacity=".8">
+    <circle cx="585" cy="470" r="4"/><circle cx="616" cy="502" r="3"/><circle cx="1098" cy="389" r="4"/>
+    <path d="m615 412 5 14 15 1-12 9 4 15-12-8-13 8 5-15-12-9 15-1Z"/>
+  </g>
+</svg>

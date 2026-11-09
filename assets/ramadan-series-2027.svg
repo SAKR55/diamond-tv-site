@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">أجواء درامية رمضانية</title>
+  <desc id="desc">زخرفة رمضانية ليلية بقوس عربي وهلال وفوانيس ذهبية.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111331"/><stop offset=".55" stop-color="#33274f"/><stop offset="1" stop-color="#7d3d48"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1bb"/><stop offset=".45" stop-color="#e5b95a"/><stop offset="1" stop-color="#a9693f"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#f8c875" stop-opacity=".35"/><stop offset="1" stop-color="#f8c875" stop-opacity="0"/></radialGradient>
+    <pattern id="mosaic" width="68" height="68" patternUnits="userSpaceOnUse">
+      <path d="M34 2 66 34 34 66 2 34Z" fill="none" stroke="#e8c77e" stroke-opacity=".17" stroke-width="2"/>
+      <circle cx="34" cy="34" r="6" fill="none" stroke="#e8c77e" stroke-opacity=".18"/>
+    </pattern>
+    <mask id="crescent"><rect width="1200" height="675" fill="#fff"/><circle cx="870" cy="156" r="64" fill="#000"/></mask>
+    <linearGradient id="curtain" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#381c3a"/><stop offset=".5" stop-color="#7c344c"/><stop offset="1" stop-color="#321a38"/></linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#sky)"/>
+  <circle cx="934" cy="146" r="185" fill="url(#glow)"/>
+  <path d="M0 0h1200v230c-100 42-180-18-269 17-92 36-152 5-230 31-102 34-182-3-281 27C293 343 187 273 0 322Z" fill="url(#mosaic)" opacity=".65"/>
+  <g fill="#fff4d3" opacity=".8">
+    <circle cx="115" cy="102" r="3"/><circle cx="218" cy="182" r="2"/><circle cx="385" cy="94" r="3"/>
+    <circle cx="512" cy="171" r="2"/><circle cx="680" cy="74" r="2.5"/><circle cx="1030" cy="82" r="2"/>
+    <path d="m710 137 5 13 14 1-11 9 4 14-12-8-12 8 4-14-11-9 14-1Z"/>
+    <path d="m348 145 4 10 11 1-9 7 3 11-9-6-10 6 4-11-9-7 11-1Z"/>
+  </g>
+  <circle cx="870" cy="156" r="70" fill="url(#gold)" mask="url(#crescent)"/>
+  <g stroke="url(#gold)" fill="none" stroke-width="4" opacity=".95">
+    <path d="M175 0v76M174 76h82M214 76v42"/>
+    <path d="M999 0v96M998 96h69M1032 96v36"/>
+  </g>
+  <g transform="translate(184 115)">
+    <path d="M12 0h38l-5 15 13 16-7 44H11L4 31l13-16Z" fill="#f4c96f" fill-opacity=".16" stroke="url(#gold)" stroke-width="3"/>
+    <path d="M17 15h28M11 31h47M17 68h30M30 0v-10M12 76h38" stroke="url(#gold)" stroke-width="3" fill="none"/>
+    <path d="M28 33 20 51h12l-5 16 14-22H29Z" fill="#ffe9aa"/>
+    <circle cx="30" cy="49" r="66" fill="url(#glow)" opacity=".7"/>
+  </g>
+  <g transform="translate(1000 132) scale(.78)">
+    <path d="M12 0h38l-5 15 13 16-7 44H11L4 31l13-16Z" fill="#f4c96f" fill-opacity=".14" stroke="url(#gold)" stroke-width="3"/>
+    <path d="M17 15h28M11 31h47M17 68h30M30 0v-10M12 76h38" stroke="url(#gold)" stroke-width="3" fill="none"/>
+    <path d="M30 35c-12 9-8 24 0 27 8-3 12-18 0-27Z" fill="#ffe9aa"/>
+    <circle cx="30" cy="49" r="62" fill="url(#glow)" opacity=".6"/>
+  </g>
+  <path d="M0 675V522c86-5 118-67 220-67s141 65 235 64c79-1 135-45 219-45 91 0 129 58 225 58 102 0 143-54 301-39v182Z" fill="#101425"/>
+  <path d="M0 590c88-13 156-43 251-25 87 16 118 57 221 35 99-21 142-73 238-61 94 12 135 73 241 66 112-7 158-57 249-46v116H0Z" fill="#17182e"/>
+  <g fill="url(#gold)" opacity=".8">
+    <path d="M340 674V591c0-55 38-94 92-94s92 39 92 94v83Z" opacity=".2"/>
+    <path d="M365 674V594c0-42 28-70 67-70s67 28 67 70v80Z" opacity=".42"/>
+    <path d="M392 674v-74c0-25 17-42 40-42s40 17 40 42v74Z" opacity=".52"/>
+    <path d="M411 674v-74c0-13 9-22 21-22s21 9 21 22v74Z" fill="#281e36"/>
+  </g>
+  <path d="M0 674V453c39 8 57 30 77 43v178Zm1123 0V468c34-12 53-25 77-43v249Z" fill="url(#curtain)" opacity=".84"/>
+  <path d="M20 674V485m44 189V519m1088 155V505m-45 169V531" stroke="#d6a767" stroke-opacity=".25" stroke-width="5"/>
+  <g fill="#f4d889">
+    <circle cx="284" cy="538" r="5"/><circle cx="925" cy="525" r="5"/><circle cx="284" cy="538" r="25" opacity=".15"/>
+    <circle cx="925" cy="525" r="25" opacity=".15"/>
+  </g>
+</svg>
