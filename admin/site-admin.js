@@ -48,16 +48,28 @@
     '<div class="hint sa-editor-note">تظهر التعديلات في قائمة المراجعة أولًا، ولا تُنشر إلا عند الضغط على زر النشر.</div></div></div></div>' +
     '<div class="sa-view" id="saArticlesView" hidden><div class="sa-intro card"><h3>إنشاء محتوى جديد</h3>' +
     '<p class="hint">يُنشأ المحتوى مع عنوان ووصف لمحركات البحث وبيانات منظمة، ويُضاف المقال تلقائيًا إلى فهرس المقالات وخريطة الموقع.</p></div>' +
-    '<div class="sa-create-grid"><form id="saArticleForm" class="card sa-form"><h3>مقال جديد</h3>' +
+    '<div class="sa-create-grid"><form id="saArticleForm" class="card sa-form"><h3>مختبر المقالات</h3>' +
+    '<section class="sa-writer-tool" id="saWriterTool"><b>اكتب الموضوع وسنجهّز مسودة منظمة</b><p class="hint">تُنشئ الأداة مسودة تلقائية قابلة للتحرير من قوالب تحريرية؛ لا تبحث في الإنترنت ولا تتحقق من الأخبار. أضف معلومات موضوعك ومصادره قبل النشر.</p>' +
+    '<label>موضوع المقال<textarea id="saWriterTopic" rows="2" maxlength="180" placeholder="مثال: كيف تختار مسلسلًا مناسبًا للمشاهدة العائلية؟"></textarea></label>' +
+    '<div class="sa-two-col"><label>الكلمة المفتاحية الرئيسية<input id="saWriterKeyword" maxlength="80" placeholder="مثال: مسلسلات عائلية"></label>' +
+    '<label>القارئ المستهدف<select id="saWriterAudience"><option value="عام">جمهور عام</option><option value="المبتدئون">المبتدئون</option><option value="العائلات">العائلات</option><option value="عشاق الرياضة">عشاق الرياضة</option><option value="عشاق السينما">عشاق السينما</option></select></label></div>' +
+    '<div class="sa-keyword-tools"><button type="button" class="ghost sm" id="saSuggestKeywords">اقتراح عبارات بحث</button><span class="hint">اقتراحات تحريرية بلا بيانات حجم بحث.</span></div><div class="sa-keyword-ideas" id="saKeywordIdeas"></div>' +
+    '<div class="sa-two-col"><label>نية المقال<select id="saWriterIntent"><option value="guide">دليل عملي</option><option value="list">قائمة ترشيحات</option><option value="compare">مقارنة</option><option value="explainer">شرح مبسط</option></select></label>' +
+    '<label>طول المسودة<select id="saWriterLength"><option value="short">مختصر</option><option value="standard" selected>متوسط</option><option value="long">موسع</option></select></label></div>' +
+    '<button type="button" id="saGenerateArticle">تجهيز مسودة المقال</button><div id="saWriterNotice" class="hint" aria-live="polite"></div></section>' +
+    '<label>عنوان المقال<input name="title" required maxlength="100" placeholder="عنوان واضح ومفيد للقارئ"></label>' +
     '<label>عنوان المقال<input name="title" required maxlength="100" placeholder="عنوان واضح ومفيد للقارئ"></label>' +
     '<label>الرابط المختصر (إنجليزي)<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="ramadan-2027-series-guide"></label>' +
     '<label>وصف نتائج البحث<textarea name="description" required maxlength="160" rows="3" placeholder="ملخص دقيق يساعد القارئ على معرفة محتوى المقال"></textarea></label>' +
-    '<div class="sa-two-col"><label>القسم<select name="category"><option value="مسلسلات">مسلسلات</option><option value="سينما">سينما</option><option value="رياضة">رياضة</option><option value="التطبيق">التطبيق</option></select></label>' +
+    '<div class="sa-two-col"><label>القسم<select name="category"><option value="عام">عام</option><option value="مسلسلات">مسلسلات</option><option value="سينما">سينما</option><option value="رياضة">رياضة</option><option value="التطبيق">التطبيق</option></select></label>' +
     '<label>اسم الكاتب<input name="author" value="فريق DIAMOND TV" maxlength="60"></label></div>' +
     '<label>رابط صورة الغلاف (اختياري)<input name="image" type="url" placeholder="https://..."></label>' +
     '<label>وصف الصورة البديل<input name="imageAlt" maxlength="150" placeholder="وصف موجز للصورة"></label>' +
+    '<label>مصادر موثوقة (اختياري؛ رابط HTTPS في كل سطر)<textarea name="sources" rows="3" placeholder="https://example.com/source"></textarea></label>' +
+    '<div class="sa-editorial-checks"><label class="sa-check"><input id="saOriginalCheck" type="checkbox"> أضفت معلومة أصلية أو تحليلًا مفيدًا للقارئ</label><label class="sa-check"><input id="saFactCheck" type="checkbox"> راجعت الحقائق والأسماء والتواريخ والمصادر</label></div>' +
     '<label>محتوى المقال<textarea name="body" required rows="12" placeholder="اكتب محتوى أصليًا ومفيدًا. افصل الفقرات بسطر فارغ، واكتب ## قبل العنوان الفرعي، وابدأ كل نقطة بشرطة - ."></textarea></label>' +
-    '<div class="sa-inline-form"><button type="button" class="ghost" id="saDraftOutline">إنشاء مخطط قابل للتحرير</button><button type="button" class="ghost" id="saSeoAudit">فحص المقال لمحركات البحث</button></div><div id="saSeoReport" class="sa-audit-report" hidden></div>' +
+    '<div class="sa-inline-form"><button type="button" class="ghost" id="saDraftOutline">إضافة مخطط للمقال</button><button type="button" class="ghost" id="saSeoAudit">فحص SEO الآن</button></div><div id="saSeoReport" class="sa-audit-report" hidden></div>' +
+    '<section class="sa-search-preview" id="saSearchPreview" aria-label="معاينة نتيجة البحث"><b>معاينة نتيجة البحث</b><div class="sa-search-url" id="saPreviewUrl">diamond-tv.shop/articles/</div><div class="sa-search-title" id="saPreviewTitle">سيظهر عنوان المقال هنا</div><div class="sa-search-description" id="saPreviewDescription">سيظهر وصف المقال هنا</div><button type="button" class="ghost sm" id="saCopySnippet">نسخ العنوان والوصف</button></section>' +
     '<button type="submit">إضافة المقال إلى قائمة النشر</button></form>' +
     '<form id="saPageForm" class="card sa-form"><h3>صفحة جديدة</h3>' +
     '<label>عنوان الصفحة<input name="title" required maxlength="100" placeholder="عنوان الصفحة"></label>' +
@@ -75,13 +87,27 @@
   dashboard.className = "sa-view";
   dashboard.innerHTML =
     '<div class="sa-dashboard-intro card"><span class="sa-eyebrow">إدارة سهلة</span><h3>لوحة الموقع</h3><p class="hint">عدّل الألوان والأقسام والبطولات، وأضف الترشيحات والمنتجات. راجع التغييرات ثم انشرها مرة واحدة.</p></div>' +
+    '<div class="sa-dashboard-actions card"><div><b>أدوات سريعة</b><p class="hint">ابدأ كتابة مقال أو راجع التغييرات المجهزة للنشر.</p></div><button type="button" id="saQuickArticle">كاتب المقالات</button><button type="button" class="ghost" id="saQuickPublish">مراجعة ونشر</button></div>' +
     '<div class="sa-dashboard-grid">' +
     '<section class="card sa-manager-card"><h3>ألوان الموقع</h3><label>اللون الرئيسي<input id="saAccent" type="color"></label><label>اللون المساند<input id="saAccent2" type="color"></label><button type="button" id="saSaveTheme">حفظ الألوان</button></section>' +
     '<section class="card sa-manager-card"><h3>أقسام الصفحة الرئيسية</h3><label class="sa-check"><input id="saLiveEnabled" type="checkbox"> المباريات المباشرة</label><label class="sa-check"><input id="saRecommendationsEnabled" type="checkbox"> ترشيحات السهرة</label><label class="sa-check"><input id="saStoreEnabled" type="checkbox"> المتجر</label><button type="button" id="saSaveSections">حفظ الأقسام</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>البطولات والقنوات</h3><p class="hint">سطر لكل بطولة: رمز البطولة | الاسم بالعربية | القنوات المعتادة مفصولة بفواصل.</p><textarea id="saLeagueEditor" rows="8" dir="auto"></textarea><button type="button" id="saSaveLeagues">حفظ البطولات</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>مسلسلات TVMaze</h3><p class="hint">ابحث عن مسلسل وأضفه؛ تُحدّث تقييماته تلقائيًا من المصدر.</p><div class="sa-inline-form"><input id="saTvSearch" placeholder="اسم المسلسل"><button type="button" id="saTvSearchBtn">بحث</button></div><div id="saTvResults" class="sa-manager-list"></div><h4>المسلسلات المختارة</h4><div id="saTvSelected" class="sa-manager-list"></div></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>ترشيحات الأفلام اليدوية</h3><p class="hint">تقييم أو وصف الأفلام هنا تحريري، وليس من مصدر خارجي.</p><form id="saMovieForm" class="sa-manager-form"><input name="title" required maxlength="100" placeholder="اسم الفيلم"><input name="image" type="url" placeholder="رابط صورة HTTPS (اختياري)"><input name="url" type="url" placeholder="رابط التفاصيل HTTPS (اختياري)"><textarea name="description" required rows="2" maxlength="260" placeholder="لماذا ترشحه؟"></textarea><button type="submit">إضافة الفيلم</button></form><div id="saMovieList" class="sa-manager-list"></div></section>' +
-    '<section class="card sa-manager-card sa-manager-wide"><h3>منتجات المتجر</h3><p class="hint">أضف وصف المنتج والسعر ورابط الطلب. الدفع الإلكتروني يحتاج مزود دفع منفصل.</p><form id="saProductForm" class="sa-manager-form"><input name="id" type="hidden"><div class="sa-manager-two"><input name="title" required maxlength="100" placeholder="اسم المنتج"><input name="category" maxlength="50" placeholder="القسم"></div><textarea name="description" required rows="2" maxlength="300" placeholder="وصف المنتج"></textarea><div class="sa-manager-two"><input name="price" maxlength="40" placeholder="السعر (اختياري)"><input name="currency" maxlength="12" value="ر.س" placeholder="العملة"></div><div class="sa-manager-two"><input name="image" type="url" placeholder="رابط صورة HTTPS (اختياري)"><input name="imageAlt" maxlength="140" placeholder="وصف الصورة"></div><input name="url" type="url" placeholder="رابط التفاصيل أو الطلب HTTPS"><label class="sa-check"><input name="active" type="checkbox" checked> المنتج متاح للعرض</label><button type="submit">حفظ المنتج</button></form><div id="saProductList" class="sa-manager-list"></div></section>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>استوديو المنتجات</h3><p class="hint">أنشئ بطاقة منتج كاملة مع الصورة والسعر السابق والحالة والمواصفات، ثم عاينها قبل إضافتها للنشر. الطلب يتم عبر الرابط الذي تحدده.</p>' +
+    '<div class="sa-product-editor"><form id="saProductForm" class="sa-manager-form sa-product-form"><input name="id" type="hidden">' +
+    '<label>اسم المنتج<input name="title" required maxlength="100" placeholder="اسم واضح للمنتج"></label>' +
+    '<div class="sa-manager-two"><label>القسم<input name="category" maxlength="50" list="saProductCategories" placeholder="مثال: اشتراكات أو أجهزة"><datalist id="saProductCategories"><option value="اشتراكات"><option value="أجهزة"><option value="إكسسوارات"><option value="عروض"></datalist></label><label>العملة<input name="currency" maxlength="12" value="ر.س" placeholder="ر.س"></label></div>' +
+    '<label>وصف المنتج<textarea name="description" required rows="3" maxlength="500" placeholder="ما الذي يحصل عليه العميل؟ اذكر التفاصيل الحقيقية بوضوح."></textarea></label>' +
+    '<label>المميزات أو المواصفات (ميزة في كل سطر)<textarea name="highlights" rows="4" maxlength="700" placeholder="تفصيل أو مواصفة موثقة لكل سطر"></textarea></label>' +
+    '<div class="sa-manager-three"><label>السعر الحالي<input name="price" maxlength="30" placeholder="مثال: 99"></label><label>السعر السابق<input name="oldPrice" maxlength="30" placeholder="اختياري"></label><label>حالة المنتج<select name="availability"><option value="available">متوفر</option><option value="preorder">طلب مسبق</option><option value="unavailable">غير متاح مؤقتًا</option></select></label></div>' +
+    '<label>رابط الصورة<input name="image" type="text" inputmode="url" placeholder="رابط HTTPS أو مسار صورة داخل الموقع"></label><label class="sa-upload-box">أو اختر صورة من جهازك<input id="saProductImageUpload" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><span class="hint">تُرفع الصورة إلى ملفات الموقع عند نشر التغييرات · حتى 4 ميغابايت</span></label>' +
+    '<label>وصف الصورة البديل<input name="imageAlt" maxlength="140" placeholder="وصف يوضح ما يظهر في الصورة"></label>' +
+    '<label>رابط الطلب أو التفاصيل<input name="url" type="url" placeholder="https://..."></label>' +
+    '<div class="sa-manager-two"><label class="sa-check"><input name="featured" type="checkbox"> تمييز المنتج في المتجر</label><label class="sa-check"><input name="active" type="checkbox" checked> عرض المنتج في المتجر</label></div>' +
+    '<div class="sa-product-form-actions"><button type="submit">حفظ المنتج</button><button type="button" class="ghost" id="saProductClear">منتج جديد</button></div></form>' +
+    '<aside class="sa-product-preview"><b>معاينة البطاقة</b><div id="saProductPreviewCard" class="sa-product-preview-card"><div class="sa-product-preview-image">DIAMOND</div><div class="sa-product-preview-copy"><span class="hint">ستظهر المعاينة هنا</span></div></div><p class="hint">السعر والخصم والتوفر يعكسان البيانات التي أدخلتها فقط.</p></aside></div>' +
+    '<div class="sa-product-list-head"><b>المنتجات المحفوظة</b><span class="hint" id="saProductCount"></span></div><div id="saProductList" class="sa-manager-list"></div></section>' +
     '</div><div class="sa-manager-footer card"><span>كل تغيير يضاف لقائمة المراجعة؛ النشر يبدأ عند الضغط على «نشر التعديلات».</span><button type="button" class="ghost sm" id="saStageConfig">حفظ تغييرات لوحة الموقع</button></div>';
   sitePanel.querySelector(".sa-tabs").innerHTML =
     '<button class="sa-tab active" data-view="dashboard">لوحة الموقع</button>' +
@@ -287,9 +313,12 @@
       return '<div class="sa-manager-row"><span><b>' + escapeHtml(movie.title) + '</b><small>' + escapeHtml(movie.description) + '</small></span><button type="button" class="ghost sm" data-remove-movie="' + index + '">حذف</button></div>';
     }).join("") || '<p class="hint">لم تُضف أفلامًا بعد.</p>';
     $("#saProductList").innerHTML = siteConfig.products.map(function (product, index) {
-      return '<div class="sa-manager-row"><span><b>' + escapeHtml(product.title) + '</b><small>' + escapeHtml(product.price || "بدون سعر") + (product.active === false ? " · مخفي" : " · ظاهر") + '</small></span>' +
+      const availability = product.availability === "preorder" ? "طلب مسبق" : product.availability === "unavailable" ? "غير متاح" : "متوفر";
+      return '<div class="sa-manager-row"><span><b>' + escapeHtml(product.title) + '</b><small>' + escapeHtml(product.category || "بلا قسم") + " · " + escapeHtml(product.price || "بدون سعر") + (product.currency ? " " + escapeHtml(product.currency) : "") + " · " + availability + (product.featured ? " · مميز" : "") + (product.active === false ? " · مخفي" : " · ظاهر") + '</small></span>' +
         '<span class="sa-manager-actions"><button type="button" class="ghost sm" data-edit-product="' + index + '">تعديل</button><button type="button" class="ghost sm" data-remove-product="' + index + '">حذف</button></span></div>';
     }).join("") || '<p class="hint">المتجر فارغ؛ أضف أول منتج من النموذج.</p>';
+    $("#saProductCount").textContent = siteConfig.products.length + " منتج";
+    renderProductPreview();
   }
   function stageDashboardConfig(message) {
     stage("assets/site-config.json", JSON.stringify(siteConfig, null, 2) + "\n", original["assets/site-config.json"] && original["assets/site-config.json"].content);
@@ -299,6 +328,26 @@
     const text = String(value || "").trim();
     if (!text) return "";
     try { const url = new URL(text); return url.protocol === "https:" ? url.href : ""; } catch (_) { return ""; }
+  }
+  function safeProductImage(value) {
+    const text = String(value || "").trim();
+    if (/^\/assets\/[a-zA-Z0-9._-]+$/.test(text)) return text;
+    return safeDashboardUrl(text);
+  }
+  function renderProductPreview() {
+    const form = $("#saProductForm");
+    if (!form) return;
+    const get = function (name) { return String(form.elements[name] && form.elements[name].value || "").trim(); };
+    const image = safeProductImage(get("image"));
+    const title = get("title") || "اسم المنتج";
+    const category = get("category") || "القسم";
+    const description = get("description") || "سيظهر وصف المنتج في هذه المساحة.";
+    const price = get("price"), oldPrice = get("oldPrice"), currency = get("currency");
+    const availability = get("availability") === "preorder" ? "طلب مسبق" : get("availability") === "unavailable" ? "غير متاح مؤقتًا" : "متوفر";
+    $("#saProductPreviewCard").innerHTML = (image ? '<img src="' + escapeHtml(image) + '" alt="">' : '<div class="sa-product-preview-image">✦ DIAMOND</div>') +
+      '<div class="sa-product-preview-copy"><span class="hint">' + escapeHtml(category) + '</span><b>' + escapeHtml(title) + '</b><p>' + escapeHtml(description) + '</p>' +
+      '<div class="sa-product-preview-price">' + (price ? '<strong>' + escapeHtml(price) + ' ' + escapeHtml(currency) + '</strong>' : '<span>السعر غير محدد</span>') + (oldPrice ? '<del>' + escapeHtml(oldPrice) + ' ' + escapeHtml(currency) + '</del>' : '') + '</div>' +
+      '<span class="sa-product-preview-state">' + availability + (form.elements.featured.checked ? ' · مميز' : '') + '</span></div>';
   }
   async function searchTvMaze() {
     const query = $("#saTvSearch").value.trim();
@@ -334,6 +383,7 @@
       if (block.indexOf("### ") === 0) return "<h3>" + escapeHtml(block.slice(4)) + "</h3>";
       if (block.indexOf("## ") === 0) return "<h2>" + escapeHtml(block.slice(3)) + "</h2>";
       const lines = block.split(/\r?\n/);
+      if (lines.every(function (line) { return /^\s*\d+[.)]\s+/.test(line); })) return "<ol>" + lines.map(function (line) { return "<li>" + escapeHtml(line.replace(/^\s*\d+[.)]\s+/, "")) + "</li>"; }).join("") + "</ol>";
       if (lines.every(function (line) { return /^\s*-\s+/.test(line); })) return "<ul>" + lines.map(function (line) { return "<li>" + escapeHtml(line.replace(/^\s*-\s+/, "")) + "</li>"; }).join("") + "</ul>";
       return "<p>" + escapeHtml(block).replace(/\r?\n/g, "<br>") + "</p>";
     }).join("\n");
@@ -372,8 +422,10 @@
       '<nav class="sa-breadcrumb"><a href="../index.html">الرئيسية</a> / ' + (isArticle ? '<a href="./">المقالات</a> / ' : "") + safeTitle + '</nav>\n' +
       '<article class="sa-article"><p class="pill">' + escapeHtml(data.category || "DIAMOND TV") + '</p><h1>' + safeTitle + '</h1>\n' +
       '<p class="sa-article-lead">' + safeDescription + '</p>\n' +
+      (isArticle ? '<p class="sa-article-author">بقلم <b>' + escapeHtml(data.author || "فريق DIAMOND TV") + '</b></p>\n' : "") +
       (data.image ? '<figure><img src="' + safeImage + '" alt="' + escapeHtml(data.imageAlt || data.title) + '" loading="lazy"></figure>\n' : "") +
       '<div class="sa-article-body">\n' + data.body + '\n</div>\n' +
+      (isArticle && data.sources && data.sources.length ? '<section class="sa-article-sources"><h2>مصادر للمراجعة</h2><ul>' + data.sources.map(function (url) { return '<li><a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(url.replace(/^https?:\/\//, "")) + '</a></li>'; }).join("") + '</ul></section>\n' : "") +
       '<p class="hint sa-updated">آخر تحديث: <time datetime="' + now + '">' + now + '</time></p></article>\n' +
       '</main>\n<script src="../assets/site.js"></script>\n</body>\n</html>\n';
   }
@@ -387,8 +439,13 @@
       category: metaField(form, "category"),
       author: metaField(form, "author"),
       image: metaField(form, "image"),
-      imageAlt: metaField(form, "imageAlt")
+      imageAlt: metaField(form, "imageAlt"),
+      sources: metaField(form, "sources").split(/\r?\n/).map(function (value) { return value.trim(); }).filter(Boolean)
     };
+    if (data.sources.some(function (value) { try { return new URL(value).protocol !== "https:"; } catch (_) { return true; } })) {
+      toast("تحقق من روابط المصادر؛ اقبل روابط HTTPS صحيحة فقط.");
+      return;
+    }
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(data.slug)) {
       toast("اكتب الرابط المختصر بأحرف إنجليزية صغيرة وأرقام وواصلات.");
       return;
@@ -507,16 +564,28 @@
     const movie = event.target.closest("[data-remove-movie]");
     if (movie) { siteConfig.recommendations.movies.splice(Number(movie.dataset.removeMovie), 1); renderDashboard(); stageDashboardConfig("حُذف الفيلم من الترشيحات."); return; }
     const remove = event.target.closest("[data-remove-product]");
-    if (remove) { siteConfig.products.splice(Number(remove.dataset.removeProduct), 1); renderDashboard(); stageDashboardConfig("حُذف المنتج من قائمة العرض."); return; }
+    if (remove) {
+      const item = siteConfig.products[Number(remove.dataset.removeProduct)];
+      if (!item || !window.confirm("حذف المنتج «" + item.title + "» من المتجر؟")) return;
+      siteConfig.products.splice(Number(remove.dataset.removeProduct), 1); renderDashboard(); stageDashboardConfig("حُذف المنتج من قائمة العرض."); return;
+    }
     const edit = event.target.closest("[data-edit-product]");
     if (edit) {
       const item = siteConfig.products[Number(edit.dataset.editProduct)], form = $("#saProductForm");
       if (!item) return;
-      Object.keys(item).forEach(function (key) { if (form.elements[key]) form.elements[key].value = item[key] == null ? "" : item[key]; });
+      Object.keys(item).forEach(function (key) {
+        if (!form.elements[key] || key === "active" || key === "featured" || key === "highlights") return;
+        form.elements[key].value = item[key] == null ? "" : item[key];
+      });
+      form.elements.highlights.value = Array.isArray(item.highlights) ? item.highlights.join("\n") : String(item.highlights || "");
       form.elements.active.checked = item.active !== false;
+      form.elements.featured.checked = item.featured === true;
+      renderProductPreview();
       form.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   });
+  $("#saQuickArticle").addEventListener("click", function () { switchView("articles"); $("#saWriterTopic").focus(); });
+  $("#saQuickPublish").addEventListener("click", function () { switchView("publish"); });
   $("#saMovieForm").addEventListener("submit", function (event) {
     event.preventDefault();
     const form = event.currentTarget, data = new FormData(form), title = String(data.get("title") || "").trim(), description = String(data.get("description") || "").trim();
@@ -525,17 +594,64 @@
     siteConfig.recommendations.movies = siteConfig.recommendations.movies.concat([{ title: title, description: description, image: safeUrl(data.get("image")), url: safeUrl(data.get("url")) }]).slice(0, 12);
     form.reset(); renderDashboard(); stageDashboardConfig("أُضيف الفيلم إلى الترشيحات اليدوية.");
   });
+  $("#saProductForm").addEventListener("input", renderProductPreview);
+  $("#saProductForm").addEventListener("change", renderProductPreview);
+  $("#saProductClear").addEventListener("click", function () {
+    const form = $("#saProductForm");
+    form.reset();
+    form.elements.id.value = "";
+    renderProductPreview();
+    form.elements.title.focus();
+  });
+  $("#saProductImageUpload").addEventListener("change", async function (event) {
+    const file = (event.target.files || [])[0];
+    if (!file) return;
+    if (!/^image\/(png|jpeg|webp|avif)$/.test(file.type) || file.size > 4 * 1024 * 1024) {
+      toast("اختر صورة PNG أو JPG أو WebP أو AVIF بحجم 4 ميغابايت أو أقل.");
+      event.target.value = "";
+      return;
+    }
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/^\.+/, "").slice(-80) || "product-image";
+    const path = "assets/store-" + Date.now() + "-" + safeName;
+    try {
+      const reader = new FileReader();
+      const base64 = await new Promise(function (resolve, reject) {
+        reader.onload = function () { resolve(String(reader.result).split(",")[1] || ""); };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      binaryPending[path] = base64;
+      original[path] = { sha: null, content: "" };
+      $("#saProductForm").elements.image.value = "/" + path;
+      if (!$("#saProductForm").elements.imageAlt.value.trim()) $("#saProductForm").elements.imageAlt.value = $("#saProductForm").elements.title.value.trim() || file.name;
+      renderPending();
+      renderProductPreview();
+      toast("أُضيفت الصورة للنشر مع المنتج.");
+    } catch (_) { toast("تعذّر قراءة الصورة."); }
+    event.target.value = "";
+  });
   $("#saProductForm").addEventListener("submit", function (event) {
     event.preventDefault();
     const form = event.currentTarget, data = new FormData(form), title = String(data.get("title") || "").trim(), description = String(data.get("description") || "").trim();
     if (!title || !description) return;
-    function safeUrl(value) { try { const url = new URL(String(value || "").trim()); return url.protocol === "https:" ? url.href : ""; } catch (_) { return ""; } }
+    const image = safeProductImage(data.get("image"));
+    const url = safeDashboardUrl(data.get("url"));
+    if (data.get("image") && !image) { toast("رابط الصورة يجب أن يكون HTTPS أو مسارًا آمنًا داخل assets."); return; }
+    if (data.get("url") && !url) { toast("رابط الطلب يجب أن يكون HTTPS."); return; }
     const currentId = String(data.get("id") || "");
-    const product = { id: currentId || "product-" + Date.now(), title: title, category: String(data.get("category") || "").trim(), description: description, price: String(data.get("price") || "").trim(), currency: String(data.get("currency") || "").trim(), image: safeUrl(data.get("image")), imageAlt: String(data.get("imageAlt") || "").trim(), url: safeUrl(data.get("url")), active: form.elements.active.checked };
+    const product = {
+      id: currentId || "product-" + Date.now(), title: title, category: String(data.get("category") || "").trim(),
+      description: description, highlights: String(data.get("highlights") || "").split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean).slice(0, 12),
+      price: String(data.get("price") || "").trim(), oldPrice: String(data.get("oldPrice") || "").trim(), currency: String(data.get("currency") || "").trim(),
+      image: image, imageAlt: String(data.get("imageAlt") || title).trim(), url: url,
+      availability: ["available", "preorder", "unavailable"].includes(String(data.get("availability"))) ? String(data.get("availability")) : "available",
+      featured: form.elements.featured.checked, active: form.elements.active.checked
+    };
     const index = siteConfig.products.findIndex(function (item) { return item.id === currentId; });
     if (index >= 0) siteConfig.products[index] = product; else siteConfig.products.push(product);
     form.reset(); form.elements.currency.value = "ر.س"; form.elements.active.checked = true;
-    renderDashboard(); stageDashboardConfig("تم حفظ المنتج في قائمة النشر.");
+    form.elements.availability.value = "available";
+    renderDashboard(); stageDashboardConfig("تم حفظ المنتج ومعاينته في قائمة النشر.");
   });
   $("#saConnectBtn").addEventListener("click", async function () {
     token = $("#saToken").value.trim();
@@ -595,26 +711,171 @@
     stage(selectedPath, $("#saEditor").value, selectedOriginal);
     $("#saEditorMeta").textContent = "التعديل جاهز للمراجعة والنشر.";
   });
+  function normalizeSearchText(value) {
+    return String(value || "").toLowerCase().replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه")
+      .replace(/[^a-z0-9\u0600-\u06ff\s]/g, " ").replace(/\s+/g, " ").trim();
+  }
+  function countPhrase(text, phrase) {
+    if (!phrase) return 0;
+    let count = 0, from = 0, at;
+    while ((at = text.indexOf(phrase, from)) !== -1) { count += 1; from = at + phrase.length; }
+    return count;
+  }
+  function transliterateSlug(value) {
+    const letters = { "ا":"a","أ":"a","إ":"i","آ":"aa","ب":"b","ت":"t","ث":"th","ج":"j","ح":"h","خ":"kh","د":"d","ذ":"dh","ر":"r","ز":"z","س":"s","ش":"sh","ص":"s","ض":"d","ط":"t","ظ":"z","ع":"a","غ":"gh","ف":"f","ق":"q","ك":"k","ل":"l","م":"m","ن":"n","ه":"h","ة":"h","و":"w","ي":"y","ى":"a","ؤ":"w","ئ":"y","ء":"" };
+    return String(value || "").toLowerCase().replace(/[\u064b-\u065f\u0670]/g, "").split("").map(function (char) {
+      return letters[char] !== undefined ? letters[char] : char;
+    }).join("").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80).replace(/-+$/g, "");
+  }
+  function updateSearchPreview(form) {
+    $("#saPreviewTitle").textContent = metaField(form, "title") || "سيظهر عنوان المقال هنا";
+    $("#saPreviewDescription").textContent = metaField(form, "description") || "سيظهر وصف المقال هنا";
+    const slug = metaField(form, "slug").replace(/[^a-z0-9-]/g, "");
+    $("#saPreviewUrl").textContent = "diamond-tv.shop/articles/" + (slug || "");
+  }
+  function renderKeywordIdeas() {
+    const topic = $("#saWriterTopic").value.trim(), ideas = $("#saKeywordIdeas");
+    ideas.replaceChildren();
+    if (!topic) return;
+    [topic, "كيف تختار " + topic, "أفضل " + topic, "مميزات " + topic, "مقارنة " + topic, "أسئلة شائعة عن " + topic].forEach(function (phrase) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "ghost sm";
+      button.dataset.keyword = phrase;
+      button.textContent = phrase;
+      ideas.appendChild(button);
+    });
+  }
+  function buildArticleDraft(topic, keyword, audience, intent, length) {
+    const topicText = topic.trim().replace(/[.!؟?]+$/g, "");
+    const audienceText = audience || "جمهور عام";
+    const common = [
+      "عند البحث عن " + topicText + "، يحتاج القارئ إلى إجابة واضحة تساعده على فهم الخيارات وتحديد ما يناسب احتياجه. يقدّم هذا المقال إطارًا عمليًا للبدء، ويجمع النقاط التي يجدر التحقق منها قبل اتخاذ قرار أو مشاركة معلومة.",
+      "تختلف التفاصيل باختلاف الوقت والمصدر والسياق؛ لذلك اعتمد في النسخة النهائية على معلومات حديثة وموثوقة، وأضف أسماء الجهات أو الأعمال أو المواعيد التي راجعتها بنفسك. الهدف أن يحصل القارئ على فائدة مباشرة، لا على قائمة كلمات متكررة.",
+      "## ما الذي ينبغي معرفته عن " + topicText + "؟",
+      "ابدأ بتعريف المقصود بالموضوع وحدوده: ما الذي يشمله، وما الذي لا يشمله؟ وضّح المصطلحات الأساسية بلغة بسيطة، ثم اربطها بالسؤال الذي جاء القارئ من أجله. إذا كان الموضوع يتضمن أعمالًا فنية أو أحداثًا أو خدمات، فاذكر أمثلة موثقة وحدد تاريخ مراجعة المعلومات.",
+      "## نقاط تساعدك على التقييم",
+      "قبل الاختيار أو التوصية، قارن المعلومات وفق معايير واضحة وملائمة للجمهور المستهدف. لا تعتمد على الانطباع وحده، ولا تعرض التقييمات كحقائق مطلقة؛ اشرح مصدرها وتاريخ الاطلاع عليها عندما تستخدمها.",
+      "- حدّد احتياج القارئ والسؤال الذي يريد حله.\n- راجع المصدر الأصلي والتاريخ، خصوصًا عند ذكر موعد أو تقييم أو سعر.\n- اذكر المزايا والقيود معًا، وبيّن لمن يناسب كل خيار.\n- استخدم أمثلة دقيقة، وأزل أي تفصيل لا تستطيع التحقق منه.",
+      "## خطوات عملية للبدء",
+      "1. اكتب الإجابة المباشرة عن السؤال الرئيسي في مقدمة قصيرة.\n2. رتّب التفاصيل من الأهم إلى الأقل أهمية، واجعل لكل عنوان فرعي فكرة واحدة.\n3. أضف روابط المصادر ذات الصلة، ثم راجع الأسماء والتواريخ والتهجئة قبل النشر.\n4. اختم بتوصية أو خلاصة تساعد القارئ على اتخاذ خطوته التالية.",
+      "## أخطاء شائعة تجنّبها",
+      "من الأخطاء الشائعة تكرار الكلمة المفتاحية بلا حاجة، وتقديم معلومات قديمة على أنها حديثة، وكتابة عنوان يعد القارئ بما لا يقدمه النص. اجعل العبارة طبيعية، وافصل بين الرأي والمعلومة، ولا تنسب تقييمًا أو تصريحًا إلى جهة من دون مصدر.",
+      "## أسئلة شائعة",
+      "### كيف أتحقق من المعلومات المتعلقة بـ " + topicText + "؟",
+      "ارجع إلى الجهة أو المصدر الأصلي، وقارن التاريخ والتفاصيل بمصدر مستقل عند الحاجة. أضف تاريخ آخر مراجعة إذا كانت المعلومات قابلة للتغيير.",
+      "### هل تناسب هذه المعلومات كل القراء؟",
+      "تختلف الاحتياجات؛ لذلك أشر بوضوح إلى الفئة التي يخدمها المقال، واذكر الحالات التي تحتاج إلى تفاصيل أو مصادر إضافية.",
+      "### ما الكلمة المفتاحية الأساسية لهذا المقال؟",
+      "المحور المقترح هو «" + (keyword || topicText) + "». استخدمه حيث يخدم المعنى، وأضف مرادفات وأسئلة قريبة بدل تكراره آليًا.",
+      "## خلاصة",
+      "يوفر موضوع " + topicText + " قيمة أكبر عندما تقدَّم معلومات دقيقة ومحدّثة، مع شرح واضح لمن يبحث عنها. راجع المسودة، وأضف الأمثلة والبيانات والمصادر الخاصة بموضوعك قبل النشر."
+    ];
+    common[0] += " يركّز الدليل أيضًا على سؤال «" + (keyword || topicText) + "» لأن هذا ما يبحث عنه القارئ.";
+    common[1] += " صيغت هذه المسودة لتكون مفهومة لـ" + audienceText + ".";
+    if (intent === "list") {
+      common[2] = "## كيف نختار ترشيحات مناسبة عن " + topicText + "؟";
+      common[3] = "الترشيح الجيد يشرح سبب الاختيار ولمن يناسب، ويعرض تفاصيل يمكن للقارئ التحقق منها. رتّب الخيارات وفق معيار مفهوم مثل النوع أو مدة المتابعة أو طبيعة الجمهور، وأضف أمثلة فعلية بدل الاكتفاء بأوصاف عامة.";
+      common[4] = "## معايير تقييم كل ترشيح";
+    } else if (intent === "compare") {
+      common[2] = "## ما أوجه المقارنة في " + topicText + "؟";
+      common[3] = "ابدأ بتحديد الخيارات التي تقارنها، ثم استخدم المعايير نفسها لكل خيار. اشرح الفروق التي تؤثر فعلًا في القرار، واذكر المصدر والتاريخ عند إدراج تقييم أو سعر أو موعد. لا تعلن فائزًا مطلقًا إذا كانت النتيجة تعتمد على تفضيل القارئ.";
+      common[4] = "## معايير المقارنة العادلة";
+    } else if (intent === "explainer") {
+      common[2] = "## ما المقصود بـ " + topicText + "؟";
+      common[3] = "قد يُستخدم المصطلح في أكثر من سياق. عرّفه بوضوح، واشرح فكرته الأساسية بكلمات مألوفة، ثم وضّح ما يرتبط به وما لا يشمله. أضف مثالًا واقعيًا بعد التحقق منه، وعرّف أي مصطلح متخصص قبل استخدامه.";
+      common[4] = "## الفكرة الأساسية خطوة بخطوة";
+    }
+    if (length === "short") return common.join("\n\n");
+    const extra = [
+      "## كيف تجعل المقال أوضح للقارئ؟",
+      "ابدأ كل قسم بجملة تجيب عن عنوانه، ثم أضف ما يثبتها أو يشرحها. استخدم القوائم عندما تكون هناك خطوات أو خيارات، والجداول للمقارنات التي تحتوي عناصر متشابهة. تجنّب الفقرات الطويلة والعبارات العامة التي لا تضيف معلومة.",
+      "إذا تغيرت معلومة بعد النشر، حدّث النص واذكر تاريخ المراجعة. واحتفظ بسجل للمصادر التي استخدمتها، حتى يسهل التأكد من دقة النسخة المنشورة لاحقًا."
+    ];
+    if (length === "long") common.splice(common.length - 2, 0, extra[0], extra[1]);
+    else common.splice(common.length - 2, 0, extra[0]);
+    return common.join("\n\n");
+  }
+  function generateArticleDraft() {
+    const form = $("#saArticleForm"), topic = $("#saWriterTopic").value.trim();
+    if (!topic) { toast("اكتب موضوع المقال أولًا."); $("#saWriterTopic").focus(); return; }
+    const keywordField = $("#saWriterKeyword"), keyword = keywordField.value.trim() || topic;
+    keywordField.value = keyword;
+    const intent = $("#saWriterIntent").value;
+    const prefix = intent === "list" ? "ترشيحات " : intent === "compare" ? "مقارنة " : intent === "explainer" ? "ما الذي تحتاج معرفته عن " : "دليل ";
+    const suffix = intent === "list" ? ": اختيارات ونصائح" : intent === "compare" ? ": أهم الفروق ومعايير الاختيار" : intent === "explainer" ? "؟ شرح مبسط" : " الشامل: خطوات ونصائح";
+    const titleSubject = keyword === topic ? topic : keyword + " حول " + topic;
+    const rawTitle = prefix + titleSubject.replace(/[؟?]+$/g, "") + suffix;
+    const title = rawTitle.length > 60 ? rawTitle.slice(0, 60).replace(/\s+\S*$/, "").trim() : rawTitle;
+    const description = ("دليل " + keyword + " و" + topic + ": معلومات مرتبة ونقاط عملية وأسئلة شائعة تساعد " + $("#saWriterAudience").value + " على تكوين صورة واضحة والتحقق من التفاصيل قبل الاختيار.").slice(0, 160);
+    const slug = transliterateSlug(keyword || topic) || ("article-" + Date.now());
+    if (form.elements.body.value.trim() && !window.confirm("ستُستبدل مسودة المقال الحالية. هل تريد المتابعة؟")) return;
+    form.elements.title.value = title;
+    form.elements.slug.value = slug;
+    form.elements.description.value = description;
+    form.elements.body.value = buildArticleDraft(topic, keyword, $("#saWriterAudience").value, intent, $("#saWriterLength").value);
+    const topicNormalized = normalizeSearchText(topic);
+    const category = /رياض|مبار|دوري|كرة|بطول/.test(topicNormalized) ? "رياضة" : /فيلم|سينما/.test(topicNormalized) ? "سينما" : /مسلسل|درام|برنامج/.test(topicNormalized) ? "مسلسلات" : /تطبيق|اشتراك|موقع/.test(topicNormalized) ? "التطبيق" : "عام";
+    form.elements.category.value = category;
+    $("#saWriterNotice").textContent = "أُنشئت مسودة قابلة للتحرير. أضف الحقائق والمصادر الخاصة بموضوعك قبل إدراجها للنشر.";
+    updateSearchPreview(form);
+    articleAudit(form);
+    form.elements.body.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast("جهزنا مسودة الموضوع. راجعها وأكمل التفاصيل قبل النشر.");
+  }
   function articleAudit(form) {
     const value = function (name) { return String(new FormData(form).get(name) || "").trim(); };
-    const title = value("title"), description = value("description"), body = value("body");
+    const title = value("title"), description = value("description"), body = value("body"), slug = value("slug");
+    const keyword = $("#saWriterKeyword").value.trim();
+    const normalizedKeyword = normalizeSearchText(keyword);
+    const normalizedTitle = normalizeSearchText(title), normalizedDescription = normalizeSearchText(description), normalizedBody = normalizeSearchText(body);
     const words = body.split(/\s+/).filter(Boolean).length;
-    const headings = (body.match(/^#{2,3}\s+/gm) || []).length;
+    const headings = (body.match(/^##\s+/gm) || []).length;
+    const questions = (body.match(/^###\s+.+[?؟]\s*$/gm) || []).length;
+    const occurrences = countPhrase(normalizedBody, normalizedKeyword);
     const checks = [
-      ["العنوان", title.length >= 30 && title.length <= 60, title.length + " حرفًا؛ استهدف عادةً 30–60."],
-      ["وصف نتائج البحث", description.length >= 80 && description.length <= 160, description.length + " حرفًا؛ اجعله واضحًا ومحددًا."],
-      ["محتوى مفيد", words >= 300, words + " كلمة؛ أضف معلومات أصلية ومصادر موثوقة."],
-      ["عناوين فرعية", headings >= 2, headings + " عنوانًا بصيغة ## أو ###."],
-      ["رابط مختصر", /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value("slug")), "استخدم رابطًا قصيرًا يسهل قراءته."],
-      ["وصف الصورة", !value("image") || Boolean(value("imageAlt")), value("image") && !value("imageAlt") ? "أضف نصًا بديلًا للصورة." : "مناسب."]
+      ["عنوان واضح", title.length >= 30 && title.length <= 60, title.length + " حرفًا؛ راجع الوضوح والطول (30–60 حرفًا إرشاديًا)."],
+      ["وصف البحث", description.length >= 80 && description.length <= 160, description.length + " حرفًا؛ الأفضل أن يصف محتوى الصفحة بدقة."],
+      ["عبارة البحث في العنوان والوصف", Boolean(normalizedKeyword) && normalizedTitle.includes(normalizedKeyword) && normalizedDescription.includes(normalizedKeyword), normalizedKeyword ? "اجعلها طبيعية ومتوافقة مع محتوى الصفحة." : "أدخل العبارة التي يتوقع القارئ البحث بها."],
+      ["استخدام طبيعي لعبارة البحث", Boolean(normalizedKeyword) && occurrences >= 1 && occurrences <= Math.max(8, words * 0.03), occurrences + " مرات في النص؛ تجنّب التكرار الذي يضعف القراءة."],
+      ["اكتمال المسودة", words >= 250, words + " كلمة؛ هذا مؤشر تحريري فقط، ولا يوجد طول يضمن الظهور أو الترتيب."],
+      ["تنظيم العناوين", headings >= 3 && headings <= 8, headings + " عناوين رئيسية بصيغة ##؛ استخدم عنوانًا لكل فكرة."],
+      ["أسئلة شائعة", questions >= 2, questions + " أسئلة بصيغة ###؛ أضف أسئلة حقيقية يطرحها جمهورك."],
+      ["رابط مختصر", /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug), "استخدم أحرفًا صغيرة وكلمات مفصولة بشرطة."],
+      ["مصادر قابلة للتحقق", value("sources").split(/\r?\n/).filter(Boolean).length > 0 && value("sources").split(/\r?\n/).filter(Boolean).every(function (url) { try { return new URL(url).protocol === "https:"; } catch (_) { return false; } }), value("sources").split(/\r?\n/).filter(Boolean).length + " رابطًا؛ أدرج المصدر عند ذكر حقائق متغيرة."],
+      ["مراجعة الحقائق", $("#saFactCheck").checked, $("#saFactCheck").checked ? "تم تأكيد المراجعة." : "راجع الأسماء والتواريخ والتقييمات قبل النشر."],
+      ["قيمة أصلية للقارئ", $("#saOriginalCheck").checked, $("#saOriginalCheck").checked ? "تم تأكيد إضافة قيمة تحريرية." : "أضف تجربة أو تحليلًا أو تفاصيل أصلية."],
+      ["وصف الصورة", !value("image") || Boolean(value("imageAlt")), value("image") && !value("imageAlt") ? "أضف نصًا بديلًا يصف الصورة." : "مناسب."]
     ];
     const passed = checks.filter(function (check) { return check[1]; }).length;
     $("#saSeoReport").innerHTML = '<div class="sa-audit-score">' + passed + ' من ' + checks.length + ' نقاط مكتملة</div>' +
       checks.map(function (check) { return '<div class="sa-audit-row ' + (check[1] ? "good" : "needs-work") + '"><b>' + (check[1] ? "✓ " : "• ") + escapeHtml(check[0]) + '</b><span>' + escapeHtml(check[2]) + '</span></div>'; }).join("") +
-      '<p class="hint">هذا فحص تحريري إرشادي ولا يضمن ترتيبًا في نتائج البحث.</p>';
+      '<p class="hint">هذا فحص تحريري، لا يضمن ترتيبًا في البحث. ركّز على محتوى أصلي موثوق يفيد القارئ؛ الطول وكثافة الكلمات لا يضمنان ترتيبًا.</p>';
     $("#saSeoReport").hidden = false;
+    updateSearchPreview(form);
   }
+  $("#saGenerateArticle").addEventListener("click", generateArticleDraft);
+  $("#saWriterTopic").addEventListener("input", renderKeywordIdeas);
+  $("#saSuggestKeywords").addEventListener("click", renderKeywordIdeas);
+  $("#saKeywordIdeas").addEventListener("click", function (event) {
+    const button = event.target.closest("[data-keyword]");
+    if (!button) return;
+    $("#saWriterKeyword").value = button.dataset.keyword;
+    toast("تم اختيار العبارة. جهّز المسودة لتحديث العنوان والوصف.");
+  });
+  $("#saCopySnippet").addEventListener("click", async function () {
+    const form = $("#saArticleForm"), text = metaField(form, "title") + "\n" + metaField(form, "description");
+    try { await navigator.clipboard.writeText(text); toast("نُسخ العنوان والوصف."); }
+    catch (_) { toast("تعذّر النسخ؛ حدّد النص وانسخه يدويًا."); }
+  });
   $("#saSeoAudit").addEventListener("click", function () { articleAudit($("#saArticleForm")); });
+  $("#saArticleForm").addEventListener("input", function (event) {
+    if (["title", "slug", "description"].includes(event.target.name)) updateSearchPreview(event.currentTarget);
+    if (!$("#saSeoReport").hidden) articleAudit(event.currentTarget);
+  });
+  $("#saArticleForm").addEventListener("change", function (event) {
+    if (event.target.type === "checkbox" && !$("#saSeoReport").hidden) articleAudit(event.currentTarget);
+  });
   $("#saDraftOutline").addEventListener("click", function () {
     const form = $("#saArticleForm"), title = metaField(form, "title"), description = metaField(form, "description");
     if (!title || !description) { toast("أدخل العنوان والوصف أولًا لصنع مخطط المقال."); return; }
@@ -687,3 +948,4 @@
   switchMainPanel(sitePanel.id);
   switchView("dashboard");
 })();
+
