@@ -4,30 +4,60 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>متجر DIAMOND TV | منتجات وعروض</title>
-<meta name="description" content="تصفح منتجات وعروض DIAMOND TV. تفاصيل واضحة للمنتج والسعر وطريقة الطلب من صفحة المتجر الرسمية.">
+<meta name="description" content="تصفح منتجات DIAMOND TV، وابحث حسب القسم واحفظ اختياراتك وقارن التفاصيل قبل الطلب.">
 <link rel="canonical" href="https://diamond-tv.shop/store/">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#f6f8fc">
+<meta property="og:type" content="website">
+<meta property="og:title" content="متجر DIAMOND TV | منتجات وعروض">
+<meta property="og:description" content="تصفح المنتجات، وابحث حسب القسم واحفظ اختياراتك قبل الطلب.">
+<meta property="og:url" content="https://diamond-tv.shop/store/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"متجر DIAMOND TV","url":"https://diamond-tv.shop/store/","description":"تصفح منتجات متجر DIAMOND TV حسب القسم والسعر."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"الرئيسية","item":"https://diamond-tv.shop/"},{"@type":"ListItem","position":2,"name":"المتجر","item":"https://diamond-tv.shop/store/"}]}</script>
 <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-<main class="wrap" id="store-content">
-<section class="hero">
-<span class="pill">متجر DIAMOND TV</span>
-<h1 style="margin-top:10px">المتجر والعروض</h1>
-<p>تعرّف على المنتجات المتاحة، ومواصفاتها وأسعارها. تظهر هنا المنتجات التي ينشرها فريق الموقع.</p>
-</section>
-<section aria-labelledby="store-products-title">
-<h2 id="store-products-title">المنتجات المتاحة</h2>
-<div id="store-grid" class="store-grid" aria-live="polite"><p class="store-empty">جارٍ تحميل المنتجات…</p></div>
-</section>
-<p class="store-note">تفاصيل الطلب والتوفر تخضع للمعلومات التي يضيفها البائع لكل منتج.</p>
+<main class="wrap store-page" id="store-content">
+  <section class="store-hero card" aria-labelledby="store-title">
+    <div class="store-hero-copy">
+      <span class="pill">DIAMOND SELECT</span>
+      <h1 id="store-title">متجر DIAMOND TV</h1>
+      <p>اكتشف المنتجات التي يضيفها فريقنا، وابحث حسب القسم، واحفظ اختياراتك للعودة إليها لاحقًا.</p>
+      <a class="store-hero-cta" href="#store-products">استكشف المنتجات <span aria-hidden="true">←</span></a>
+    </div>
+    <div class="store-hero-mark" aria-hidden="true"><span>✦</span><b>D</b><small>اختياراتك في مكان واحد</small></div>
+  </section>
+
+  <section class="store-toolbox card" aria-labelledby="store-tools-title">
+    <div class="store-toolbox-head"><div><span class="store-eyebrow">اكتشف بسرعة</span><h2 id="store-tools-title">اعثر على ما تبحث عنه</h2></div><span class="store-result-count" id="store-count" aria-live="polite">جارٍ التحميل…</span></div>
+    <label class="store-search"><span aria-hidden="true">⌕</span><span class="sr-only">ابحث في المنتجات</span><input id="store-search" type="search" placeholder="ابحث باسم المنتج أو وصفه" autocomplete="off"></label>
+    <div class="store-filter-row">
+      <div class="store-categories" id="store-categories" role="group" aria-label="تصفية المنتجات حسب القسم"></div>
+      <div class="store-sort-wrap"><label for="store-sort">ترتيب حسب</label><select id="store-sort"><option value="recommended">الافتراضي</option><option value="price-low">السعر الأقل</option><option value="price-high">السعر الأعلى</option><option value="name">الاسم</option></select></div>
+      <button type="button" class="store-favorites-toggle" id="store-favorites-toggle" aria-pressed="false">♡ المحفوظات <span id="store-favorite-count">0</span></button>
+    </div>
+  </section>
+
+  <section class="store-products-section" id="store-products" aria-labelledby="store-products-title">
+    <div class="store-section-head"><div><span class="store-eyebrow">تصفّح مختارات المتجر</span><h2 id="store-products-title">المنتجات المتاحة</h2></div><span id="store-visible-count" class="hint"></span></div>
+    <div id="store-grid" class="store-grid" aria-live="polite"><p class="store-empty">جارٍ تحميل المنتجات…</p></div>
+  </section>
+
+  <aside class="store-note card"><span class="store-note-icon" aria-hidden="true">i</span><div><b>تفاصيل واضحة قبل الطلب</b><p>راجع وصف المنتج وسعره ورابط الطلب الذي يضيفه فريق المتجر. التوفر وخيارات الشراء يحددهما البائع في تفاصيل كل منتج.</p></div></aside>
 </main>
+
+<dialog class="store-dialog" id="store-dialog" aria-labelledby="store-dialog-title">
+  <form method="dialog"><button class="store-dialog-close" aria-label="إغلاق التفاصيل">×</button></form>
+  <div id="store-dialog-content"></div>
+</dialog>
+
 <script src="../assets/site-config.js"></script>
 <script src="../assets/site.js"></script>
 <script src="../assets/store.js"></script>
 </body>
 </html>
+
