@@ -89,7 +89,7 @@
       </div>
     </div>
   </section>
-  <p class="note">يجمع الجدول بين <a href="https://www.espn.com/soccer/" target="_blank" rel="noopener noreferrer">ESPN</a> و<a href="https://www.thesportsdb.com/docs/api" target="_blank" rel="noopener noreferrer">TheSportsDB</a>: نتائج وإحصاءات مباشرة من المصدر الأول، ومواعيد احتياطية لدوري روشن والدوري المصري تُحدّث كل 15 دقيقة من المصدر الثاني. قد تتغير المواعيد؛ راجع إعلان البطولة والناقل الرسمي.</p>
+  <p class="note">يجمع الجدول بين <a href="https://www.espn.com/soccer/" target="_blank" rel="noopener noreferrer">ESPN</a> و<a href="https://www.thesportsdb.com/docs/api" target="_blank" rel="noopener noreferrer">TheSportsDB</a>: نتائج وإحصاءات مباشرة من المصدر الأول، ومواعيد احتياطية للدوريات والبطولات الرئيسية تُحدّث كل 15 دقيقة من المصدر الثاني، ومنها دوري روشن والدوري المصري. قد تتغير المواعيد؛ راجع إعلان البطولة والناقل الرسمي.</p>
 
   <section class="seo" aria-labelledby="live-seo-title">
     <h2 id="live-seo-title">مواعيد ونتائج مباريات اليوم في البطولات الكبرى</h2>
@@ -135,7 +135,11 @@ let LEAGUES = [
   { id:"uefa.europa",     ar:"الدوري الأوروبي",        tv:["beIN SPORTS"] },
 ];
 const API = (lg, d) => `https://site.api.espn.com/apis/site/v2/sports/soccer/${lg}/scoreboard?dates=${d}`;
-const TSDB_IDS = { "ksa.1": "4668", "egy.1": "4829" };
+const TSDB_IDS = {
+  "ksa.1": "4668", "egy.1": "4829", "afc.champions": "4719",
+  "uefa.champions": "4480", "eng.1": "4328", "esp.1": "4335",
+  "ita.1": "4332", "ger.1": "4331", "fra.1": "4334", "uefa.europa": "4481"
+};
 const TSDB_API = id => `https://www.thesportsdb.com/api/v1/json/123/eventsnextleague.php?id=${encodeURIComponent(id)}`;
 
 const LEAGUE_CACHE = new Map();
