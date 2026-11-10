@@ -175,5 +175,65 @@
       "secondary": "#0c9fa2"
     }
   },
-  "products": []
+  "products": [
+    {
+      "id": "xiwbsy-google-tv-projector-1005010639087895",
+      "title": "جهاز عرض XIWBSY الذكي مع Google TV وWi‑Fi 6",
+      "category": "أجهزة البث",
+      "description": "جهاز عرض منزلي ذكي من XIWBSY. يذكر المورد Google TV وAndroid 14.0 وWi‑Fi 6 ومساعد Google الصوتي، مع دعم تشغيل 4K. راجع صفحة المورد للتأكد من مواصفات النسخة المختارة، خصوصًا الدقة الأصلية والسطوع الفعلي والملحقات والتوصيل قبل تثبيت الطلب؛ قد يتغير السعر والتوفر بحسب الدولة والنسخة.",
+      "seoTitle": "جهاز عرض XIWBSY مع Google TV وWi‑Fi 6 | DIAMOND TV",
+      "seoDescription": "تعرّف على جهاز العرض الذكي XIWBSY مع Google TV وWi‑Fi 6. راجع المعلومات المعلنة من المورد وتحقق من مواصفات النسخة والسعر والتوصيل في صفحة المنتج.",
+      "brand": "XIWBSY",
+      "sku": "DTV-XIWBSY-4000",
+      "supplierSku": "",
+      "warranty": "",
+      "delivery": "",
+      "highlights": [
+        "Google TV وAndroid 14.0 بحسب وصف المورد",
+        "دعم تشغيل 4K كما يذكر عنوان القائمة",
+        "Wi‑Fi 6 ومساعد Google الصوتي بحسب وصف المورد",
+        "تحقق من الدقة الأصلية والسطوع والملحقات قبل الشراء"
+      ],
+      "specifications": [
+        {
+          "name": "العلامة التجارية",
+          "value": "XIWBSY"
+        },
+        {
+          "name": "النظام",
+          "value": "Google TV / Android 14.0 بحسب وصف المورد"
+        },
+        {
+          "name": "الاتصال اللاسلكي",
+          "value": "Wi‑Fi 6 بحسب وصف المورد"
+        },
+        {
+          "name": "تشغيل 4K",
+          "value": "مذكور في عنوان قائمة المورد؛ الدقة الأصلية تحتاج تأكيدًا"
+        }
+      ],
+      "tags": [
+        "جهاز عرض",
+        "بروجكتر",
+        "Google TV",
+        "XIWBSY",
+        "Wi‑Fi 6",
+        "4K"
+      ],
+      "price": "",
+      "oldPrice": "",
+      "currency": "ر.س",
+      "stock": null,
+      "image": "",
+      "images": [],
+      "videos": [],
+      "imageAlt": "جهاز عرض XIWBSY الذكي مع Google TV وWi‑Fi 6",
+      "url": "https://ar.aliexpress.com/item/1005010639087895.html",
+      "sourceUrl": "https://ar.aliexpress.com/item/1005010639087895.html",
+      "availability": "available",
+      "featured": false,
+      "active": true,
+      "createdAt": "2026-11-10T14:20:50.000Z"
+    }
+  ]
 }
