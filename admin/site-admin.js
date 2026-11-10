@@ -147,6 +147,7 @@
     '<label>اسم المنتج<input name="title" required maxlength="100" placeholder="اسم واضح للمنتج"></label>' +
     '<div class="sa-manager-two"><label>القسم<input name="category" maxlength="50" list="saProductCategories" placeholder="مثال: اشتراكات أو أجهزة"><datalist id="saProductCategories"><option value="اشتراكات"><option value="أجهزة"><option value="إكسسوارات"><option value="عروض"></datalist></label><label>العملة<input name="currency" maxlength="12" value="ر.س" placeholder="ر.س"></label></div>' +
     '<label>وصف المنتج<textarea name="description" required rows="3" maxlength="700" placeholder="صف المنتج بلغة واضحة، واعتمد على تفاصيل مؤكدة من المورد."></textarea></label>' +
+    '<div class="sa-manager-two"><label>عنوان SEO<input name="seoTitle" maxlength="70" placeholder="حتى 70 حرفًا"></label><label>وصف SEO<textarea name="seoDescription" rows="2" maxlength="320" placeholder="وصف موجز لنتيجة البحث"></textarea></label></div>' +
     '<div class="sa-manager-three"><label>العلامة التجارية<input name="brand" maxlength="80" placeholder="اسم العلامة"></label><label>رمز المنتج SKU<input name="sku" maxlength="60" placeholder="اختياري"></label><label>الضمان<input name="warranty" maxlength="100" placeholder="مثال: سنة"></label></div>' +
     '<label>المميزات (ميزة في كل سطر)<textarea name="highlights" rows="3" maxlength="900" placeholder="مزايا مؤكدة ومفيدة للمشتري"></textarea></label>' +
     '<label>المواصفات (اسم الخاصية | القيمة في كل سطر)<textarea name="specifications" rows="4" maxlength="1200" placeholder="اللون | أسود&#10;المقاس | صغير"></textarea></label>' +
@@ -1186,7 +1187,7 @@
     const existingProduct = siteConfig.products.find(function (item) { return item.id === currentId; });
     const product = {
       id: currentId || "product-" + Date.now(), title: title, category: String(data.get("category") || "").trim(),
-      description: description, brand: String(data.get("brand") || "").trim(), sku: String(data.get("sku") || "").trim(),
+      description: description, seoTitle: String(data.get("seoTitle") || "").trim().slice(0, 70), seoDescription: String(data.get("seoDescription") || "").trim().slice(0, 320), brand: String(data.get("brand") || "").trim(), sku: String(data.get("sku") || "").trim(),
       warranty: String(data.get("warranty") || "").trim(), delivery: String(data.get("delivery") || "").trim(),
       highlights: String(data.get("highlights") || "").split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean).slice(0, 16),
       specifications: specs, tags: String(data.get("tags") || "").split(/[،,]/).map(function (value) { return value.trim(); }).filter(Boolean).slice(0, 12),
