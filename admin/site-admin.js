@@ -1379,10 +1379,10 @@
     form.elements.category.value = item.category === "sports" ? "رياضة" : "مسلسلات";
     generateArticleDraft({ trend: item });
   }
-  function selectTrendSources(trend) {
+  function selectTrendSources(trend, includeUntrusted) {
     const candidates = (trend.news || []).filter(function (entry) {
       const assessment = sourceAssessment(entry.url, entry.domain);
-      return entry.title && assessment.valid && assessment.trusted;
+      return entry.title && assessment.valid && (assessment.trusted || includeUntrusted === true);
     }).slice().sort(function (a, b) {
       const aa = sourceAssessment(a.url, a.domain), bb = sourceAssessment(b.url, b.domain);
       const score = function (entry, check) {
@@ -1527,7 +1527,7 @@
   function buildTrendArticleDraft(trend, settings) {
     const config = settings || {};
     const topic = String(trend.title || "").trim();
-    const news = selectTrendSources(trend).slice(0, 12);
+    const news = selectTrendSources(trend, config.allowUntrusted === true).slice(0, 12);
     const report = createTrendFactReview(trend, news);
     activeTrendFactReport = report;
     const analysis = trendCoverageAnalysis(trend, news, report);
@@ -1823,7 +1823,9 @@
         updatedAt: result.updatedAt || new Date().toISOString(),
         news: activeResearchSources
       };
-      const sources = selectTrendSources(trend).slice(0, 12);
+      const trustedSources = selectTrendSources(trend).slice(0, 12);
+      const sources = trustedSources.length ? trustedSources : selectTrendSources(trend, true).slice(0, 12);
+      const hasTrustedSource = sources.some(function (entry) { return sourceAssessment(entry.url, entry.domain).trusted; });
       if (!sources.length) {
         activeTrendFactReport = null;
         $("#saWriterSourcesPreview").hidden = false;
@@ -1857,7 +1859,8 @@
         tone: $("#saWriterTone").value,
         audience: $("#saWriterAudience").value,
         intent: $("#saWriterIntent").value,
-        length: $("#saWriterLength").value
+        length: $("#saWriterLength").value,
+        allowUntrusted: !hasTrustedSource
       });
       const topicNormalized = normalizeSearchText(topic);
       const category = trend.category === "sports" ? "رياضة" :
@@ -1865,16 +1868,18 @@
         trend.category === "entertainment" ? "مسلسلات" :
         /تطبيق|اشتراك|موقع/.test(topicNormalized) ? "التطبيق" : "عام";
       form.elements.category.value = category;
-      const researchNote = sources.length < 2
-        ? "تنبيه: ظهر مصدر موثوق واحد فقط؛ هذه مسودة أولية للمراجعة وليست مقارنة ولا تُنشر قبل إضافة مصدر مستقل آخر."
-        : readablePages >= 2
-          ? "استُخرج نص كافٍ من " + readablePages + " صفحات؛ الفحص يرصد الزوايا والمفردات ولا يؤكد صحة الوقائع."
-          : "تنبيه: استُخرج نص كافٍ من " + readablePages + " صفحات فقط؛ راجع كل حقيقة وأضف مصدرًا مستقلًا أمكن قراءة نصه قبل النشر.";
+      const researchNote = !hasTrustedSource
+        ? "تنبيه: المصادر التي عُثر عليها خارج قائمة الناشرين المعتمدين؛ راجعها يدويًا وأضف مصدرًا موثوقًا قبل النشر."
+        : sources.length < 2
+          ? "تنبيه: ظهر مصدر موثوق واحد فقط؛ هذه مسودة أولية للمراجعة وليست مقارنة ولا تُنشر قبل إضافة مصدر مستقل آخر."
+          : readablePages >= 2
+            ? "استُخرج نص كافٍ من " + readablePages + " صفحات؛ الفحص يرصد الزوايا والمفردات ولا يؤكد صحة الوقائع."
+            : "تنبيه: استُخرج نص كافٍ من " + readablePages + " صفحات فقط؛ راجع كل حقيقة وأضف مصدرًا مستقلًا أمكن قراءة نصه قبل النشر.";
       $("#saWriterNotice").textContent = "أُعدت مسودة أولية عن «" + topic + "» من " + sources.length + " ناشرين معروفين. " + researchNote;
       updateSearchPreview(form);
       articleAudit(form);
       form.elements.body.scrollIntoView({ behavior: "smooth", block: "center" });
-      toast(sources.length >= 2 && readablePages >= 2 ? "اكتملت المسودة الأولية. راجع النص والحقائق قبل النشر." : "ظهرت المسودة والمصادر؛ استكمل التحقق قبل النشر.");
+      toast(hasTrustedSource && sources.length >= 2 && readablePages >= 2 ? "اكتملت المسودة الأولية. راجع النص والحقائق قبل النشر." : "ظهرت المسودة والمصادر؛ استكمل التحقق قبل النشر.");
     } catch (error) {
       activeResearchSources = [];
       activeTrendFactReport = null;
