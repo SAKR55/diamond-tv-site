@@ -1427,8 +1427,12 @@
       const pageStatus = entry.articleRead
         ? "استُخرج من الصفحة نص يقارب " + (Number(entry.articleWordCount) || 0) + " كلمة."
         : "تعذرت قراءة نص كافٍ من الصفحة؛ اعتمد الفحص على العنوان والملخص المتاح فقط.";
+      const summaryWords = String(entry.description || "").trim().split(/\s+/).filter(Boolean);
+      const summary = summaryWords.length
+        ? "الوصف التعريفي المتاح: «" + summaryWords.slice(0, 22).join(" ") + (summaryWords.length > 22 ? "…" : "") + "»."
+        : "لا يتوفر وصف نصي كافٍ؛ لا نستنتج من العنوان وحده.";
       return "### " + sourceName + " — " + entry.title + "\n\n" +
-        pageStatus + " الزوايا التي رصدها الفحص: " + dimensions + ". مفردات بارزة في النص المستخرج: " + terms + ".";
+        pageStatus + " " + summary + " الزوايا التي رصدها الفحص: " + dimensions + ". مفردات بارزة في النص المستخرج: " + terms + ".";
     }).join("\n\n");
     const datedSources = news.filter(function (entry) { return entry.publishedAt; }).slice().sort(function (a, b) {
       return String(a.publishedAt).localeCompare(String(b.publishedAt));
@@ -1480,8 +1484,8 @@
       "## ملخص سريع",
       lead + " " + intentText,
       quick,
-      "## ما الذي نشرته المصادر؟",
-      sourceOverview,
+      "## ما الأفكار التي تناولها كل ناشر؟",
+      sourceOverview + " يلخص هذا القسم وصف كل صفحة على حدة، ثم تقارن الأقسام التالية الزوايا والمفردات التي تكررت أو غابت.",
       sourcesSection,
       datedSources.length ? "## توقيت التغطيات\n\n" + datedSources.join("\n") : "",
       "## نقاط الالتقاء والاختلاف",
