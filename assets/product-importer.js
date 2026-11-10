@@ -92,7 +92,7 @@
     if(["available","preorder","unavailable"].indexOf(data.availability)>=0) form.elements.availability.value=data.availability;
     updatePreview();
   }
-  function isAliExpressHost(host){return /(^|\\.)aliexpress\\.(com|us|ru)$/i.test(String(host||""));}
+  function isAliExpressHost(host){return /(^|\.)aliexpress\.(com|us|ru)$/i.test(String(host||""));}
   function openDsersImport(){
     var source=$("piSourceUrl").value.trim(), parsed;
     try{parsed=new URL(source);}catch(_){status("piImportStatus","الصق رابط منتج AliExpress أولًا.","error");return;}
