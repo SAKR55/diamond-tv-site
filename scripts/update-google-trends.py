@@ -154,7 +154,8 @@ def google_news_entries(topic: str) -> list[dict]:
     try:
         with urllib.request.urlopen(request, timeout=12) as response:
             root = ET.fromstring(response.read())
-    except Exception:
+    except Exception as error:
+        print(f"Google News RSS unavailable for {topic}: {type(error).__name__}")
         return []
 
     entries: list[dict] = []
@@ -180,6 +181,49 @@ def google_news_entries(topic: str) -> list[dict]:
             "description": plain_text(child_text(item, "description")),
             "publishedAt": child_text(item, "pubDate"),
             "feed": "Google News RSS",
+        })
+        if len(entries) >= 12:
+            break
+    return entries
+
+
+def bing_news_entries(topic: str) -> list[dict]:
+    query = urlencode({"q": topic, "format": "rss", "mkt": "en-US"})
+    url = "https://www.bing.com/news/search?" + query
+    request = urllib.request.Request(url, headers={"User-Agent": "DIAMOND-TV-Trends/1.3 (+https://diamond-tv.shop/)"})
+    try:
+        with urllib.request.urlopen(request, timeout=12) as response:
+            root = ET.fromstring(response.read())
+    except Exception as error:
+        print(f"Bing News RSS unavailable for {topic}: {type(error).__name__}")
+        return []
+
+    entries: list[dict] = []
+    for item in root.iter():
+        if local_name(item.tag) != "item":
+            continue
+        title = child_text(item, "title")
+        link = child_text(item, "link")
+        source_node = next((node for node in item.iter() if local_name(node.tag) == "source"), None)
+        source_name = (source_node.text or "").strip() if source_node is not None and source_node.text else ""
+        publisher_url = (source_node.attrib.get("url", "") if source_node is not None else "") or child_text(item, "url")
+        domain, tier = publisher_details(publisher_url)
+        if tier == "unlisted":
+            domain, tier = trusted_publisher_from_name(source_name)
+        if not title or not link.startswith("https://") or tier == "unlisted":
+            continue
+        direct_url = child_text(item, "url")
+        if direct_url.startswith("https://") and publisher_details(direct_url)[1] != "unlisted":
+            link = direct_url
+        entries.append({
+            "title": title,
+            "source": source_name or domain,
+            "url": link,
+            "domain": domain,
+            "publisherTier": tier,
+            "description": plain_text(child_text(item, "description")),
+            "publishedAt": child_text(item, "pubDate"),
+            "feed": "Bing News RSS",
         })
         if len(entries) >= 12:
             break
@@ -251,8 +295,14 @@ def main() -> None:
                 news.append(entry)
             if len(news) >= 10:
                 break
-        if len(trends) < 20:
-            news.extend(google_news_entries(title))
+        if len(trends) < 15:
+            google_entries = google_news_entries(title)
+            print(f"Google News RSS for {title}: {len(google_entries)} trusted entries")
+            news.extend(google_entries)
+            if len(news) < 5:
+                bing_entries = bing_news_entries(title)
+                print(f"Bing News RSS for {title}: {len(bing_entries)} trusted entries")
+                news.extend(bing_entries)
         news = relevant_news(title, news)
         unique: dict[str, dict] = {}
         for story in news:
