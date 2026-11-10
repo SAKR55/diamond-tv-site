@@ -24,18 +24,29 @@
   </section>
 
   <section class="card pi-connect">
-    <div><h2>اتصال آمن بالمستودع</h2><p class="hint">استخدم رمز GitHub المقيّد بالمستودع SAKR55/diamond-tv-site وصلاحية Contents: Read and write. يبقى الرمز في ذاكرة هذه الصفحة فقط.</p></div>
+    <div><h2>اتصال آمن بالمستودع</h2><p class="hint">للقراءة الآلية والنشر المباشر استخدم رمز GitHub المقيّد بالمستودع SAKR55/diamond-tv-site وصلاحية Contents: Read and write. يبقى الرمز في ذاكرة هذه الصفحة فقط. تنزيل ملفات المنصات لا يحتاج اتصالًا.</p></div>
     <div class="pi-connect-row"><label class="sr-only" for="piToken">رمز GitHub</label><input id="piToken" type="password" autocomplete="off" spellcheck="false" placeholder="ألصق رمز GitHub هنا"><button type="button" id="piConnect">اتصال بالمتجر</button></div>
     <div id="piConnectionStatus" class="pi-status" role="status" aria-live="polite">غير متصل</div>
   </section>
 
-  <div id="piWorkspace" hidden>
+  <div id="piWorkspace">
+    <section class="card pi-destination">
+      <div class="pi-section-head"><div><span class="pi-eyebrow">خيارات الإضافة</span><h2>اربط أو صدّر بيانات المنتج</h2></div></div>
+      <p class="pi-hint">انشر مباشرة في DIAMOND، أو نزّل ملفًا متوافقًا مع Shopify أو WooCommerce. لباقي المتاجر، استخدم CSV عامًا أو JSON ثم طابق الحقول في أداة الاستيراد لدى منصتك. الربط المباشر يحتاج واجهة مخصصة لكل منصة.</p>
+      <div class="pi-export-row"><span>تنزيل بيانات المنتج للمنصة:</span>
+        <button type="button" class="ghost sm" id="piExportShopify">Shopify CSV</button>
+        <button type="button" class="ghost sm" id="piExportWoo">WooCommerce CSV</button>
+        <button type="button" class="ghost sm" id="piExportGenericCsv">CSV عام</button>
+        <button type="button" class="ghost sm" id="piExportGeneric">JSON عام</button>
+      </div>
+    </section>
+
     <section class="card pi-source">
       <div class="pi-section-head"><div><span class="pi-eyebrow">الخطوة الأولى</span><h2>اجلب بيانات صفحة المنتج</h2></div><span class="pi-source-icon" aria-hidden="true">↧</span></div>
-      <div class="pi-source-row"><label class="sr-only" for="piSourceUrl">رابط صفحة المنتج</label><input id="piSourceUrl" type="url" inputmode="url" placeholder="الصق رابط HTTPS لصفحة المنتج"><button id="piImport" type="button">قراءة الرابط</button></div>
+      <div class="pi-source-row"><label class="sr-only" for="piSourceUrl">رابط صفحة المنتج</label><input id="piSourceUrl" type="url" inputmode="url" placeholder="الصق رابط HTTPS لصفحة المنتج"><button id="piImport" type="button" disabled>قراءة الرابط</button></div>
       <label class="pi-check"><input id="piRights" type="checkbox"> أملك إذن استخدام بيانات المنتج وصوره من هذا المصدر</label>
       <p class="pi-hint">تُقرأ البيانات العامة التي يسمح بها الموقع، مثل الاسم والسعر والوصف والصور. لن يتم تجاوز تسجيل الدخول أو الحماية. بعض المتاجر تمنع القراءة الآلية؛ عندها أدخل البيانات في النموذج أدناه.</p>
-      <div id="piImportStatus" class="pi-status" role="status" aria-live="polite"></div>
+      <div id="piImportStatus" class="pi-status" role="status" aria-live="polite"></div><a class="pi-action-link" href="https://github.com/SAKR55/diamond-tv-site/actions" target="_blank" rel="noopener noreferrer">عرض سجل عمليات الاستيراد ↗</a>
     </section>
 
     <section class="pi-work-grid">
@@ -44,25 +55,45 @@
         <label>اسم المنتج <input name="title" required maxlength="100" placeholder="اكتب اسمًا واضحًا"></label>
         <div class="pi-two"><label>القسم <input name="category" maxlength="60" list="piCategories" placeholder="مثال: أجهزة البث"><datalist id="piCategories"></datalist></label><label>العلامة التجارية <input name="brand" maxlength="80"></label></div>
         <label>وصف المنتج <textarea name="description" required rows="4" maxlength="1200" placeholder="اكتب وصفًا دقيقًا يساعد المشتري"></textarea></label>
-        <div class="pi-two"><label>السعر <input name="price" inputmode="decimal" maxlength="30" placeholder="مثال: 99"></label><label>السعر السابق <input name="oldPrice" inputmode="decimal" maxlength="30"></label></div>
-        <div class="pi-three"><label>العملة <input name="currency" maxlength="12" value="ر.س"></label><label>رمز SKU <input name="sku" maxlength="60"></label><label>الكمية <input name="stock" type="number" min="0" max="999999" placeholder="اختياري"></label></div>
+        <div class="pi-price-tool">
+          <div><b>حاسبة سعر البيع</b><small>تحسب سعرًا مقترحًا؛ لا تحفظ التكلفة أو الهامش في المتجر.</small></div>
+          <div class="pi-three"><label>تكلفة الشراء<input id="piCost" type="number" min="0" step="0.01" inputmode="decimal"></label><label>هامش الربح %<input id="piMargin" type="number" min="0" max="90" step="0.1" value="30"></label><label>ضريبة %<input id="piTax" type="number" min="0" max="100" step="0.1" value="0"></label></div>
+          <button type="button" class="ghost sm" id="piCalculatePrice">احسب السعر المقترح</button><span id="piPricingStatus" class="hint"></span>
+        </div>
+        <div class="pi-two"><label>السعر <input name="price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="مثال: 99"></label><label>السعر السابق <input name="oldPrice" type="number" min="0" step="0.01" inputmode="decimal"></label></div>
+        <div class="pi-three"><label>العملة <input name="currency" maxlength="12" value="ر.س"></label><label>رمز SKU <span class="pi-field-action"><input name="sku" maxlength="60"><button type="button" class="ghost sm" id="piGenerateSku">توليد</button></span></label><label>الكمية <input name="stock" type="number" min="0" max="999999" placeholder="اختياري"></label></div>
+        <label>وسوم البحث <span class="pi-field-action"><input name="tags" maxlength="240" placeholder="وسم، وسم آخر"><button type="button" class="ghost sm" id="piGenerateTags">اقتراح</button></span></label>
         <label>رابط الصورة الرئيسية <input name="image" type="text" inputmode="url" placeholder="https://... أو /assets/صورة.png"></label>
         <label>روابط صور إضافية <textarea name="images" rows="3" placeholder="رابط صورة في كل سطر"></textarea></label>
         <label>روابط فيديوهات المنتج <textarea name="videos" rows="2" placeholder="رابط فيديو في كل سطر"></textarea></label>
+        <div class="pi-media-upload">
+          <b>رفع صور أو فيديوهات من الجهاز</b>
+          <div class="pi-two"><label>صور المنتج<input id="piImageFiles" type="file" accept="image/png,image/jpeg,image/webp,image/avif" multiple><small>حتى 4 ميغابايت للصورة · 8 صور كحد أقصى</small></label><button type="button" class="ghost sm" id="piUploadImages" disabled>رفع الصور وإضافتها</button></div>
+          <div class="pi-two"><label>فيديوهات المنتج<input id="piVideoFiles" type="file" accept="video/mp4,video/webm" multiple><small>MP4 أو WebM · حتى 15 ميغابايت للفيديو · فيديوهان كحد أقصى</small></label><button type="button" class="ghost sm" id="piUploadVideos" disabled>رفع الفيديوهات وإضافتها</button></div>
+          <div id="piMediaStatus" class="pi-status" role="status" aria-live="polite"></div>
+        </div>
         <div class="pi-two"><label>مميزات المنتج <textarea name="highlights" rows="4" placeholder="ميزة واحدة في كل سطر"></textarea></label><label>المواصفات <textarea name="specifications" rows="4" placeholder="اسم الخاصية | القيمة"></textarea></label></div>
         <div class="pi-two"><label>الضمان <input name="warranty" maxlength="100"></label><label>مدة التوصيل <input name="delivery" maxlength="100"></label></div>
         <label>حالة المنتج <select name="availability"><option value="available">متوفر</option><option value="preorder">طلب مسبق</option><option value="unavailable">غير متوفر مؤقتًا</option></select></label>
         <div class="pi-two"><label>رابط صفحة المنتج في المصدر <input name="sourceUrl" type="url" inputmode="url" placeholder="يُملأ عند الاستيراد"></label><label>رابط الشراء أو الطلب <input name="url" type="url" inputmode="url" placeholder="اختياري"></label></div>
-        <label>وصف الصورة البديل <input name="imageAlt" maxlength="150" placeholder="وصف مختصر للصورة"></label>
+        <label>وصف الصورة البديل <span class="pi-field-action"><input name="imageAlt" maxlength="150" placeholder="وصف مختصر للصورة"><button type="button" class="ghost sm" id="piGenerateAlt">اقتراح</button></span></label>
+        <div class="pi-quality-tools"><button type="button" class="ghost sm" id="piFormatDescription">تنسيق الوصف والمميزات</button><span>يعيد ترتيب المعلومات التي أدخلتها دون إضافة مواصفات غير مؤكدة.</span></div>
+        <section class="pi-seo-editor">
+          <div><b>بيانات نتائج البحث</b><button type="button" class="ghost sm" id="piGenerateSeo">اقتراح من بيانات المنتج</button></div>
+          <label>عنوان SEO <input name="seoTitle" maxlength="70" placeholder="حتى 70 حرفًا"></label>
+          <label>وصف SEO <textarea name="seoDescription" rows="3" maxlength="320" placeholder="وصف دقيق يوضح ما سيجده المشتري"></textarea></label>
+        </section>
         <div class="pi-options"><label class="pi-check"><input name="featured" type="checkbox"> منتج مميز</label><label class="pi-check"><input name="active" type="checkbox" checked> عرض المنتج في المتجر</label></div>
-        <button class="pi-save" id="piSave" type="submit" disabled>إضافة المنتج إلى المتجر</button>
+        <button class="pi-save" id="piSave" type="submit" disabled>إضافة المنتج إلى متجر DIAMOND</button>
         <div id="piSaveStatus" class="pi-status" role="status" aria-live="polite"></div>
+        <section class="pi-audit" aria-live="polite"><div class="pi-audit-head"><b>فحص اكتمال صفحة المنتج</b><strong id="piAuditScore">0%</strong></div><div id="piAuditList"></div><p>الفحص يساعد على تحسين وضوح صفحة المنتج، ولا يضمن ترتيبًا معينًا في محركات البحث.</p></section>
       </form>
 
       <aside class="card pi-preview">
         <span class="pi-eyebrow">معاينة قبل النشر</span>
         <div id="piPreviewImage" class="pi-preview-image"><span>صورة المنتج</span></div>
-        <div class="pi-preview-copy"><span id="piPreviewCategory">القسم</span><h3 id="piPreviewTitle">اسم المنتج</h3><p id="piPreviewDescription">سيظهر وصف المنتج هنا.</p><strong id="piPreviewPrice">السعر غير محدد</strong></div>
+        <div class="pi-preview-copy"><span id="piPreviewCategory">القسم</span><h3 id="piPreviewTitle">اسم المنتج</h3><p id="piPreviewDescription">سيظهر وصف المنتج هنا.</p><strong id="piPreviewPrice">السعر غير محدد</strong><div id="piPreviewTags" class="pi-preview-tags"></div></div>
+        <div class="pi-seo-preview"><small>معاينة نتيجة البحث</small><b id="piPreviewSeoTitle">سيظهر عنوان الصفحة</b><p id="piPreviewSeoDescription">سيظهر وصف الصفحة هنا.</p></div>
         <div class="pi-preview-note"><b>ملاحظة الصور</b><p>تُعرض الصور من روابط HTTPS التي توفرها. استخدم صورًا تملك حق استخدامها. يمكنك رفع الصور إلى ملفات الموقع لاحقًا من لوحة الإدارة.</p></div>
         <div class="pi-preview-note pi-note-warn"><b>المصادر المحمية</b><p>قد لا تسمح بعض المواقع بالاستيراد الآلي. صفحات Alibaba وAliExpress تحتاج تكاملًا رسميًا مرخصًا أو إدخال تفاصيل المنتج يدويًا.</p></div>
       </aside>
