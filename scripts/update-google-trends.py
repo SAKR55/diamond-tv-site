@@ -37,16 +37,26 @@ SPORTS = re.compile(
 OFFICIAL_DOMAINS = {
     "fifa.com", "uefa.com", "the-afc.com", "cafonline.com", "icc-cricket.com",
     "nba.com", "nfl.com", "premierleague.com", "saudiproleague.com", "spl.com.sa",
+    "laliga.com", "bundesliga.com", "legaseriea.it", "ligue1.com", "conmebol.com",
+    "fiba.basketball", "saff.com.sa", "egyptianproleague.com",
     "spa.gov.sa", "mbc.net", "shahid.mbc.net", "netflix.com", "primevideo.com", "disneyplus.com",
+    "osn.com", "osnplus.com", "starzplay.com", "jawwy.tv",
 }
 RECOGNIZED_DOMAINS = {
     "reuters.com", "apnews.com", "afp.com", "bbc.com", "bbc.co.uk", "aljazeera.net",
     "aljazeera.com", "dawn.com", "ndtv.com", "ndtvprofit.com", "minutemirror.com.pk",
     "espn.com", "espncricinfo.com", "cricbuzz.com", "skysports.com", "arabnews.com",
-    "alarabiya.net", "asharq.com", "theguardian.com", "goal.com", "kooora.com",
+    "alarabiya.net", "asharq.com", "aawsat.com", "theguardian.com", "goal.com", "kooora.com",
     "thehindu.com", "indiatoday.in", "indianexpress.com", "hindustantimes.com", "timesofindia.indiatimes.com",
-    "variety.com", "hollywoodreporter.com", "deadline.com", "yahoo.com", "yahoo.net",
+    "variety.com", "hollywoodreporter.com", "deadline.com", "indiewire.com", "screenrant.com",
+    "yahoo.com", "yahoo.net", "cnn.com", "npr.org", "cbsnews.com", "dw.com", "france24.com",
+    "skynewsarabia.com", "alaraby.co.uk", "al-monitor.com", "al-ain.com", "almasryalyoum.com",
+    "ahram.org.eg", "youm7.com", "masrawy.com", "elwatannews.com", "alriyadh.com",
+    "okaz.com.sa", "sabq.org", "saudigazette.com.sa", "arriyadiyah.com",
+    "nytimes.com", "washingtonpost.com", "theathletic.com", "axios.com", "nme.com", "empireonline.com",
+    "independentarabia.com", "akhbaar24.com", "al-madina.com", "albilad.com", "alyaum.com", "aleqt.com", "rt.com",
 }
+NEWS_WRAPPER_HOSTS = {"news.google.com", "www.google.com", "www.bing.com"}
 
 ENTERTAINMENT = re.compile(
     r"مسلسل|مسلسلات|فيلم|أفلام|افلام|سينما|دراما|ممثل|ممثلة|حلقة|رمضان|"
@@ -92,20 +102,34 @@ class MetaDescriptionParser(HTMLParser):
 
 
 class ArticleTextParser(HTMLParser):
-    BLOCK_TAGS = {"p", "li", "h2", "h3", "h4", "blockquote", "figcaption", "dt", "dd"}
+    BLOCK_TAGS = {"p", "li", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "figcaption", "dt", "dd"}
     SKIP_TAGS = {"script", "style", "nav", "header", "footer", "aside", "form", "noscript",
                  "svg", "button", "iframe", "select", "textarea", "dialog", "menu", "template"}
     VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
                  "meta", "param", "source", "track", "wbr"}
+    NOISY = re.compile(r"\b(?:navigation|sidebar|related|recommendations?|comments?|social-share|newsletter|ad-slot|advertisement|cookie|breadcrumb|share-tools)\b", re.I)
+    ARTICLE_CONTAINER = re.compile(r"\b(?:article|story|post|entry|article-body|article-content|story-body|story-content|post-content|entry-content|article__body|article__content|story__body|main-content)\b", re.I)
+    CONTENT_CONTAINER = re.compile(r"\b(?:main|content|content-body|body-content|article-text|story-text)\b", re.I)
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.tags: list[str] = []
+        self.context_scores: list[tuple[str, int]] = []
         self.ignored: list[str] = []
         self.blocks: list[tuple[int, str]] = []
         self.current_tag = ""
         self.current_priority = 0
         self.current_parts: list[str] = []
+
+    def _container_score(self, tag: str, values: dict[str, str]) -> int:
+        role = values.get("role", "").lower()
+        itemprop = values.get("itemprop", "").lower()
+        class_id = (values.get("class", "") + " " + values.get("id", "")).lower()
+        if tag == "article" or role == "article" or "articlebody" in itemprop or self.ARTICLE_CONTAINER.search(class_id):
+            return 3
+        if tag == "main" or role == "main" or self.CONTENT_CONTAINER.search(class_id):
+            return 2
+        return 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -116,18 +140,19 @@ class ArticleTextParser(HTMLParser):
         values = {key.lower(): (value or "") for key, value in attrs}
         role = values.get("role", "").lower()
         class_id = (values.get("class", "") + " " + values.get("id", "")).lower()
-        noisy = bool(re.search(r"\b(?:navigation|sidebar|related|recommendations?|comments?|social-share|newsletter|ad-slot|advertisement)\b", class_id))
-        if tag in self.SKIP_TAGS or role in {"navigation", "banner", "contentinfo", "complementary"} or noisy:
+        if tag in self.SKIP_TAGS or role in {"navigation", "banner", "contentinfo", "complementary"} or self.NOISY.search(class_id):
             if tag not in self.VOID_TAGS:
                 self.ignored.append(tag)
             return
+        score = self._container_score(tag, values)
         if tag in self.BLOCK_TAGS:
             self._flush()
             self.current_tag = tag
             self.current_parts = []
-            self.current_priority = 3 if "article" in self.tags else 2 if "main" in self.tags else 1
+            self.current_priority = max([1, score] + [item[1] for item in self.context_scores])
         if tag not in self.VOID_TAGS:
             self.tags.append(tag)
+            self.context_scores.append((tag, score))
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
@@ -142,6 +167,7 @@ class ArticleTextParser(HTMLParser):
         for index in range(len(self.tags) - 1, -1, -1):
             if self.tags[index] == tag:
                 del self.tags[index:]
+                del self.context_scores[index:]
                 break
 
     def handle_data(self, data: str) -> None:
@@ -155,7 +181,7 @@ class ArticleTextParser(HTMLParser):
     def _flush(self) -> None:
         if self.current_parts:
             text = re.sub(r"\s+", " ", unescape(" ".join(self.current_parts))).strip()
-            if len(text) >= 28:
+            if len(text) >= 22:
                 self.blocks.append((self.current_priority, text))
         self.current_tag = ""
         self.current_priority = 0
@@ -165,9 +191,35 @@ class ArticleTextParser(HTMLParser):
         self._flush()
         for priority in (3, 2, 1):
             selected = [text for level, text in self.blocks if level == priority]
-            if selected and sum(len(item.split()) for item in selected) >= 120:
-                return "\n".join(selected)[:60000]
-        return "\n".join(text for _, text in self.blocks)[:60000]
+            words = sum(len(item.split()) for item in selected)
+            if selected and (words >= 90 or priority == 1):
+                return "\n".join(selected)[:80000]
+        return "\n".join(text for _, text in self.blocks)[:80000]
+
+
+class JsonLdArticleParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.in_jsonld = False
+        self.parts: list[str] = []
+        self.current: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() == "script":
+            values = {key.lower(): (value or "").lower() for key, value in attrs}
+            self.in_jsonld = values.get("type", "").split(";")[0].strip() == "application/ld+json"
+            if self.in_jsonld:
+                self.current = []
+
+    def handle_data(self, data: str) -> None:
+        if self.in_jsonld:
+            self.current.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "script" and self.in_jsonld:
+            self.parts.append("".join(self.current))
+            self.current = []
+            self.in_jsonld = False
 
 
 class PlainTextParser(HTMLParser):
@@ -185,6 +237,35 @@ def plain_text(value: str, limit: int = 700) -> str:
     parser = PlainTextParser()
     parser.feed(value or "")
     return re.sub(r"\s+", " ", " ".join(parser.parts)).strip()[:limit]
+
+
+def structured_article_text(html: str) -> str:
+    parser = JsonLdArticleParser()
+    parser.feed(html)
+    candidates: list[str] = []
+
+    def collect(value: object) -> None:
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if str(key).lower() in {"articlebody", "article_body"} and isinstance(child, str):
+                    cleaned = plain_text(child, 80000)
+                    if len(cleaned.split()) >= 80:
+                        candidates.append(cleaned)
+                else:
+                    collect(child)
+        elif isinstance(value, list):
+            for child in value:
+                collect(child)
+
+    for item in parser.parts:
+        try:
+            collect(json.loads(item))
+        except (json.JSONDecodeError, TypeError):
+            try:
+                collect(json.loads(unescape(item)))
+            except (json.JSONDecodeError, TypeError):
+                continue
+    return max(candidates, key=lambda item: len(item.split()), default="")
 
 
 def local_name(tag: str) -> str:
@@ -265,13 +346,32 @@ def relevant_news(topic: str, news: list[dict]) -> list[dict]:
 def publisher_details(url: str) -> tuple[str, str]:
     try:
         host = (urlsplit(url).hostname or "").lower().removeprefix("www.")
-        if host in OFFICIAL_DOMAINS or any(host.endswith("." + item) for item in OFFICIAL_DOMAINS):
-            return host, "official"
-        if host in RECOGNIZED_DOMAINS or any(host.endswith("." + item) for item in RECOGNIZED_DOMAINS):
-            return host, "recognized"
+        for domain in sorted(OFFICIAL_DOMAINS, key=len, reverse=True):
+            if host == domain or host.endswith("." + domain):
+                return domain, "official"
+        for domain in sorted(RECOGNIZED_DOMAINS, key=len, reverse=True):
+            if host == domain or host.endswith("." + domain):
+                return domain, "recognized"
         return host, "unlisted"
     except Exception:
         return "", "unlisted"
+
+
+def is_known_news_wrapper(url: str) -> bool:
+    try:
+        parts = urlsplit(url)
+        host = (parts.hostname or "").lower()
+        if parts.scheme != "https" or parts.username or parts.password:
+            return False
+        if host not in NEWS_WRAPPER_HOSTS:
+            return False
+        return (host == "news.google.com" and parts.path.startswith("/rss/articles/")) or (
+            host == "www.google.com" and parts.path.startswith("/url")
+        ) or (
+            host == "www.bing.com" and parts.path.startswith("/news/")
+        )
+    except Exception:
+        return False
 
 
 PUBLISHER_NAME_DOMAINS = {
@@ -281,14 +381,41 @@ PUBLISHER_NAME_DOMAINS = {
     "hindustan times": "hindustantimes.com", "times of india": "timesofindia.indiatimes.com",
     "ndtv": "ndtv.com", "espn": "espn.com", "espncricinfo": "espncricinfo.com",
     "cricbuzz": "cricbuzz.com", "sky sports": "skysports.com", "arab news": "arabnews.com",
-    "al arabiya": "alarabiya.net", "asharq": "asharq.com", "the guardian": "theguardian.com",
-    "goal": "goal.com", "kooora": "kooora.com", "variety": "variety.com",
-    "hollywood reporter": "hollywoodreporter.com", "deadline": "deadline.com", "yahoo": "yahoo.com",
+    "al arabiya": "alarabiya.net", "asharq": "asharq.com", "sharq al awsat": "aawsat.com",
+    "the guardian": "theguardian.com", "goal": "goal.com", "kooora": "kooora.com",
+    "variety": "variety.com", "hollywood reporter": "hollywoodreporter.com", "deadline": "deadline.com",
+    "cnn": "cnn.com", "npr": "npr.org", "cbs news": "cbsnews.com", "dw": "dw.com",
+    "france 24": "france24.com", "sky news arabia": "skynewsarabia.com", "alaraby": "alaraby.co.uk",
+    "al monitor": "al-monitor.com", "al ain": "al-ain.com", "masrawy": "masrawy.com",
+    "al masry al youm": "almasryalyoum.com", "al aham": "ahram.org.eg", "al ahram": "ahram.org.eg",
+    "youm7": "youm7.com", "elwatan": "elwatannews.com", "alriyadh": "alriyadh.com",
+    "saudi gazette": "saudigazette.com.sa", "okaz": "okaz.com.sa", "sabq": "sabq.org",
+    "arriyadiyah": "arriyadiyah.com", "nme": "nme.com", "indiewire": "indiewire.com",
+    "screen rant": "screenrant.com", "new york times": "nytimes.com", "washington post": "washingtonpost.com",
+}
+
+
+ARABIC_PUBLISHER_NAME_DOMAINS = {
+    "وكالة الأنباء السعودية": "spa.gov.sa", "الجزيرة": "aljazeera.net",
+    "العربية": "alarabiya.net", "الشرق الأوسط": "aawsat.com", "الشرق الاوسط": "aawsat.com",
+    "سكاي نيوز عربية": "skynewsarabia.com", "العربي الجديد": "alaraby.co.uk",
+    "الرياض": "alriyadh.com", "عكاظ": "okaz.com.sa", "سبق": "sabq.org",
+    "الرياضية": "arriyadiyah.com", "المصري اليوم": "almasryalyoum.com",
+    "الأهرام": "ahram.org.eg", "الاهرام": "ahram.org.eg", "اليوم السابع": "youm7.com",
+    "مصراوي": "masrawy.com", "العين": "al-ain.com",
+    "اندبندنت عربية": "independentarabia.com", "إندبندنت عربية": "independentarabia.com",
+    "أخبار 24": "akhbaar24.com", "أخبار24": "akhbaar24.com",
+    "المدينة": "al-madina.com", "اليوم": "alyaum.com",
+    "الاقتصادية": "aleqt.com", "آر تي": "rt.com", "روسيا اليوم": "rt.com",
 }
 
 
 def trusted_publisher_from_name(name: str) -> tuple[str, str]:
-    normalized = re.sub(r"[^a-z0-9]+", " ", (name or "").lower()).strip()
+    raw_name = (name or "").strip().lower()
+    for label, domain in ARABIC_PUBLISHER_NAME_DOMAINS.items():
+        if label in raw_name:
+            return publisher_details("https://" + domain)
+    normalized = re.sub(r"[^a-z0-9]+", " ", raw_name).strip()
     for label, domain in PUBLISHER_NAME_DOMAINS.items():
         if label in normalized:
             return publisher_details("https://" + domain)
@@ -298,19 +425,23 @@ def trusted_publisher_from_name(name: str) -> tuple[str, str]:
 def google_news_entries(topic: str) -> list[dict]:
     entries: list[dict] = []
     seen: set[str] = set()
-    variants = [("ar", "SA", "SA:ar")]
-    if not re.search(r"[\u0600-\u06ff]", topic) or len(entries) < 3:
-        variants.append(("en", "US", "US:en"))
+    variants = [
+        ("ar", "SA", "SA:ar"),
+        ("ar", "EG", "EG:ar"),
+        ("en", "US", "US:en"),
+        ("en", "GB", "GB:en"),
+    ]
     for language, region, edition in variants:
         query = urlencode({"q": topic, "hl": language, "gl": region, "ceid": edition})
         url = "https://news.google.com/rss/search?" + query
-        request = urllib.request.Request(url, headers={"User-Agent": "DIAMOND-TV-Trends/1.4 (+https://diamond-tv.shop/)"})
+        request = urllib.request.Request(url, headers={"User-Agent": "DIAMOND-TV-Research/1.5 (+https://diamond-tv.shop/)"})
         try:
-            with urllib.request.urlopen(request, timeout=12) as response:
+            with urllib.request.urlopen(request, timeout=8) as response:
                 root = ET.fromstring(response.read())
         except Exception as error:
-            print(f"Google News RSS unavailable for {topic} ({language}): {type(error).__name__}")
+            print(f"Google News RSS unavailable for {topic} ({region}:{language}): {type(error).__name__}")
             continue
+        batch_count = 0
         for item in root.iter():
             if local_name(item.tag) != "item":
                 continue
@@ -334,53 +465,64 @@ def google_news_entries(topic: str) -> list[dict]:
                 "description": plain_text(child_text(item, "description")),
                 "publishedAt": child_text(item, "pubDate"),
                 "feed": "Google News RSS",
+                "edition": edition,
             })
-            if len(entries) >= 12:
+            batch_count += 1
+            if batch_count >= 10:
                 break
-        if len(entries) >= 8:
+        if len(entries) >= 32:
             break
     return entries
 
-def bing_news_entries(topic: str) -> list[dict]:
-    query = urlencode({"q": topic, "format": "rss", "mkt": "en-US"})
-    url = "https://www.bing.com/news/search?" + query
-    request = urllib.request.Request(url, headers={"User-Agent": "DIAMOND-TV-Trends/1.3 (+https://diamond-tv.shop/)"})
-    try:
-        with urllib.request.urlopen(request, timeout=12) as response:
-            root = ET.fromstring(response.read())
-    except Exception as error:
-        print(f"Bing News RSS unavailable for {topic}: {type(error).__name__}")
-        return []
 
+def bing_news_entries(topic: str) -> list[dict]:
     entries: list[dict] = []
-    for item in root.iter():
-        if local_name(item.tag) != "item":
+    seen: set[str] = set()
+    for market in ("ar-SA", "en-US", "en-GB"):
+        query = urlencode({"q": topic, "format": "rss", "mkt": market})
+        url = "https://www.bing.com/news/search?" + query
+        request = urllib.request.Request(url, headers={"User-Agent": "DIAMOND-TV-Research/1.5 (+https://diamond-tv.shop/)"})
+        try:
+            with urllib.request.urlopen(request, timeout=8) as response:
+                root = ET.fromstring(response.read())
+        except Exception as error:
+            print(f"Bing News RSS unavailable for {topic} ({market}): {type(error).__name__}")
             continue
-        title = child_text(item, "title")
-        link = child_text(item, "link")
-        source_node = next((node for node in item.iter() if local_name(node.tag) == "source"), None)
-        source_name = (source_node.text or "").strip() if source_node is not None and source_node.text else ""
-        publisher_url = (source_node.attrib.get("url", "") if source_node is not None else "") or child_text(item, "url")
-        domain, tier = publisher_details(publisher_url)
-        if tier == "unlisted":
-            domain, tier = trusted_publisher_from_name(source_name)
-        if not title or not link.startswith("https://") or tier == "unlisted":
-            continue
-        direct_url = child_text(item, "url")
-        if direct_url.startswith("https://") and publisher_details(direct_url)[1] != "unlisted":
-            link = direct_url
-        entries.append({
-            "title": title,
-            "source": source_name or domain,
-            "url": link,
-            "domain": domain,
-            "publisherTier": tier,
-            "description": plain_text(child_text(item, "description")),
-            "publishedAt": child_text(item, "pubDate"),
-            "feed": "Bing News RSS",
-        })
-        if len(entries) >= 12:
-            break
+
+        batch_count = 0
+        for item in root.iter():
+            if local_name(item.tag) != "item":
+                continue
+            title = child_text(item, "title")
+            link = child_text(item, "link")
+            source_node = next((node for node in item.iter() if local_name(node.tag) == "source"), None)
+            source_name = (source_node.text or "").strip() if source_node is not None and source_node.text else ""
+            publisher_url = (source_node.attrib.get("url", "") if source_node is not None else "") or child_text(item, "url")
+            domain, tier = publisher_details(publisher_url)
+            if tier == "unlisted":
+                domain, tier = trusted_publisher_from_name(source_name)
+            if not title or not link.startswith("https://") or tier == "unlisted":
+                continue
+            direct_url = child_text(item, "url")
+            if direct_url.startswith("https://") and publisher_details(direct_url)[1] != "unlisted":
+                link = direct_url
+            if link in seen:
+                continue
+            seen.add(link)
+            entries.append({
+                "title": title,
+                "source": source_name or domain,
+                "url": link,
+                "domain": domain,
+                "publisherTier": tier,
+                "description": plain_text(child_text(item, "description")),
+                "publishedAt": child_text(item, "pubDate"),
+                "feed": "Bing News RSS",
+                "edition": market,
+            })
+            batch_count += 1
+            if batch_count >= 10:
+                break
     return entries
 
 
@@ -391,7 +533,7 @@ class TrustedPublisherRedirectHandler(urllib.request.HTTPRedirectHandler):
             if parts.scheme != "https" or parts.username or parts.password:
                 return None
             _, tier = publisher_details(newurl)
-            if tier == "unlisted":
+            if tier == "unlisted" and not is_known_news_wrapper(newurl):
                 return None
         except Exception:
             return None
@@ -402,13 +544,13 @@ def fetch_source_metadata(url: str, trusted_only: bool = False, analyze_article:
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     result = {
         "description": "", "pageTitle": "", "reachable": False, "httpStatus": None, "checkedAt": now,
-        "finalUrl": "", "articleRead": False, "articleWordCount": 0, "analysisTerms": [], "coverageDimensions": [],
+        "finalUrl": "", "articleRead": False, "articleWordCount": 0, "articleTextMethod": "", "analysisTerms": [], "coverageDimensions": [],
     }
     try:
         parts = urlsplit(url)
         if parts.scheme != "https" or not parts.hostname or parts.username or parts.password:
             return result
-        if trusted_only and publisher_details(url)[1] == "unlisted":
+        if trusted_only and publisher_details(url)[1] == "unlisted" and not is_known_news_wrapper(url):
             return result
     except Exception:
         return result
@@ -418,7 +560,7 @@ def fetch_source_metadata(url: str, trusted_only: bool = False, analyze_article:
     )
     try:
         opener = urllib.request.build_opener(TrustedPublisherRedirectHandler()) if trusted_only else None
-        response_context = opener.open(request, timeout=8) if opener else urllib.request.urlopen(request, timeout=8)
+        response_context = opener.open(request, timeout=12) if opener else urllib.request.urlopen(request, timeout=12)
         with response_context as response:
             status = int(response.status)
             final_url = response.geturl()
@@ -430,7 +572,7 @@ def fetch_source_metadata(url: str, trusted_only: bool = False, analyze_article:
                 return result
             if not result["reachable"] or "text/html" not in response.headers.get("Content-Type", "").lower():
                 return result
-            raw = response.read(512_000 if analyze_article else 192_000)
+            raw = response.read(1_500_000 if analyze_article else 256_000)
             charset = response.headers.get_content_charset() or "utf-8"
         html = raw.decode(charset, errors="replace")
         parser = MetaDescriptionParser()
@@ -440,11 +582,18 @@ def fetch_source_metadata(url: str, trusted_only: bool = False, analyze_article:
         if analyze_article:
             body_parser = ArticleTextParser()
             body_parser.feed(html)
-            article_text = body_parser.article_text()
+            dom_text = body_parser.article_text()
+            jsonld_text = structured_article_text(html)
+            if len(jsonld_text.split()) > len(dom_text.split()):
+                article_text = jsonld_text
+                result["articleTextMethod"] = "بيانات المقال المنظمة"
+            else:
+                article_text = dom_text
+                result["articleTextMethod"] = "نص الصفحة"
             word_count = len(re.findall(r"\S+", article_text))
             terms, dimensions = analyze_article_text(article_text, topic)
             result["articleWordCount"] = word_count
-            result["articleRead"] = word_count >= 180
+            result["articleRead"] = word_count >= 150
             result["analysisTerms"] = terms
             result["coverageDimensions"] = dimensions
     except Exception:
@@ -457,7 +606,7 @@ def inspect_source_link(raw_url: str, topic: str = "") -> dict:
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     result = {
         "inputUrl": url[:2048], "finalUrl": "", "domain": "", "publisherTier": "unlisted",
-        "pageTitle": "", "description": "", "reachable": False, "httpStatus": None, "articleRead": False, "articleWordCount": 0, "analysisTerms": [], "coverageDimensions": [],
+        "pageTitle": "", "description": "", "reachable": False, "httpStatus": None, "articleRead": False, "articleWordCount": 0, "articleTextMethod": "", "analysisTerms": [], "coverageDimensions": [],
         "checkedAt": now, "reason": "",
     }
     try:
@@ -485,6 +634,7 @@ def inspect_source_link(raw_url: str, topic: str = "") -> dict:
         "checkedAt": metadata.get("checkedAt", now),
         "articleRead": bool(metadata.get("articleRead")),
         "articleWordCount": int(metadata.get("articleWordCount", 0)),
+        "articleTextMethod": metadata.get("articleTextMethod", ""),
         "analysisTerms": metadata.get("analysisTerms", []),
         "coverageDimensions": metadata.get("coverageDimensions", []),
     })
@@ -519,7 +669,7 @@ def check_source_links(urls: list[str], topic: str = "") -> list[dict]:
             except Exception:
                 results[index] = {"inputUrl": normalized[index], "finalUrl": "", "domain": "", "publisherTier": "unlisted",
                                   "pageTitle": "", "description": "", "reachable": False, "httpStatus": None,
-                                  "articleRead": False, "articleWordCount": 0, "analysisTerms": [], "coverageDimensions": [],
+                                  "articleRead": False, "articleWordCount": 0, "articleTextMethod": "", "analysisTerms": [], "coverageDimensions": [],
                                   "checkedAt": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
                                   "reason": "تعذر فحص الرابط بسبب استجابة الشبكة."}
     return [item for item in results if item is not None]
@@ -563,16 +713,23 @@ def classify(title: str, news: list[dict]) -> str | None:
 
 
 def collect_topic_research(topic: str) -> list[dict]:
-    stories = google_news_entries(topic) + bing_news_entries(topic)
-    stories = relevant_news(topic, stories)
+    google_stories = google_news_entries(topic)
+    bing_stories = bing_news_entries(topic)
+    merged_stories: list[dict] = []
+    for index in range(max(len(google_stories), len(bing_stories))):
+        if index < len(google_stories):
+            merged_stories.append(google_stories[index])
+        if index < len(bing_stories):
+            merged_stories.append(bing_stories[index])
+    stories = relevant_news(topic, merged_stories)
     unique_by_url: dict[str, dict] = {}
     for story in stories:
         url = str(story.get("url", ""))
         if url.startswith("https://"):
             unique_by_url.setdefault(url, story)
-    stories = list(unique_by_url.values())
+    stories = list(unique_by_url.values())[:30]
 
-    with ThreadPoolExecutor(max_workers=8) as pool:
+    with ThreadPoolExecutor(max_workers=10) as pool:
         futures = {
             pool.submit(fetch_source_metadata, story["url"], trusted_only=True, analyze_article=True, topic=topic): story
             for story in stories
@@ -589,6 +746,9 @@ def collect_topic_research(topic: str) -> list[dict]:
                         story["url"] = final_url
                         story["domain"] = final_domain
                         story["publisherTier"] = final_tier
+                    else:
+                        story["publisherTier"] = "unlisted"
+                        story["reachable"] = False
                 if metadata.get("description"):
                     story["description"] = metadata["description"]
                 story.update({key: value for key, value in metadata.items() if key != "description"})
@@ -597,9 +757,11 @@ def collect_topic_research(topic: str) -> list[dict]:
 
     stories.sort(key=lambda story: (
         story.get("publisherTier") == "unlisted",
-        story.get("publisherTier") != "official",
+        not story.get("articleRead", False),
         not story.get("reachable", False),
+        story.get("publisherTier") != "official",
         not bool(story.get("description")),
+        -(int(story.get("articleWordCount", 0) or 0)),
     ))
     selected: list[dict] = []
     seen_domains: set[str] = set()
@@ -613,7 +775,7 @@ def collect_topic_research(topic: str) -> list[dict]:
         seen_domains.add(domain)
         seen_urls.add(story["url"])
         selected.append(story)
-        if len(selected) >= 8:
+        if len(selected) >= 12:
             break
     return selected
 
