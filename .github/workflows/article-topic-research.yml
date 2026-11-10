@@ -33,6 +33,7 @@ jobs:
         if: github.event.action == 'article-link-check'
         env:
           REQUEST_ID: ${{ github.event.client_payload.request_id }}
+          TOPIC: ${{ github.event.client_payload.topic }}
           LINKS_JSON: ${{ toJson(github.event.client_payload.urls) }}
         run: python scripts/update-google-trends.py check-links "$REQUEST_ID"
       - name: Save article research results
