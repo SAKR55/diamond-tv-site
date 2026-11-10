@@ -2,7 +2,7 @@ name: Research a requested article topic
 
 on:
   repository_dispatch:
-    types: [article-research]
+    types: [article-research, article-link-check]
 
 permissions:
   contents: write
@@ -24,11 +24,18 @@ jobs:
         with:
           python-version: "3.x"
       - name: Search trusted publisher feeds
+        if: github.event.action == 'article-research'
         env:
           TOPIC: ${{ github.event.client_payload.topic }}
           REQUEST_ID: ${{ github.event.client_payload.request_id }}
         run: python scripts/update-google-trends.py research-topic "$TOPIC" "$REQUEST_ID"
-      - name: Save research sources
+      - name: Check article source links
+        if: github.event.action == 'article-link-check'
+        env:
+          REQUEST_ID: ${{ github.event.client_payload.request_id }}
+          LINKS_JSON: ${{ toJson(github.event.client_payload.urls) }}
+        run: python scripts/update-google-trends.py check-links "$REQUEST_ID"
+      - name: Save article research results
         env:
           REQUEST_ID: ${{ github.event.client_payload.request_id }}
         run: |
@@ -39,5 +46,5 @@ jobs:
             echo "No research output was written."
             exit 1
           fi
-          git commit -m "chore: collect article research sources"
+          git commit -m "chore: save article research results"
           git push origin HEAD:main
