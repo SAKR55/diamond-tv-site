@@ -41,6 +41,7 @@ RECOGNIZED_DOMAINS = {
     "aljazeera.com", "dawn.com", "ndtv.com", "ndtvprofit.com", "minutemirror.com.pk",
     "espn.com", "espncricinfo.com", "cricbuzz.com", "skysports.com", "arabnews.com",
     "alarabiya.net", "asharq.com", "theguardian.com", "goal.com", "kooora.com",
+    "thehindu.com", "indiatoday.in", "indianexpress.com", "hindustantimes.com", "timesofindia.indiatimes.com",
     "variety.com", "hollywoodreporter.com", "deadline.com", "yahoo.com", "yahoo.net",
 }
 
@@ -131,6 +132,8 @@ def publisher_details(url: str) -> tuple[str, str]:
 PUBLISHER_NAME_DOMAINS = {
     "reuters": "reuters.com", "associated press": "apnews.com", "ap news": "apnews.com",
     "afp": "afp.com", "bbc": "bbc.com", "al jazeera": "aljazeera.net", "dawn": "dawn.com",
+    "the hindu": "thehindu.com", "india today": "indiatoday.in", "indian express": "indianexpress.com",
+    "hindustan times": "hindustantimes.com", "times of india": "timesofindia.indiatimes.com",
     "ndtv": "ndtv.com", "espn": "espn.com", "espncricinfo": "espncricinfo.com",
     "cricbuzz": "cricbuzz.com", "sky sports": "skysports.com", "arab news": "arabnews.com",
     "al arabiya": "alarabiya.net", "asharq": "asharq.com", "the guardian": "theguardian.com",
@@ -148,44 +151,50 @@ def trusted_publisher_from_name(name: str) -> tuple[str, str]:
 
 
 def google_news_entries(topic: str) -> list[dict]:
-    query = urlencode({"q": topic, "hl": "ar", "gl": "SA", "ceid": "SA:ar"})
-    url = "https://news.google.com/rss/search?" + query
-    request = urllib.request.Request(url, headers={"User-Agent": "DIAMOND-TV-Trends/1.3 (+https://diamond-tv.shop/)"})
-    try:
-        with urllib.request.urlopen(request, timeout=12) as response:
-            root = ET.fromstring(response.read())
-    except Exception as error:
-        print(f"Google News RSS unavailable for {topic}: {type(error).__name__}")
-        return []
-
     entries: list[dict] = []
-    for item in root.iter():
-        if local_name(item.tag) != "item":
+    seen: set[str] = set()
+    variants = [("ar", "SA", "SA:ar")]
+    if not re.search(r"[\u0600-\u06ff]", topic) or len(entries) < 3:
+        variants.append(("en", "US", "US:en"))
+    for language, region, edition in variants:
+        query = urlencode({"q": topic, "hl": language, "gl": region, "ceid": edition})
+        url = "https://news.google.com/rss/search?" + query
+        request = urllib.request.Request(url, headers={"User-Agent": "DIAMOND-TV-Trends/1.4 (+https://diamond-tv.shop/)"})
+        try:
+            with urllib.request.urlopen(request, timeout=12) as response:
+                root = ET.fromstring(response.read())
+        except Exception as error:
+            print(f"Google News RSS unavailable for {topic} ({language}): {type(error).__name__}")
             continue
-        title = child_text(item, "title")
-        link = child_text(item, "link")
-        source_node = next((node for node in item.iter() if local_name(node.tag) == "source"), None)
-        source_name = (source_node.text or "").strip() if source_node is not None and source_node.text else ""
-        publisher_url = (source_node.attrib.get("url", "") if source_node is not None else "")
-        domain, tier = publisher_details(publisher_url)
-        if tier == "unlisted":
-            domain, tier = trusted_publisher_from_name(source_name)
-        if not title or not link.startswith("https://") or tier == "unlisted":
-            continue
-        entries.append({
-            "title": title,
-            "source": source_name or domain,
-            "url": link,
-            "domain": domain,
-            "publisherTier": tier,
-            "description": plain_text(child_text(item, "description")),
-            "publishedAt": child_text(item, "pubDate"),
-            "feed": "Google News RSS",
-        })
-        if len(entries) >= 12:
+        for item in root.iter():
+            if local_name(item.tag) != "item":
+                continue
+            title = child_text(item, "title")
+            link = child_text(item, "link")
+            source_node = next((node for node in item.iter() if local_name(node.tag) == "source"), None)
+            source_name = (source_node.text or "").strip() if source_node is not None and source_node.text else ""
+            publisher_url = (source_node.attrib.get("url", "") if source_node is not None else "")
+            domain, tier = publisher_details(publisher_url)
+            if tier == "unlisted":
+                domain, tier = trusted_publisher_from_name(source_name)
+            if not title or not link.startswith("https://") or tier == "unlisted" or link in seen:
+                continue
+            seen.add(link)
+            entries.append({
+                "title": title,
+                "source": source_name or domain,
+                "url": link,
+                "domain": domain,
+                "publisherTier": tier,
+                "description": plain_text(child_text(item, "description")),
+                "publishedAt": child_text(item, "pubDate"),
+                "feed": "Google News RSS",
+            })
+            if len(entries) >= 12:
+                break
+        if len(entries) >= 8:
             break
     return entries
-
 
 def bing_news_entries(topic: str) -> list[dict]:
     query = urlencode({"q": topic, "format": "rss", "mkt": "en-US"})
