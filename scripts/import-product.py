@@ -14,6 +14,7 @@ import re
 import socket
 import sys
 import tempfile
+from decimal import Decimal, InvalidOperation
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -466,6 +467,133 @@ def parse_page(data: bytes, content_type: str, final_url: str) -> dict:
     return {"ok": True, "finalUrl": final_url, "product": payload, "found": list(dict.fromkeys(found)), "warnings": warnings}
 
 
+
+def shopify_json_url(page_url: str) -> str:
+    parts = urlsplit(page_url)
+    match = re.search(r"^(.*?/products/)([^/]+?)(?:\.html)?/?$", parts.path, re.IGNORECASE)
+    if not match:
+        return ""
+    handle = match.group(2)
+    if handle.lower().endswith(".js"):
+        handle = handle[:-3]
+    if not handle or handle in (".", ".."):
+        return ""
+    return urlunsplit(("https", parts.netloc, match.group(1) + handle + ".js", "", ""))
+
+
+def shopify_money(value) -> str:
+    if value is None or value == "":
+        return ""
+    try:
+        amount = Decimal(str(value)) / Decimal(100)
+    except (InvalidOperation, ValueError):
+        return ""
+    if not amount.is_finite() or amount < 0:
+        return ""
+    return format(amount.normalize(), "f")
+
+
+def parse_shopify_product(data: bytes, content_type: str, final_url: str) -> dict:
+    if content_type and "json" not in content_type:
+        raise ImportProblem("لم يُرجع مصدر Shopify بيانات JSON صالحة.")
+    try:
+        item = json.loads(data.decode("utf-8", errors="replace"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ImportProblem("تعذّرت قراءة بيانات المنتج العامة من Shopify.") from exc
+    if not isinstance(item, dict) or not get_text(item.get("title")):
+        raise ImportProblem("لم يُرجع مسار Shopify بيانات منتج عامة.")
+    variants = item.get("variants") if isinstance(item.get("variants"), list) else []
+    selected = next((v for v in variants if isinstance(v, dict) and v.get("available")), None)
+    if selected is None:
+        selected = next((v for v in variants if isinstance(v, dict)), {})
+    raw_images = item.get("images") if isinstance(item.get("images"), list) else []
+    if not raw_images and item.get("featured_image"):
+        raw_images = [item.get("featured_image")]
+    images = []
+    for value in raw_images[:MAX_IMAGES]:
+        image = asset_url(value, final_url)
+        if image and image not in images:
+            images.append(image)
+    description = clean_text(item.get("description"), 1200)
+    specifications = []
+    options = item.get("options") if isinstance(item.get("options"), list) else []
+    for index, option in enumerate(options[:8]):
+        if not isinstance(option, dict):
+            continue
+        name = get_text(option.get("name"))[:60]
+        values = []
+        for variant in variants[:250]:
+            if not isinstance(variant, dict):
+                continue
+            option_values = variant.get("options") if isinstance(variant.get("options"), list) else []
+            if index < len(option_values):
+                value = get_text(option_values[index])[:50]
+                if value and value not in values:
+                    values.append(value)
+        if name and values:
+            specifications.append({"name": name, "value": "، ".join(values[:20])[:140]})
+    price = shopify_money((selected or {}).get("price", item.get("price")))
+    old_price = shopify_money((selected or {}).get("compare_at_price", item.get("compare_at_price")))
+    currency = get_text(item.get("currency"))
+    availability = "available" if item.get("available", True) else "unavailable"
+    payload = {
+        "title": clean_text(item.get("title"), 100),
+        "category": clean_text(item.get("type"), 60),
+        "brand": clean_text(item.get("vendor"), 80),
+        "sku": clean_text((selected or {}).get("sku"), 60),
+        "description": description,
+        "price": price,
+        "oldPrice": old_price,
+        "currency": currency,
+        "image": images[0] if images else "",
+        "images": images,
+        "videos": [],
+        "highlights": [],
+        "specifications": specifications,
+        "availability": availability,
+        "stock": None,
+        "sourceUrl": final_url,
+    }
+    found = ["الاسم", "العلامة التجارية", "القسم"]
+    if description:
+        found.append("الوصف")
+    if price:
+        found.append("السعر")
+    if images:
+        found.append("الصور")
+    if payload["sku"]:
+        found.append("رمز المنتج")
+    if specifications:
+        found.append("خيارات المنتج")
+    warnings = []
+    if not images:
+        warnings.append("لم تتضمن بيانات المنتج رابط صورة.")
+    if not price:
+        warnings.append("لم يظهر السعر في بيانات المنتج.")
+    if not currency:
+        warnings.append("لم تحدد واجهة المنتج العملة؛ تحقق منها يدويًا قبل النشر.")
+    if not description:
+        warnings.append("لم يتضمن المصدر وصفًا؛ أضفه يدويًا قبل النشر.")
+    return {"ok": True, "finalUrl": final_url, "product": payload, "found": found, "warnings": warnings}
+
+
+def merge_shopify_result(shopify_result: dict, page_result: dict | None) -> dict:
+    if not page_result:
+        return shopify_result
+    product = shopify_result.get("product", {})
+    page_product = page_result.get("product", {})
+    for key in ("currency", "imageAlt"):
+        if not product.get(key) and page_product.get(key):
+            product[key] = page_product[key]
+    if not product.get("images") and page_product.get("images"):
+        product["images"] = page_product["images"]
+        product["image"] = page_product["images"][0]
+    if not product.get("price") and page_product.get("price"):
+        product["price"] = page_product["price"]
+    shopify_result["found"] = list(dict.fromkeys((shopify_result.get("found") or []) + (page_result.get("found") or [])))
+    shopify_result["warnings"] = list(dict.fromkeys((shopify_result.get("warnings") or []) + (page_result.get("warnings") or [])))
+    return shopify_result
+
 def write_result(request_id: str, result: dict):
     if not re.fullmatch(r"[A-Za-z0-9-]{8,90}", request_id):
         raise ImportProblem("رقم طلب الاستيراد غير صالح.")
@@ -486,13 +614,41 @@ def main():
     try:
         safe = validate_url(source_url)
         host = urlsplit(safe).hostname or ""
-        if not robots_allows(safe, host):
-            raise ImportProblem("ملف robots.txt في هذا الموقع لا يسمح بقراءة صفحة المنتج.")
-        data, content_type, final_url = fetch_public(safe, host, MAX_PAGE_BYTES)
-        final_host = urlsplit(final_url).hostname or host
-        if not robots_allows(final_url, final_host):
-            raise ImportProblem("ملف robots.txt لا يسمح بقراءة عنوان صفحة المنتج النهائي.")
-        result = parse_page(data, content_type, final_url)
+        page_result = None
+        page_error = None
+        try:
+            if not robots_allows(safe, host):
+                raise ImportProblem("ملف robots.txt في هذا الموقع لا يسمح بقراءة صفحة المنتج.")
+            data, content_type, final_url = fetch_public(safe, host, MAX_PAGE_BYTES)
+            final_host = urlsplit(final_url).hostname or host
+            if not robots_allows(final_url, final_host):
+                raise ImportProblem("ملف robots.txt لا يسمح بقراءة عنوان صفحة المنتج النهائي.")
+            page_result = parse_page(data, content_type, final_url)
+        except ImportProblem as exc:
+            page_error = exc
+
+        shopify_result = None
+        shopify_error = None
+        endpoint = shopify_json_url(safe)
+        if endpoint:
+            try:
+                if not robots_allows(endpoint, host):
+                    raise ImportProblem("ملف robots.txt لا يسمح بقراءة واجهة بيانات المنتج.")
+                data, content_type, final_url = fetch_public(endpoint, host, MAX_PAGE_BYTES)
+                shopify_result = parse_shopify_product(data, content_type, final_url)
+            except ImportProblem as exc:
+                shopify_error = exc
+
+        if shopify_result:
+            result = merge_shopify_result(shopify_result, page_result)
+        elif page_result:
+            result = page_result
+        elif page_error:
+            raise page_error
+        elif shopify_error:
+            raise shopify_error
+        else:
+            raise ImportProblem("تعذّر العثور على بيانات عامة قابلة للاستيراد.")
     except ImportProblem as exc:
         result = {"ok": False, "error": str(exc)}
     except Exception:
