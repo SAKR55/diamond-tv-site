@@ -1549,7 +1549,7 @@
     if (!urls.length) { toast("أضف رابطًا واحدًا على الأقل ثم افحصه."); sourceField.focus(); return; }
     if (urls.length > 12) { toast("افحص حتى 12 رابطًا في المرة الواحدة."); return; }
     if (articleLinkCheckInProgress) { toast("فحص الروابط جارٍ بالفعل."); return; }
-    if (!window.confirm("ستُرسل الروابط إلى فاحص الخادم، وتُحفظ نتيجة الفحص مؤقتًا في مستودع الموقع العام. لا تضع روابط خاصة أو تتضمن رموز دخول. هل تتابع؟")) return;
+    if (!window.confirm("ستُرسل الروابط إلى فاحص الخادم، وتُحفظ نتيجة الفحص في مستودع الموقع العام. لا تضع روابط خاصة أو تتضمن رموز دخول. هل تتابع؟")) return;
 
     const requestId = "linkcheck-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9);
     const resultPath = ".github/article-research/" + requestId + ".json";
