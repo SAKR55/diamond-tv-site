@@ -1,12 +1,98 @@
 {
   "country": "SA",
   "source": "https://trends.google.com/trending?geo=SA&hl=ar",
-  "updatedAt": "2026-11-10T09:04:56Z",
+  "updatedAt": "2026-11-10T09:08:02Z",
   "trends": [
+    {
+      "title": "anvay dravid",
+      "category": "sports",
+      "traffic": "200+",
+      "publishedAt": "Tue, 10 Nov 2026 00:20:00 -0800",
+      "news": [
+        {
+          "title": "Anvay Dravid, Aaryavir Sehwag named in India squad for U19 Asia Cup - Yahoo Sports",
+          "source": "Yahoo Sports",
+          "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPTHRMdjU3bWExN0QzUnFGTlVQZHAtSG9lRzZFbUotU3gwd2lCd1dVbVFDYXNsNXMtbUU4Y1JoX3FrbEphUXdKbEdXekR3b2NQQ2FLSjVRM2N2SldhaVJEQk12MHJrb1NXTlcwZlBZMmlOZkt4NXlKN3Bvai1hcXp3V2FMR3lCRVZKSDJj?oc=5",
+          "domain": "sports.yahoo.com",
+          "publisherTier": "recognized",
+          "description": "Anvay Dravid, Aaryavir Sehwag named in India squad for U19 Asia Cup Yahoo Sports",
+          "publishedAt": "Fri, 30 Oct 2026 07:00:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:52Z"
+        },
+        {
+          "title": "Aaryavir Sehwag, Anvay Dravid dismissed cheaply against Pakistan in Under-19 Asia Cup - Sportstar",
+          "source": "Sportstar",
+          "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPVnpuTG90WE5TQUdaRWhEb2dKOHYyS1lWeG5OMmJ1SGhkQzZOVEpFZFQyMFRMSnFWSWZHc0Y3al93eEd5aHJqbmx6UW5DX0xxYmFOSnBfN2xmZVg2UVBWQzI5eGJUMnB0R0F3SElFNXlaUkw2cnpWZ2tVQXJ6VnFHYjI1ZjQ0RDFUNmV6TnBPckJkekVXRDZ3QjI5UzdiRGtBSVlROVhiZFVGeEY3M0NfVTg5ZkV2TmJWV3NxZVU4VURnWXNIZjFOZlQ1eTh5cU5iWHJRYjg0cGJiR03SAeIBQVVfeXFMTkcybC12RWltbmdJaW9JODlGYTdHYXg1NG5OZGtBaWl0U3lxYmRWc2lOSTlKNmhnejFURXl3MzhXZnpzdmpMODNDc0JUQm44TW13ZHYtaHU3ai1KZU1fQTNyQWtDVVBKTzJ3TTVUZFJhWFpYUlFmRnFIdHppLWFmQmlKWmtFNWFjWk9fVTRpd0I3UXViY2hrbl92NTJ1YW1lMmxqRDFHdVNSZEt2U016YmpnT1g1VEU5bi1ZY0xOMnNDNW5wbHRsclRZcmpjTzJLcnFwSjdJWDFlVG9BTkM0aFJzdw?oc=5",
+          "domain": "sportstar.thehindu.com",
+          "publisherTier": "recognized",
+          "description": "Aaryavir Sehwag, Anvay Dravid dismissed cheaply against Pakistan in Under-19 Asia Cup Sportstar",
+          "publishedAt": "Sun, 08 Nov 2026 06:40:45 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:52Z"
+        },
+        {
+          "title": "The Wall's Son Is A Destroyer: Anvay Dravid, Son Of Rahul Dravid, Smashes Stunning Knock In Elite U19 Cup - NDTV Sports",
+          "source": "NDTV Sports",
+          "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNMnc3MjBuVERTRjlkdGZhZ2tyR0ZSMVJHOGtIdUVRSWVobGZNc0dVeDB5dV9XX2h6RlMyTTRuYkxkVlJhZkVnd28tdm04aDJ2WkdBalFjaXZIWklJd1RMWGVaZTMwaVp1MFd4NFk5NjRGVXUtRnZrSnI0cXQwb3hlNDR6amloZ0NUSjRrRWctdlgycnNjQ1ZpdHBNdkREcXozR2RJRHFQQmRmVDJMS0YxTGdiZWp4cU0xNHNfOXFoQTdXbDlfNDFNTw?oc=5",
+          "domain": "sports.ndtv.com",
+          "publisherTier": "recognized",
+          "description": "The Wall's Son Is A Destroyer: Anvay Dravid, Son Of Rahul Dravid, Smashes Stunning Knock In Elite U19 Cup NDTV Sports",
+          "publishedAt": "Mon, 12 Oct 2026 07:00:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:52Z"
+        },
+        {
+          "title": "IND vs NEP, U19 Asia Cup: Star kids Sehwag, Dravid look to make their own mark - India Today",
+          "source": "India Today",
+          "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxPZlByc1VlT3Q3V2FqcmRsM0tLa2t0Sms2LWVmTXF2V05PbnVSb3pydlVGWGJYM3ZQamZlQXN4ZWtVT0hFNEpRdDlRMmxWSlVWV2NzVjNHQmVLWmdJSVQzTVMxcFl5UUE4TWZvOG1WSi1JUHJhVTBfMndVNDNpUmNYbVdiVmpKRlhudkU2bkhhaUtvSDd1bUJ1WVZRNWFPMTJRMUFCeEgwbmJKLXAtVi1IZm41ek1LUjNkbUQ3Tl9fZFJ6ZF9QMi03OG1MQ0RJUU15R0s1b3U1cW1JaFM4MFRmX25n0gHnAUFVX3lxTE96MVo5ajBRQk1tNUpKbTJSbHlqMEFYOW5DRDBoaTUtcFJTSXg2UjB4ekNfMkQ0ZEdJQ3FPNjlxeTNoLXFtZnk0V3F5SmFyaGMtajAyenRCU0lQRGhuakhUM2tOcXlDQ1l3X2RkVUswRDN2OFN1R1ZfdkJZc0RWSlJMUTF0SFM3NFhHR3J1MU1tNlVMVjcwa1hXVnNKNFZEdEZaRUtyaC1GbkF0R212a2RyQWtteHVjSkRkS2ZOZjFNOXJqZnVPbVB5Qk05WVR3dEJFMXBEVXlqSlZ1a3Q4Nm9nM1BPbWljRQ?oc=5",
+          "domain": "indiatoday.in",
+          "publisherTier": "recognized",
+          "description": "IND vs NEP, U19 Asia Cup: Star kids Sehwag, Dravid look to make their own mark India Today",
+          "publishedAt": "Fri, 06 Nov 2026 02:19:01 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:52Z"
+        },
+        {
+          "title": "Vinoo Mankad trophy: Dravid slams 151 as Karnataka chase down 358; Sehwag scores 173 off 143 balls in los - The Times of India",
+          "source": "The Times of India",
+          "url": "https://news.google.com/rss/articles/CBMinwJBVV95cUxNaGI1R29sWmRNaGZaQTdEaU5TV1ZoWWlONUQ3TzBNZmdtMmlvNWVmb1NVdEE0cXJyRXJwelBLeWNWTTFJcFNhOW5rU1JTOEpNdjNlOVkwaWZvb1FzTDN4TWZhN1hLT3AyVWJLSW5EWjE5NTY5cndzMUZTTkFzdXN5Z3JDS3BUZkhGVFR5YmNqUFBmekZIZ19MelRpZXBlMmFlZXpUOUo2VlNDQ2dPblZ2Z2FDSkV6QUhMUDZDc0s4clRTV19oTFgyR1BsZkJSck5sdko0UjNnNF8zaWxMQnhLYnY1dTVNUkZ1ekNsSXhtaTVRMlFpNlo2SmdqTm1ialEzbzhIQ1c4eFZqa1VZVlNDbFZqTzNXVy1BcS1EX09iRdIBpAJBVV95cUxORGxBcVNsOEFoV1dsdzRHakZxRHVibXFzcnJVSXBuRjN1MC1FOU54MThld1djbjdJaUx1NG1xa29PVEUyWk1JTTJuVlNlby01TkM0aDNNeVA4amV3ZXRiQUJkQjJJZVdvWjRkRFRQN0lYNlR6c3NOakFiSTVqT19KWTBadDBUTWsyWGppTjVIOFRSSS1jYXFZb2ttcTNIeXM2WmdfdDhra0llazhoSVNfWlhXRGdveGZGeVFta0M3ekdibjJjalh6R3JMdkstcllONEp3V2s5N2RzVHI1SkhXYXVuRmpVUVFDYnU5elpMVXhDR0dUdDRpaDRCQ1pNVlUwTGkteDQwNWxFX294dTNvLVhOdGR6VkhCRVMtVGNocEZ6aHNO?oc=5",
+          "domain": "timesofindia.indiatimes.com",
+          "publisherTier": "recognized",
+          "description": "Vinoo Mankad trophy: Dravid slams 151 as Karnataka chase down 358; Sehwag scores 173 off 143 balls in los The Times of India",
+          "publishedAt": "Fri, 16 Oct 2026 07:00:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:52Z"
+        },
+        {
+          "title": "Aaryavir Sehwag and Anvay Dravid light up Vinoo Mankad Trophy with quickfire centuries | Cricket - Hindustan Times",
+          "source": "Hindustan Times",
+          "url": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxPN0tlVHZzZVhOb3ktNWxHdWNXdFJ5UEFQZURMcHhFYkpMNzJtTnNtM0JyNGt6bTlLd2NQMzlPbGRfUEU5bzE1OEQtZ2E4X2tSaDJDQWxweTFGcDNBYjVvTkxMdGtHdTNyeXl1YUw2VjA4eGgwNjRFTXV5b29yTkl6TXppY0xKVEd4Zm9pRHotaWkzTWs3TmZWdFBQeXExSUlHNW1hcXhqRkVxZV8wYkxaSXY1Wkg2UjloVnBKNWFZbVJWNnZjcGo5UmxyenlGUkFZdlJyR1BpYjEtZzVYQ0x30gHkAUFVX3lxTE02ajNXLW9Nci0xX2wzVktkbDZSOVViZGJVYnQ5am13VUFxbGZqSzFRWFBtaEdNaTM3UG9ZT2VUWHpGV2labEdzNWk2c2lkREx5T1VwWGJuc21KSjRUY2VETTh5WnMwR2JIN1BiTHJLU2ljRkFNQ29oLTQ4WVlFN0k4dDllYU01YkV3c1FFX0lMTnd2R0NJeHlwUlA2a0k5dHhvVUc1bi1oLTJpdWV6TGswQlc0ZTRVTDZ6XzUzOVhFVnJscEFBdkdaaEp3YkR1UjVjdkd3d3p1OW1vYjJsSmczaDNEZw?oc=5",
+          "domain": "hindustantimes.com",
+          "publisherTier": "recognized",
+          "description": "Aaryavir Sehwag and Anvay Dravid light up Vinoo Mankad Trophy with quickfire centuries | Cricket Hindustan Times",
+          "publishedAt": "Sat, 17 Oct 2026 07:00:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:52Z"
+        }
+      ]
+    },
     {
       "title": "ind u19 vs uae u19",
       "category": "sports",
-      "traffic": "200+",
+      "traffic": "500+",
       "publishedAt": "Mon, 9 Nov 2026 23:00:00 -0800",
       "news": [
         {
@@ -18,17 +104,98 @@
           "description": "Here's everything you need to know about the upcoming U-19 Asia Cup, including where to catch the games live without missing a minute.",
           "reachable": true,
           "httpStatus": 200,
-          "checkedAt": "2026-11-10T09:04:53Z"
+          "checkedAt": "2026-11-10T09:07:56Z"
         },
         {
-          "title": "INDU19 302/7 (49.4) (Aryan Savsani 1(2) Mohit Ulva 1(1)) | India U19 vs United Arab Emirates U19, 11th Match, Group A, ACC Men's U19 Asia Cup 2026 Live Cricket Stream, live scores, ball-by-ball commentary, highlights, videos, news, and more in USA & C",
+          "title": "India U19 vs UAE U19 Live Streaming: When And Where To Watch U19 Asia Cup 2026 Match - NDTV Profit",
+          "source": "NDTV Profit",
+          "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOTjd2bW5telRmYTRtLThWaEZ4a3FsTmlsVkFIbjhMRk5ENGVEbzhuQm1FcGp2eXFIT2RtV2JheWZEYV9pNTExT3JsY3hYVmFFelFXcVVoLTJuUXQ3eDB3UWlidmo0dkowdDRYeDBtRDMzcXRpS200Umw3bFdjWlgtaDg2VDhUS1pNUjBaVmZuNi1PUkR5aTR6SDJOcDN5d3lfRkpPVVI4WmttMkRvV2gyQWRoTElTd3R5cW9VdDBSeDJ0YjZV0gHMAUFVX3lxTE5FbkFYTXB6YUVxbnB3MU1UVmRPY3d6V196bEpmd3lDNTVYTGVaM045WVh4TUN3cGJCSWlJQVByMjM1TUhhNnF5OFFGbUlqTnhoLU5acUsxOUdKc3dCUDhsNDlRQjFQMURyUEthUmE0WmJmVHZXemVqS1ZpZ2dfODU0dlljbkhGVjNrZXpTZVNRNGdEUkVKVWFjYWdLclBST1QtemNDRER1ZE5xSUtweE8yUGMtcjZKOFUzdUdyNU0yekptX3ZFa2U1YklZbQ?oc=5",
+          "domain": "ndtvprofit.com",
+          "publisherTier": "recognized",
+          "description": "India U19 vs UAE U19 Live Streaming: When And Where To Watch U19 Asia Cup 2026 Match NDTV Profit",
+          "publishedAt": "Tue, 10 Nov 2026 02:00:01 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:56Z"
+        },
+        {
+          "title": "India U-19 vs UAE U-19 LIVE streaming info: When, where to watch Under-19 Asia Cup match? - Sportstar",
+          "source": "Sportstar",
+          "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxPRG1kOTRSejVVTG5adGJfdmhkSm9hUWFuRjNKM19md3h3dGZwZ2Vvcl82N2licy1PQUV6U1A1bVE1YVBOYTlzMTZya0RnMTdlT0xjOUJjTGlIT0JCMUZyZXpMZUtkVllndTIzS0syY0VUTXEybFducDFBUVlxTUZBdkFlaUF5SDE1akJHUW9XV0o3M2VXYWp6R3ItSUFyZV85eWxuYlNYZTVUNWMzU0dWNk5xZHo1Njd0TWYxaHpnLXlVd2RtRFhwSHY1eXBqWlVaZE85cmU2TmJMRlF0U1HSAeQBQVVfeXFMT01kc2FiTVlYOHJPU2ZtRHp1dGxuNDByZ1VOWFpqUjBHejJCemNZbThlSUp5OW5aTWl5Nk9rSlRDRHF6SGRkdGpUZHZ5d0pLTzRuVmgxZDJmeTQ3YmlYYmVTaEI2ZjhyeGxnZzlmSlNDalZsUkZfMFB5RUlVTk9VTEhjOHpxempMNXhXZWUybW5LU0ozcTE5SGdmc2tsc3FSQmVhOEd6YzdwWG1fYl9GMFdaQnpoQUxwcnNtbVh1S0szbXlqamZXSE91bDNFZ203SjVPdjhYX1I5ZEI2M1hVUzRCYnNl?oc=5",
+          "domain": "sportstar.thehindu.com",
+          "publisherTier": "recognized",
+          "description": "India U-19 vs UAE U-19 LIVE streaming info: When, where to watch Under-19 Asia Cup match? Sportstar",
+          "publishedAt": "Tue, 10 Nov 2026 00:30:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:56Z"
+        },
+        {
+          "title": "India vs UAE Live Streaming, U19 Asia Cup 2026 Live Telecast: When And Where To Watch - NDTV Sports",
+          "source": "NDTV Sports",
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNbzY3VEZqQ2I1cGdJME84dC15VldvR1MzNGRULTREYW8yR2Q4QTZsdlQ4eUdxakg2YjhXSmctdDROclhSYmtQclJWNXpyV3hYNDBWX1l1QjVldEdKU3pWRnVvMklwTWNBbFQwV3M4NjhEZW0yYUFYZk1MSkdIWnU4QllVNVpXR0g3MmhhdFRNODY4bUhla2dKbWIxV21WRDZxSUFJYnJpb19VeDlvdElBUWRRakxVY1RBbUxRSWpHSGkyUQ?oc=5",
+          "domain": "sports.ndtv.com",
+          "publisherTier": "recognized",
+          "description": "India vs UAE Live Streaming, U19 Asia Cup 2026 Live Telecast: When And Where To Watch NDTV Sports",
+          "publishedAt": "Tue, 10 Nov 2026 02:13:29 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:56Z"
+        },
+        {
+          "title": "Like father, like son: Aaryavir Sehwag smashes 168-ball 160 vs UAE in U19 Asia Cup - The Indian Express",
+          "source": "The Indian Express",
+          "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQUlh1Zjlzc0Z3bVpJRm1fUW5hTWpBN3lpeG42YkphRkExX1hoRzFabEZSemN6aTFWVWtKVlBXajllUm02Vmxyd2poOEo2UXRiem5CbVQ2S2V2bXU2cEFPcV91ZWM2amZvNXcwYkozUjJWRmpoaElVV3NLSmprb2NCRHpvZ2txRnp1aG9DOEhhZ3J3YjNaQzZrZFVRbzEzRWhxMV9IZkcxNjUwOUlFLU5CSE930gG4AUFVX3lxTE9LVDVTVW9XLU05MTF2SDdnMzdRc1dnRm9QTTc3UVVWZTZqMy1Iczk1dkpsNnhITzI1ZGRGcmJGd2lNUEFQclkxM21tVEw3cUZrSW1feGFWSjhXb2hVX1lqRDZHVG1sbGRTQ1ZBRlFEX3ZPZU5yU01NQ240QWNBV0dhek1uSEJ4bGU1MHZoLTF1aVIyVWlBeWZjaUQ1NEd1RnVrMGNmdjJrY2ZqRkpEb0FHOUFXbGF4Q3E?oc=5",
+          "domain": "indianexpress.com",
+          "publisherTier": "recognized",
+          "description": "Like father, like son: Aaryavir Sehwag smashes 168-ball 160 vs UAE in U19 Asia Cup The Indian Express",
+          "publishedAt": "Tue, 10 Nov 2026 08:43:50 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:56Z"
+        },
+        {
+          "title": "INDU19 vs UAEU19, 11th Match, Group A, ACC Men's U19 Asia Cup 2026 - Live Stream - Cricbuzz",
           "source": "Cricbuzz",
-          "url": "https://www.cricbuzz.com/live-cricket-scores/175690/indu19-vs-uaeu19-11th-match-group-a-acc-mens-u19-asia-cup-2026",
+          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNU0VIRG03V3c3dU5iRDlfOG9LSDU4M3cwSzVMU0dQNDQ3YVZQUFc4QmI0N2pNTVBBeThuQU1Panpyd09ZTlVBM1pJS3owcjlUMWloblU2R3JiV2tLTkZ1MXlQN3l1TzRWNHJINXdxR283M0RFSE4zOGlnNEU1R1dLckdoT1JETWJ6TVZrQzc2VGNpbmxNcUpDZWZCa2NaQQ?oc=5",
           "domain": "cricbuzz.com",
           "publisherTier": "recognized",
-          "reachable": false,
-          "httpStatus": null,
-          "checkedAt": "2026-11-10T09:04:53Z"
+          "description": "INDU19 vs UAEU19, 11th Match, Group A, ACC Men's U19 Asia Cup 2026 - Live Stream Cricbuzz",
+          "publishedAt": "Tue, 10 Nov 2026 04:38:32 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:57Z"
+        },
+        {
+          "title": "IND vs UAE ACC Men's U19 Asia Cup 2025 Live Streaming: When, where and how to watch India U19 vs UAE U19 - The Times of India",
+          "source": "The Times of India",
+          "url": "https://news.google.com/rss/articles/CBMirgJBVV95cUxQeDhJSUdOOWJGQU51NE56SmRTekVjRFh1RzBRd1F0bWlYRjNvdVlrdGFBS09QVGFMb0dlb2x0b0taWUt0QVpPcDU4aGFMaDExM3FUVkpQZlFNLTBVbmktZXNBd3RmZEZBWDJHbGpQSUJPSnZ2aE1WQzFVc2NwcVZiTWNlaWFPUDFBV2lZdGxwMXVwUWUyYUktSDV4ZkZjU1RWSUl4OG9vd2lVVXVwb19DZHIzSHJncS00b2xfbFRGRlBSNXlqcXVhVlFQX1NXcGRmZ3RCNjlkX3otWnRPVDN2dlhiOGNoa1VyZm9zZHY4Vzk1X0l5bW5ySUx1RTJzZXZwQkVwaWVQazlULUdEbXpMTkI2b29ZZEc2OTl3eHdZaC02Rl9oeThrMkEya2M5QdIBswJBVV95cUxNMTd5LXVoWTNPRHVGbGQ0Z25wYlI1Zi0wbEpvcXZmRzNndy0ybDQyc01LX2REdUZCU0ZNdlRjTERrdDJtR0lOc0xiMkZ6eXFnYW5ES3V3YjBVVi1mMi01a3JRS0FDQXpvd29FWW1WTWtjUVE5dHQzRWRSVmhmS3N0b3BJU2ZCYlZYem9nbEcyd3BEaE5OZTFVc3FibXIyMlhIV3Mwd0l6U0hEcVU4Y05WdUNyVC1lT0pORjQ5Z0xmWXViSGVzVzh6a0lvbGY1dlVVVU9FWEozeFgzYmpjNndlM01nNDdyMk5kWTNpWVN6X1BLRFQ4UWZBNmNRLUNON0QzQmhjZEtkX3A1Qm9EcWl2QmFQZlpuekE3X21LdklueFh0V24tWXJCZ19SRUNSZ2xEOElF?oc=5",
+          "domain": "timesofindia.indiatimes.com",
+          "publisherTier": "recognized",
+          "description": "IND vs UAE ACC Men's U19 Asia Cup 2025 Live Streaming: When, where and how to watch India U19 vs UAE U19 The Times of India",
+          "publishedAt": "Thu, 11 Dec 2025 08:00:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:57Z"
+        },
+        {
+          "title": "India vs UAE, U19 Asia Cup Live Streaming: When and where to watch IND vs UAE on TV and online | Cricket - Hindustan Times",
+          "source": "Hindustan Times",
+          "url": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxOdHFwdmdSU2YyZGdLbmQyRlRscVFoSGNOUkRJalVkSHgtRVVEcm9fM3NDdVUxTUhaakx1WXI4cXdmcE9vUXRndGFtYmhIN2VtaDF0bHlQU2FlZkpUXzlPUkNiZWFBWWRjWmxLdlVHUkNHYmpYT0drWm96OGQ0eUdnN1BtVkh3RlBGOTBqUzl5RXlJNEJTTWlac1FmeUtFcGVlVFVFYUs1bGY3N0loVnNrTWdRbi16TVk2dHB1Vm9UcDl1b1prbEhyQVN0NW95YmlNM1NtbjVBZDRmeW5qUGtrN0ZQR0V6YTjSAewBQVVfeXFMTm5US1Nja2l2bFlGZzdITDA0bnVkdWp6TmRKeWRhMFFRRVdPVU1RNTdTekJmRUxYZExRdExuRDVScVZJMUhXdG14ZHEtT3JkUWpoX3BzSVF4TVhNSUp6d2NmSUdFQlJaNzZ0VDFxYU1DSWZhNGttQ3JPT25sNWlaOWw3bXU4VEVFbjhQOHBJVnVnZ2o5REhSZG5WdjhDZDZJT3BpMlN6VzJrZDlxWlNWZjQxcTMtZ000WlVCdUlIYl9PRXpZUVJOeVFCYV9wekNLTFpxQ0JNXzlvNkdNS2YyRmFKOGlvWU1KM0lhSmQ?oc=5",
+          "domain": "hindustantimes.com",
+          "publisherTier": "recognized",
+          "description": "India vs UAE, U19 Asia Cup Live Streaming: When and where to watch IND vs UAE on TV and online | Cricket Hindustan Times",
+          "publishedAt": "Fri, 12 Dec 2025 08:00:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:57Z"
         }
       ]
     },
@@ -47,17 +214,46 @@
           "description": "Nepal win the toss and elect to bowl against Pakistan in the U19 Asia Cup as Mohammad Huzaifa replaces Ali Raza in the defending champion....",
           "reachable": true,
           "httpStatus": 200,
-          "checkedAt": "2026-11-10T09:04:54Z"
+          "checkedAt": "2026-11-10T09:07:58Z"
         },
         {
-          "title": "Pakistan U19 vs Nepal U19 Live Streaming: When And Where To Watch U19 Asia Cup 2026 Match",
+          "title": "Pakistan U19 vs Nepal U19 Live Streaming: When And Where To Watch U19 Asia Cup 2026 Match - NDTV Profit",
           "source": "NDTV Profit",
-          "url": "https://www.ndtvprofit.com/sports/pakistan-u19-vs-nepal-u19-live-streaming-when-and-where-to-watch-u19-asia-cup-2026-match-12305326",
+          "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxPVFVuN0h0MnB6Q0pXWUhweDctbGh1THM5TnZISV92bThvZHFMZ3RDaDhVNHIyS2pIYnpqOVlpRnNHQ1RrTnUweW1JbG1zZW9OR0h0VjhINWRucDM5SjJJVFZCamJmaUZOa1ZLbmlZYnhsRnQwSk5vVzBtb3ZKaHFkU3RaUnpON2VsN29qY1RoT01JTTNtMFNBcUstMDU3anZ5R1BDTEZuQ0Zjc0xtYTdkZ2ZKSWxUOVA5UG50b3FrazFraGVHemxxTEhrZ9IB0wFBVV95cUxQNjlSbENoOG1fNDViU0Vqb1pmWVhoZVQwUmNMSVlvZ0wzRGVDSEU0bEZYUjMzSzE3NG9TN094Y1Joc3B6ZjBkcHo2TkhWcjBudWNGTHNiRVlCSy1NVHVScGRjY1YtbThsQlBBNzVRU05hTXdyWGE4Z2JQaV94UDJ0WFhNeFU2MDJQMUY4MW1YNWp6MVlEbmdCTXFDMkhpUGtfdk5ZNmhKNHNYZHRWRVBHMDlSNV9vU0M5NmJaY2JtUzliSzB0MzZsT2N1R0ZkYUJVaWQw?oc=5",
           "domain": "ndtvprofit.com",
           "publisherTier": "recognized",
-          "reachable": false,
-          "httpStatus": null,
-          "checkedAt": "2026-11-10T09:04:54Z"
+          "description": "Pakistan U19 vs Nepal U19 Live Streaming: When And Where To Watch U19 Asia Cup 2026 Match NDTV Profit",
+          "publishedAt": "Tue, 10 Nov 2026 02:00:01 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:58Z"
+        },
+        {
+          "title": "PAKU19 vs NPLU19, 12th Match, Group A, ACC Men's U19 Asia Cup 2026 - Live Stream - Cricbuzz",
+          "source": "Cricbuzz",
+          "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPdUxOVXFnTUFUVnllamFjckIxbGJNWFl4Y2JONHRQRGc4S0ZITkp1U1F1eHgxangtVDVTMWRZUU5UYVA5WUxlN3h5a0M3NGhRY2lkTUV0UXNWcFRmc3ZZa20yUzgtN21TVTZTVEFoUGZKRDl1ZFhsTnZWSEJ0RW9QQjM2YXZ4UGlxX1hiR2RHVFF5cHA2V1hyRTJjb3NTUGZyWjZFZ096Vkg1SGN4RE5NXzc1WW4?oc=5",
+          "domain": "cricbuzz.com",
+          "publisherTier": "recognized",
+          "description": "PAKU19 vs NPLU19, 12th Match, Group A, ACC Men's U19 Asia Cup 2026 - Live Stream Cricbuzz",
+          "publishedAt": "Tue, 10 Nov 2026 04:43:32 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:58Z"
+        },
+        {
+          "title": "12th Match, Group A, Asian Cricket Council Under-19s Asia Cup at Al Amarat, Nov 10 2026 - ESPN India",
+          "source": "ESPN India",
+          "url": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxOUTZvZnZ0OUx4YUhDUFJGenRKNmJiNDgwb3pPazdrZGdwYk1MRlRLdTJTX0RuMnhRYTVUWE50Y0M3OExGcExUVkhQeUk3TGQzQ1AzcHIwbkpJMlJCajVEX2JhT01aU014SEdwUndOa3VrNy1FZEU3cmQ1RDNvNWRyMVMtS3NkSm1PcC1iQWVtd25PejgzTHFuTTU4d3ZURldZZkF4ams3RmVaUW9RSTE0YmQ3UDFSYWRsdXVxSzVqam1Za09DSkFvR3NUOGJJWnVjTG9iYnVUZTZITUJQSUxjSW9mN1VTbTRIVThqdjVETQ?oc=5",
+          "domain": "espn.com",
+          "publisherTier": "recognized",
+          "description": "12th Match, Group A, Asian Cricket Council Under-19s Asia Cup at Al Amarat, Nov 10 2026 ESPN India",
+          "publishedAt": "Tue, 10 Nov 2026 06:31:30 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:07:58Z"
         }
       ]
     },
@@ -76,7 +272,72 @@
           "description": "“We have played good and positive cricket considering the conditions,” says Tayyab Arif; Babar Azam and two debutants among four batters to hit half-centuries.",
           "reachable": true,
           "httpStatus": 200,
-          "checkedAt": "2026-11-10T09:04:55Z"
+          "checkedAt": "2026-11-10T09:08:00Z"
+        },
+        {
+          "title": "PAK vs SL, 1st Test, Sri Lanka tour of Pakistan, 2026 - Live Stream - Cricbuzz",
+          "source": "Cricbuzz",
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPU0Y4c1RMNE9pQ041NGZtZmR2M0hMX2RVLUVsaV8yYXQ2YXZ2cWhIN0poUFdVbXVsd3dKY3B2Ml9tblV5YlNrRjRRU3hKNlBmWjNrM2ppUFIySTFQRnYtYlJvakdUakFEMHM1eGFnZVNlR2JMdFdqOFZLQlp1bnp0TDM2VzhEbjJsOFVEMXY1OGFneDc0Z3kzVUlnZVpjUDZFalh5SQ?oc=5",
+          "domain": "cricbuzz.com",
+          "publisherTier": "recognized",
+          "description": "PAK vs SL, 1st Test, Sri Lanka tour of Pakistan, 2026 - Live Stream Cricbuzz",
+          "publishedAt": "Mon, 09 Nov 2026 03:39:44 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:08:00Z"
+        },
+        {
+          "title": "Pakistan vs. Sri Lanka free live stream: How to watch 1st Test without cable in India - Yahoo Sports",
+          "source": "Yahoo Sports",
+          "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOTlJtd0JOaTY4aU1KOUNrdVVhQlNFS0oyWThlQmhiNGdMYUo5RDFRVjZKZ3JYY0VhUHRwYXNsQWpfRHdpNWhYemRaUDR6aXh2QlpHdC05VmJEcHN6NFM5dVlOQ3FfQ21ObmxTWWlsVl9GaFlJRXhUam5VeUdCXzNiSg?oc=5",
+          "domain": "sports.yahoo.com",
+          "publisherTier": "recognized",
+          "description": "Pakistan vs. Sri Lanka free live stream: How to watch 1st Test without cable in India Yahoo Sports",
+          "publishedAt": "Mon, 09 Nov 2026 05:34:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:08:00Z"
+        },
+        {
+          "title": "Pakistan vs Sri Lanka Live Streaming, 1st Test Live Telecast: When And Where To Watch - NDTV Sports",
+          "source": "NDTV Sports",
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQaHBVUXpnN205WkJORVIyRUlocTY2d28zNk9DbHE3MllsbURrSVVGR0x6cVBVRndYcTB0YjI0M193ZjJkY2ZlRlRIbWFuYW9DSTc2clJhenBOV2M4VVRVczY2YW9PcnZDS2NDRjBIOFoweWkwbkp1bTRYME9iRnh4UThrTThMMHFSRmRqaC1BbTJtZmo2eUZTUzlUVTd6QXByUEk5Qjdidk5oS2JpRi0zNy1MUi1JSlJPTE4wUS1QSk9KQQ?oc=5",
+          "domain": "sports.ndtv.com",
+          "publisherTier": "recognized",
+          "description": "Pakistan vs Sri Lanka Live Streaming, 1st Test Live Telecast: When And Where To Watch NDTV Sports",
+          "publishedAt": "Mon, 09 Nov 2026 03:34:42 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:08:00Z"
+        },
+        {
+          "title": "Pakistan vs Sri Lanka 1st Test Live Streaming: When And Where To Watch In India - NDTV Profit",
+          "source": "NDTV Profit",
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPUGVxOUdWRUE1eHB1TzFHaHZqTlBqZDNrb1U1SEpPQmNrRHhaWDRMSTBfQUJCQzhBbkhsSkdTa0Q5MkRHalZ5MkdVUm5xdXlOUlFiM1Z0bkVVdHlCWFRPSlZDMVpJbUUwWnAxWmIyWmg4amM1TVdDLUxsc1ptSkR2RmNtT2JiTEJEZkdRc2hhX0Myd3UyRGg2VzZMRnpoUjViby1PM3lyS1J2NGxHN0tmbV9yeGh2WGpsVjBFY1ZuWHlpd9IBygFBVV95cUxOVzJaWkQwWTBNR2RrYnFEcWlBdXpMZ1dES2VuM1pMdWR0dzhnTlV6TzNWakpKUndKd0hfOWhZcEVTUDdpSWs0NUhLQnBTUkhvek9mbFo4cjVCRXRQWjBIUEFiRlotNHM0OGdxZ0Nhd3dWemFEODZjaVNpX3BUSDcyaVFUMnZLMEVxekhwbTVjdF83TlMweTRIdjhaX1A1OEZqb0dYdXJmSjBVR00zeWVyREVLaXNLYlB5NkdOYzJLLUUzYlZPby1Ub0Jn?oc=5",
+          "domain": "ndtvprofit.com",
+          "publisherTier": "recognized",
+          "description": "Pakistan vs Sri Lanka 1st Test Live Streaming: When And Where To Watch In India NDTV Profit",
+          "publishedAt": "Mon, 09 Nov 2026 01:30:01 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:08:00Z"
+        },
+        {
+          "title": "Pakistan looks to youngsters to beat Sri Lanka in first test - AP News",
+          "source": "AP News",
+          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNMXNRZzJnVTFOaXVPRmhSNktOQlotWFBtb2ZvQjBmSE9VRHVtTTYzV0cyMnBJNngtNjE1RUNkMmlGdGwwY0hKeXJBVWJicUU2endwUWEtME15ZGRqOS1fcHBvZmpBSTl3aktuUjBaX0xCZkgxTGdkZzVLVktGeFpDRmhTYnlqcHRSMC1JbXM5dVBrN2VRbVQxZWdJTV9fUQ?oc=5",
+          "domain": "apnews.com",
+          "publisherTier": "recognized",
+          "description": "Pakistan looks to youngsters to beat Sri Lanka in first test AP News",
+          "publishedAt": "Sun, 08 Nov 2026 10:27:00 GMT",
+          "feed": "Google News RSS",
+          "reachable": true,
+          "httpStatus": 200,
+          "checkedAt": "2026-11-10T09:08:00Z"
         },
         {
           "title": "Recent Match Report - Pakistan vs Sri Lanka, Sri Lanka tour of Pakistan, 1st Test | ESPN.com",
@@ -86,7 +347,7 @@
           "publisherTier": "recognized",
           "reachable": true,
           "httpStatus": 202,
-          "checkedAt": "2026-11-10T09:04:55Z"
+          "checkedAt": "2026-11-10T09:08:00Z"
         }
       ]
     }
