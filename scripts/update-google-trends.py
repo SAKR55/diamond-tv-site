@@ -8,7 +8,7 @@ import re
 import tempfile
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from urllib.parse import urlsplit
+from urllib.parse import urlencode, urlsplit
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from html import unescape
@@ -34,14 +34,14 @@ SPORTS = re.compile(
 OFFICIAL_DOMAINS = {
     "fifa.com", "uefa.com", "the-afc.com", "cafonline.com", "icc-cricket.com",
     "nba.com", "nfl.com", "premierleague.com", "saudiproleague.com", "spl.com.sa",
-    "spa.gov.sa", "mbc.net", "netflix.com", "primevideo.com", "disneyplus.com",
+    "spa.gov.sa", "mbc.net", "shahid.mbc.net", "netflix.com", "primevideo.com", "disneyplus.com",
 }
 RECOGNIZED_DOMAINS = {
-    "reuters.com", "apnews.com", "bbc.com", "bbc.co.uk", "aljazeera.net",
+    "reuters.com", "apnews.com", "afp.com", "bbc.com", "bbc.co.uk", "aljazeera.net",
     "aljazeera.com", "dawn.com", "ndtv.com", "ndtvprofit.com", "minutemirror.com.pk",
-    "espn.com", "cricbuzz.com",
-    "skysports.com", "arabnews.com", "variety.com", "hollywoodreporter.com",
-    "deadline.com", "yahoo.com", "yahoo.net",
+    "espn.com", "espncricinfo.com", "cricbuzz.com", "skysports.com", "arabnews.com",
+    "alarabiya.net", "asharq.com", "theguardian.com", "goal.com", "kooora.com",
+    "variety.com", "hollywoodreporter.com", "deadline.com", "yahoo.com", "yahoo.net",
 }
 
 ENTERTAINMENT = re.compile(
@@ -65,6 +65,23 @@ class MetaDescriptionParser(HTMLParser):
         key = (values.get("property") or values.get("name") or "").lower()
         if key in {"og:description", "description", "twitter:description"}:
             self.description = re.sub(r"\s+", " ", unescape(values.get("content", ""))).strip()[:700]
+
+
+class PlainTextParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parts: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        text = re.sub(r"\s+", " ", unescape(data)).strip()
+        if text:
+            self.parts.append(text)
+
+
+def plain_text(value: str, limit: int = 700) -> str:
+    parser = PlainTextParser()
+    parser.feed(value or "")
+    return re.sub(r"\s+", " ", " ".join(parser.parts)).strip()[:limit]
 
 
 def local_name(tag: str) -> str:
@@ -111,19 +128,57 @@ def publisher_details(url: str) -> tuple[str, str]:
         return "", "unlisted"
 
 
+def google_news_entries(topic: str) -> list[dict]:
+    query = urlencode({"q": topic, "hl": "ar", "gl": "SA", "ceid": "SA:ar"})
+    url = "https://news.google.com/rss/search?" + query
+    request = urllib.request.Request(url, headers={"User-Agent": "DIAMOND-TV-Trends/1.3 (+https://diamond-tv.shop/)"})
+    try:
+        with urllib.request.urlopen(request, timeout=12) as response:
+            root = ET.fromstring(response.read())
+    except Exception:
+        return []
+
+    entries: list[dict] = []
+    for item in root.iter():
+        if local_name(item.tag) != "item":
+            continue
+        title = child_text(item, "title")
+        link = child_text(item, "link")
+        source_node = next((node for node in item.iter() if local_name(node.tag) == "source"), None)
+        source_name = (source_node.text or "").strip() if source_node is not None and source_node.text else ""
+        publisher_url = (source_node.attrib.get("url", "") if source_node is not None else "")
+        domain, tier = publisher_details(publisher_url)
+        if not title or not link.startswith("https://") or tier == "unlisted":
+            continue
+        entries.append({
+            "title": title,
+            "source": source_name or domain,
+            "url": link,
+            "domain": domain,
+            "publisherTier": tier,
+            "description": plain_text(child_text(item, "description")),
+            "publishedAt": child_text(item, "pubDate"),
+            "feed": "Google News RSS",
+        })
+        if len(entries) >= 12:
+            break
+    return entries
+
+
 def fetch_source_metadata(url: str) -> dict:
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
-    result = {"description": "", "reachable": False, "httpStatus": None, "checkedAt": now}
+    result = {"description": "", "reachable": False, "httpStatus": None, "checkedAt": now, "finalUrl": ""}
     if not url.startswith("https://"):
         return result
     request = urllib.request.Request(
         url,
-        headers={"User-Agent": "DIAMOND-TV-Trends/1.2 (+https://diamond-tv.shop/)", "Accept": "text/html"},
+        headers={"User-Agent": "DIAMOND-TV-Trends/1.3 (+https://diamond-tv.shop/)", "Accept": "text/html"},
     )
     try:
         with urllib.request.urlopen(request, timeout=8) as response:
             status = int(response.status)
             final_url = response.geturl()
+            result["finalUrl"] = final_url
             result["httpStatus"] = status
             result["reachable"] = 200 <= status < 400 and final_url.startswith("https://")
             if not result["reachable"] or "text/html" not in response.headers.get("Content-Type", "").lower():
@@ -175,16 +230,54 @@ def main() -> None:
                 news.append(entry)
             if len(news) >= 10:
                 break
+        if len(trends) < 20:
+            news.extend(google_news_entries(title))
         news = relevant_news(title, news)
-        with ThreadPoolExecutor(max_workers=5) as pool:
-            futures = {pool.submit(fetch_source_metadata, story["url"]): story for story in news}
+        unique: dict[str, dict] = {}
+        for story in news:
+            if not story.get("url", "").startswith("https://"):
+                continue
+            unique.setdefault(story["url"], story)
+        news = list(unique.values())
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            futures = {pool.submit(fetch_source_metadata, story["url"]): story for story in news if story.get("publisherTier") != "unlisted"}
             for future in as_completed(futures):
                 story = futures[future]
                 try:
-                    story.update(future.result())
+                    metadata = future.result()
+                    final_url = metadata.pop("finalUrl", "")
+                    if final_url.startswith("https://"):
+                        final_domain, final_tier = publisher_details(final_url)
+                        if final_tier != "unlisted":
+                            story["url"] = final_url
+                            story["domain"] = final_domain
+                            story["publisherTier"] = final_tier
+                    if metadata.get("description"):
+                        story["description"] = metadata["description"]
+                    story.update({key: value for key, value in metadata.items() if key != "description"})
                 except Exception:
-                    story.update({"description": "", "reachable": False, "httpStatus": None})
-        news.sort(key=lambda story: (story.get("publisherTier") == "unlisted", not story.get("reachable", False)))
+                    story.update({"reachable": False, "httpStatus": None})
+        news.sort(key=lambda story: (
+            story.get("publisherTier") == "unlisted",
+            story.get("publisherTier") != "official",
+            not story.get("reachable", False),
+            not bool(story.get("description")),
+        ))
+        diverse: list[dict] = []
+        seen_domains: set[str] = set()
+        seen_urls: set[str] = set()
+        for story in news:
+            if story.get("publisherTier") == "unlisted":
+                continue
+            domain = story.get("domain") or publisher_details(story.get("url", ""))[0]
+            if not domain or domain in seen_domains or story["url"] in seen_urls:
+                continue
+            seen_domains.add(domain)
+            seen_urls.add(story["url"])
+            diverse.append(story)
+            if len(diverse) >= 8:
+                break
+        news = diverse
         category = classify(title, news)
         if not category:
             continue
