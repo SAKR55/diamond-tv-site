@@ -1067,7 +1067,7 @@
     });
   }
   const OFFICIAL_SOURCE_DOMAINS = ["fifa.com","uefa.com","the-afc.com","cafonline.com","icc-cricket.com","nba.com","nfl.com","premierleague.com","saudiproleague.com","spl.com.sa","spa.gov.sa","mbc.net","shahid.mbc.net","netflix.com","primevideo.com","disneyplus.com"];
-  const KNOWN_NEWS_DOMAINS = ["reuters.com","apnews.com","afp.com","bbc.com","bbc.co.uk","aljazeera.net","aljazeera.com","dawn.com","ndtv.com","ndtvprofit.com","minutemirror.com.pk","espn.com","espncricinfo.com","cricbuzz.com","skysports.com","arabnews.com","alarabiya.net","asharq.com","theguardian.com","goal.com","kooora.com","variety.com","hollywoodreporter.com","deadline.com","yahoo.com","yahoo.net"];
+  const KNOWN_NEWS_DOMAINS = ["reuters.com","apnews.com","afp.com","bbc.com","bbc.co.uk","aljazeera.net","aljazeera.com","dawn.com","ndtv.com","ndtvprofit.com","minutemirror.com.pk","espn.com","espncricinfo.com","cricbuzz.com","skysports.com","arabnews.com","alarabiya.net","asharq.com","theguardian.com","goal.com","kooora.com","thehindu.com","indiatoday.in","indianexpress.com","hindustantimes.com","timesofindia.indiatimes.com","variety.com","hollywoodreporter.com","deadline.com","yahoo.com","yahoo.net"];
   function sourceAssessment(rawUrl, publisherDomain) {
     try {
       const url = new URL(String(rawUrl || "").trim());
