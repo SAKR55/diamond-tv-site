@@ -36,14 +36,23 @@
       <div class="pi-export-row"><span>تنزيل بيانات المنتج للمنصة:</span>
         <button type="button" class="ghost sm" id="piExportShopify">Shopify CSV</button>
         <button type="button" class="ghost sm" id="piExportWoo">WooCommerce CSV</button>
+        <button type="button" class="ghost sm" id="piExportDsers">DSers CSV</button>
         <button type="button" class="ghost sm" id="piExportGenericCsv">CSV عام</button>
         <button type="button" class="ghost sm" id="piExportGeneric">JSON عام</button>
       </div>
     </section>
 
+    <section class="card pi-dsers">
+      <div class="pi-section-head"><div><span class="pi-eyebrow">مصدر الدروبشيبنج الرسمي</span><h2>AliExpress عبر DSers</h2></div></div>
+      <p class="pi-hint">استخدم إضافة DSers الرسمية لاستيراد المنتج من صفحة AliExpress إلى قائمة DSers. موقع DIAMOND الحالي مبني على GitHub Pages، لذلك لا يمكن لـ DSers دفع تفاصيل المنتج إليه مباشرة. جهّز بيانات الربط عبر زر DSers CSV؛ لإرسال العنوان والصور تلقائيًا يلزم متجر WooCommerce مدعوم أو تطبيق DSers مخصص بعد قبول طلب المطورين.</p>
+      <div class="pi-dsers-links"><a class="pi-action-link" href="https://accounts.dsers.com/" target="_blank" rel="noopener noreferrer">فتح DSers ↗</a><a class="pi-action-link" href="https://help.dsers.com/dsers-chrome-extension-sourcing-and-product-import-tools-guide/" target="_blank" rel="noopener noreferrer">طريقة الاستيراد من AliExpress ↗</a><a class="pi-action-link" href="https://help.dsers.com/dsers-doesnt-support-your-platform-use-csv-upload-to-connect-your-store/" target="_blank" rel="noopener noreferrer">ربط المتجر غير المدعوم عبر CSV ↗</a><a class="pi-action-link" href="https://help.dsers.com/partner-account-registration-for-third-party-app-integrations-2/" target="_blank" rel="noopener noreferrer">طلب تكامل DSers مخصص ↗</a></div>
+      <p class="pi-dsers-note">ملف DSers يربط SKU المنتج برابط المورد وتجهيز الطلبات؛ لا يحتوي على وصف المنتج أو صوره لاستيرادها إلى الموقع.</p>
+    </section>
+
     <section class="card pi-source">
       <div class="pi-section-head"><div><span class="pi-eyebrow">الخطوة الأولى</span><h2>اجلب بيانات صفحة المنتج</h2></div><span class="pi-source-icon" aria-hidden="true">↧</span></div>
       <div class="pi-source-row"><label class="sr-only" for="piSourceUrl">رابط صفحة المنتج</label><input id="piSourceUrl" type="url" inputmode="url" placeholder="الصق رابط HTTPS لصفحة المنتج"><button id="piImport" type="button" disabled>قراءة الرابط</button></div>
+      <div class="pi-dsers-handoff"><button type="button" class="ghost sm" id="piDsersOpen">إرسال رابط AliExpress إلى DSers</button><span class="pi-hint">الصق رابط المنتج أعلاه؛ سننسخه لسهولة لصقه في قائمة استيراد DSers.</span></div>
       <label class="pi-check"><input id="piRights" type="checkbox"> أملك إذن استخدام بيانات المنتج وصوره من هذا المصدر</label>
       <p class="pi-hint">تُقرأ البيانات العامة التي يسمح بها الموقع، مثل الاسم والسعر والوصف والصور. لن يتم تجاوز تسجيل الدخول أو الحماية. بعض المتاجر تمنع القراءة الآلية؛ عندها أدخل البيانات في النموذج أدناه.</p>
       <div id="piImportStatus" class="pi-status" role="status" aria-live="polite"></div><a class="pi-action-link" href="https://github.com/SAKR55/diamond-tv-site/actions" target="_blank" rel="noopener noreferrer">عرض سجل عمليات الاستيراد ↗</a>
@@ -51,6 +60,7 @@
 
     <section class="pi-work-grid">
       <form id="piProductForm" class="card pi-form">
+        <input name="id" type="hidden">
         <div class="pi-section-head"><div><span class="pi-eyebrow">الخطوة الثانية</span><h2>راجع تفاصيل المنتج</h2></div><button class="ghost sm" type="reset">مسح الحقول</button></div>
         <label>اسم المنتج <input name="title" required maxlength="100" placeholder="اكتب اسمًا واضحًا"></label>
         <div class="pi-two"><label>القسم <input name="category" maxlength="60" list="piCategories" placeholder="مثال: أجهزة البث"><datalist id="piCategories"></datalist></label><label>العلامة التجارية <input name="brand" maxlength="80"></label></div>
@@ -62,6 +72,7 @@
         </div>
         <div class="pi-two"><label>السعر <input name="price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="مثال: 99"></label><label>السعر السابق <input name="oldPrice" type="number" min="0" step="0.01" inputmode="decimal"></label></div>
         <div class="pi-three"><label>العملة <input name="currency" maxlength="12" value="ر.س"></label><label>رمز SKU <span class="pi-field-action"><input name="sku" maxlength="60"><button type="button" class="ghost sm" id="piGenerateSku">توليد</button></span></label><label>الكمية <input name="stock" type="number" min="0" max="999999" placeholder="اختياري"></label></div>
+        <label>SKU المورد (اختياري لـ DSers) <input name="supplierSku" maxlength="100" placeholder="رمز المتغير لدى المورد"></label>
         <label>وسوم البحث <span class="pi-field-action"><input name="tags" maxlength="240" placeholder="وسم، وسم آخر"><button type="button" class="ghost sm" id="piGenerateTags">اقتراح</button></span></label>
         <label>رابط الصورة الرئيسية <input name="image" type="text" inputmode="url" placeholder="https://... أو /assets/صورة.png"></label>
         <label>روابط صور إضافية <textarea name="images" rows="3" placeholder="رابط صورة في كل سطر"></textarea></label>

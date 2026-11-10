@@ -92,6 +92,16 @@
     if(["available","preorder","unavailable"].indexOf(data.availability)>=0) form.elements.availability.value=data.availability;
     updatePreview();
   }
+  function isAliExpressHost(host){return /(^|\\.)aliexpress\\.(com|us|ru)$/i.test(String(host||""));}
+  function openDsersImport(){
+    var source=$("piSourceUrl").value.trim(), parsed;
+    try{parsed=new URL(source);}catch(_){status("piImportStatus","الصق رابط منتج AliExpress أولًا.","error");return;}
+    if(parsed.protocol!=="https:"||!isAliExpressHost(parsed.hostname)){status("piImportStatus","أدخل رابط HTTPS مباشرًا من AliExpress.","error");return;}
+    if(!$("piRights").checked){status("piImportStatus","أكد امتلاك إذن استخدام بيانات وصور المنتج.","error");return;}
+    window.open("https://accounts.dsers.com/","_blank","noopener,noreferrer");
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(source).then(function(){status("piImportStatus","نُسخ الرابط. الصقه في قائمة استيراد DSers لإضافة المنتج إلى حسابك.","success");}).catch(function(){status("piImportStatus","فتحنا DSers. انسخ الرابط من الحقل والصقه في قائمة استيراد المنتجات.");});}
+    else status("piImportStatus","فتحنا DSers. انسخ الرابط من الحقل والصقه في قائمة استيراد المنتجات.");
+  }
   async function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
   async function importFromUrl(){
     if(busy)return;
@@ -101,6 +111,7 @@
     if(parsed.protocol!=="https:"||parsed.username||parsed.password||(parsed.port&&parsed.port!=="443")){
       status("piImportStatus","استخدم رابط HTTPS عامًّا دون اسم مستخدم أو كلمة مرور.","error");return;
     }
+    if(isAliExpressHost(parsed.hostname)){status("piImportStatus","روابط AliExpress تُستورد من خلال DSers الرسمي. استخدم زر «إرسال رابط AliExpress إلى DSers»؛ الاستيراد المباشر إلى هذا الموقع المخصص يحتاج WooCommerce أو موافقة على تطبيق DSers مخصص.","error");return;}
     if(!$("piRights").checked){status("piImportStatus","أكد امتلاك إذن استخدام بيانات وصور المنتج.","error");return;}
     busy=true; $("piImport").disabled=true;
     try{
@@ -145,11 +156,13 @@
     var videos=uniqueLines(form.elements.videos.value,6,"الفيديوهات");
     if(image) images=[image].concat(images.filter(function(item){return item!==image;})).slice(0,8);
     var stockText=form.elements.stock.value;
+    var productId=form.elements.id.value.trim();
+    if(!productId){productId="product-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8);form.elements.id.value=productId;}
     var product={
-      id:"product-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8),
+      id:productId,
       title:title,category:form.elements.category.value.trim().slice(0,60)||"عام",
       description:description,seoTitle:form.elements.seoTitle.value.trim().slice(0,70),seoDescription:form.elements.seoDescription.value.trim().slice(0,320),brand:form.elements.brand.value.trim().slice(0,80),
-      sku:form.elements.sku.value.trim().slice(0,60),warranty:form.elements.warranty.value.trim().slice(0,100),
+      sku:form.elements.sku.value.trim().slice(0,60),supplierSku:form.elements.supplierSku.value.trim().slice(0,100),warranty:form.elements.warranty.value.trim().slice(0,100),
       delivery:form.elements.delivery.value.trim().slice(0,100),
       highlights:splitLines(form.elements.highlights.value,16).map(function(x){return x.slice(0,140);}),
       specifications:parseSpecs(form.elements.specifications.value),
@@ -231,6 +244,13 @@
       for(var i=1;i<images.length;i+=1){var row=new Array(headers.length).fill("");row[0]=file;row[15]=images[i];row[16]=i+1;row[17]=product.imageAlt;rows.push(row);}
       downloadCsv(headers,rows,file+"-shopify.csv");
       status("piSaveStatus","تم تنزيل ملف Shopify CSV. راجع العملة والتصنيف قبل استيراده في Shopify.","success");return;
+    }
+    if(format==="dsers"){
+      if(!product.sku){status("piSaveStatus","أدخل رمز SKU قبل تنزيل ملف DSers؛ هذا الحقل مطلوب في قالبهم.","error");return;}
+      var dsersHeaders=["Product ID","SKU","Supplier URL","SKU (Supplier SKU)"];
+      var dsersRow=[product.id,product.sku,product.sourceUrl||"",product.supplierSku||""];
+      downloadCsv(dsersHeaders,[dsersRow],file+"-dsers.csv");
+      status("piSaveStatus","تم تنزيل ملف DSers. ارفعه من CSV Upload ثم Product، وأكمل مطابقة المورد داخل DSers.","success");return;
     }
     if(format==="woo"){
       var wooHeaders=["Type","SKU","Name","Published","Is featured?","Visibility in catalog","Short description","Description","Regular price","Sale price","In stock?","Stock","Categories","Tags","Images","External URL","meta:seo_title","meta:seo_description"];
@@ -409,6 +429,8 @@
   });
   $("piExportShopify").addEventListener("click",function(){exportProduct("shopify");});
   $("piExportWoo").addEventListener("click",function(){exportProduct("woo");});
+  $("piExportDsers").addEventListener("click",function(){exportProduct("dsers");});
+  $("piDsersOpen").addEventListener("click",openDsersImport);
   $("piExportGenericCsv").addEventListener("click",function(){exportProduct("genericCsv");});
   $("piExportGeneric").addEventListener("click",function(){exportProduct("json");});
   $("piUploadImages").addEventListener("click",function(){uploadMedia("image");});

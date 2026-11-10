@@ -9,6 +9,11 @@
 .pi-steps{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .pi-steps span{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #e1e4f1;border-radius:999px;background:#ffffffd9;font-size:.83rem;font-weight:700}
 .pi-steps b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#6d4aff;color:white}
+.pi-dsers{padding:clamp(16px,3vw,24px);margin-top:16px;border:1px solid #d8d4ff;background:linear-gradient(135deg,#fbfaff,#f4f8ff)}
+.pi-dsers>p{margin:8px 0;line-height:1.8}
+.pi-dsers-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pi-dsers-note{padding:10px 12px;border:1px solid #e5e1ff;border-radius:10px;background:#fff;color:#5b5870;font-size:.84rem}
+.pi-dsers-handoff{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
 .pi-connect,.pi-source,.pi-form,.pi-preview{padding:clamp(16px,3vw,24px);margin-top:16px}
 .pi-connect h2,.pi-source h2,.pi-form h2{margin:0;font-size:1.12rem}
 .pi-connect-row,.pi-source-row{display:flex;gap:9px;margin-top:12px}
