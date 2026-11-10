@@ -24,12 +24,18 @@
 <main class="wrap store-page" id="store-content">
   <section class="store-hero card" aria-labelledby="store-title">
     <div class="store-hero-copy">
-      <span class="pill">DIAMOND SELECT</span>
+      <div class="store-brand"><img id="store-brand-logo" src="../assets/store-logo.svg" alt="DIAMOND TV"><span class="pill" id="store-brand-label">DIAMOND SELECT</span></div>
       <h1 id="store-title">متجر DIAMOND TV</h1>
-      <p>اكتشف المنتجات التي يضيفها فريقنا، وابحث حسب القسم، واحفظ اختياراتك للعودة إليها لاحقًا.</p>
+      <p id="store-subtitle">اكتشف منتجات وخدمات مختارة بعناية، وتصفّح الأقسام واحفظ ما يناسبك.</p>
       <a class="store-hero-cta" href="#store-products">استكشف المنتجات <span aria-hidden="true">←</span></a>
+      <div class="store-announce" id="store-announcement"></div>
     </div>
     <div class="store-hero-mark" aria-hidden="true"><span>✦</span><b>D</b><small>اختياراتك في مكان واحد</small></div>
+  </section>
+
+  <section class="store-category-showcase" aria-labelledby="store-category-title">
+    <div class="store-section-head"><div><span class="store-eyebrow">تسوّق بسهولة</span><h2 id="store-category-title">تصفّح الأقسام</h2></div><span class="hint">اختر قسمًا لعرض منتجاته</span></div>
+    <div class="store-category-tiles" id="store-category-tiles"></div>
   </section>
 
   <section class="store-toolbox card" aria-labelledby="store-tools-title">
@@ -37,7 +43,8 @@
     <label class="store-search"><span aria-hidden="true">⌕</span><span class="sr-only">ابحث في المنتجات</span><input id="store-search" type="search" placeholder="ابحث باسم المنتج أو وصفه" autocomplete="off"></label>
     <div class="store-filter-row">
       <div class="store-categories" id="store-categories" role="group" aria-label="تصفية المنتجات حسب القسم"></div>
-      <div class="store-sort-wrap"><label for="store-sort">ترتيب حسب</label><select id="store-sort"><option value="recommended">الافتراضي</option><option value="price-low">السعر الأقل</option><option value="price-high">السعر الأعلى</option><option value="name">الاسم</option></select></div>
+      <div class="store-sort-wrap"><label for="store-sort">ترتيب حسب</label><select id="store-sort"><option value="recommended">الافتراضي</option><option value="price-low">السعر الأقل</option><option value="price-high">السعر الأعلى</option><option value="name">الاسم</option><option value="newest">الأحدث</option><option value="featured">المميزة أولًا</option></select></div>
+      <label class="store-available-filter"><input id="store-available-only" type="checkbox"> المتوفر فقط</label>
       <button type="button" class="store-favorites-toggle" id="store-favorites-toggle" aria-pressed="false">♡ المحفوظات <span id="store-favorite-count">0</span></button>
     </div>
   </section>
@@ -46,6 +53,7 @@
     <div class="store-section-head"><div><span class="store-eyebrow">تصفّح مختارات المتجر</span><h2 id="store-products-title">المنتجات المتاحة</h2></div><span id="store-visible-count" class="hint"></span></div>
     <div id="store-grid" class="store-grid" aria-live="polite"><p class="store-empty">جارٍ تحميل المنتجات…</p></div>
   </section>
+  <div class="store-compare-bar" id="store-compare-bar" hidden><span id="store-compare-label">اختر منتجين للمقارنة</span><button type="button" id="store-compare-open">قارن المنتجات</button><button type="button" class="ghost" id="store-compare-clear">مسح</button></div>
 
   <aside class="store-note card"><span class="store-note-icon" aria-hidden="true">i</span><div><b>تفاصيل واضحة قبل الطلب</b><p>راجع وصف المنتج وسعره ورابط الطلب الذي يضيفه فريق المتجر. التوفر وخيارات الشراء يحددهما البائع في تفاصيل كل منتج.</p></div></aside>
 </main>
