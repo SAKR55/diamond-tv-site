@@ -1056,9 +1056,11 @@
     };
     const index = siteConfig.products.findIndex(function (item) { return item.id === currentId; });
     if (index >= 0) siteConfig.products[index] = product; else siteConfig.products.push(product);
+    const linkedMedia = new Set([product.image].concat(product.images || [], product.videos || []).filter(Boolean));
+    const newMediaPaths = Object.keys(binaryPending).filter(function (path) { return linkedMedia.has("/" + path); });
     form.reset(); form.elements.currency.value = "ر.س"; form.elements.active.checked = true;
     form.elements.availability.value = "available";
-    renderDashboard(); stageDashboardConfig("تم حفظ المنتج ومعاينته في قائمة النشر.");
+    renderDashboard(); stageDashboardConfig("تم حفظ المنتج ووسائطه ونشرها مع الإعدادات.", newMediaPaths);
   });
   $("#saConnectBtn").addEventListener("click", async function () {
     token = $("#saToken").value.trim();
