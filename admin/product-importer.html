@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f5f6fc">
+  <title>أداة استيراد المنتجات | DIAMOND TV</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/product-importer.css">
+  <script defer src="/assets/product-importer.js"></script>
+</head>
+<body>
+<main class="wrap pi-page">
+  <header class="pi-top">
+    <a class="pi-brand" href="/store/" aria-label="العودة إلى المتجر"><img src="/assets/store-logo.svg" alt="DIAMOND TV"><span>أداة إدارة المنتجات</span></a>
+    <a class="ghost sm" href="/store/">معاينة المتجر ↗</a>
+  </header>
+  <section class="pi-hero card">
+    <span class="pi-eyebrow">استيراد ومراجعة ونشر</span>
+    <h1>أضف منتجًا إلى المتجر من مكان واحد</h1>
+    <p>الصق رابط المنتج لجلب التفاصيل العامة المتاحة، راجعها وعدّلها، ثم أضف المنتج مباشرة إلى المتجر. إذا منع المصدر القراءة الآلية، أكمل الحقول يدويًا من صفحة المنتج.</p>
+    <div class="pi-steps"><span><b>١</b> اربط المتجر</span><span><b>٢</b> اجلب أو أدخل البيانات</span><span><b>٣</b> راجع وانشر</span></div>
+  </section>
+
+  <section class="card pi-connect">
+    <div><h2>اتصال آمن بالمستودع</h2><p class="hint">استخدم رمز GitHub المقيّد بالمستودع SAKR55/diamond-tv-site وصلاحية Contents: Read and write. يبقى الرمز في ذاكرة هذه الصفحة فقط.</p></div>
+    <div class="pi-connect-row"><label class="sr-only" for="piToken">رمز GitHub</label><input id="piToken" type="password" autocomplete="off" spellcheck="false" placeholder="ألصق رمز GitHub هنا"><button type="button" id="piConnect">اتصال بالمتجر</button></div>
+    <div id="piConnectionStatus" class="pi-status" role="status" aria-live="polite">غير متصل</div>
+  </section>
+
+  <div id="piWorkspace" hidden>
+    <section class="card pi-source">
+      <div class="pi-section-head"><div><span class="pi-eyebrow">الخطوة الأولى</span><h2>اجلب بيانات صفحة المنتج</h2></div><span class="pi-source-icon" aria-hidden="true">↧</span></div>
+      <div class="pi-source-row"><label class="sr-only" for="piSourceUrl">رابط صفحة المنتج</label><input id="piSourceUrl" type="url" inputmode="url" placeholder="الصق رابط HTTPS لصفحة المنتج"><button id="piImport" type="button">قراءة الرابط</button></div>
+      <label class="pi-check"><input id="piRights" type="checkbox"> أملك إذن استخدام بيانات المنتج وصوره من هذا المصدر</label>
+      <p class="pi-hint">تُقرأ البيانات العامة التي يسمح بها الموقع، مثل الاسم والسعر والوصف والصور. لن يتم تجاوز تسجيل الدخول أو الحماية. بعض المتاجر تمنع القراءة الآلية؛ عندها أدخل البيانات في النموذج أدناه.</p>
+      <div id="piImportStatus" class="pi-status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="pi-work-grid">
+      <form id="piProductForm" class="card pi-form">
+        <div class="pi-section-head"><div><span class="pi-eyebrow">الخطوة الثانية</span><h2>راجع تفاصيل المنتج</h2></div><button class="ghost sm" type="reset">مسح الحقول</button></div>
+        <label>اسم المنتج <input name="title" required maxlength="100" placeholder="اكتب اسمًا واضحًا"></label>
+        <div class="pi-two"><label>القسم <input name="category" maxlength="60" list="piCategories" placeholder="مثال: أجهزة البث"><datalist id="piCategories"></datalist></label><label>العلامة التجارية <input name="brand" maxlength="80"></label></div>
+        <label>وصف المنتج <textarea name="description" required rows="4" maxlength="1200" placeholder="اكتب وصفًا دقيقًا يساعد المشتري"></textarea></label>
+        <div class="pi-two"><label>السعر <input name="price" inputmode="decimal" maxlength="30" placeholder="مثال: 99"></label><label>السعر السابق <input name="oldPrice" inputmode="decimal" maxlength="30"></label></div>
+        <div class="pi-three"><label>العملة <input name="currency" maxlength="12" value="ر.س"></label><label>رمز SKU <input name="sku" maxlength="60"></label><label>الكمية <input name="stock" type="number" min="0" max="999999" placeholder="اختياري"></label></div>
+        <label>رابط الصورة الرئيسية <input name="image" type="text" inputmode="url" placeholder="https://... أو /assets/صورة.png"></label>
+        <label>روابط صور إضافية <textarea name="images" rows="3" placeholder="رابط صورة في كل سطر"></textarea></label>
+        <label>روابط فيديوهات المنتج <textarea name="videos" rows="2" placeholder="رابط فيديو في كل سطر"></textarea></label>
+        <div class="pi-two"><label>مميزات المنتج <textarea name="highlights" rows="4" placeholder="ميزة واحدة في كل سطر"></textarea></label><label>المواصفات <textarea name="specifications" rows="4" placeholder="اسم الخاصية | القيمة"></textarea></label></div>
+        <div class="pi-two"><label>الضمان <input name="warranty" maxlength="100"></label><label>مدة التوصيل <input name="delivery" maxlength="100"></label></div>
+        <label>حالة المنتج <select name="availability"><option value="available">متوفر</option><option value="preorder">طلب مسبق</option><option value="unavailable">غير متوفر مؤقتًا</option></select></label>
+        <div class="pi-two"><label>رابط صفحة المنتج في المصدر <input name="sourceUrl" type="url" inputmode="url" placeholder="يُملأ عند الاستيراد"></label><label>رابط الشراء أو الطلب <input name="url" type="url" inputmode="url" placeholder="اختياري"></label></div>
+        <label>وصف الصورة البديل <input name="imageAlt" maxlength="150" placeholder="وصف مختصر للصورة"></label>
+        <div class="pi-options"><label class="pi-check"><input name="featured" type="checkbox"> منتج مميز</label><label class="pi-check"><input name="active" type="checkbox" checked> عرض المنتج في المتجر</label></div>
+        <button class="pi-save" id="piSave" type="submit" disabled>إضافة المنتج إلى المتجر</button>
+        <div id="piSaveStatus" class="pi-status" role="status" aria-live="polite"></div>
+      </form>
+
+      <aside class="card pi-preview">
+        <span class="pi-eyebrow">معاينة قبل النشر</span>
+        <div id="piPreviewImage" class="pi-preview-image"><span>صورة المنتج</span></div>
+        <div class="pi-preview-copy"><span id="piPreviewCategory">القسم</span><h3 id="piPreviewTitle">اسم المنتج</h3><p id="piPreviewDescription">سيظهر وصف المنتج هنا.</p><strong id="piPreviewPrice">السعر غير محدد</strong></div>
+        <div class="pi-preview-note"><b>ملاحظة الصور</b><p>تُعرض الصور من روابط HTTPS التي توفرها. استخدم صورًا تملك حق استخدامها. يمكنك رفع الصور إلى ملفات الموقع لاحقًا من لوحة الإدارة.</p></div>
+        <div class="pi-preview-note pi-note-warn"><b>المصادر المحمية</b><p>قد لا تسمح بعض المواقع بالاستيراد الآلي. صفحات Alibaba وAliExpress تحتاج تكاملًا رسميًا مرخصًا أو إدخال تفاصيل المنتج يدويًا.</p></div>
+      </aside>
+    </section>
+  </div>
+
+  <footer class="pi-footer"><a href="/admin/">العودة إلى لوحة التحكم</a><span>يتم حفظ المنتج في إعدادات المتجر على GitHub.</span></footer>
+</main>
+</body>
+</html>
