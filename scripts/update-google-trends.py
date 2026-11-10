@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import tempfile
@@ -11,6 +12,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.parse import urlencode, urlsplit
 import xml.etree.ElementTree as ET
+from collections import Counter
 from html.parser import HTMLParser
 from html import unescape
 from datetime import datetime, timezone
@@ -89,6 +91,85 @@ class MetaDescriptionParser(HTMLParser):
                 self.title = re.sub(r"\s+", " ", " ".join(self.title_parts)).strip()[:300]
 
 
+class ArticleTextParser(HTMLParser):
+    BLOCK_TAGS = {"p", "li", "h2", "h3", "h4", "blockquote", "figcaption", "dt", "dd"}
+    SKIP_TAGS = {"script", "style", "nav", "header", "footer", "aside", "form", "noscript",
+                 "svg", "button", "iframe", "select", "textarea", "dialog", "menu", "template"}
+    VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
+                 "meta", "param", "source", "track", "wbr"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.tags: list[str] = []
+        self.ignored: list[str] = []
+        self.blocks: list[tuple[int, str]] = []
+        self.current_tag = ""
+        self.current_priority = 0
+        self.current_parts: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        if self.ignored:
+            if tag not in self.VOID_TAGS:
+                self.ignored.append(tag)
+            return
+        values = {key.lower(): (value or "") for key, value in attrs}
+        role = values.get("role", "").lower()
+        class_id = (values.get("class", "") + " " + values.get("id", "")).lower()
+        noisy = bool(re.search(r"\b(?:navigation|sidebar|related|recommendations?|comments?|social-share|newsletter|ad-slot|advertisement)\b", class_id))
+        if tag in self.SKIP_TAGS or role in {"navigation", "banner", "contentinfo", "complementary"} or noisy:
+            if tag not in self.VOID_TAGS:
+                self.ignored.append(tag)
+            return
+        if tag in self.BLOCK_TAGS:
+            self._flush()
+            self.current_tag = tag
+            self.current_parts = []
+            self.current_priority = 3 if "article" in self.tags else 2 if "main" in self.tags else 1
+        if tag not in self.VOID_TAGS:
+            self.tags.append(tag)
+
+    def handle_endtag(self, tag: str) -> None:
+        tag = tag.lower()
+        if self.ignored:
+            for index in range(len(self.ignored) - 1, -1, -1):
+                if self.ignored[index] == tag:
+                    del self.ignored[index:]
+                    break
+            return
+        if self.current_tag == tag:
+            self._flush()
+        for index in range(len(self.tags) - 1, -1, -1):
+            if self.tags[index] == tag:
+                del self.tags[index:]
+                break
+
+    def handle_data(self, data: str) -> None:
+        if not self.ignored and self.current_tag and data.strip():
+            self.current_parts.append(data.strip())
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        self.handle_starttag(tag, attrs)
+        self.handle_endtag(tag)
+
+    def _flush(self) -> None:
+        if self.current_parts:
+            text = re.sub(r"\s+", " ", unescape(" ".join(self.current_parts))).strip()
+            if len(text) >= 28:
+                self.blocks.append((self.current_priority, text))
+        self.current_tag = ""
+        self.current_priority = 0
+        self.current_parts = []
+
+    def article_text(self) -> str:
+        self._flush()
+        for priority in (3, 2, 1):
+            selected = [text for level, text in self.blocks if level == priority]
+            if selected and sum(len(item.split()) for item in selected) >= 120:
+                return "\n".join(selected)[:60000]
+        return "\n".join(text for _, text in self.blocks)[:60000]
+
+
 class PlainTextParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -122,6 +203,49 @@ def topic_terms(title: str) -> list[str]:
     normalized = normalized.replace("ى", "ي").replace("ة", "ه")
     terms = re.findall(r"[a-z0-9\u0600-\u06ff]+", normalized)
     return [term for term in terms if len(term) >= 4 and term not in STOPWORDS]
+
+
+def normalize_analysis_text(value: str) -> str:
+    value = re.sub(r"[\u064b-\u065f\u0670]", "", (value or "").lower())
+    return re.sub(r"[أإآٱ]", "ا", value).replace("ى", "ي").replace("ة", "ه")
+
+
+def analyze_article_text(text: str, topic: str) -> tuple[list[str], list[str]]:
+    normalized = normalize_analysis_text(text)
+    topic_words = set(topic_terms(topic))
+    stopwords = {
+        "الذي", "التي", "هذا", "هذه", "ذلك", "تلك", "بعد", "قبل", "عبر", "حول", "ضمن",
+        "اكثر", "اليوم", "امس", "من", "في", "على", "الى", "عن", "ما", "كيف", "كان",
+        "كانت", "يكون", "تكون", "بين", "مع", "عند", "حتى", "كما", "لكن", "حيث", "لدى", "هناك",
+        "قالت", "قال", "اعلن", "اعلنت", "اكد", "اكدت", "ذكر", "ذكرت", "بحسب", "المصادر", "التقرير", "الخبر", "المقال", "الصحيفة", "الناشر", "جديد", "الجديد", "خلال", "بينما", "الرئيس", "الفريق", "اللاعب", "المباراة",
+        "the", "and", "for", "with", "from", "this", "that", "have", "has", "will",
+        "were", "was", "are", "been", "into", "after", "before", "over", "under", "said", "says", "according", "report", "news", "article", "their", "they", "about", "when", "what", "which", "new", "latest", "more", "than", "also", "first", "last", "time", "team", "match", "game", "season", "source", "sources", "page", "read", "watch", "view", "video", "sport", "sports", "series", "film", "movie", "show",
+    }
+    terms = re.findall(r"[a-z0-9\u0600-\u06ff]+", normalized)
+    counts = Counter(term for term in terms if len(term) >= 4 and term not in stopwords and term not in topic_words)
+    analysis_terms = [term for term, count in counts.most_common(10) if count >= 2][:8]
+
+    sports_dimensions = [
+        ("الموعد أو الجدول", r"موعد|توقيت|جدول|fixture|schedule|kick.?off|when"),
+        ("النتيجة أو الأداء", r"نتيجة|فاز|خسر|score|result|innings|statistics|احصائ"),
+        ("البث والمتابعة", r"بث|قناة|stream|watch|broadcast|live|ناقل"),
+        ("الجهة المنظمة", r"fifa|uefa|the-afc|cafonline|icc|nba|nfl|premier league|الاتحاد"),
+    ]
+    entertainment_dimensions = [
+        ("موعد العرض", r"موعد|يعرض|العرض|release|premiere|schedule|date"),
+        ("المنصة أو الإتاحة", r"منصة|شاهد|نتفليكس|netflix|prime video|disney|streaming"),
+        ("الأسماء أو فريق العمل", r"ممثل|بطولة|أبطال|cast|actor|actress|starring|director"),
+        ("الجهة المنتجة أو الناشرة", r"إنتاج|منتج|استوديو|mbc|netflix|primevideo|disney|production|studio"),
+    ]
+    general_dimensions = [
+        ("السياق أو الخلفية", r"خلفية|تاريخ|سياق|background|history|context"),
+        ("الأرقام أو البيانات", r"نسبة|عدد|احصاء|بيانات|percent|data|statistics|\b\d+(?:[.,]\d+)?\b"),
+        ("الجهة الرسمية أو المعنية", r"وزارة|هيئة|منظمة|رسمي|official|agency|ministry|authority"),
+        ("الأثر أو الخطوات العملية", r"تأثير|أثر|خطوة|دليل|impact|effect|guide|how to"),
+    ]
+    dimensions = sports_dimensions if SPORTS.search(topic) else entertainment_dimensions if ENTERTAINMENT.search(topic) else general_dimensions
+    coverage = [label for label, pattern in dimensions if re.search(pattern, normalized, re.IGNORECASE)]
+    return analysis_terms, coverage
 
 
 def relevant_news(topic: str, news: list[dict]) -> list[dict]:
@@ -274,9 +398,12 @@ class TrustedPublisherRedirectHandler(urllib.request.HTTPRedirectHandler):
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
-def fetch_source_metadata(url: str, trusted_only: bool = False) -> dict:
+def fetch_source_metadata(url: str, trusted_only: bool = False, analyze_article: bool = False, topic: str = "") -> dict:
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
-    result = {"description": "", "pageTitle": "", "reachable": False, "httpStatus": None, "checkedAt": now, "finalUrl": ""}
+    result = {
+        "description": "", "pageTitle": "", "reachable": False, "httpStatus": None, "checkedAt": now,
+        "finalUrl": "", "articleRead": False, "articleWordCount": 0, "analysisTerms": [], "coverageDimensions": [],
+    }
     try:
         parts = urlsplit(url)
         if parts.scheme != "https" or not parts.hostname or parts.username or parts.password:
@@ -287,7 +414,7 @@ def fetch_source_metadata(url: str, trusted_only: bool = False) -> dict:
         return result
     request = urllib.request.Request(
         url,
-        headers={"User-Agent": "DIAMOND-TV-LinkReview/1.0 (+https://diamond-tv.shop/)", "Accept": "text/html"},
+        headers={"User-Agent": "DIAMOND-TV-Research/1.0 (+https://diamond-tv.shop/)", "Accept": "text/html"},
     )
     try:
         opener = urllib.request.build_opener(TrustedPublisherRedirectHandler()) if trusted_only else None
@@ -303,23 +430,34 @@ def fetch_source_metadata(url: str, trusted_only: bool = False) -> dict:
                 return result
             if not result["reachable"] or "text/html" not in response.headers.get("Content-Type", "").lower():
                 return result
-            raw = response.read(192_000)
+            raw = response.read(512_000 if analyze_article else 192_000)
             charset = response.headers.get_content_charset() or "utf-8"
+        html = raw.decode(charset, errors="replace")
         parser = MetaDescriptionParser()
-        parser.feed(raw.decode(charset, errors="replace"))
+        parser.feed(html)
         result["description"] = parser.description
         result["pageTitle"] = parser.title
+        if analyze_article:
+            body_parser = ArticleTextParser()
+            body_parser.feed(html)
+            article_text = body_parser.article_text()
+            word_count = len(re.findall(r"\S+", article_text))
+            terms, dimensions = analyze_article_text(article_text, topic)
+            result["articleWordCount"] = word_count
+            result["articleRead"] = word_count >= 180
+            result["analysisTerms"] = terms
+            result["coverageDimensions"] = dimensions
     except Exception:
         pass
     return result
 
 
-def inspect_source_link(raw_url: str) -> dict:
+def inspect_source_link(raw_url: str, topic: str = "") -> dict:
     url = str(raw_url or "").strip()
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     result = {
         "inputUrl": url[:2048], "finalUrl": "", "domain": "", "publisherTier": "unlisted",
-        "pageTitle": "", "description": "", "reachable": False, "httpStatus": None,
+        "pageTitle": "", "description": "", "reachable": False, "httpStatus": None, "articleRead": False, "articleWordCount": 0, "analysisTerms": [], "coverageDimensions": [],
         "checkedAt": now, "reason": "",
     }
     try:
@@ -337,7 +475,7 @@ def inspect_source_link(raw_url: str) -> dict:
         result["reason"] = "تعذر قراءة صيغة الرابط."
         return result
 
-    metadata = fetch_source_metadata(url, trusted_only=True)
+    metadata = fetch_source_metadata(url, trusted_only=True, analyze_article=True, topic=topic)
     result.update({
         "finalUrl": metadata.get("finalUrl", ""),
         "pageTitle": metadata.get("pageTitle", ""),
@@ -345,6 +483,10 @@ def inspect_source_link(raw_url: str) -> dict:
         "reachable": bool(metadata.get("reachable")),
         "httpStatus": metadata.get("httpStatus"),
         "checkedAt": metadata.get("checkedAt", now),
+        "articleRead": bool(metadata.get("articleRead")),
+        "articleWordCount": int(metadata.get("articleWordCount", 0)),
+        "analysisTerms": metadata.get("analysisTerms", []),
+        "coverageDimensions": metadata.get("coverageDimensions", []),
     })
     if result["finalUrl"]:
         final_domain, final_tier = publisher_details(result["finalUrl"])
@@ -357,7 +499,7 @@ def inspect_source_link(raw_url: str) -> dict:
     return result
 
 
-def check_source_links(urls: list[str]) -> list[dict]:
+def check_source_links(urls: list[str], topic: str = "") -> list[dict]:
     normalized = []
     seen = set()
     for value in urls[:12]:
@@ -369,7 +511,7 @@ def check_source_links(urls: list[str]) -> list[dict]:
 
     results: list[dict | None] = [None] * len(normalized)
     with ThreadPoolExecutor(max_workers=4) as pool:
-        futures = {pool.submit(inspect_source_link, url): index for index, url in enumerate(normalized)}
+        futures = {pool.submit(inspect_source_link, url, topic): index for index, url in enumerate(normalized)}
         for future in as_completed(futures):
             index = futures[future]
             try:
@@ -377,12 +519,13 @@ def check_source_links(urls: list[str]) -> list[dict]:
             except Exception:
                 results[index] = {"inputUrl": normalized[index], "finalUrl": "", "domain": "", "publisherTier": "unlisted",
                                   "pageTitle": "", "description": "", "reachable": False, "httpStatus": None,
+                                  "articleRead": False, "articleWordCount": 0, "analysisTerms": [], "coverageDimensions": [],
                                   "checkedAt": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
                                   "reason": "تعذر فحص الرابط بسبب استجابة الشبكة."}
     return [item for item in results if item is not None]
 
 
-def write_link_check(request_id: str, links_json: str) -> None:
+def write_link_check(request_id: str, links_json: str, topic: str = "") -> None:
     if not re.fullmatch(r"[a-z0-9-]{12,80}", request_id or ""):
         raise ValueError("Invalid request identifier")
     try:
@@ -391,10 +534,11 @@ def write_link_check(request_id: str, links_json: str) -> None:
         raise ValueError("Invalid link list") from error
     if not isinstance(links, list):
         raise ValueError("Link list must be an array")
-    results = check_source_links(links)
+    topic = re.sub(r"\s+", " ", (topic or "")).strip()[:180]
+    results = check_source_links(links, topic)
     updated_at = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     payload = {
-        "requestId": request_id, "mode": "link-check", "updatedAt": updated_at,
+        "requestId": request_id, "mode": "link-check", "topic": topic, "updatedAt": updated_at,
         "sourceCount": len(results), "accessibleCount": sum(bool(item.get("reachable")) for item in results),
         "links": results,
     }
@@ -430,7 +574,7 @@ def collect_topic_research(topic: str) -> list[dict]:
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         futures = {
-            pool.submit(fetch_source_metadata, story["url"]): story
+            pool.submit(fetch_source_metadata, story["url"], trusted_only=True, analyze_article=True, topic=topic): story
             for story in stories
             if story.get("publisherTier") != "unlisted"
         }
@@ -617,7 +761,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 4 and sys.argv[1] == "research-topic":
         write_topic_research(sys.argv[2], sys.argv[3])
     elif len(sys.argv) == 3 and sys.argv[1] == "check-links":
-        write_link_check(sys.argv[2], __import__("os").environ.get("LINKS_JSON", "[]"))
+        write_link_check(sys.argv[2], os.environ.get("LINKS_JSON", "[]"), os.environ.get("TOPIC", ""))
     else:
         main()
 
