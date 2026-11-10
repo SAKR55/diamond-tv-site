@@ -1,0 +1,58 @@
+{
+  "requestId": "linkcheck-mwakhm3x-eph20qd",
+  "mode": "link-check",
+  "topic": "اصالة نصري",
+  "updatedAt": "2026-11-10T10:48:50Z",
+  "sourceCount": 3,
+  "accessibleCount": 0,
+  "links": [
+    {
+      "inputUrl": "https://news.google.com/rss/articles/CBMi0gJBVV95cUxPMlM2NHdwNGtlN2JyNS03X1d4SHZDM3hIaTF4UmROd0hmVHdTRTJjZ3RLNXFwalllRVVkX1JEbXlWRHRkZFBRVngxTEtBVkkwR3dadVBsMWVySEZjQ2d3VnJraDcyOWl6U3NmcGgxOHozMHBEdGwtTG02aUZYaUZQSlUyNHJyczRlUm1jejRnSFJWenUzYjdqTjQxalVlOVFoY1dqTDZ4LXJYSncybkxrQnh4TTMteVlVMFZBa0lmT29Uc2dyc3o2a3RZUlQ2VFZWWGFjeDl1M29oRmluaE9PQjBubTcwanlOTmloWUd6UlhBUzJlSUhmRGk1YzhGN3BzemFWWjE2ZkE4NldDaUlkWUhIZy1HcEVJd3dsemdXeFFURTVHcTA0NlE1UFR6eGlGM1BfbVFrX0xsY0V4bnhlRWtXSVhYT3pDa05TN05tQml5UQ?oc=5",
+      "finalUrl": "",
+      "domain": "news.google.com",
+      "publisherTier": "unlisted",
+      "pageTitle": "",
+      "description": "",
+      "reachable": false,
+      "httpStatus": null,
+      "articleRead": false,
+      "articleWordCount": 0,
+      "analysisTerms": [],
+      "coverageDimensions": [],
+      "checkedAt": "2026-11-10T10:48:50Z",
+      "reason": "النطاق غير موجود في قائمة الناشرين والجهات المعروفة؛ لم يُفتح الرابط."
+    },
+    {
+      "inputUrl": "https://news.google.com/rss/articles/CBMizgNBVV95cUxNMmxCVEhMc3JEOTQ3Vm12TnczTGxGV1ppbDZCazB3UGFhaU9nbVVmZl9GMllMNmJQRnJnMDYxRENiS2pjQUVWMndEWHgxZUlJeWNqSFljWERmTzNldzZ4MFhJQXktRk5acXpfemdKN2xLbWRQSWxfSWdmcVBFeDhkSDd5aXExZVotdGFSVjl6d1MxcUJaczIyaHZsSUE4ZktMRUotWW95bVdQd0NkdTVwcElaOWxXSzl4RlpOQWlrdXBOQXB1ZHVYU0N1TXoyUDZkNTctV2o5UjdWRnJMcHdaX2o4amcyR19qWWl6NUNLZVBqNFlCTWdnZTRNM2dSeUVmRDNyblRjQnJ0MjZRSjRERmdMMUh4VmFGS2UxWjlTZWh4aDhaaElKWHdpVTRvd3lFYnB5cUpLZkc0endvcVNxR1VyRnJNYXp4aHJxMTROM3dLY2VURWltNS1MVDFHbkU2bEd2U2dhTjdZMklGR2NnOGxYNDVTWVFzSkd4eDlGbjM3WUVBNWplX25acEZaM0xEVncxQk1RRWpOWHhZV0JZZTdzTFVQc1Uza2N4YUFqTE9aSzBLN1BtTmo5NUptNkFXVDdQUm4zbXFyU1phYnfSAdMDQVVfeXFMTUJoMk81dGkyeXZQUnI5OVdDYXNyOUJSeFFSbzVodzAyQUlETGp6akFGRDMyUXQ1U2tfVTZlWVpERzlFblFsVXp1VGtyUDZ0SEIyR19VYlducnV1eTJaSTBnZlFVdEtjblFxNGtDY3lEV0tCUXowVHFfT21qRTVibXQyeWVPS1VrLThxYXk3dC1FYW8xLVlNVWpXVy00ZDJzZXVZZE5JV3hpd29lRFlSekk4dDBoRHdtMU1QYnVJeWJCbW1DbXZVWkoyek5ORXF5RWdieXZrUHB1RGJ0bFJJUTlCcGpmYTg0Z281SXpFTVE4Y0Z1OXZ5Yk4xQ3FodWdvaEl6cEEybTBlUnI4cjdyMGg1d0JKb3laSUNTZzhyMFQtZ2ZGbEFtYjNrdjQyakpoMU1RRU1sNUxPZnRvSExlWFlwQ1UzdFZhMUI0alYxVlRxcGgxMXdjYUhURUNzb1BSbm1sVXJQdGZlNGVINXVNbWxjbTZlaFhWTlpObkJ6TWtBSjFNdWNBYzJoZXFQU3hlQzdSZkxaa19ITGVsd3kyYl9LRmxkTE90MEFHUk9OVi00Y0RJZm1Gb043cEpSeVFWeW5LcUplUV8za2FBcFYyY1FyYmc?oc=5",
+      "finalUrl": "",
+      "domain": "news.google.com",
+      "publisherTier": "unlisted",
+      "pageTitle": "",
+      "description": "",
+      "reachable": false,
+      "httpStatus": null,
+      "articleRead": false,
+      "articleWordCount": 0,
+      "analysisTerms": [],
+      "coverageDimensions": [],
+      "checkedAt": "2026-11-10T10:48:50Z",
+      "reason": "النطاق غير موجود في قائمة الناشرين والجهات المعروفة؛ لم يُفتح الرابط."
+    },
+    {
+      "inputUrl": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE8xczdpWU1MTGYtNy1PdTF2N3Y0ODZNZTU1ZmUzZkU5QkFQZWhQMExwNFFBQ1pXVnZ5UjI1aWRLVHJLMGFUWEtrZzBtSHBjWDdZaFFXZXJQZWhjVXBk0gFiQVVfeXFMTWRiUjJIMnM2amtCZTFIOGRic2ZlTjgyOEQ3U1UwcV9mNzF6WTlfSnRlVmRzU0xncHpvRmNCZzVVeWpfcVBiaUk1MnpwcEJDa2FDR283bjRvaTdZaEk4YTNJT2c?oc=5",
+      "finalUrl": "",
+      "domain": "news.google.com",
+      "publisherTier": "unlisted",
+      "pageTitle": "",
+      "description": "",
+      "reachable": false,
+      "httpStatus": null,
+      "articleRead": false,
+      "articleWordCount": 0,
+      "analysisTerms": [],
+      "coverageDimensions": [],
+      "checkedAt": "2026-11-10T10:48:50Z",
+      "reason": "النطاق غير موجود في قائمة الناشرين والجهات المعروفة؛ لم يُفتح الرابط."
+    }
+  ]
+}
