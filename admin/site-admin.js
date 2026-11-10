@@ -676,10 +676,8 @@
         switchView("articles");
         return;
       }
-      if (review.factReport && (!review.factReport.fresh || review.factReport.summaries < 2)) {
-        toast(!review.factReport.fresh
-          ? "لقطة الترند أقدم من 48 ساعة؛ حدّث الموضوع الرائج وأعد توليد المقال قبل النشر."
-          : "لا توجد ملخصات وصفية من مصدرين مستقلين؛ لا يكفي العنوان وحده لبناء مقال موثق.");
+      if (review.factReport && !review.factReport.fresh) {
+        toast("لقطة الترند أقدم من 48 ساعة؛ حدّث الموضوع الرائج وأعد توليد المقال قبل النشر.");
         switchView("articles");
         return;
       }
