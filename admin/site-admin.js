@@ -86,7 +86,7 @@
     '<p class="hint">يُنشأ المحتوى مع عنوان ووصف لمحركات البحث وبيانات منظمة، ويُضاف المقال تلقائيًا إلى فهرس المقالات وخريطة الموقع.</p></div>' +
     '<div class="sa-create-grid"><form id="saArticleForm" class="card sa-form"><h3>مختبر المقالات</h3>' +
     '<section class="sa-trend-panel"><div class="sa-editor-head"><div><b>الموضوعات الرائجة في السعودية</b><p class="hint">تتحدث القائمة تلقائيًا كل 6 ساعات من Google Trends، وتُصفّى لموضوعات الرياضة والترفيه.</p></div><button type="button" class="ghost sm" id="saRefreshTrends">تحديث القائمة</button></div><div id="saTrendStatus" class="hint" aria-live="polite">جارٍ تحميل الترندات…</div><div id="saTrendList" class="sa-trend-list"></div><a class="sa-trend-source" href="https://trends.google.com/trending?geo=SA&amp;hl=ar" target="_blank" rel="noopener noreferrer">فتح مؤشرات Google Trends السعودية ↗</a></section>' +
-    '<section class="sa-writer-tool" id="saWriterTool"><b>بحث الموضوع وكتابة المقال</b><p class="hint">اكتب موضوعًا أو اختر موضوعًا رائجًا. يبحث النظام في خلاصات Google وBing، ثم يحاول قراءة صفحات HTTPS لناشرين معروفين واستخراج عدد الكلمات وزوايا التغطية والمفردات المتكررة. تُستخدم هذه الإشارات لصياغة مسودة مقارنة مع روابط المصادر؛ لا يُحفظ النص الكامل، وقد تمنع بعض المواقع القراءة الآلية. راجع الوقائع وأضف فائدة أصلية قبل النشر. سيظهر تنبيه قبل إرسال الموضوع، وتُحفظ النتائج الموجزة والروابط في المستودع العام.</p>' +
+    '<section class="sa-writer-tool" id="saWriterTool"><b>بحث الموضوع وكتابة المقال</b><p class="hint">اكتب موضوعًا أو اختر موضوعًا رائجًا. يجمع النظام نتائج عربية وسعودية ومصرية وإنجليزية من Google News وBing News، ويفحص حتى 12 مصدرًا معروفًا. يحاول قراءة نصوص الصفحات ويستخرج عدد الكلمات وزوايا التغطية والمفردات؛ ثم يبني مسودة مقارنة مع ملخص قصير لكل ناشر. لا يُحفظ النص الكامل، وقد تمنع بعض المواقع القراءة الآلية. راجع الوقائع وأضف فائدة أصلية قبل النشر. سيظهر تنبيه قبل إرسال الموضوع، وتُحفظ النتائج الموجزة والروابط في المستودع العام.</p>' +
     '<label>موضوع المقال<textarea id="saWriterTopic" rows="2" maxlength="180" placeholder="مثال: كيف تختار مسلسلًا مناسبًا للمشاهدة العائلية؟"></textarea></label>' +
     '<label>معلومات المقال أو نص أولي<textarea id="saWriterBrief" rows="4" maxlength="5000" placeholder="أضف النقاط والحقائق التي تحققت منها، أو الصق نصًا أوليًا ليُنظّم في أقسام. لا تضع كلمة مرور أو معلومات خاصة."></textarea></label>' +
     '<div class="sa-two-col"><label>الكلمة المفتاحية الرئيسية<input id="saWriterKeyword" maxlength="80" placeholder="مثال: مسلسلات عائلية"></label>' +
@@ -1079,8 +1079,8 @@
       ideas.appendChild(button);
     });
   }
-  const OFFICIAL_SOURCE_DOMAINS = ["fifa.com","uefa.com","the-afc.com","cafonline.com","icc-cricket.com","nba.com","nfl.com","premierleague.com","saudiproleague.com","spl.com.sa","spa.gov.sa","mbc.net","shahid.mbc.net","netflix.com","primevideo.com","disneyplus.com"];
-  const KNOWN_NEWS_DOMAINS = ["reuters.com","apnews.com","afp.com","bbc.com","bbc.co.uk","aljazeera.net","aljazeera.com","dawn.com","ndtv.com","ndtvprofit.com","minutemirror.com.pk","espn.com","espncricinfo.com","cricbuzz.com","skysports.com","arabnews.com","alarabiya.net","asharq.com","theguardian.com","goal.com","kooora.com","thehindu.com","indiatoday.in","indianexpress.com","hindustantimes.com","timesofindia.indiatimes.com","variety.com","hollywoodreporter.com","deadline.com","yahoo.com","yahoo.net"];
+  const OFFICIAL_SOURCE_DOMAINS = ["fifa.com","uefa.com","the-afc.com","cafonline.com","icc-cricket.com","nba.com","nfl.com","premierleague.com","saudiproleague.com","spl.com.sa","laliga.com","bundesliga.com","legaseriea.it","ligue1.com","conmebol.com","fiba.basketball","saff.com.sa","egyptianproleague.com","spa.gov.sa","mbc.net","shahid.mbc.net","netflix.com","primevideo.com","disneyplus.com","osn.com","osnplus.com","starzplay.com","jawwy.tv"];
+  const KNOWN_NEWS_DOMAINS = ["reuters.com","apnews.com","afp.com","bbc.com","bbc.co.uk","aljazeera.net","aljazeera.com","dawn.com","ndtv.com","ndtvprofit.com","minutemirror.com.pk","espn.com","espncricinfo.com","cricbuzz.com","skysports.com","arabnews.com","alarabiya.net","asharq.com","aawsat.com","theguardian.com","goal.com","kooora.com","thehindu.com","indiatoday.in","indianexpress.com","hindustantimes.com","timesofindia.indiatimes.com","variety.com","hollywoodreporter.com","deadline.com","indiewire.com","screenrant.com","yahoo.com","yahoo.net","cnn.com","npr.org","cbsnews.com","dw.com","france24.com","skynewsarabia.com","alaraby.co.uk","al-monitor.com","al-ain.com","almasryalyoum.com","ahram.org.eg","youm7.com","masrawy.com","elwatannews.com","alriyadh.com","okaz.com.sa","sabq.org","saudigazette.com.sa","arriyadiyah.com","nytimes.com","washingtonpost.com","theathletic.com","axios.com","nme.com","empireonline.com","independentarabia.com","akhbaar24.com","al-madina.com","albilad.com","alyaum.com","aleqt.com","rt.com"];
   function sourceAssessment(rawUrl, publisherDomain) {
     try {
       const url = new URL(String(rawUrl || "").trim());
@@ -1252,7 +1252,7 @@
   function useTrendItem(item) {
     const form = $("#saArticleForm");
     const title = String(item.title || "").trim();
-    const validNews = selectTrendSources(item).slice(0, 6);
+    const validNews = selectTrendSources(item).slice(0, 12);
     if (!title || !validNews.length) {
       toast("لا تتوفر روابط أخبار موثوقة لهذا الموضوع بعد؛ اختر موضوعًا آخر أو أضف مصادر يدويًا.");
       return;
@@ -1273,7 +1273,8 @@
     }).slice().sort(function (a, b) {
       const aa = sourceAssessment(a.url, a.domain), bb = sourceAssessment(b.url, b.domain);
       const score = function (entry, check) {
-        return (check.official ? 100 : 0) + (entry.reachable === true ? 30 : 0) +
+        return (entry.articleRead === true ? 1000 : 0) + Math.min(100, Number(entry.articleWordCount) || 0) +
+          (entry.reachable === true ? 60 : 0) + (check.official ? 40 : 0) +
           (String(entry.description || "").trim().length >= 40 ? 20 : 0);
       };
       return score(b, bb) - score(a, aa);
@@ -1367,7 +1368,11 @@
     const sharedTerms = Array.from(termsByPublisher.entries())
       .filter(function (row) { return row[1].size >= 2; })
       .sort(function (a, b) { return b[1].size - a[1].size || b[0].length - a[0].length; })
-      .slice(0, 6).map(function (row) { return row[0]; });
+      .slice(0, 8).map(function (row) { return row[0]; });
+    const distinctTerms = Array.from(termsByPublisher.entries())
+      .filter(function (row) { return row[1].size === 1; })
+      .sort(function (a, b) { return b[0].length - a[0].length; })
+      .slice(0, 8).map(function (row) { return row[0]; });
     const coverageText = seen.length
       ? "تظهر في النصوص المتاحة زوايا مثل " + seen.join("، ") + "."
       : "لم يستطع الفحص تحديد زوايا كافية في النص المتاح؛ لا نضيف تفاصيل مستنتجة من العناوين.";
@@ -1388,13 +1393,16 @@
         dimensionCounts[dimension].add(publisher);
       });
     });
-    const sharedDimensions = Object.keys(dimensionCounts).filter(function (dimension) {
-      return dimensionCounts[dimension].size >= 2;
-    }).sort(function (a, b) { return dimensionCounts[b].size - dimensionCounts[a].size; });
+    const dimensionCoverage = Object.keys(dimensionCounts).map(function (dimension) {
+      return { dimension: dimension, publisherCount: dimensionCounts[dimension].size };
+    }).sort(function (a, b) { return b.publisherCount - a.publisherCount || a.dimension.localeCompare(b.dimension); });
+    const sharedDimensions = dimensionCoverage.filter(function (row) { return row.publisherCount >= 2; }).map(function (row) { return row.dimension; });
     return {
       seen: seen,
       missing: missing,
       sharedTerms: sharedTerms,
+      distinctTerms: distinctTerms,
+      dimensionCoverage: dimensionCoverage,
       sharedDimensions: sharedDimensions,
       text: coverageText + " " + gapText + " " + next,
       sharedText: sharedTerms.length
@@ -1406,7 +1414,7 @@
   function buildTrendArticleDraft(trend, settings) {
     const config = settings || {};
     const topic = String(trend.title || "").trim();
-    const news = selectTrendSources(trend).slice(0, 8);
+    const news = selectTrendSources(trend).slice(0, 12);
     const report = createTrendFactReview(trend, news);
     activeTrendFactReport = report;
     const analysis = trendCoverageAnalysis(trend, news, report);
@@ -1425,7 +1433,7 @@
         ? entry.analysisTerms.slice(0, 5).join("، ")
         : "لا توجد مفردات كافية للتحليل الآلي";
       const pageStatus = entry.articleRead
-        ? "استُخرج من الصفحة نص يقارب " + (Number(entry.articleWordCount) || 0) + " كلمة."
+        ? "استُخرج من الصفحة نص يقارب " + (Number(entry.articleWordCount) || 0) + " كلمة" + (entry.articleTextMethod ? " عبر " + entry.articleTextMethod : "") + "."
         : "تعذرت قراءة نص كافٍ من الصفحة؛ اعتمد الفحص على العنوان والملخص المتاح فقط.";
       const summaryWords = String(entry.description || "").trim().split(/\s+/).filter(Boolean);
       const summary = summaryWords.length
@@ -1451,6 +1459,12 @@
     const commonCoverage = analysis.sharedDimensions.length
       ? "تكررت زوايا " + analysis.sharedDimensions.join("، ") + " في نصوص أكثر من ناشر."
       : "لم تظهر زاوية تغطية مشتركة بوضوح في نصوص الصفحات التي أمكن قراءتها.";
+    const coverageMatrix = analysis.dimensionCoverage.length
+      ? analysis.dimensionCoverage.map(function (row) { return "- " + row.dimension + ": رصدها الفحص في " + row.publisherCount + " من " + report.readablePages + " صفحات مقروءة."; }).join("\n")
+      : "- لم تُستخرج بيانات كافية لبناء مقارنة بين زوايا المقالات.";
+    const distinctIdeaText = analysis.distinctTerms.length
+      ? "مصطلحات بارزة ظهرت في نص مصدر واحد ضمن المجموعة: " + analysis.distinctTerms.join("، ") + ". ظهورها مرة واحدة لا يؤكد أهميتها أو صحتها، لكنه يوضح زاوية تستحق فتح المصدر ومراجعتها."
+      : "لم يرصد التحليل مفردات منفردة كافية للتمييز بين زوايا الناشرين.";
     const originality = "الملاحظة التحليلية: " + commonCoverage + (analysis.missing.length
       ? " بينما لم تتضح معلومات " + analysis.missing.join("، ") + " في المجموعة التي فحصناها."
       : " ومع ذلك لا يكفي تكرار الزوايا لإثبات صحة الوقائع.");
@@ -1490,8 +1504,10 @@
       datedSources.length ? "## توقيت التغطيات\n\n" + datedSources.join("\n") : "",
       "## نقاط الالتقاء والاختلاف",
       analysis.text + " " + analysis.sharedText,
+      "## خريطة الأفكار بحسب عدد المصادر",
+      coverageMatrix + "\n\n" + distinctIdeaText,
       "## إضافة تحليلية للقارئ",
-      originality + " هذا رصد لتوزيع زوايا التغطية في النصوص التي أمكن الوصول إليها، وليس نتيجة تحقق مستقل.",
+      originality + " هذه مقارنة لتوزيع الأفكار في المواد المتاحة، وليست نتيجة تحقق مستقل من الوقائع.",
       "## ما الذي ينبغي التحقق منه؟",
       readerUse + (analysis.missing.length ? " وتحتاج الجوانب التالية إلى مصدر مباشر: " + analysis.missing.join("، ") + "." : ""),
       "## أسئلة شائعة",
@@ -1567,8 +1583,8 @@
       method: "POST",
       body: { event_type: "article-research", client_payload: { topic: topic, request_id: requestId } }
     });
-    for (let attempt = 0; attempt < 45; attempt += 1) {
-      $("#saWriterNotice").textContent = "جارٍ البحث عن تغطيات موثوقة للموضوع (" + (attempt + 1) + "/45)…";
+    for (let attempt = 0; attempt < 75; attempt += 1) {
+      $("#saWriterNotice").textContent = "جارٍ البحث عن تغطيات موثوقة للموضوع (" + (attempt + 1) + "/75)…";
       await waitForResearch(2000);
       try {
         const resultFile = await api("/contents/" + apiPath(resultPath) + "?ref=" + encodeURIComponent(BRANCH));
@@ -1634,6 +1650,7 @@
           articleWordCount: Number(item.articleWordCount) || 0,
           analysisTerms: Array.isArray(item.analysisTerms) ? item.analysisTerms : [],
           coverageDimensions: Array.isArray(item.coverageDimensions) ? item.coverageDimensions : [],
+          articleTextMethod: item.articleTextMethod || "",
           reason: item.reason || ""
         };
       });
@@ -1651,7 +1668,7 @@
             : "";
           const description = item.description ? "<p>" + escapeHtml(item.description) + "</p>" : "";
           const analysis = item.articleRead
-            ? "<p class=\"hint\">نص مستخرج: نحو " + item.articleWordCount + " كلمة · الزوايا: " + escapeHtml((item.coverageDimensions || []).join("، ") || "غير محددة") + " · مفردات: " + escapeHtml((item.analysisTerms || []).slice(0, 6).join("، ") || "غير كافية") + "</p>"
+            ? "<p class=\"hint\">نص مستخرج: نحو " + item.articleWordCount + " كلمة" + (item.articleTextMethod ? " عبر " + escapeHtml(item.articleTextMethod) : "") + " · الزوايا: " + escapeHtml((item.coverageDimensions || []).join("، ") || "غير محددة") + " · مفردات: " + escapeHtml((item.analysisTerms || []).slice(0, 6).join("، ") || "غير كافية") + "</p>"
             : "<p class=\"hint\">لم يُستخرج نص كافٍ من صفحة الناشر.</p>";
           return '<div class="sa-source-review-row"><span>' + escapeHtml(headline) + '</span><b>' + (ok ? "✓ " : "• ") + escapeHtml(status) +
             (item.checkedAt ? " · " + escapeHtml(item.checkedAt) : "") + "</b>" + description + analysis +
@@ -1693,7 +1710,7 @@
         updatedAt: result.updatedAt || new Date().toISOString(),
         news: activeResearchSources
       };
-      const sources = selectTrendSources(trend).slice(0, 8);
+      const sources = selectTrendSources(trend).slice(0, 12);
       if (sources.length < 2) {
         activeTrendFactReport = null;
         $("#saWriterNotice").textContent = "لم نعثر على تغطيتين كافيتين من ناشرين معروفين ومختلفين. لم نكتب مسودة تخمينية؛ جرّب صياغة أوضح للموضوع.";
