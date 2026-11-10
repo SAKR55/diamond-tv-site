@@ -39,7 +39,7 @@
         if (/^(?:articles|pages|assets)\/[a-zA-Z0-9._/-]+$|^(?:sitemap\.xml)$/.test(path) && typeof saved.pending[path] === "string") pending[path] = saved.pending[path];
       });
       Object.keys(saved.binaryPending || {}).forEach(function (path) {
-        if (/^assets\/[a-zA-Z0-9._-]+\.(?:png|jpe?g|webp|gif|avif)$/i.test(path) && typeof saved.binaryPending[path] === "string") binaryPending[path] = saved.binaryPending[path];
+        if (/^assets\/[a-zA-Z0-9._-]+\.(?:png|jpe?g|webp|gif|avif|mp4|webm)$/i.test(path) && typeof saved.binaryPending[path] === "string") binaryPending[path] = saved.binaryPending[path];
       });
       Object.keys(saved.pendingDeletes || {}).forEach(function (path) {
         if (/^articles\/[a-zA-Z0-9._/-]+$/.test(path) && saved.pendingDeletes[path] === true) pendingDeletes[path] = true;
@@ -95,7 +95,7 @@
     '<div class="sa-two-col"><label>نية المقال<select id="saWriterIntent"><option value="guide">دليل عملي</option><option value="list">قائمة ترشيحات</option><option value="compare">مقارنة</option><option value="explainer">شرح مبسط</option></select></label>' +
     '<label>طول المسودة<select id="saWriterLength"><option value="short">مختصر</option><option value="standard" selected>متوسط</option><option value="long">موسع</option></select></label></div>' +
     '<label>نبرة الكتابة<select id="saWriterTone"><option value="natural">صحفية طبيعية</option><option value="analysis">تحليلية هادئة</option><option value="simple">مبسطة وقريبة للقارئ</option></select></label>' +
-    '<button type="button" id="saGenerateArticle">ابحث واكتب المقال كاملًا</button><div id="saWriterNotice" class="hint" aria-live="polite"></div></section>' +
+    '<button type="button" id="saGenerateArticle">ابحث واكتب المقال كاملًا</button><div id="saWriterNotice" class="hint" aria-live="polite"></div><div id="saWriterSourcesPreview" class="sa-source-review-list" hidden aria-live="polite"></div></section>' +
     '<label>عنوان المقال<input name="title" required maxlength="100" placeholder="عنوان واضح ومفيد للقارئ"></label>' +
     '<label>الرابط المختصر (إنجليزي)<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="ramadan-2027-series-guide"></label>' +
     '<label>وصف نتائج البحث<textarea name="description" required maxlength="160" rows="3" placeholder="ملخص دقيق يساعد القارئ على معرفة محتوى المقال"></textarea></label>' +
@@ -137,17 +137,27 @@
     '<div class="sa-dashboard-grid">' +
     '<section class="card sa-manager-card"><h3>ألوان الموقع</h3><label>اللون الرئيسي<input id="saAccent" type="color"></label><label>اللون المساند<input id="saAccent2" type="color"></label><button type="button" id="saSaveTheme">حفظ ونشر الألوان</button></section>' +
     '<section class="card sa-manager-card"><h3>أقسام الصفحة الرئيسية</h3><label class="sa-check"><input id="saLiveEnabled" type="checkbox"> المباريات المباشرة</label><label class="sa-check"><input id="saRecommendationsEnabled" type="checkbox"> ترشيحات السهرة</label><label class="sa-check"><input id="saStoreEnabled" type="checkbox"> المتجر</label><button type="button" id="saSaveSections">حفظ ونشر الأقسام</button></section>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>هوية المتجر وأقسامه</h3><p class="hint">عدّل اسم المتجر ونصوص الواجهة والأقسام وصورها. اكتب قسمًا في كل سطر: الاسم | وصف قصير | رابط صورة HTTPS أو مسار داخل assets.</p><div class="sa-manager-two"><label>عنوان المتجر<input id="saStoreTitle" maxlength="80"></label><label>رابط الشعار<input id="saStoreLogo" placeholder="/assets/store-logo.svg أو رابط HTTPS"></label></div><label>وصف الواجهة<textarea id="saStoreSubtitle" rows="2" maxlength="240"></textarea></label><label>وصف محركات البحث<textarea id="saStoreMeta" rows="2" maxlength="170" placeholder="وصف موجز لنتيجة البحث"></textarea></label><label>شريط الإعلان<input id="saStoreAnnouncement" maxlength="140" placeholder="اختياري"></label><label>الأقسام (سطر لكل قسم)<textarea id="saStoreCategories" rows="6" dir="auto" placeholder="الاشتراكات الرقمية | باقات وخدمات | /assets/store-category-subscriptions.svg"></textarea></label><button type="button" id="saSaveStorefront">حفظ ونشر هوية المتجر</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>البطولات والقنوات</h3><p class="hint">تشمل الدوريات المحلية والمنافسات الدولية. سطر لكل بطولة: رمز المصدر | الاسم بالعربية | القنوات المؤكدة إن وُجدت.</p><textarea id="saLeagueEditor" rows="12" dir="auto"></textarea><button type="button" id="saSaveLeagues">حفظ ونشر البطولات</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>مسلسلات TVMaze</h3><p class="hint">ابحث عن مسلسل وأضفه؛ تُحدّث تقييماته تلقائيًا من المصدر.</p><div class="sa-inline-form"><input id="saTvSearch" placeholder="اسم المسلسل"><button type="button" id="saTvSearchBtn">بحث</button></div><div id="saTvResults" class="sa-manager-list"></div><h4>المسلسلات المختارة</h4><div id="saTvSelected" class="sa-manager-list"></div></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>ترشيحات الأفلام اليدوية</h3><p class="hint">تقييم أو وصف الأفلام هنا تحريري، وليس من مصدر خارجي.</p><form id="saMovieForm" class="sa-manager-form"><input type="hidden" name="editIndex" value=""><input name="title" required maxlength="100" placeholder="اسم الفيلم"><input name="image" type="url" placeholder="رابط صورة HTTPS (اختياري)"><input name="url" type="url" placeholder="رابط التفاصيل HTTPS (اختياري)"><textarea name="description" required rows="2" maxlength="260" placeholder="لماذا ترشحه؟"></textarea><div class="sa-product-form-actions"><button type="submit">إضافة الفيلم</button><button type="button" class="ghost" id="saMovieClear">ترشيح جديد</button></div></form><div id="saMovieList" class="sa-manager-list"></div></section>' +
-    '<section class="card sa-manager-card sa-manager-wide"><h3>استوديو المنتجات</h3><p class="hint">أنشئ بطاقة منتج كاملة مع الصورة والسعر السابق والحالة والمواصفات، ثم عاينها قبل إضافتها للنشر. الطلب يتم عبر الرابط الذي تحدده.</p>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>استوديو المنتجات</h3><p class="hint">أضف بيانات دقيقة ومنظمة، وارفق صورًا وفيديوهات، ثم راجع المعاينة قبل نشر المنتج. يتطلب الاستيراد المباشر من Alibaba أو AliExpress API رسميًا معتمدًا؛ لا تضع بيانات سرية في رابط المصدر، واستخدم الوسائط التي تملك حق نشرها.</p>' +
     '<div class="sa-product-editor"><form id="saProductForm" class="sa-manager-form sa-product-form"><input name="id" type="hidden">' +
     '<label>اسم المنتج<input name="title" required maxlength="100" placeholder="اسم واضح للمنتج"></label>' +
     '<div class="sa-manager-two"><label>القسم<input name="category" maxlength="50" list="saProductCategories" placeholder="مثال: اشتراكات أو أجهزة"><datalist id="saProductCategories"><option value="اشتراكات"><option value="أجهزة"><option value="إكسسوارات"><option value="عروض"></datalist></label><label>العملة<input name="currency" maxlength="12" value="ر.س" placeholder="ر.س"></label></div>' +
-    '<label>وصف المنتج<textarea name="description" required rows="3" maxlength="500" placeholder="ما الذي يحصل عليه العميل؟ اذكر التفاصيل الحقيقية بوضوح."></textarea></label>' +
-    '<label>المميزات أو المواصفات (ميزة في كل سطر)<textarea name="highlights" rows="4" maxlength="700" placeholder="تفصيل أو مواصفة موثقة لكل سطر"></textarea></label>' +
-    '<div class="sa-manager-three"><label>السعر الحالي<input name="price" maxlength="30" placeholder="مثال: 99"></label><label>السعر السابق<input name="oldPrice" maxlength="30" placeholder="اختياري"></label><label>حالة المنتج<select name="availability"><option value="available">متوفر</option><option value="preorder">طلب مسبق</option><option value="unavailable">غير متاح مؤقتًا</option></select></label></div>' +
-    '<label>رابط الصورة<input name="image" type="text" inputmode="url" placeholder="رابط HTTPS أو مسار صورة داخل الموقع"></label><label class="sa-upload-box">أو اختر صورة من جهازك<input id="saProductImageUpload" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><span class="hint">تُرفع الصورة إلى ملفات الموقع عند نشر التغييرات · حتى 4 ميغابايت</span></label>' +
+    '<label>وصف المنتج<textarea name="description" required rows="3" maxlength="700" placeholder="صف المنتج بلغة واضحة، واعتمد على تفاصيل مؤكدة من المورد."></textarea></label>' +
+    '<div class="sa-manager-three"><label>العلامة التجارية<input name="brand" maxlength="80" placeholder="اسم العلامة"></label><label>رمز المنتج SKU<input name="sku" maxlength="60" placeholder="اختياري"></label><label>الضمان<input name="warranty" maxlength="100" placeholder="مثال: سنة"></label></div>' +
+    '<label>المميزات (ميزة في كل سطر)<textarea name="highlights" rows="3" maxlength="900" placeholder="مزايا مؤكدة ومفيدة للمشتري"></textarea></label>' +
+    '<label>المواصفات (اسم الخاصية | القيمة في كل سطر)<textarea name="specifications" rows="4" maxlength="1200" placeholder="اللون | أسود&#10;المقاس | صغير"></textarea></label>' +
+    '<div class="sa-manager-three"><label>السعر الحالي<input name="price" maxlength="30" placeholder="مثال: 99"></label><label>السعر السابق<input name="oldPrice" maxlength="30" placeholder="اختياري"></label><label>الكمية المتاحة<input name="stock" type="number" min="0" max="999999" placeholder="اختياري"></label></div>' +
+    '<div class="sa-manager-two"><label>حالة المنتج<select name="availability"><option value="available">متوفر</option><option value="preorder">طلب مسبق</option><option value="unavailable">غير متاح مؤقتًا</option></select></label><label>مدة الشحن/التسليم<input name="delivery" maxlength="100" placeholder="مثال: 2–5 أيام عمل"></label></div>' +
+    '<label>رابط الصورة الرئيسية<input name="image" type="text" inputmode="url" placeholder="HTTPS أو مسار داخل assets"></label><label class="sa-upload-box">رفع الصورة الرئيسية<input id="saProductImageUpload" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><span class="hint">PNG أو JPG أو WebP أو AVIF · حتى 4 ميغابايت</span></label>' +
+    '<label>صور إضافية (رابط في كل سطر)<textarea name="images" rows="3" maxlength="1800" placeholder="https://... أو /assets/صورة.jpg"></textarea></label>' +
+    '<label class="sa-upload-box">رفع عدة صور للمعرض<input id="saProductGalleryUpload" type="file" accept="image/png,image/jpeg,image/webp,image/avif" multiple><span class="hint">حتى 8 صور إجمالًا · 4 ميغابايت للصورة</span></label>' +
+    '<label>فيديوهات المنتج (رابط في كل سطر)<textarea name="videos" rows="2" maxlength="1200" placeholder="روابط MP4/WebM أو YouTube أو Vimeo"></textarea></label>' +
+    '<label class="sa-upload-box">رفع فيديو MP4 أو WebM<input id="saProductVideoUpload" type="file" accept="video/mp4,video/webm" multiple><span class="hint">حتى فيديوهين · 15 ميغابايت لكل فيديو. الملفات الكبيرة استخدم لها رابط فيديو HTTPS.</span></label>' +
+    '<label>رابط المصدر أو المورد<input name="sourceUrl" type="url" placeholder="HTTPS — مرجع المنتج عند المراجعة"></label>' +
+    '<label>وسوم المنتج (افصل بفاصلة)<input name="tags" maxlength="260" placeholder="جديد، عرض، الأكثر طلبًا"></label>' +
     '<label>وصف الصورة البديل<input name="imageAlt" maxlength="140" placeholder="وصف يوضح ما يظهر في الصورة"></label>' +
     '<label>رابط الطلب أو التفاصيل<input name="url" type="url" placeholder="https://..."></label>' +
     '<div class="sa-manager-two"><label class="sa-check"><input name="featured" type="checkbox"> تمييز المنتج في المتجر</label><label class="sa-check"><input name="active" type="checkbox" checked> عرض المنتج في المتجر</label></div>' +
@@ -266,7 +276,7 @@
     const treeSha = branch.commit.commit.tree.sha;
     const tree = await api("/git/trees/" + treeSha + "?recursive=1");
     treeFiles = (tree.tree || []).filter(function (entry) {
-      return entry.type === "blob" && /\.(html?|css|js|json|xml|txt|md|svg|webmanifest|png|jpe?g|webp|gif|avif)$/i.test(entry.path);
+      return entry.type === "blob" && /\.(html?|css|js|json|xml|txt|md|svg|webmanifest|png|jpe?g|webp|gif|avif|mp4|webm)$/i.test(entry.path);
     }).sort(function (a, b) { return a.path.localeCompare(b.path); });
     if (tree.truncated) toast("قائمة الملفات كبيرة؛ تعرض الملفات التي أعادها GitHub فقط.");
     $("#saFileList").replaceChildren();
@@ -471,6 +481,19 @@
       sections: { live: true, recommendations: true, store: true },
       leagues: [],
       recommendations: { tvmazeIds: [], movies: [] },
+      storefront: {
+        title: "متجر DIAMOND TV",
+        subtitle: "اكتشف منتجات وخدمات مختارة بعناية، وتصفّح الأقسام واحفظ ما يناسبك.",
+        metaDescription: "تصفح متجر DIAMOND TV لاكتشاف المنتجات والخدمات المختارة، واقرأ المواصفات والأسعار قبل الطلب.",
+        announcement: "اختيارات DIAMOND TV في مكان واحد",
+        logo: "/assets/store-logo.svg",
+        categories: [
+          { name: "الاشتراكات الرقمية", description: "باقات وخدمات رقمية مختارة", image: "/assets/store-category-subscriptions.svg" },
+          { name: "أجهزة البث", description: "أجهزة وتجهيزات للمشاهدة", image: "/assets/store-category-devices.svg" },
+          { name: "الإكسسوارات", description: "إضافات عملية لتجربتك", image: "/assets/store-category-accessories.svg" },
+          { name: "العروض", description: "خيارات وعروض مميزة", image: "/assets/store-category-offers.svg" }
+        ]
+      },
       products: []
     };
   }
@@ -482,6 +505,8 @@
     } catch (_) { siteConfig = siteConfig || defaultSiteConfig(); }
     siteConfig.theme = Object.assign({ accent: "#6d4aff", accent2: "#0c9fa2" }, siteConfig.theme || {});
     siteConfig.sections = Object.assign({ live: true, recommendations: true, store: true }, siteConfig.sections || {});
+    siteConfig.storefront = Object.assign(defaultSiteConfig().storefront, siteConfig.storefront || {});
+    siteConfig.storefront.categories = Array.isArray(siteConfig.storefront.categories) ? siteConfig.storefront.categories : [];
     siteConfig.recommendations = Object.assign({ tvmazeIds: [], movies: [] }, siteConfig.recommendations || {});
     siteConfig.leagues = Array.isArray(siteConfig.leagues) ? siteConfig.leagues : [];
     siteConfig.products = Array.isArray(siteConfig.products) ? siteConfig.products : [];
@@ -494,6 +519,12 @@
     $("#saLiveEnabled").checked = siteConfig.sections.live !== false;
     $("#saRecommendationsEnabled").checked = siteConfig.sections.recommendations !== false;
     $("#saStoreEnabled").checked = siteConfig.sections.store !== false;
+    $("#saStoreTitle").value = String(siteConfig.storefront.title || "");
+    $("#saStoreSubtitle").value = String(siteConfig.storefront.subtitle || "");
+    $("#saStoreMeta").value = String(siteConfig.storefront.metaDescription || "");
+    $("#saStoreAnnouncement").value = String(siteConfig.storefront.announcement || "");
+    $("#saStoreLogo").value = String(siteConfig.storefront.logo || "");
+    $("#saStoreCategories").value = siteConfig.storefront.categories.map(function (item) { return [item.name || "", item.description || "", item.image || ""].join(" | "); }).join("\n");
     $("#saLeagueEditor").value = siteConfig.leagues.map(function (league) {
       return [league.id, league.ar, (league.tv || []).join("، ")].join(" | ");
     }).join("\n");
@@ -505,7 +536,9 @@
     }).join("") || '<p class="hint">لم تُضف أفلامًا بعد.</p>';
     $("#saProductList").innerHTML = siteConfig.products.map(function (product, index) {
       const availability = product.availability === "preorder" ? "طلب مسبق" : product.availability === "unavailable" ? "غير متاح" : "متوفر";
-      return '<div class="sa-manager-row"><span><b>' + escapeHtml(product.title) + '</b><small>' + escapeHtml(product.category || "بلا قسم") + " · " + escapeHtml(product.price || "بدون سعر") + (product.currency ? " " + escapeHtml(product.currency) : "") + " · " + availability + (product.featured ? " · مميز" : "") + (product.active === false ? " · مخفي" : " · ظاهر") + '</small></span>' +
+      const mediaCount = new Set([product.image].concat(Array.isArray(product.images) ? product.images : []).filter(Boolean)).size;
+      const videoCount = Array.isArray(product.videos) ? product.videos.length : 0;
+      return '<div class="sa-manager-row"><span><b>' + escapeHtml(product.title) + '</b><small>' + escapeHtml(product.category || "بلا قسم") + " · " + escapeHtml(product.price || "بدون سعر") + (product.currency ? " " + escapeHtml(product.currency) : "") + " · " + availability + " · " + mediaCount + " صور · " + videoCount + " فيديو" + (product.featured ? " · مميز" : "") + (product.active === false ? " · مخفي" : " · ظاهر") + '</small></span>' +
         '<span class="sa-manager-actions"><button type="button" class="ghost sm" data-edit-product="' + index + '">تعديل</button><button type="button" class="ghost sm" data-remove-product="' + index + '">حذف</button></span></div>';
     }).join("") || '<p class="hint">المتجر فارغ؛ أضف أول منتج من النموذج.</p>';
     $("#saProductCount").textContent = siteConfig.products.length + " منتج";
@@ -544,11 +577,14 @@
     const category = get("category") || "القسم";
     const description = get("description") || "سيظهر وصف المنتج في هذه المساحة.";
     const price = get("price"), oldPrice = get("oldPrice"), currency = get("currency");
+    const mediaImages = Array.from(new Set([image].concat(get("images").split(/\r?\n/).map(safeProductImage)).filter(Boolean)));
+    const videoCount = get("videos").split(/\r?\n/).map(function (value) { return value.trim(); }).filter(Boolean).length;
     const availability = get("availability") === "preorder" ? "طلب مسبق" : get("availability") === "unavailable" ? "غير متاح مؤقتًا" : "متوفر";
-    $("#saProductPreviewCard").innerHTML = (image ? '<img src="' + escapeHtml(image) + '" alt="">' : '<div class="sa-product-preview-image">✦ DIAMOND</div>') +
+    $("#saProductPreviewCard").innerHTML = (mediaImages[0] ? '<img src="' + escapeHtml(mediaImages[0]) + '" alt="">' : '<div class="sa-product-preview-image">✦ DIAMOND</div>') +
+      (mediaImages.length > 1 ? '<div class="sa-product-preview-thumbs">' + mediaImages.slice(1, 5).map(function (src) { return '<img src="' + escapeHtml(src) + '" alt="">'; }).join("") + '</div>' : '') +
       '<div class="sa-product-preview-copy"><span class="hint">' + escapeHtml(category) + '</span><b>' + escapeHtml(title) + '</b><p>' + escapeHtml(description) + '</p>' +
       '<div class="sa-product-preview-price">' + (price ? '<strong>' + escapeHtml(price) + ' ' + escapeHtml(currency) + '</strong>' : '<span>السعر غير محدد</span>') + (oldPrice ? '<del>' + escapeHtml(oldPrice) + ' ' + escapeHtml(currency) + '</del>' : '') + '</div>' +
-      '<span class="sa-product-preview-state">' + availability + (form.elements.featured.checked ? ' · مميز' : '') + '</span></div>';
+      '<span class="sa-product-preview-state">' + availability + (form.elements.featured.checked ? ' · مميز' : '') + ' · ' + mediaImages.length + ' صور · ' + videoCount + ' فيديو</span></div>';
   }
   async function searchTvMaze() {
     const query = $("#saTvSearch").value.trim();
@@ -811,6 +847,27 @@
     siteConfig.sections = { live: $("#saLiveEnabled").checked, recommendations: $("#saRecommendationsEnabled").checked, store: $("#saStoreEnabled").checked };
     stageDashboardConfig("تم حفظ إعدادات الأقسام للمراجعة.");
   });
+  $("#saSaveStorefront").addEventListener("click", function () {
+    const title = $("#saStoreTitle").value.trim().slice(0, 80);
+    const subtitle = $("#saStoreSubtitle").value.trim().slice(0, 240);
+    const metaDescription = $("#saStoreMeta").value.trim().slice(0, 170);
+    const announcement = $("#saStoreAnnouncement").value.trim().slice(0, 140);
+    const logoRaw = $("#saStoreLogo").value.trim();
+    const logo = logoRaw ? safeProductImage(logoRaw) : "";
+    if (!title) { toast("اكتب اسم المتجر."); return; }
+    if (logoRaw && !logo) { toast("رابط الشعار يجب أن يكون HTTPS أو مسارًا داخل assets."); return; }
+    const categories = $("#saStoreCategories").value.split(/\r?\n/).map(function (line) {
+      const parts = line.split("|").map(function (part) { return part.trim(); });
+      if (!parts[0]) return null;
+      const image = parts[2] ? safeProductImage(parts[2]) : "";
+      if (parts[2] && !image) return { invalid: true };
+      return { name: parts[0].slice(0, 60), description: (parts[1] || "").slice(0, 150), image: image };
+    }).filter(Boolean);
+    if (categories.some(function (item) { return item.invalid; })) { toast("تحقق من صور الأقسام: استخدم HTTPS أو مسارًا داخل assets."); return; }
+    if (categories.length > 12) { toast("يمكنك إضافة حتى 12 قسمًا."); return; }
+    siteConfig.storefront = { title: title, subtitle: subtitle, metaDescription: metaDescription, announcement: announcement, logo: logo, categories: categories };
+    stageDashboardConfig("تم حفظ هوية المتجر وأقسامه للمراجعة.");
+  });
   $("#saSaveLeagues").addEventListener("click", function () {
     const rows = $("#saLeagueEditor").value.split(/\r?\n/).map(function (line) { return line.split("|").map(function (part) { return part.trim(); }); }).filter(function (parts) { return parts.length >= 2 && parts[0] && parts[1]; });
     if (!rows.length) { toast("أدخل بطولة واحدة على الأقل."); return; }
@@ -866,10 +923,14 @@
       const item = siteConfig.products[Number(edit.dataset.editProduct)], form = $("#saProductForm");
       if (!item) return;
       Object.keys(item).forEach(function (key) {
-        if (!form.elements[key] || key === "active" || key === "featured" || key === "highlights") return;
+        if (!form.elements[key] || ["active", "featured", "highlights", "images", "videos", "specifications", "tags"].includes(key)) return;
         form.elements[key].value = item[key] == null ? "" : item[key];
       });
       form.elements.highlights.value = Array.isArray(item.highlights) ? item.highlights.join("\n") : String(item.highlights || "");
+      form.elements.images.value = Array.isArray(item.images) ? item.images.join("\n") : "";
+      form.elements.videos.value = Array.isArray(item.videos) ? item.videos.join("\n") : "";
+      form.elements.specifications.value = Array.isArray(item.specifications) ? item.specifications.map(function (entry) { return [entry.name || "", entry.value || ""].join(" | "); }).join("\n") : "";
+      form.elements.tags.value = Array.isArray(item.tags) ? item.tags.join("، ") : "";
       form.elements.active.checked = item.active !== false;
       form.elements.featured.checked = item.featured === true;
       renderProductPreview();
@@ -899,31 +960,61 @@
     renderProductPreview();
     form.elements.title.focus();
   });
-  $("#saProductImageUpload").addEventListener("change", async function (event) {
-    const file = (event.target.files || [])[0];
-    if (!file) return;
-    if (!/^image\/(png|jpeg|webp|avif)$/.test(file.type) || file.size > 4 * 1024 * 1024) {
-      toast("اختر صورة PNG أو JPG أو WebP أو AVIF بحجم 4 ميغابايت أو أقل.");
-      event.target.value = "";
-      return;
+  async function uploadProductMedia(files, kind, setAsCover) {
+    const form = $("#saProductForm");
+    const list = Array.from(files || []);
+    if (!list.length) return;
+    const currentImages = [form.elements.image.value.trim()].concat(form.elements.images.value.split(/\r?\n/).map(function (value) { return value.trim(); })).filter(Boolean);
+    const currentVideos = form.elements.videos.value.split(/\r?\n/).map(function (value) { return value.trim(); }).filter(Boolean);
+    const maxCount = kind === "image" ? 8 : 2;
+    const remaining = maxCount - (kind === "image" ? currentImages.length : currentVideos.length);
+    if (list.length > remaining) { toast(kind === "image" ? "يمكنك إضافة حتى 8 صور للمنتج." : "يمكنك إضافة فيديوهين كحد أقصى."); return; }
+    const mimePattern = kind === "image" ? /^image\/(png|jpeg|webp|avif)$/ : /^video\/(mp4|webm)$/;
+    const maxSize = kind === "image" ? 4 * 1024 * 1024 : 15 * 1024 * 1024;
+    for (const file of list) {
+      if (!mimePattern.test(file.type) || file.size > maxSize) {
+        toast(kind === "image" ? "اختر صور PNG أو JPG أو WebP أو AVIF، بحد 4 ميغابايت للصورة." : "اختر فيديو MP4 أو WebM بحجم 15 ميغابايت أو أقل.");
+        return;
+      }
     }
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/^\.+/, "").slice(-80) || "product-image";
-    const path = "assets/store-" + Date.now() + "-" + safeName;
     try {
-      const reader = new FileReader();
-      const base64 = await new Promise(function (resolve, reject) {
-        reader.onload = function () { resolve(String(reader.result).split(",")[1] || ""); };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-      binaryPending[path] = base64;
-      original[path] = { sha: null, content: "" };
-      $("#saProductForm").elements.image.value = "/" + path;
-      if (!$("#saProductForm").elements.imageAlt.value.trim()) $("#saProductForm").elements.imageAlt.value = $("#saProductForm").elements.title.value.trim() || file.name;
+      const created = [];
+      for (const file of list) {
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/^\.+/, "").slice(-70) || (kind === "image" ? "product-image" : "product-video");
+        const path = "assets/store-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7) + "-" + safeName;
+        const reader = new FileReader();
+        const base64 = await new Promise(function (resolve, reject) {
+          reader.onload = function () { resolve(String(reader.result).split(",")[1] || ""); };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        binaryPending[path] = base64;
+        original[path] = { sha: null, content: "" };
+        created.push({ path: "/" + path, name: file.name });
+      }
+      if (kind === "image") {
+        if (setAsCover && created[0]) form.elements.image.value = created[0].path;
+        const extras = created.slice(setAsCover ? 1 : 0).map(function (item) { return item.path; });
+        form.elements.images.value = [form.elements.images.value.trim(), extras.join("\n")].filter(Boolean).join("\n");
+        if (!form.elements.imageAlt.value.trim()) form.elements.imageAlt.value = form.elements.title.value.trim() || created[0].name;
+      } else {
+        form.elements.videos.value = [form.elements.videos.value.trim(), created.map(function (item) { return item.path; }).join("\n")].filter(Boolean).join("\n");
+      }
       renderPending();
       renderProductPreview();
-      toast("أُضيفت الصورة للنشر مع المنتج.");
-    } catch (_) { toast("تعذّر قراءة الصورة."); }
+      toast(kind === "image" ? "أُضيفت الصور إلى معرض المنتج." : "أُضيفت الفيديوهات إلى المنتج.");
+    } catch (_) { toast("تعذّرت قراءة أحد الملفات."); }
+  }
+  $("#saProductImageUpload").addEventListener("change", async function (event) {
+    await uploadProductMedia(event.target.files, "image", true);
+    event.target.value = "";
+  });
+  $("#saProductGalleryUpload").addEventListener("change", async function (event) {
+    await uploadProductMedia(event.target.files, "image", false);
+    event.target.value = "";
+  });
+  $("#saProductVideoUpload").addEventListener("change", async function (event) {
+    await uploadProductMedia(event.target.files, "video", false);
     event.target.value = "";
   });
   $("#saProductForm").addEventListener("submit", function (event) {
@@ -932,16 +1023,36 @@
     if (!title || !description) return;
     const image = safeProductImage(data.get("image"));
     const url = safeDashboardUrl(data.get("url"));
+    const sourceUrl = safeDashboardUrl(data.get("sourceUrl"));
+    const imagesRaw = String(data.get("images") || "").split(/\r?\n/).map(function (value) { return value.trim(); }).filter(Boolean);
+    const videosRaw = String(data.get("videos") || "").split(/\r?\n/).map(function (value) { return value.trim(); }).filter(Boolean);
+    const images = imagesRaw.map(safeProductImage);
+    const videos = videosRaw.map(safeProductImage);
     if (data.get("image") && !image) { toast("رابط الصورة يجب أن يكون HTTPS أو مسارًا آمنًا داخل assets."); return; }
+    if (images.some(function (value) { return !value; })) { toast("تحقق من روابط الصور الإضافية: HTTPS أو مسار داخل assets."); return; }
+    if (videos.some(function (value) { return !value; })) { toast("روابط الفيديو يجب أن تكون HTTPS أو مسارات داخل assets."); return; }
+    if (images.length + (image ? 1 : 0) > 8 || videos.length > 6) { toast("الحد الأقصى 8 صور و6 روابط فيديو للمنتج."); return; }
     if (data.get("url") && !url) { toast("رابط الطلب يجب أن يكون HTTPS."); return; }
+    if (data.get("sourceUrl") && !sourceUrl) { toast("رابط المصدر يجب أن يكون HTTPS."); return; }
+    const specs = String(data.get("specifications") || "").split(/\r?\n/).map(function (line) {
+      const parts = line.split("|").map(function (part) { return part.trim(); });
+      return parts[0] && parts[1] ? { name: parts[0].slice(0, 80), value: parts.slice(1).join(" | ").slice(0, 160) } : null;
+    }).filter(Boolean).slice(0, 24);
+    const coverImage = image || images[0] || "";
     const currentId = String(data.get("id") || "");
+    const existingProduct = siteConfig.products.find(function (item) { return item.id === currentId; });
     const product = {
       id: currentId || "product-" + Date.now(), title: title, category: String(data.get("category") || "").trim(),
-      description: description, highlights: String(data.get("highlights") || "").split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean).slice(0, 12),
+      description: description, brand: String(data.get("brand") || "").trim(), sku: String(data.get("sku") || "").trim(),
+      warranty: String(data.get("warranty") || "").trim(), delivery: String(data.get("delivery") || "").trim(),
+      highlights: String(data.get("highlights") || "").split(/\r?\n/).map(function (line) { return line.trim(); }).filter(Boolean).slice(0, 16),
+      specifications: specs, tags: String(data.get("tags") || "").split(/[،,]/).map(function (value) { return value.trim(); }).filter(Boolean).slice(0, 12),
       price: String(data.get("price") || "").trim(), oldPrice: String(data.get("oldPrice") || "").trim(), currency: String(data.get("currency") || "").trim(),
-      image: image, imageAlt: String(data.get("imageAlt") || title).trim(), url: url,
+      stock: data.get("stock") === "" ? null : Math.max(0, Math.min(999999, Number(data.get("stock")) || 0)),
+      image: coverImage, images: images, videos: videos, imageAlt: String(data.get("imageAlt") || title).trim(), url: url, sourceUrl: sourceUrl,
       availability: ["available", "preorder", "unavailable"].includes(String(data.get("availability"))) ? String(data.get("availability")) : "available",
-      featured: form.elements.featured.checked, active: form.elements.active.checked
+      featured: form.elements.featured.checked, active: form.elements.active.checked,
+      createdAt: existingProduct && existingProduct.createdAt ? existingProduct.createdAt : new Date().toISOString()
     };
     const index = siteConfig.products.findIndex(function (item) { return item.id === currentId; });
     if (index >= 0) siteConfig.products[index] = product; else siteConfig.products.push(product);
@@ -1711,12 +1822,20 @@
         news: activeResearchSources
       };
       const sources = selectTrendSources(trend).slice(0, 12);
-      if (sources.length < 2) {
+      if (!sources.length) {
         activeTrendFactReport = null;
-        $("#saWriterNotice").textContent = "لم نعثر على تغطيتين كافيتين من ناشرين معروفين ومختلفين. لم نكتب مسودة تخمينية؛ جرّب صياغة أوضح للموضوع.";
-        toast("لم تظهر مصادر مستقلة كافية؛ لم تُنشأ المسودة.");
+        $("#saWriterSourcesPreview").hidden = false;
+        $("#saWriterSourcesPreview").innerHTML = '<p class="hint">اكتمل البحث لكن لم تُرجع خدمة المصادر روابط صالحة أو موثوقة لهذا الموضوع.</p>';
+        $("#saWriterNotice").textContent = "لم أكتب مسودة بلا مصادر. جرّب موضوعًا أدق أو أضف مصادر موثوقة يدويًا.";
+        toast("لم تُعثر على مصادر صالحة؛ لم تُنشأ مسودة.");
         return;
       }
+      const sourcePreview = $("#saWriterSourcesPreview");
+      sourcePreview.hidden = false;
+      sourcePreview.innerHTML = '<b>المصادر التي بُنيت عليها المسودة</b>' + sources.map(function (entry) {
+        const assessment = sourceAssessment(entry.url, entry.domain);
+        return '<div class="sa-source-review-row"><span><b>' + escapeHtml(entry.title || entry.source || assessment.host) + '</b><small>' + escapeHtml(assessment.publisher || assessment.host || "") + ' · ' + (entry.articleRead === true ? 'قُرئت الصفحة (' + (Number(entry.articleWordCount) || 0) + ' كلمة)' : 'لم يُستخرج نص كافٍ من الصفحة') + '</small></span><a href="' + escapeHtml(safeDashboardUrl(entry.url)) + '" target="_blank" rel="noopener noreferrer">فتح المصدر ↗</a></div>';
+      }).join("");
       const readablePages = sources.filter(function (entry) { return entry.articleRead === true; }).length;
       const keywordField = $("#saWriterKeyword"), keyword = keywordField.value.trim() || topic;
       keywordField.value = keyword;
@@ -1744,17 +1863,21 @@
         trend.category === "entertainment" ? "مسلسلات" :
         /تطبيق|اشتراك|موقع/.test(topicNormalized) ? "التطبيق" : "عام";
       form.elements.category.value = category;
-      const researchNote = readablePages >= 2
-        ? "استُخرج نص كافٍ من " + readablePages + " صفحات؛ الفحص يرصد الزوايا والمفردات ولا يؤكد صحة الوقائع."
-        : "تنبيه: استُخرج نص كافٍ من " + readablePages + " صفحات فقط؛ لا تنشر المسودة حتى تضيف مصدرين أمكن قراءة نصهما والتحقق يدويًا.";
-      $("#saWriterNotice").textContent = "أُعدت مسودة مقارنة عن «" + topic + "» من " + sources.length + " ناشرين معروفين. " + researchNote;
+      const researchNote = sources.length < 2
+        ? "تنبيه: ظهر مصدر موثوق واحد فقط؛ هذه مسودة أولية للمراجعة وليست مقارنة ولا تُنشر قبل إضافة مصدر مستقل آخر."
+        : readablePages >= 2
+          ? "استُخرج نص كافٍ من " + readablePages + " صفحات؛ الفحص يرصد الزوايا والمفردات ولا يؤكد صحة الوقائع."
+          : "تنبيه: استُخرج نص كافٍ من " + readablePages + " صفحات فقط؛ راجع كل حقيقة وأضف مصدرًا مستقلًا أمكن قراءة نصه قبل النشر.";
+      $("#saWriterNotice").textContent = "أُعدت مسودة أولية عن «" + topic + "» من " + sources.length + " ناشرين معروفين. " + researchNote;
       updateSearchPreview(form);
       articleAudit(form);
       form.elements.body.scrollIntoView({ behavior: "smooth", block: "center" });
-      toast(readablePages >= 2 ? "اكتملت المسودة الأولية. راجع النص والحقائق قبل النشر." : "أُعدت مسودة محدودة؛ يلزم مصدران مقروءان قبل النشر.");
+      toast(sources.length >= 2 && readablePages >= 2 ? "اكتملت المسودة الأولية. راجع النص والحقائق قبل النشر." : "ظهرت المسودة والمصادر؛ استكمل التحقق قبل النشر.");
     } catch (error) {
       activeResearchSources = [];
       activeTrendFactReport = null;
+      $("#saWriterSourcesPreview").hidden = true;
+      $("#saWriterSourcesPreview").replaceChildren();
       $("#saWriterNotice").textContent = friendlyGitHubError(error) || error.message || "تعذّر البحث في المصادر.";
       toast("تعذّر تنفيذ البحث المباشر؛ لم نستخدم لقطة قديمة بدل المصادر.");
     } finally {
