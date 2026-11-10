@@ -148,24 +148,32 @@
       {
         "name": "الاشتراكات الرقمية",
         "description": "باقات وخدمات رقمية مختارة",
-        "image": "/assets/store-category-subscriptions.svg"
+        "image": "/assets/store-category-subscriptions.svg",
+        "color": "#6d4aff"
       },
       {
         "name": "أجهزة البث",
         "description": "أجهزة وتجهيزات للمشاهدة",
-        "image": "/assets/store-category-devices.svg"
+        "image": "/assets/store-category-devices.svg",
+        "color": "#0c9fa2"
       },
       {
         "name": "الإكسسوارات",
         "description": "إضافات عملية لتجربتك",
-        "image": "/assets/store-category-accessories.svg"
+        "image": "/assets/store-category-accessories.svg",
+        "color": "#c15d87"
       },
       {
         "name": "العروض",
         "description": "خيارات وعروض مميزة",
-        "image": "/assets/store-category-offers.svg"
+        "image": "/assets/store-category-offers.svg",
+        "color": "#e38b2c"
       }
-    ]
+    ],
+    "colors": {
+      "primary": "#6d4aff",
+      "secondary": "#0c9fa2"
+    }
   },
   "products": []
 }
