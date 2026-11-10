@@ -352,12 +352,12 @@ footer{margin-top:50px;border-top:1px solid var(--line);padding:24px 0;color:var
 .store-category-showcase{margin:26px 0}
 .store-category-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:14px}
 .store-category-card{position:relative;display:flex;flex-direction:column;overflow:hidden;min-height:220px;padding:0;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--text);text-align:right;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s}
-.store-category-card:hover,.store-category-card:focus-visible{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 45%,var(--line));box-shadow:0 16px 32px #1d29401a;outline:none}
+.store-category-card:hover,.store-category-card:focus-visible{transform:translateY(-4px);border-color:color-mix(in srgb,var(--category-color,var(--accent)) 45%,var(--line));box-shadow:0 16px 32px #1d29401a;outline:none}
 .store-category-card>img{display:block;width:100%;height:138px;object-fit:cover;background:var(--bg2)}
 .store-category-card-copy{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:13px 14px}
 .store-category-card-copy b{font-size:.97rem}
 .store-category-card-copy small{grid-column:1/-1;color:var(--muted);font-size:.78rem;line-height:1.6}
-.store-category-card-copy em{grid-column:2;grid-row:1;color:var(--accent);font-size:.74rem;font-style:normal;font-weight:800}
+.store-category-card-copy em{grid-column:2;grid-row:1;color:var(--category-color,var(--accent));font-size:.74rem;font-style:normal;font-weight:800}
 .store-toolbox{border:1px solid color-mix(in srgb,var(--accent) 13%,var(--line));box-shadow:0 12px 36px #1d294008}
 .store-available-filter{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:.8rem;white-space:nowrap}
 .store-available-filter input{accent-color:var(--accent)}
@@ -417,3 +417,23 @@ footer{margin-top:50px;border-top:1px solid var(--line);padding:24px 0;color:var
 
 .sa-product-preview-thumbs{display:flex;gap:6px;padding:7px 10px;overflow:auto}
 .sa-product-preview-thumbs img{width:48px;height:38px;object-fit:cover;border:1px solid var(--line);border-radius:7px}
+
+/* Simple store identity controls and category color customization */
+.sa-store-logo-row{align-items:center}
+.sa-store-logo-row>img{width:160px;height:108px;object-fit:contain;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.sa-store-category-editor{display:grid;gap:12px;margin:10px 0 18px}
+.sa-store-category-row{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.sa-store-category-row .sa-manager-three{margin-bottom:10px}
+.sa-store-category-media{display:grid;grid-template-columns:86px minmax(140px,1fr) minmax(160px,1fr) auto;gap:10px;align-items:end}
+.sa-store-category-image-preview{width:86px;height:68px;overflow:hidden;border:1px solid var(--line);border-radius:9px;background:var(--bg2)}
+.sa-store-category-image-preview img{width:100%;height:100%;object-fit:cover}
+.sa-store-category-row input[type=color]{min-height:40px}
+.sa-product-import{margin:12px 0 8px}
+.sa-product-import input{flex:1;min-width:210px}
+.sa-product-import-rights{margin:8px 0}
+.store-brand img{width:clamp(138px,19vw,178px);height:92px;object-fit:contain}
+.store-brand .pill{display:none}
+.store-category-card{border-color:color-mix(in srgb,var(--category-color,var(--accent)) 30%,var(--line));background:color-mix(in srgb,var(--category-color,var(--accent)) 7%,var(--card))}
+.store-category-card:hover,.store-category-card:focus-visible{border-color:var(--category-color,var(--accent))}
+.store-category-card-copy em{color:var(--category-color,var(--accent))}
+@media(max-width:650px){.sa-store-category-media{grid-template-columns:70px 1fr}.sa-store-category-media .sa-upload-box{grid-column:1/-1}.sa-store-category-image-preview{width:70px;height:58px}.sa-store-category-media button{grid-column:2;justify-self:end}.store-brand img{width:126px;height:74px}}
