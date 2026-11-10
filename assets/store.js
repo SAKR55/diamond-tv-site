@@ -31,6 +31,10 @@
     document.title = title + " | DIAMOND TV";
     var metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription && config.metaDescription) metaDescription.content = String(config.metaDescription).slice(0, 170);
+    var storeRoot = document.getElementById("store-content");
+    var primaryColor = /^#[0-9a-f]{6}$/i.test((config.colors || {}).primary || "") ? config.colors.primary : "#6d4aff";
+    var secondaryColor = /^#[0-9a-f]{6}$/i.test((config.colors || {}).secondary || "") ? config.colors.secondary : "#0c9fa2";
+    if (storeRoot) { storeRoot.style.setProperty("--accent", primaryColor); storeRoot.style.setProperty("--accent2", secondaryColor); }
     var logo = safeUrl(config.logo);
     var logoNode = document.getElementById("store-brand-logo");
     if (logoNode) {
@@ -51,8 +55,9 @@
     if (!tiles) return;
     tiles.innerHTML = categories.map(function (item, index) {
       var image = safeUrl(item.image) || "/assets/store-category-" + ["subscriptions", "devices", "accessories", "offers"][index % 4] + ".svg";
+      var color = /^#[0-9a-f]{6}$/i.test(item.color || "") ? item.color : primaryColor;
       var count = products.filter(function (product) { return String(product.category || "").trim() === String(item.name).trim(); }).length;
-      return '<button type="button" class="store-category-card" data-category="' + esc(item.name) + '">' +
+      return '<button type="button" class="store-category-card" style="--category-color:' + color + '" data-category="' + esc(item.name) + '">' +
         '<img src="' + esc(image) + '" alt="" loading="lazy"><span class="store-category-card-copy"><b>' + esc(item.name) + '</b><small>' + esc(item.description || "اكتشف المنتجات") + '</small><em>' + count + ' منتجات <span aria-hidden="true">←</span></em></span></button>';
     }).join("");
   }
