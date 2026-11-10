@@ -29,6 +29,7 @@
   let activeLinkCheckReport = null;
   let articleResearchInProgress = false;
   let articleLinkCheckInProgress = false;
+  let productImportInProgress = false;
   let replaceTvMazeId = "";
 
   function restorePendingCache() {
@@ -137,11 +138,11 @@
     '<div class="sa-dashboard-grid">' +
     '<section class="card sa-manager-card"><h3>ألوان الموقع</h3><label>اللون الرئيسي<input id="saAccent" type="color"></label><label>اللون المساند<input id="saAccent2" type="color"></label><button type="button" id="saSaveTheme">حفظ ونشر الألوان</button></section>' +
     '<section class="card sa-manager-card"><h3>أقسام الصفحة الرئيسية</h3><label class="sa-check"><input id="saLiveEnabled" type="checkbox"> المباريات المباشرة</label><label class="sa-check"><input id="saRecommendationsEnabled" type="checkbox"> ترشيحات السهرة</label><label class="sa-check"><input id="saStoreEnabled" type="checkbox"> المتجر</label><button type="button" id="saSaveSections">حفظ ونشر الأقسام</button></section>' +
-    '<section class="card sa-manager-card sa-manager-wide"><h3>هوية المتجر وأقسامه</h3><p class="hint">عدّل اسم المتجر ونصوص الواجهة والأقسام وصورها. اكتب قسمًا في كل سطر: الاسم | وصف قصير | رابط صورة HTTPS أو مسار داخل assets.</p><div class="sa-manager-two"><label>عنوان المتجر<input id="saStoreTitle" maxlength="80"></label><label>رابط الشعار<input id="saStoreLogo" placeholder="/assets/store-logo.svg أو رابط HTTPS"></label></div><label>وصف الواجهة<textarea id="saStoreSubtitle" rows="2" maxlength="240"></textarea></label><label>وصف محركات البحث<textarea id="saStoreMeta" rows="2" maxlength="170" placeholder="وصف موجز لنتيجة البحث"></textarea></label><label>شريط الإعلان<input id="saStoreAnnouncement" maxlength="140" placeholder="اختياري"></label><label>الأقسام (سطر لكل قسم)<textarea id="saStoreCategories" rows="6" dir="auto" placeholder="الاشتراكات الرقمية | باقات وخدمات | /assets/store-category-subscriptions.svg"></textarea></label><button type="button" id="saSaveStorefront">حفظ ونشر هوية المتجر</button></section>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>هوية المتجر وأقسامه</h3><p class="hint">غيّر شكل المتجر من هنا: ارفع الشعار وصور الأقسام، اختر ألوان المتجر، وأضف أو احذف الأقسام.</p><div class="sa-manager-two"><label>عنوان المتجر<input id="saStoreTitle" maxlength="80"></label><label>رابط الشعار<input id="saStoreLogo" placeholder="/assets/store-logo.svg أو رابط HTTPS"></label></div><div class="sa-manager-two sa-store-logo-row"><img id="saStoreLogoPreview" src="/assets/store-logo.svg" alt="معاينة الشعار"><label class="sa-upload-box">رفع شعار من الجهاز<input id="saStoreLogoUpload" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><span class="hint">PNG أو JPG أو WebP أو AVIF · حتى 4 ميغابايت</span></label></div><label>وصف الواجهة<textarea id="saStoreSubtitle" rows="2" maxlength="240"></textarea></label><label>وصف محركات البحث<textarea id="saStoreMeta" rows="2" maxlength="170" placeholder="وصف موجز لنتيجة البحث"></textarea></label><label>شريط الإعلان<input id="saStoreAnnouncement" maxlength="140" placeholder="اختياري"></label><div class="sa-manager-two"><label>اللون الرئيسي للمتجر<input id="saStoreColor" type="color"></label><label>اللون المساند للمتجر<input id="saStoreColor2" type="color"></label></div><div class="sa-product-list-head"><b>أقسام المتجر</b><button type="button" class="ghost sm" id="saAddStoreCategory">إضافة قسم</button></div><div id="saStoreCategories" class="sa-store-category-editor"></div><button type="button" id="saSaveStorefront">حفظ ونشر هوية المتجر</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>البطولات والقنوات</h3><p class="hint">تشمل الدوريات المحلية والمنافسات الدولية. سطر لكل بطولة: رمز المصدر | الاسم بالعربية | القنوات المؤكدة إن وُجدت.</p><textarea id="saLeagueEditor" rows="12" dir="auto"></textarea><button type="button" id="saSaveLeagues">حفظ ونشر البطولات</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>مسلسلات TVMaze</h3><p class="hint">ابحث عن مسلسل وأضفه؛ تُحدّث تقييماته تلقائيًا من المصدر.</p><div class="sa-inline-form"><input id="saTvSearch" placeholder="اسم المسلسل"><button type="button" id="saTvSearchBtn">بحث</button></div><div id="saTvResults" class="sa-manager-list"></div><h4>المسلسلات المختارة</h4><div id="saTvSelected" class="sa-manager-list"></div></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>ترشيحات الأفلام اليدوية</h3><p class="hint">تقييم أو وصف الأفلام هنا تحريري، وليس من مصدر خارجي.</p><form id="saMovieForm" class="sa-manager-form"><input type="hidden" name="editIndex" value=""><input name="title" required maxlength="100" placeholder="اسم الفيلم"><input name="image" type="url" placeholder="رابط صورة HTTPS (اختياري)"><input name="url" type="url" placeholder="رابط التفاصيل HTTPS (اختياري)"><textarea name="description" required rows="2" maxlength="260" placeholder="لماذا ترشحه؟"></textarea><div class="sa-product-form-actions"><button type="submit">إضافة الفيلم</button><button type="button" class="ghost" id="saMovieClear">ترشيح جديد</button></div></form><div id="saMovieList" class="sa-manager-list"></div></section>' +
-    '<section class="card sa-manager-card sa-manager-wide"><h3>استوديو المنتجات</h3><p class="hint">أضف بيانات دقيقة ومنظمة، وارفق صورًا وفيديوهات، ثم راجع المعاينة قبل نشر المنتج. يتطلب الاستيراد المباشر من Alibaba أو AliExpress API رسميًا معتمدًا؛ لا تضع بيانات سرية في رابط المصدر، واستخدم الوسائط التي تملك حق نشرها.</p>' +
+    '<section class="card sa-manager-card sa-manager-wide"><h3>استوديو المنتجات</h3><p class="hint">ألصق رابط صفحة منتج عام يسمح بالاستيراد؛ ستُملأ الحقول المتاحة لتراجعها قبل الحفظ. لا يتجاوز الاستيراد تسجيل الدخول أو الحماية. روابط Alibaba وAliExpress تتطلب تغذية API رسمية معتمدة.</p><div class="sa-inline-form sa-product-import"><input id="saProductImportUrl" type="url" placeholder="الصق رابط صفحة المنتج HTTPS"><button type="button" id="saProductImportBtn">استيراد من الرابط</button></div><label class="sa-check sa-product-import-rights"><input id="saProductImportRights" type="checkbox"> أملك إذن استخدام بيانات وصور المنتج من هذا المصدر</label><div id="saProductImportStatus" class="hint" role="status" aria-live="polite"></div>' +
     '<div class="sa-product-editor"><form id="saProductForm" class="sa-manager-form sa-product-form"><input name="id" type="hidden">' +
     '<label>اسم المنتج<input name="title" required maxlength="100" placeholder="اسم واضح للمنتج"></label>' +
     '<div class="sa-manager-two"><label>القسم<input name="category" maxlength="50" list="saProductCategories" placeholder="مثال: اشتراكات أو أجهزة"><datalist id="saProductCategories"><option value="اشتراكات"><option value="أجهزة"><option value="إكسسوارات"><option value="عروض"></datalist></label><label>العملة<input name="currency" maxlength="12" value="ر.س" placeholder="ر.س"></label></div>' +
@@ -487,11 +488,12 @@
         metaDescription: "تصفح متجر DIAMOND TV لاكتشاف المنتجات والخدمات المختارة، واقرأ المواصفات والأسعار قبل الطلب.",
         announcement: "اختيارات DIAMOND TV في مكان واحد",
         logo: "/assets/store-logo.svg",
+        colors: { primary: "#6d4aff", secondary: "#0c9fa2" },
         categories: [
-          { name: "الاشتراكات الرقمية", description: "باقات وخدمات رقمية مختارة", image: "/assets/store-category-subscriptions.svg" },
-          { name: "أجهزة البث", description: "أجهزة وتجهيزات للمشاهدة", image: "/assets/store-category-devices.svg" },
-          { name: "الإكسسوارات", description: "إضافات عملية لتجربتك", image: "/assets/store-category-accessories.svg" },
-          { name: "العروض", description: "خيارات وعروض مميزة", image: "/assets/store-category-offers.svg" }
+          { name: "الاشتراكات الرقمية", description: "باقات وخدمات رقمية مختارة", image: "/assets/store-category-subscriptions.svg", color: "#6d4aff" },
+          { name: "أجهزة البث", description: "أجهزة وتجهيزات للمشاهدة", image: "/assets/store-category-devices.svg", color: "#0c9fa2" },
+          { name: "الإكسسوارات", description: "إضافات عملية لتجربتك", image: "/assets/store-category-accessories.svg", color: "#d879a3" },
+          { name: "العروض", description: "خيارات وعروض مميزة", image: "/assets/store-category-offers.svg", color: "#339b75" }
         ]
       },
       products: []
@@ -506,6 +508,7 @@
     siteConfig.theme = Object.assign({ accent: "#6d4aff", accent2: "#0c9fa2" }, siteConfig.theme || {});
     siteConfig.sections = Object.assign({ live: true, recommendations: true, store: true }, siteConfig.sections || {});
     siteConfig.storefront = Object.assign(defaultSiteConfig().storefront, siteConfig.storefront || {});
+    siteConfig.storefront.colors = Object.assign({ primary: "#6d4aff", secondary: "#0c9fa2" }, siteConfig.storefront.colors || {});
     siteConfig.storefront.categories = Array.isArray(siteConfig.storefront.categories) ? siteConfig.storefront.categories : [];
     siteConfig.recommendations = Object.assign({ tvmazeIds: [], movies: [] }, siteConfig.recommendations || {});
     siteConfig.leagues = Array.isArray(siteConfig.leagues) ? siteConfig.leagues : [];
@@ -524,7 +527,10 @@
     $("#saStoreMeta").value = String(siteConfig.storefront.metaDescription || "");
     $("#saStoreAnnouncement").value = String(siteConfig.storefront.announcement || "");
     $("#saStoreLogo").value = String(siteConfig.storefront.logo || "");
-    $("#saStoreCategories").value = siteConfig.storefront.categories.map(function (item) { return [item.name || "", item.description || "", item.image || ""].join(" | "); }).join("\n");
+    $("#saStoreLogoPreview").src = safeProductImage(siteConfig.storefront.logo) || "/assets/store-logo.svg";
+    $("#saStoreColor").value = /^#[0-9a-f]{6}$/i.test(siteConfig.storefront.colors.primary || "") ? siteConfig.storefront.colors.primary : "#6d4aff";
+    $("#saStoreColor2").value = /^#[0-9a-f]{6}$/i.test(siteConfig.storefront.colors.secondary || "") ? siteConfig.storefront.colors.secondary : "#0c9fa2";
+    renderStoreCategoryEditor();
     $("#saLeagueEditor").value = siteConfig.leagues.map(function (league) {
       return [league.id, league.ar, (league.tv || []).join("، ")].join(" | ");
     }).join("\n");
@@ -543,6 +549,34 @@
     }).join("") || '<p class="hint">المتجر فارغ؛ أضف أول منتج من النموذج.</p>';
     $("#saProductCount").textContent = siteConfig.products.length + " منتج";
     renderProductPreview();
+  }
+  function renderStoreCategoryEditor() {
+    const box = $("#saStoreCategories");
+    if (!box || !siteConfig || !siteConfig.storefront) return;
+    const categories = siteConfig.storefront.categories || [];
+    box.innerHTML = categories.map(function (item, index) {
+      const name = String(item.name || "");
+      const description = String(item.description || "");
+      const image = safeProductImage(item.image || "");
+      const color = /^#[0-9a-f]{6}$/i.test(item.color || "") ? item.color : "#6d4aff";
+      return '<article class="sa-store-category-row" data-store-category="' + index + '">' +
+        '<div class="sa-manager-three"><label>اسم القسم<input data-store-category-field="name" maxlength="60" value="' + escapeHtml(name) + '" placeholder="مثال: أجهزة البث"></label><label>وصف مختصر<input data-store-category-field="description" maxlength="150" value="' + escapeHtml(description) + '" placeholder="سطر يوضح القسم"></label><label>لون القسم<input data-store-category-field="color" type="color" value="' + color + '"></label></div>' +
+        '<div class="sa-store-category-media"><div class="sa-store-category-image-preview"><img src="' + escapeHtml(image || "/assets/store-category-default.svg") + '" alt="" data-store-category-preview></div><label>رابط الصورة<input data-store-category-field="image" maxlength="500" value="' + escapeHtml(item.image || "") + '" placeholder="/assets/صورة-القسم.png أو HTTPS"></label><label class="sa-upload-box">رفع صورة للقسم<input data-store-category-image-upload="' + index + '" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><span class="hint">حتى 4 ميغابايت</span></label><button type="button" class="ghost sm" data-remove-store-category="' + index + '">حذف القسم</button></div></article>';
+    }).join("") || '<p class="hint">لم تُضف أقسامًا بعد. اضغط «إضافة قسم» لبدء إعداد المتجر.</p>';
+  }
+  async function readStorefrontImage(file, purpose) {
+    if (!file || !/^image\/(png|jpeg|webp|avif)$/.test(file.type) || file.size > 4 * 1024 * 1024) throw new Error("اختر صورة PNG أو JPG أو WebP أو AVIF بحجم 4 ميغابايت أو أقل.");
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").replace(/^\.+/, "").slice(-60) || "store-image";
+    const path = "assets/store-" + purpose + "-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7) + "-" + safeName;
+    const reader = new FileReader();
+    const base64 = await new Promise(function (resolve, reject) {
+      reader.onload = function () { resolve(String(reader.result).split(",")[1] || ""); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+    binaryPending[path] = base64;
+    original[path] = { sha: null, content: "" };
+    return "/" + path;
   }
   function queueAutoPublish(paths) {
     (paths || []).forEach(function (path) { autoPublishPaths.add(path); });
@@ -856,17 +890,73 @@
     const logo = logoRaw ? safeProductImage(logoRaw) : "";
     if (!title) { toast("اكتب اسم المتجر."); return; }
     if (logoRaw && !logo) { toast("رابط الشعار يجب أن يكون HTTPS أو مسارًا داخل assets."); return; }
-    const categories = $("#saStoreCategories").value.split(/\r?\n/).map(function (line) {
-      const parts = line.split("|").map(function (part) { return part.trim(); });
-      if (!parts[0]) return null;
-      const image = parts[2] ? safeProductImage(parts[2]) : "";
-      if (parts[2] && !image) return { invalid: true };
-      return { name: parts[0].slice(0, 60), description: (parts[1] || "").slice(0, 150), image: image };
-    }).filter(Boolean);
-    if (categories.some(function (item) { return item.invalid; })) { toast("تحقق من صور الأقسام: استخدم HTTPS أو مسارًا داخل assets."); return; }
+    const categories = siteConfig.storefront.categories.map(function (item) {
+      return {
+        name: String(item.name || "").trim().slice(0, 60),
+        description: String(item.description || "").trim().slice(0, 150),
+        image: safeProductImage(item.image || ""),
+        color: /^#[0-9a-f]{6}$/i.test(item.color || "") ? item.color : "#6d4aff"
+      };
+    });
+    if (siteConfig.storefront.categories.some(function (item) { return !String(item.name || "").trim() || (String(item.image || "").trim() && !safeProductImage(item.image)); })) { toast("أكمل اسم كل قسم وتحقق من رابط صورته."); return; }
     if (categories.length > 12) { toast("يمكنك إضافة حتى 12 قسمًا."); return; }
-    siteConfig.storefront = { title: title, subtitle: subtitle, metaDescription: metaDescription, announcement: announcement, logo: logo, categories: categories };
-    stageDashboardConfig("تم حفظ هوية المتجر وأقسامه للمراجعة.");
+    const colors = { primary: $("#saStoreColor").value, secondary: $("#saStoreColor2").value };
+    siteConfig.storefront = { title: title, subtitle: subtitle, metaDescription: metaDescription, announcement: announcement, logo: logo, colors: colors, categories: categories };
+    const linkedImages = new Set([logo].concat(categories.map(function (item) { return item.image; })).filter(Boolean));
+    const imagePaths = Object.keys(binaryPending).filter(function (path) { return linkedImages.has("/" + path); });
+    stageDashboardConfig("تم حفظ هوية المتجر وأقسامه وصورها.", imagePaths);
+  });
+  $("#saAddStoreCategory").addEventListener("click", function () {
+    if (siteConfig.storefront.categories.length >= 12) { toast("يمكنك إضافة حتى 12 قسمًا."); return; }
+    siteConfig.storefront.categories.push({ name: "قسم جديد", description: "", image: "/assets/store-category-default.svg", color: "#6d4aff" });
+    renderStoreCategoryEditor();
+    const inputs = $("#saStoreCategories").querySelectorAll('[data-store-category-field="name"]');
+    if (inputs.length) { inputs[inputs.length - 1].focus(); inputs[inputs.length - 1].select(); }
+  });
+  $("#saStoreCategories").addEventListener("input", function (event) {
+    const field = event.target.closest("[data-store-category-field]");
+    const row = event.target.closest("[data-store-category]");
+    if (!field || !row) return;
+    const item = siteConfig.storefront.categories[Number(row.dataset.storeCategory)];
+    if (!item) return;
+    item[field.dataset.storeCategoryField] = field.value;
+    if (field.dataset.storeCategoryField === "image") {
+      const preview = row.querySelector("[data-store-category-preview]");
+      const image = safeProductImage(field.value);
+      if (preview && image) preview.src = image;
+    }
+  });
+  $("#saStoreCategories").addEventListener("click", function (event) {
+    const button = event.target.closest("[data-remove-store-category]");
+    if (!button) return;
+    siteConfig.storefront.categories.splice(Number(button.dataset.removeStoreCategory), 1);
+    renderStoreCategoryEditor();
+  });
+  $("#saStoreCategories").addEventListener("change", async function (event) {
+    const input = event.target.closest("[data-store-category-image-upload]");
+    if (!input || !input.files || !input.files[0]) return;
+    const index = Number(input.dataset.storeCategoryImageUpload), item = siteConfig.storefront.categories[index];
+    if (!item) { input.value = ""; return; }
+    try {
+      item.image = await readStorefrontImage(input.files[0], "category");
+      renderStoreCategoryEditor(); renderPending();
+      toast("أُضيفت صورة القسم؛ احفظ هوية المتجر لنشرها.");
+    } catch (error) { toast(error.message || "تعذّر رفع صورة القسم."); input.value = ""; }
+  });
+  $("#saStoreLogo").addEventListener("input", function (event) {
+    const logo = safeProductImage(event.target.value);
+    if (logo) $("#saStoreLogoPreview").src = logo;
+  });
+  $("#saStoreLogoUpload").addEventListener("change", async function (event) {
+    if (!event.target.files || !event.target.files[0]) return;
+    try {
+      const logo = await readStorefrontImage(event.target.files[0], "logo");
+      $("#saStoreLogo").value = logo;
+      $("#saStoreLogoPreview").src = logo;
+      renderPending();
+      toast("أُضيف الشعار؛ احفظ هوية المتجر لنشره.");
+    } catch (error) { toast(error.message || "تعذّر رفع الشعار."); }
+    event.target.value = "";
   });
   $("#saSaveLeagues").addEventListener("click", function () {
     const rows = $("#saLeagueEditor").value.split(/\r?\n/).map(function (line) { return line.split("|").map(function (part) { return part.trim(); }); }).filter(function (parts) { return parts.length >= 2 && parts[0] && parts[1]; });
@@ -951,6 +1041,59 @@
     form.reset(); form.elements.editIndex.value = ""; form.querySelector('button[type="submit"]').textContent = "إضافة الفيلم"; renderDashboard(); stageDashboardConfig(editIndex >= 0 ? "تم تحديث ترشيح الفيلم." : "أُضيف الفيلم إلى الترشيحات اليدوية.");
   });
   $("#saMovieClear").addEventListener("click", function () { const form = $("#saMovieForm"); form.reset(); form.elements.editIndex.value = ""; form.querySelector('button[type="submit"]').textContent = "إضافة الفيلم"; });
+  $("#saProductImportBtn").addEventListener("click", async function () {
+    const sourceField = $("#saProductImportUrl");
+    const sourceUrl = sourceField.value.trim();
+    const status = $("#saProductImportStatus");
+    if (!sourceUrl) { toast("الصق رابط صفحة المنتج أولًا."); sourceField.focus(); return; }
+    try {
+      const parsed = new URL(sourceUrl);
+      if (parsed.protocol !== "https:" || parsed.username || parsed.password || (parsed.port && parsed.port !== "443")) throw new Error("استخدم رابط HTTPS عامًّا من دون بيانات دخول.");
+    } catch (error) { toast(error.message || "رابط المنتج غير صالح."); sourceField.focus(); return; }
+    if (!$("#saProductImportRights").checked) { toast("أكد امتلاك إذن استخدام بيانات وصور هذا المنتج."); return; }
+    if (productImportInProgress || articleResearchInProgress) { toast("انتظر اكتمال العملية الحالية."); return; }
+    const form = $("#saProductForm");
+    if ((form.elements.title.value.trim() || form.elements.description.value.trim()) &&
+        !window.confirm("سيستبدل الاستيراد الحقول التي وجد لها بيانات في النموذج. هل تتابع؟")) return;
+    const button = $("#saProductImportBtn");
+    productImportInProgress = true;
+    button.disabled = true;
+    status.textContent = "سيتم جلب البيانات العامة المتاحة فقط؛ لا يُستخدم تسجيل دخول ولا يتم تجاوز حماية الموقع.";
+    try {
+      const result = await requestProductImport(sourceUrl);
+      if (!result.ok || !result.product) throw new Error(result.error || "لم تظهر بيانات منتج قابلة للاستيراد في الصفحة.");
+      const product = result.product, set = function (name, value) {
+        if (value !== undefined && value !== null && String(value) !== "" && form.elements[name]) form.elements[name].value = String(value);
+      };
+      set("title", product.title);
+      set("category", product.category);
+      set("brand", product.brand);
+      set("sku", product.sku);
+      set("description", product.description);
+      set("price", product.price);
+      set("oldPrice", product.oldPrice);
+      set("currency", product.currency);
+      set("image", (product.images || [])[0] || product.image);
+      set("images", (product.images || []).slice(1).join("\n"));
+      set("videos", (product.videos || []).join("\n"));
+      set("highlights", (product.highlights || []).join("\n"));
+      set("specifications", (product.specifications || []).map(function (item) { return [item.name || "", item.value || ""].join(" | "); }).join("\n"));
+      set("imageAlt", product.title);
+      set("sourceUrl", result.finalUrl || product.sourceUrl || sourceUrl);
+      if (product.availability && ["available", "preorder", "unavailable"].includes(product.availability)) form.elements.availability.value = product.availability;
+      if (product.stock !== undefined && product.stock !== null) set("stock", product.stock);
+      renderProductPreview();
+      const fields = Array.isArray(result.found) ? result.found.join("، ") : "البيانات التي يدعمها النموذج";
+      const warnings = Array.isArray(result.warnings) && result.warnings.length ? " ملاحظات: " + result.warnings.join(" · ") : "";
+      status.textContent = "اكتمل الاستيراد. عُبئت: " + fields + ". راجع السعر والصور والوصف والمواصفات قبل حفظ المنتج." + warnings;
+      form.elements.title.focus();
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+      toast("تمت تعبئة بيانات المنتج؛ راجعها ثم احفظ.");
+    } catch (error) {
+      status.textContent = error.message || "تعذّر استيراد بيانات المنتج.";
+      toast(error.message || "تعذّر استيراد بيانات المنتج.");
+    } finally { productImportInProgress = false; button.disabled = false; }
+  });
   $("#saProductForm").addEventListener("input", renderProductPreview);
   $("#saProductForm").addEventListener("change", renderProductPreview);
   $("#saProductClear").addEventListener("click", function () {
@@ -1710,6 +1853,29 @@
       }
     }
     throw new Error("تأخر البحث عن المصادر. حدّث المحاولة بعد قليل.");
+  }
+  async function requestProductImport(sourceUrl) {
+    const random = Math.random().toString(36).slice(2, 11);
+    const requestId = "product-" + Date.now().toString(36) + "-" + random;
+    const resultPath = ".github/product-imports/" + requestId + ".json";
+    await api("/dispatches", {
+      method: "POST",
+      body: { event_type: "product-import", client_payload: { source_url: sourceUrl, request_id: requestId } }
+    });
+    for (let attempt = 0; attempt < 75; attempt += 1) {
+      $("#saProductImportStatus").textContent = "جارٍ قراءة بيانات صفحة المنتج (" + (attempt + 1) + "/75)…";
+      await waitForResearch(2000);
+      try {
+        const resultFile = await api("/contents/" + apiPath(resultPath) + "?ref=" + encodeURIComponent(BRANCH));
+        const result = JSON.parse(decodeBase64(resultFile.content || ""));
+        if (result.requestId !== requestId) throw new Error("تعذّرت مطابقة نتيجة الاستيراد.");
+        return result;
+      } catch (error) {
+        if (error && error.status === 404) continue;
+        throw error;
+      }
+    }
+    throw new Error("تأخر استيراد المنتج. أعد المحاولة بعد قليل.");
   }
   async function checkArticleLinks() {
     const form = $("#saArticleForm");
