@@ -25,7 +25,10 @@
   let trendUpdatedAt = "";
   let activeTrendFactReport = null;
   let activeResearchSources = [];
+  let activeLinkCheckResults = [];
+  let activeLinkCheckReport = null;
   let articleResearchInProgress = false;
+  let articleLinkCheckInProgress = false;
   let replaceTvMazeId = "";
 
   function restorePendingCache() {
@@ -99,7 +102,9 @@
     '<label>اسم الكاتب<input name="author" value="فريق DIAMOND TV" maxlength="60"></label></div>' +
     '<label>رابط صورة الغلاف (اختياري)<input name="image" type="url" placeholder="https://..."></label>' +
     '<label>وصف الصورة البديل<input name="imageAlt" maxlength="150" placeholder="وصف موجز للصورة"></label>' +
-    '<label>مصادر المقال (رابط HTTPS في كل سطر)<textarea name="sources" rows="5" placeholder="روابط المصادر التي جمعتها الأداة أو راجعتها"></textarea></label><p class="hint">يفحص النظام HTTPS ونطاقات المصادر المعروفة وتنوعها. لا يمكن فحص النص الكامل للرابط من المتصفح؛ افتح المصادر واقرأها قبل اعتماد الحقائق.</p>' +
+    '<label>مصادر المقال (رابط في كل سطر)<textarea name="sources" rows="5" placeholder="الصق روابط المصدر المباشرة هنا"></textarea></label>' +
+    '<div class="sa-inline-form"><button type="button" class="ghost" id="saCheckArticleLinks">فحص روابط المصادر بدقة</button></div><div id="saArticleLinkCheckResult" class="sa-source-review-list" hidden aria-live="polite"></div>' +
+    '<p class="hint">يفحص الخادم استجابة HTTPS والعنوان النهائي وصفحة الناشر المعروفة، ويعرض عنوان الصفحة وملخصها عند توفرهما. لا يقرأ المقال كاملًا؛ افتح المصادر واقرأ النص والسياق قبل اعتماد الحقائق.</p>' +
     '<div class="sa-editorial-checks"><label class="sa-check"><input id="saOriginalCheck" type="checkbox"> أضفت معلومة أصلية أو تحليلًا مفيدًا للقارئ</label><label class="sa-check"><input id="saFactCheck" type="checkbox"> راجعت الحقائق والأسماء والتواريخ والمصادر</label></div>' +
     '<label>محتوى المقال<textarea name="body" required rows="12" placeholder="اكتب محتوى أصليًا ومفيدًا. افصل الفقرات بسطر فارغ، واكتب ## قبل العنوان الفرعي، وابدأ كل نقطة بشرطة - ."></textarea></label>' +
     '<div class="sa-inline-form"><button type="button" class="ghost" id="saDraftOutline">إضافة مخطط للمقال</button><button type="button" class="ghost" id="saSeoAudit">مراجعة المقال الآن</button></div><div id="saSeoReport" class="sa-audit-report" hidden></div>' +
@@ -1084,7 +1089,8 @@
     } catch (_) { return { valid: false, trusted: false, official: false, host: "", label: "رابط غير صالح" }; }
   }
   function sourceEntriesFor(url) {
-    return activeResearchSources.filter(function (entry) { return entry.url === url; }).concat(
+    return activeLinkCheckResults.filter(function (entry) { return entry.url === url || entry.finalUrl === url; }).concat(
+      activeResearchSources.filter(function (entry) { return entry.url === url || entry.finalUrl === url; }),
       trendItems.flatMap(function (trend) { return (trend.news || []).filter(function (entry) { return entry.url === url; }); })
     );
   }
@@ -1536,6 +1542,84 @@
     }
     throw new Error("تأخر البحث عن المصادر. حدّث المحاولة بعد قليل.");
   }
+  async function checkArticleLinks() {
+    const form = $("#saArticleForm");
+    const sourceField = form.elements.sources;
+    const urls = Array.from(new Set(sourceField.value.split(/\r?\n/).map(function (value) { return value.trim(); }).filter(Boolean)));
+    if (!urls.length) { toast("أضف رابطًا واحدًا على الأقل ثم افحصه."); sourceField.focus(); return; }
+    if (urls.length > 12) { toast("افحص حتى 12 رابطًا في المرة الواحدة."); return; }
+    if (articleLinkCheckInProgress) { toast("فحص الروابط جارٍ بالفعل."); return; }
+    if (!window.confirm("ستُرسل الروابط إلى فاحص الخادم، وتُحفظ نتيجة الفحص مؤقتًا في مستودع الموقع العام. لا تضع روابط خاصة أو تتضمن رموز دخول. هل تتابع؟")) return;
+
+    const requestId = "linkcheck-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9);
+    const resultPath = ".github/article-research/" + requestId + ".json";
+    const button = $("#saCheckArticleLinks"), panel = $("#saArticleLinkCheckResult");
+    articleLinkCheckInProgress = true;
+    button.disabled = true;
+    panel.hidden = false;
+    panel.innerHTML = "<b>فحص الروابط</b><p class=\"hint\">جارٍ فحص " + urls.length + " رابطًا…</p>";
+    try {
+      await api("/dispatches", {
+        method: "POST",
+        body: { event_type: "article-link-check", client_payload: { request_id: requestId, urls: urls } }
+      });
+      let result = null;
+      for (let attempt = 0; attempt < 45; attempt += 1) {
+        panel.innerHTML = "<b>فحص الروابط</b><p class=\"hint\">جارٍ فحص استجابة الناشرين (" + (attempt + 1) + "/45)…</p>";
+        await waitForResearch(2000);
+        try {
+          const file = await api("/contents/" + apiPath(resultPath) + "?ref=" + encodeURIComponent(BRANCH));
+          result = JSON.parse(decodeBase64(file.content || ""));
+          if (result.requestId !== requestId || result.mode !== "link-check" || !Array.isArray(result.links)) throw new Error("نتيجة فحص الروابط غير مطابقة.");
+          break;
+        } catch (error) {
+          if (error && error.status === 404) continue;
+          throw error;
+        }
+      }
+      if (!result) throw new Error("انتهت مهلة انتظار فحص الروابط.");
+      activeLinkCheckResults = result.links.map(function (item) {
+        return {
+          url: item.inputUrl || "",
+          finalUrl: item.finalUrl || "",
+          title: item.pageTitle || "",
+          source: item.domain || "",
+          domain: item.domain || "",
+          description: item.description || "",
+          reachable: item.reachable === true,
+          httpStatus: item.httpStatus,
+          checkedAt: item.checkedAt || result.updatedAt || "",
+          publisherTier: item.publisherTier || "unlisted",
+          reason: item.reason || ""
+        };
+      });
+      activeLinkCheckReport = { topic: $("#saWriterTopic").value.trim(), updatedAt: result.updatedAt || new Date().toISOString() };
+      const accessible = result.links.filter(function (item) { return item.reachable === true; }).length;
+      panel.innerHTML = "<b>نتيجة الفحص: " + accessible + " من " + result.links.length + " روابط استجابت</b>" +
+        result.links.map(function (item) {
+          const url = item.finalUrl || item.inputUrl || "";
+          const assessment = sourceAssessment(url, item.domain);
+          const ok = item.reachable === true && assessment.trusted;
+          const headline = item.pageTitle || item.domain || item.inputUrl || "رابط";
+          const status = ok ? "متاح عبر HTTPS · " + (item.httpStatus || "استجابة ناجحة") : item.reason || "لم يتم التحقق";
+          const finalLink = item.finalUrl && assessment.valid
+            ? '<a href="' + escapeHtml(item.finalUrl) + '" target="_blank" rel="noopener noreferrer">فتح الرابط النهائي ↗</a>'
+            : "";
+          const description = item.description ? "<p>" + escapeHtml(item.description) + "</p>" : "";
+          return '<div class="sa-source-review-row"><span>' + escapeHtml(headline) + '</span><b>' + (ok ? "✓ " : "• ") + escapeHtml(status) +
+            (item.checkedAt ? " · " + escapeHtml(item.checkedAt) : "") + "</b>" + description +
+            '<small>' + escapeHtml(item.inputUrl || "") + (item.finalUrl && item.finalUrl !== item.inputUrl ? " → " + escapeHtml(item.finalUrl) : "") + "</small>" + finalLink + "</div>";
+        }).join("");
+      articleAudit(form);
+      toast("اكتمل فحص الروابط. راجع حالة كل رابط وافتح الأصل قبل اعتماد المعلومات.");
+    } catch (error) {
+      panel.innerHTML = "<b>تعذر فحص الروابط</b><p class=\"hint\">" + escapeHtml(friendlyGitHubError(error) || error.message || "حدث خطأ أثناء الفحص.") + "</p>";
+      toast("تعذر فحص الروابط. تحقق من صلاحية GitHub ثم أعد المحاولة.");
+    } finally {
+      articleLinkCheckInProgress = false;
+      button.disabled = false;
+    }
+  }
   async function generateArticleDraft(options) {
     const form = $("#saArticleForm"), topic = $("#saWriterTopic").value.trim();
     if (!topic) { toast("اكتب موضوع المقال أولًا."); $("#saWriterTopic").focus(); return; }
@@ -1631,7 +1715,8 @@
     const sourceReview = reviewSourceSet(sources, topic);
     const usesTrendSources = sourceReview.rows.some(function (row) { return Boolean(row.entry); });
     const currentFactReport = activeTrendFactReport && normalizeSearchText(activeTrendFactReport.topic) === normalizedTopic ? activeTrendFactReport : null;
-    const researchTimestamp = currentFactReport && currentFactReport.updatedAt || trendUpdatedAt;
+    const currentLinkCheck = activeLinkCheckReport && (!normalizedTopic || normalizeSearchText(activeLinkCheckReport.topic) === normalizedTopic) ? activeLinkCheckReport : null;
+    const researchTimestamp = currentLinkCheck && currentLinkCheck.updatedAt || currentFactReport && currentFactReport.updatedAt || trendUpdatedAt;
     const trendSnapshotTime = researchTimestamp ? new Date(researchTimestamp).getTime() : 0;
     const trendSnapshotFresh = !usesTrendSources || (trendSnapshotTime > 0 && Date.now() - trendSnapshotTime <= 48 * 60 * 60 * 1000);
     const needsFreshSources = /اليوم|غد|مباراة|مباريات|تقييم|القنوات|القناة|موعد|السعر|يعرض|عرض|رمضان\s*2027|2026|2027/i.test(body);
@@ -1678,6 +1763,7 @@
     return { checks: checks, sourceReview: sourceReview, words: words, factReport: factReport };
   }
   $("#saGenerateArticle").addEventListener("click", generateArticleDraft);
+  $("#saCheckArticleLinks").addEventListener("click", checkArticleLinks);
   $("#saRefreshTrends").addEventListener("click", function () { loadTrendSnapshot(true); });
   $("#saTrendList").addEventListener("click", function (event) {
     const button = event.target.closest("[data-trend-index]");
