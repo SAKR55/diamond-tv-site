@@ -550,6 +550,7 @@ def parse_shopify_product(data: bytes, content_type: str, final_url: str) -> dic
         "videos": [],
         "highlights": [],
         "specifications": specifications,
+        "tags": [clean_text(tag, 50) for tag in as_list(item.get("tags")) if clean_text(tag, 50)][:24],
         "availability": availability,
         "stock": None,
         "sourceUrl": final_url,
