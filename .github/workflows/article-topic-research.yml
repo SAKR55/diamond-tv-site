@@ -47,4 +47,5 @@ jobs:
             exit 1
           fi
           git commit -m "chore: save article research results"
+          git pull --rebase origin main
           git push origin HEAD:main
