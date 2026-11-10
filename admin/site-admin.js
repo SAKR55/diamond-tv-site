@@ -328,6 +328,13 @@
     if (!hasPending || !original[path]) original[path] = { sha: data.sha, content: content };
     return content;
   }
+  async function fetchLatestFile(path) {
+    const data = await api("/contents/" + apiPath(path) + "?ref=" + encodeURIComponent(BRANCH));
+    const content = decodeBase64(data.content || "");
+    const hasPending = Object.prototype.hasOwnProperty.call(pending, path) || Object.prototype.hasOwnProperty.call(binaryPending, path);
+    if (!hasPending) original[path] = { sha: data.sha, content: content };
+    return content;
+  }
   async function openFile(path) {
     selectedPath = path;
     renderFileList();
@@ -387,7 +394,7 @@
         });
         actions.appendChild(preview);
       }
-      const remove = document.createElement("button"); remove.type = "button"; remove.className = "ghost sm"; remove.textContent = "إزالة";
+      const remove = document.createElement("button"); remove.type = "button"; remove.className = "ghost sm"; remove.textContent = pendingDeletes[path] ? "إلغاء الحذف" : "إلغاء التعديل";
       remove.addEventListener("click", function () {
         delete pending[path]; delete binaryPending[path]; delete pendingDeletes[path];
         if (selectedPath === path) { $("#saEditor").value = original[path] ? original[path].content : ""; $("#saEditorMeta").textContent = "تمت إزالة التعديل المعلّق."; }
@@ -980,7 +987,7 @@
     if (!match || !window.confirm("حذف المقال «" + title + "»؟ سيتم تحديث الفهرس وخريطة الموقع أيضًا.")) return;
     const slug = match[1], canonical = "https://diamond-tv.shop/" + path;
     try {
-      let listing = pending["articles/index.html"] || await fetchFile("articles/index.html");
+      let listing = pending["articles/index.html"] || await fetchLatestFile("articles/index.html");
       const doc = new DOMParser().parseFromString(listing, "text/html");
       const links = Array.from(doc.querySelectorAll("a[href]")).filter(function (link) { return (link.getAttribute("href") || "").split(/[?#]/)[0] === slug + ".html"; });
       if (!links.length) throw new Error("لم أجد رابط المقال في فهرس المقالات.");
@@ -994,7 +1001,7 @@
         } catch (_) { throw new Error("تعذّر تحديث بيانات المقال المنظمة في الفهرس."); }
       }
       listing = "<!doctype html>\n" + doc.documentElement.outerHTML + "\n";
-      let sitemap = pending["sitemap.xml"] || await fetchFile("sitemap.xml");
+      let sitemap = pending["sitemap.xml"] || await fetchLatestFile("sitemap.xml");
       const xml = new DOMParser().parseFromString(sitemap, "application/xml");
       if (xml.querySelector("parsererror")) throw new Error("تعذّر قراءة خريطة الموقع.");
       const entries = Array.from(xml.getElementsByTagName("url"));
@@ -1008,7 +1015,10 @@
       else { delete pending[path]; delete binaryPending[path]; delete original[path]; renderPending(); }
       await renderArticleManager();
       switchView("publish");
-      toast("أُضيف حذف المقال وتحديث فهرسه إلى قائمة المراجعة والنشر.");
+      toast("جارٍ حذف المقال وتحديث الفهرس وخريطة الموقع…");
+      const saved = await publishPendingPaths([path, "articles/index.html", "sitemap.xml"]);
+      if (saved) toast("تم حذف المقال وتحديث فهرسه وخريطة الموقع تلقائيًا.");
+      else toast("تعذّر إكمال الحذف تلقائيًا؛ بقيت الملفات في قائمة المراجعة مع توضيح السبب.");
     } catch (error) { toast(error.message || "تعذّر تجهيز حذف المقال."); }
   }
   function normalizeSearchText(value) {
@@ -1393,7 +1403,7 @@
       for (const path of paths) {
         const expected = original[path] ? original[path].sha : null;
         const latest = currentMap[path] || null;
-        if (expected !== latest) throw new Error("تغيّر الملف " + path + " على GitHub منذ تحميله. حدّث الملف ثم أعد الحفظ.");
+        if (expected !== latest && !pendingDeletes[path]) throw new Error("تغيّر الملف " + path + " على GitHub منذ تحميله. حدّث الملف ثم أعد الحفظ.");
       }
       const treeEntries = [];
       for (const path of paths) {
