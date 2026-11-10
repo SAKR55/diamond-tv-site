@@ -138,5 +138,34 @@
     "tvmazeIds": [],
     "movies": []
   },
-  "products": []
+  "products": [],
+  "storefront": {
+    "title": "متجر DIAMOND TV",
+    "subtitle": "اكتشف منتجات وخدمات مختارة بعناية، وتصفّح الأقسام واحفظ ما يناسبك.",
+    "announcement": "اختيارات DIAMOND TV في مكان واحد",
+    "logo": "/assets/store-logo.svg",
+    "categories": [
+      {
+        "name": "الاشتراكات الرقمية",
+        "description": "باقات وخدمات رقمية مختارة",
+        "image": "/assets/store-category-subscriptions.svg"
+      },
+      {
+        "name": "أجهزة البث",
+        "description": "أجهزة وتجهيزات للمشاهدة",
+        "image": "/assets/store-category-devices.svg"
+      },
+      {
+        "name": "الإكسسوارات",
+        "description": "إضافات عملية لتجربتك",
+        "image": "/assets/store-category-accessories.svg"
+      },
+      {
+        "name": "العروض",
+        "description": "خيارات وعروض مميزة",
+        "image": "/assets/store-category-offers.svg"
+      }
+    ],
+    "metaDescription": "تصفح متجر DIAMOND TV لاكتشاف المنتجات والخدمات المختارة، واقرأ المواصفات والأسعار قبل الطلب."
+  }
 }
