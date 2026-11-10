@@ -7,6 +7,8 @@ import json
 import re
 import tempfile
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from html import unescape
@@ -19,14 +21,29 @@ FEED = "https://trends.google.com/trending/rss?geo=SA&hl=ar"
 SOURCE = "https://trends.google.com/trending?geo=SA&hl=ar"
 
 SPORTS = re.compile(
-    r"كرة|كوره|دوري|مباراة|مباريات|منتخب|بطولة|الهلال|النصر|الاتحاد|الاهلي|الأهلي|"
+    r"كرة|كوره|دوري|مباراة|مباريات|منتخب|بطولة|كأس|الهلال|النصر|الاتحاد|الاهلي|الأهلي|"
     r"ابو\s*تريكة|ابو\s*تريكه|أبو\s*تريكة|أبو\s*تريكه|"
     r"برشلونة|ريال مدريد|ليفربول|ارسنال|مانشستر|يوفنتوس|بايرن|باريس سان|"
-    r"world cup|football|soccer|league|match|fc |f\.c\.|vs\.?|champions league|"
+    r"world cup|football|soccer|league|match|cricket|basketball|champions league|asia cup|"
+    r"\b(?:u1[789]|under-?19|nba|nfl|afc|uefa|fifa)\b|"
+    r"\b(?:score|standings|tournament|premier league)\b|"
     r"barcelona|real madrid|liverpool|arsenal|manchester|juventus|bayern|chelsea|"
-    r"al hilal|al nassr|al ittihad|al ahly|afcon|afc|uefa|fifa",
+    r"al hilal|al nassr|al ittihad|al ahly|afcon|warriors|pelicans|lakers|celtics",
     re.IGNORECASE,
 )
+OFFICIAL_DOMAINS = {
+    "fifa.com", "uefa.com", "the-afc.com", "cafonline.com", "icc-cricket.com",
+    "nba.com", "nfl.com", "premierleague.com", "saudiproleague.com", "spl.com.sa",
+    "spa.gov.sa", "mbc.net", "netflix.com", "primevideo.com", "disneyplus.com",
+}
+RECOGNIZED_DOMAINS = {
+    "reuters.com", "apnews.com", "bbc.com", "bbc.co.uk", "aljazeera.net",
+    "aljazeera.com", "dawn.com", "ndtv.com", "ndtvprofit.com", "minutemirror.com.pk",
+    "espn.com", "cricbuzz.com",
+    "skysports.com", "arabnews.com", "variety.com", "hollywoodreporter.com",
+    "deadline.com", "yahoo.com", "yahoo.net",
+}
+
 ENTERTAINMENT = re.compile(
     r"مسلسل|مسلسلات|فيلم|أفلام|افلام|سينما|دراما|ممثل|ممثلة|حلقة|رمضان|"
     r"برنامج\s*(?:تلفزيوني|حواري|فني|ترفيهي)|نتفلكس|شاهد|mbc|osn|نتفليكس|"
@@ -82,24 +99,43 @@ def relevant_news(topic: str, news: list[dict]) -> list[dict]:
     return accepted
 
 
-def fetch_source_description(url: str) -> str:
+def publisher_details(url: str) -> tuple[str, str]:
+    try:
+        host = (urlsplit(url).hostname or "").lower().removeprefix("www.")
+        if host in OFFICIAL_DOMAINS or any(host.endswith("." + item) for item in OFFICIAL_DOMAINS):
+            return host, "official"
+        if host in RECOGNIZED_DOMAINS or any(host.endswith("." + item) for item in RECOGNIZED_DOMAINS):
+            return host, "recognized"
+        return host, "unlisted"
+    except Exception:
+        return "", "unlisted"
+
+
+def fetch_source_metadata(url: str) -> dict:
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    result = {"description": "", "reachable": False, "httpStatus": None, "checkedAt": now}
     if not url.startswith("https://"):
-        return ""
+        return result
     request = urllib.request.Request(
         url,
-        headers={"User-Agent": "DIAMOND-TV-Trends/1.1 (+https://diamond-tv.shop/)", "Accept": "text/html"},
+        headers={"User-Agent": "DIAMOND-TV-Trends/1.2 (+https://diamond-tv.shop/)", "Accept": "text/html"},
     )
     try:
-        with urllib.request.urlopen(request, timeout=6) as response:
-            if "text/html" not in response.headers.get("Content-Type", "").lower():
-                return ""
+        with urllib.request.urlopen(request, timeout=8) as response:
+            status = int(response.status)
+            final_url = response.geturl()
+            result["httpStatus"] = status
+            result["reachable"] = 200 <= status < 400 and final_url.startswith("https://")
+            if not result["reachable"] or "text/html" not in response.headers.get("Content-Type", "").lower():
+                return result
             raw = response.read(192_000)
             charset = response.headers.get_content_charset() or "utf-8"
         parser = MetaDescriptionParser()
         parser.feed(raw.decode(charset, errors="replace"))
-        return parser.description
+        result["description"] = parser.description
     except Exception:
-        return ""
+        pass
+    return result
 
 
 def classify(title: str, news: list[dict]) -> str | None:
@@ -133,12 +169,22 @@ def main() -> None:
                 "url": child_text(node, "news_item_url"),
             }
             if entry["title"] and entry["url"].startswith("https://"):
+                host, tier = publisher_details(entry["url"])
+                entry["domain"] = host
+                entry["publisherTier"] = tier
                 news.append(entry)
-            if len(news) >= 3:
+            if len(news) >= 10:
                 break
         news = relevant_news(title, news)
-        for story in news[:2]:
-            story["description"] = fetch_source_description(story["url"])
+        with ThreadPoolExecutor(max_workers=5) as pool:
+            futures = {pool.submit(fetch_source_metadata, story["url"]): story for story in news}
+            for future in as_completed(futures):
+                story = futures[future]
+                try:
+                    story.update(future.result())
+                except Exception:
+                    story.update({"description": "", "reachable": False, "httpStatus": None})
+        news.sort(key=lambda story: (story.get("publisherTier") == "unlisted", not story.get("reachable", False)))
         category = classify(title, news)
         if not category:
             continue
