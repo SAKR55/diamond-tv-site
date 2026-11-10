@@ -141,35 +141,5 @@
     ],
     "movies": []
   },
-  "products": [
-    {
-      "id": "product-1794310058495",
-      "title": "HONOR 600 Pro",
-      "category": "",
-      "description": "Honor 600 Pro comes with a 120 Hz refresh rate 6.57-inch touchscreen display offering a resolution of 1,264x2,728 pixels (1.5K). Honor 600 Pro is powered by an octa-core Snapdragon 8 Elite processor. It comes with 12GB of RAM. The Honor 600 Pro runs Android 16 and is powered by a 7000mAh non-removable battery. The Honor 600 Pro supports wireless charging, as well as 80W Fast Charging fast charging. As far as the cameras are concerned, the Honor 600 Pro on the rear packs a triple camera setup fea",
-      "highlights": [
-        "Warranty: 1 Year Warranty by Honor Malaysia",
-        "Dimensions: 156.00 x 74.70 x 7.80mm",
-        "Weight: 200g",
-        "Battery Capacity: 7000 mAh",
-        "Charging Power: 80W",
-        "Screen Size: 6.57 inches AMOLED",
-        "Refresh Rate: Up to 120Hz",
-        "Resolution: 1264 x 2728 pixels",
-        "Processor: Qualcomm Snapdragon 8 Elite",
-        "RAM: 12GB",
-        "Internal Storage: 256GB or 512GB",
-        "Rear Camera: 200-megapixel + 50-megapixel + 12-megapixel"
-      ],
-      "price": "100",
-      "oldPrice": "200",
-      "currency": "ر.س",
-      "image": "https://itronicmobile.com.my/product/honor-600-pro-5g-smartphone",
-      "imageAlt": "HONOR 600 Pro",
-      "url": "https://www.honor.com/sa-ar/phones/honor-600-pro/spec/",
-      "availability": "unavailable",
-      "featured": false,
-      "active": true
-    }
-  ]
+  "products": []
 }
