@@ -128,6 +128,25 @@ def publisher_details(url: str) -> tuple[str, str]:
         return "", "unlisted"
 
 
+PUBLISHER_NAME_DOMAINS = {
+    "reuters": "reuters.com", "associated press": "apnews.com", "ap news": "apnews.com",
+    "afp": "afp.com", "bbc": "bbc.com", "al jazeera": "aljazeera.net", "dawn": "dawn.com",
+    "ndtv": "ndtv.com", "espn": "espn.com", "espncricinfo": "espncricinfo.com",
+    "cricbuzz": "cricbuzz.com", "sky sports": "skysports.com", "arab news": "arabnews.com",
+    "al arabiya": "alarabiya.net", "asharq": "asharq.com", "the guardian": "theguardian.com",
+    "goal": "goal.com", "kooora": "kooora.com", "variety": "variety.com",
+    "hollywood reporter": "hollywoodreporter.com", "deadline": "deadline.com", "yahoo": "yahoo.com",
+}
+
+
+def trusted_publisher_from_name(name: str) -> tuple[str, str]:
+    normalized = re.sub(r"[^a-z0-9]+", " ", (name or "").lower()).strip()
+    for label, domain in PUBLISHER_NAME_DOMAINS.items():
+        if label in normalized:
+            return publisher_details("https://" + domain)
+    return "", "unlisted"
+
+
 def google_news_entries(topic: str) -> list[dict]:
     query = urlencode({"q": topic, "hl": "ar", "gl": "SA", "ceid": "SA:ar"})
     url = "https://news.google.com/rss/search?" + query
@@ -148,6 +167,8 @@ def google_news_entries(topic: str) -> list[dict]:
         source_name = (source_node.text or "").strip() if source_node is not None and source_node.text else ""
         publisher_url = (source_node.attrib.get("url", "") if source_node is not None else "")
         domain, tier = publisher_details(publisher_url)
+        if tier == "unlisted":
+            domain, tier = trusted_publisher_from_name(source_name)
         if not title or not link.startswith("https://") or tier == "unlisted":
             continue
         entries.append({
@@ -288,6 +309,7 @@ def main() -> None:
             "publishedAt": child_text(item, "pubDate"),
             "news": news,
         })
+        print(f"Research sources for {title}: {len(news)} publishers, {sum(bool(story.get('description')) for story in news)} descriptions")
         if len(trends) >= 30:
             break
 
