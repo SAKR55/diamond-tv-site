@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 import tempfile
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -276,6 +277,91 @@ def classify(title: str, news: list[dict]) -> str | None:
     return None
 
 
+def collect_topic_research(topic: str) -> list[dict]:
+    stories = google_news_entries(topic) + bing_news_entries(topic)
+    stories = relevant_news(topic, stories)
+    unique_by_url: dict[str, dict] = {}
+    for story in stories:
+        url = str(story.get("url", ""))
+        if url.startswith("https://"):
+            unique_by_url.setdefault(url, story)
+    stories = list(unique_by_url.values())
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        futures = {
+            pool.submit(fetch_source_metadata, story["url"]): story
+            for story in stories
+            if story.get("publisherTier") != "unlisted"
+        }
+        for future in as_completed(futures):
+            story = futures[future]
+            try:
+                metadata = future.result()
+                final_url = metadata.pop("finalUrl", "")
+                if final_url.startswith("https://"):
+                    final_domain, final_tier = publisher_details(final_url)
+                    if final_tier != "unlisted":
+                        story["url"] = final_url
+                        story["domain"] = final_domain
+                        story["publisherTier"] = final_tier
+                if metadata.get("description"):
+                    story["description"] = metadata["description"]
+                story.update({key: value for key, value in metadata.items() if key != "description"})
+            except Exception:
+                story.update({"reachable": False, "httpStatus": None})
+
+    stories.sort(key=lambda story: (
+        story.get("publisherTier") == "unlisted",
+        story.get("publisherTier") != "official",
+        not story.get("reachable", False),
+        not bool(story.get("description")),
+    ))
+    selected: list[dict] = []
+    seen_domains: set[str] = set()
+    seen_urls: set[str] = set()
+    for story in stories:
+        if story.get("publisherTier") == "unlisted":
+            continue
+        domain = story.get("domain") or publisher_details(story.get("url", ""))[0]
+        if not domain or domain in seen_domains or story["url"] in seen_urls:
+            continue
+        seen_domains.add(domain)
+        seen_urls.add(story["url"])
+        selected.append(story)
+        if len(selected) >= 8:
+            break
+    return selected
+
+
+def write_topic_research(topic: str, request_id: str) -> None:
+    topic = re.sub(r"\s+", " ", (topic or "")).strip()
+    if not topic or len(topic) > 180:
+        raise ValueError("Topic must contain 1 to 180 characters")
+    if not re.fullmatch(r"[a-z0-9-]{12,80}", request_id or ""):
+        raise ValueError("Invalid request identifier")
+
+    sources = collect_topic_research(topic)
+    updated_at = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    payload = {
+        "requestId": request_id,
+        "topic": topic,
+        "updatedAt": updated_at,
+        "sourceCount": len(sources),
+        "publisherCount": len({story.get("domain") for story in sources if story.get("domain")}),
+        "summaryCount": sum(bool(str(story.get("description", "")).strip()) for story in sources),
+        "sources": sources,
+    }
+    output_dir = ROOT / ".github" / "article-research"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output = output_dir / (request_id + ".json")
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=output_dir, delete=False) as temp:
+        json.dump(payload, temp, ensure_ascii=False, indent=2)
+        temp.write("\n")
+        temp_path = Path(temp.name)
+    temp_path.replace(output)
+    print(f"On-demand research complete: {payload['sourceCount']} sources, {payload['summaryCount']} descriptions")
+
+
 def main() -> None:
     request = urllib.request.Request(FEED, headers={"User-Agent": "DIAMOND-TV-Trends/1.0 (+https://diamond-tv.shop/)"})
     with urllib.request.urlopen(request, timeout=30) as response:
@@ -387,5 +473,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 4 and sys.argv[1] == "research-topic":
+        write_topic_research(sys.argv[2], sys.argv[3])
+    else:
+        main()
 
