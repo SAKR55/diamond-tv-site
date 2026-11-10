@@ -157,3 +157,11 @@
 
 
 
+
+.sa-article-manager{margin-bottom:14px}
+.sa-source-label{display:block;margin:3px 0 6px;color:var(--muted);font-size:.76rem}
+.sa-source-review-list{display:grid;gap:4px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line)}
+.sa-source-review-row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:.8rem;overflow-wrap:anywhere}
+.sa-source-review-row span{direction:ltr;text-align:left;color:var(--muted)}
+.sa-source-review-row b{color:var(--fg);text-align:right}
+@media(max-width:520px){.sa-source-review-row{align-items:flex-start;flex-direction:column}}
