@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: article-research-${{ github.event.client_payload.request_id || github.run_id }}
+  group: article-research
   cancel-in-progress: false
 
 jobs:
