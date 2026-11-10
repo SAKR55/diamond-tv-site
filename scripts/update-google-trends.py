@@ -59,14 +59,34 @@ class MetaDescriptionParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.description = ""
+        self.title = ""
+        self.title_parts: list[str] = []
+        self.in_title = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag.lower() != "meta" or self.description:
+        lowered_tag = tag.lower()
+        if lowered_tag == "title":
+            self.in_title = True
+            return
+        if lowered_tag != "meta":
             return
         values = {key.lower(): (value or "") for key, value in attrs}
         key = (values.get("property") or values.get("name") or "").lower()
-        if key in {"og:description", "description", "twitter:description"}:
-            self.description = re.sub(r"\s+", " ", unescape(values.get("content", ""))).strip()[:700]
+        content = re.sub(r"\s+", " ", unescape(values.get("content", ""))).strip()
+        if key in {"og:title", "twitter:title"} and content and not self.title:
+            self.title = content[:300]
+        if key in {"og:description", "description", "twitter:description"} and content and not self.description:
+            self.description = content[:700]
+
+    def handle_data(self, data: str) -> None:
+        if self.in_title and data.strip():
+            self.title_parts.append(data.strip())
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "title":
+            self.in_title = False
+            if not self.title:
+                self.title = re.sub(r"\s+", " ", " ".join(self.title_parts)).strip()[:300]
 
 
 class PlainTextParser(HTMLParser):
@@ -240,22 +260,47 @@ def bing_news_entries(topic: str) -> list[dict]:
     return entries
 
 
-def fetch_source_metadata(url: str) -> dict:
+class TrustedPublisherRedirectHandler(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        try:
+            parts = urlsplit(newurl)
+            if parts.scheme != "https" or parts.username or parts.password:
+                return None
+            _, tier = publisher_details(newurl)
+            if tier == "unlisted":
+                return None
+        except Exception:
+            return None
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def fetch_source_metadata(url: str, trusted_only: bool = False) -> dict:
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
-    result = {"description": "", "reachable": False, "httpStatus": None, "checkedAt": now, "finalUrl": ""}
-    if not url.startswith("https://"):
+    result = {"description": "", "pageTitle": "", "reachable": False, "httpStatus": None, "checkedAt": now, "finalUrl": ""}
+    try:
+        parts = urlsplit(url)
+        if parts.scheme != "https" or not parts.hostname or parts.username or parts.password:
+            return result
+        if trusted_only and publisher_details(url)[1] == "unlisted":
+            return result
+    except Exception:
         return result
     request = urllib.request.Request(
         url,
-        headers={"User-Agent": "DIAMOND-TV-Trends/1.3 (+https://diamond-tv.shop/)", "Accept": "text/html"},
+        headers={"User-Agent": "DIAMOND-TV-LinkReview/1.0 (+https://diamond-tv.shop/)", "Accept": "text/html"},
     )
     try:
-        with urllib.request.urlopen(request, timeout=8) as response:
+        opener = urllib.request.build_opener(TrustedPublisherRedirectHandler()) if trusted_only else None
+        response_context = opener.open(request, timeout=8) if opener else urllib.request.urlopen(request, timeout=8)
+        with response_context as response:
             status = int(response.status)
             final_url = response.geturl()
             result["finalUrl"] = final_url
             result["httpStatus"] = status
             result["reachable"] = 200 <= status < 400 and final_url.startswith("https://")
+            if trusted_only and publisher_details(final_url)[1] == "unlisted":
+                result["reachable"] = False
+                return result
             if not result["reachable"] or "text/html" not in response.headers.get("Content-Type", "").lower():
                 return result
             raw = response.read(192_000)
@@ -263,9 +308,105 @@ def fetch_source_metadata(url: str) -> dict:
         parser = MetaDescriptionParser()
         parser.feed(raw.decode(charset, errors="replace"))
         result["description"] = parser.description
+        result["pageTitle"] = parser.title
     except Exception:
         pass
     return result
+
+
+def inspect_source_link(raw_url: str) -> dict:
+    url = str(raw_url or "").strip()
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    result = {
+        "inputUrl": url[:2048], "finalUrl": "", "domain": "", "publisherTier": "unlisted",
+        "pageTitle": "", "description": "", "reachable": False, "httpStatus": None,
+        "checkedAt": now, "reason": "",
+    }
+    try:
+        parts = urlsplit(url)
+        if len(url) > 2048 or parts.scheme != "https" or not parts.hostname or parts.username or parts.password:
+            result["reason"] = "يجب أن يكون الرابط HTTPS صالحًا ومن دون بيانات دخول."
+            return result
+        domain, tier = publisher_details(url)
+        result["domain"] = domain
+        result["publisherTier"] = tier
+        if tier == "unlisted":
+            result["reason"] = "النطاق غير موجود في قائمة الناشرين والجهات المعروفة؛ لم يُفتح الرابط."
+            return result
+    except Exception:
+        result["reason"] = "تعذر قراءة صيغة الرابط."
+        return result
+
+    metadata = fetch_source_metadata(url, trusted_only=True)
+    result.update({
+        "finalUrl": metadata.get("finalUrl", ""),
+        "pageTitle": metadata.get("pageTitle", ""),
+        "description": metadata.get("description", ""),
+        "reachable": bool(metadata.get("reachable")),
+        "httpStatus": metadata.get("httpStatus"),
+        "checkedAt": metadata.get("checkedAt", now),
+    })
+    if result["finalUrl"]:
+        final_domain, final_tier = publisher_details(result["finalUrl"])
+        result["domain"] = final_domain
+        result["publisherTier"] = final_tier
+    if result["reachable"]:
+        result["reason"] = "استجاب الرابط عبر HTTPS، والتحويل النهائي بقي ضمن نطاق ناشر معروف."
+    else:
+        result["reason"] = "لم تُسترجع صفحة HTTPS قابلة للقراءة. راجع الرابط يدويًا أو استخدم رابطًا أصليًا آخر."
+    return result
+
+
+def check_source_links(urls: list[str]) -> list[dict]:
+    normalized = []
+    seen = set()
+    for value in urls[:12]:
+        url = str(value or "").strip()
+        if not url or url in seen:
+            continue
+        seen.add(url)
+        normalized.append(url)
+
+    results: list[dict | None] = [None] * len(normalized)
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {pool.submit(inspect_source_link, url): index for index, url in enumerate(normalized)}
+        for future in as_completed(futures):
+            index = futures[future]
+            try:
+                results[index] = future.result()
+            except Exception:
+                results[index] = {"inputUrl": normalized[index], "finalUrl": "", "domain": "", "publisherTier": "unlisted",
+                                  "pageTitle": "", "description": "", "reachable": False, "httpStatus": None,
+                                  "checkedAt": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+                                  "reason": "تعذر فحص الرابط بسبب استجابة الشبكة."}
+    return [item for item in results if item is not None]
+
+
+def write_link_check(request_id: str, links_json: str) -> None:
+    if not re.fullmatch(r"[a-z0-9-]{12,80}", request_id or ""):
+        raise ValueError("Invalid request identifier")
+    try:
+        links = json.loads(links_json or "[]")
+    except json.JSONDecodeError as error:
+        raise ValueError("Invalid link list") from error
+    if not isinstance(links, list):
+        raise ValueError("Link list must be an array")
+    results = check_source_links(links)
+    updated_at = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    payload = {
+        "requestId": request_id, "mode": "link-check", "updatedAt": updated_at,
+        "sourceCount": len(results), "accessibleCount": sum(bool(item.get("reachable")) for item in results),
+        "links": results,
+    }
+    output_dir = ROOT / ".github" / "article-research"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output = output_dir / (request_id + ".json")
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=output_dir, delete=False) as temp:
+        json.dump(payload, temp, ensure_ascii=False, indent=2)
+        temp.write("\n")
+        temp_path = Path(temp.name)
+    temp_path.replace(output)
+    print(f"Link review complete: {payload['accessibleCount']} of {payload['sourceCount']} links are reachable")
 
 
 def classify(title: str, news: list[dict]) -> str | None:
@@ -475,6 +616,8 @@ def main() -> None:
 if __name__ == "__main__":
     if len(sys.argv) == 4 and sys.argv[1] == "research-topic":
         write_topic_research(sys.argv[2], sys.argv[3])
+    elif len(sys.argv) == 3 and sys.argv[1] == "check-links":
+        write_link_check(sys.argv[2], __import__("os").environ.get("LINKS_JSON", "[]"))
     else:
         main()
 
