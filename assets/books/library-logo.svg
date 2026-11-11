@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="280" viewBox="0 0 960 280" role="img" aria-labelledby="title desc">
+<title id="title">المكتبة الماسية</title><desc id="desc">شعار المكتبة الماسية لكتب وقصص الأطفال</desc>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6855e8"/><stop offset="1" stop-color="#15a79a"/></linearGradient></defs>
+<g transform="translate(46 35)" fill="none" stroke="url(#g)" stroke-width="12" stroke-linejoin="round">
+<path d="M92 12 164 64 92 166 20 64Z"/><path d="M92 166V66"/><path d="M50 76c15-12 30-12 42 0 13-12 28-12 43 0v54c-15-10-29-10-43 2-13-12-28-12-42-2Z"/>
+</g>
+<text x="900" y="122" text-anchor="end" font-size="66" font-weight="700" fill="#263956" font-family="Arial,Tahoma,sans-serif">المكتبة الماسية</text>
+<text x="900" y="188" text-anchor="end" font-size="30" fill="#64728b" font-family="Arial,Tahoma,sans-serif">كتب وقصص وأنشطة للأطفال</text>
+</svg>
