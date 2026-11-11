@@ -1,8 +1,8 @@
 {
   "version": 1,
   "theme": {
-    "accent": "#c7a3a3",
-    "accent2": "#0c83a1"
+    "accent": "#324fe2",
+    "accent2": "#c09191"
   },
   "sections": {
     "live": true,
