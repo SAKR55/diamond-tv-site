@@ -154,24 +154,6 @@
         "description": "باقات وخدمات رقمية مختارة",
         "image": "/assets/store-category-1794424501133-ok0og-diamond_digital_subscriptions_banner.png",
         "color": "#6d4aff"
-      },
-      {
-        "name": "أجهزة البث",
-        "description": "أجهزة وتجهيزات للمشاهدة",
-        "image": "/assets/store-category-1794423634008-58hz6-5000_na1fn_ZGlhbW9uZF9zdHJlYW1pbmdfYmFubmVyX2Zvb3RiYWxs.webp",
-        "color": "#0c9fa2"
-      },
-      {
-        "name": "الإكسسوارات",
-        "description": "إضافات عملية لتجربتك",
-        "image": "/assets/store-category-1794423095034-e44b5-diamond_accessories_category_banner_more.png",
-        "color": "#c15d87"
-      },
-      {
-        "name": "العروض",
-        "description": "خيارات وعروض مميزة",
-        "image": "/assets/store-category-1794424754676-yegw5-diamond_streaming_subscriptions_offers_banner.png",
-        "color": "#e38b2c"
       }
     ]
   },
