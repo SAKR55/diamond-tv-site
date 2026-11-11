@@ -145,7 +145,7 @@
     "announcement": "",
     "logo": "/assets/store-logo-1794418707068-805i3-diamond_wordmark_recolored.png",
     "colors": {
-      "primary": "#fff94d",
+      "primary": "#4dbbff",
       "secondary": "#0c25a1"
     },
     "categories": [
@@ -164,7 +164,7 @@
       {
         "name": "الإكسسوارات",
         "description": "إضافات عملية لتجربتك",
-        "image": "/assets/store-category-accessories.svg",
+        "image": "/assets/store-category-1794423095034-e44b5-diamond_accessories_category_banner_more.png",
         "color": "#c15d87"
       },
       {
