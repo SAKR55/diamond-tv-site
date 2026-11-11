@@ -9,7 +9,7 @@
     ["store","store/","🎁 متجر المكتبة","store"]
   ];
   const header=document.createElement("header");header.className="top";
-  header.innerHTML='<div class="wrap"><a class="brand" href="'+ROOT+'index.html" aria-label="المكتبة الماسية - الرئيسية">المكتبة الماسية</a><nav class="nav" aria-label="القائمة الرئيسية">'+links.map(function(x){return '<a href="'+ROOT+x[1]+'"'+(x[0]===page?' class="on"':'')+' data-site-section="'+x[3]+'">'+x[2]+'</a>';}).join("")+'</nav></div>';
+  header.innerHTML='<div class="wrap"><a class="brand" href="'+ROOT+'index.html" aria-label="المكتبة الماسية - الرئيسية"><i aria-hidden="true"></i>المكتبة الماسية</a><nav class="nav" aria-label="القائمة الرئيسية">'+links.map(function(x){return '<a href="'+ROOT+x[1]+'"'+(x[0]===page?' class="on"':'')+' data-site-section="'+x[3]+'">'+x[2]+'</a>';}).join("")+'</nav></div>';
   document.body.prepend(header);
   const footer=document.createElement("footer");
   footer.innerHTML='<div class="wrap"><nav class="flinks">'+links.map(function(x){return '<a href="'+ROOT+x[1]+'" data-site-section="'+x[3]+'">'+x[2].replace(/^\\S+\\s/,"")+'</a>';}).join("")+'</nav>المكتبة الماسية © '+new Date().getFullYear()+'</div>';

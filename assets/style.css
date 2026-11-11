@@ -502,3 +502,5 @@ body.store-site #store-content{--accent:#13CFE1!important;--accent2:#9186FF!impo
 .store-downloadable .store-gallery-main{object-fit:contain;background:#eef3fa;padding:12px}
 .store-price-free{color:#087d67!important;font-weight:800}
 @media(max-width:640px){.children-page,.article-page,.articles-kids{padding:0 12px}.children-card img{height:220px}}
+
+.children-card[hidden],.kids-article-card[hidden],[data-site-section][hidden]{display:none!important}
