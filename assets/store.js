@@ -42,6 +42,11 @@
       else logoNode.hidden = true;
       logoNode.alt = title;
     }
+    var heroLogoNode = document.getElementById("store-hero-logo");
+    if (heroLogoNode) {
+      if (logo) { heroLogoNode.src = logo; heroLogoNode.hidden = false; }
+      else heroLogoNode.hidden = true;
+    }
     var announcement = document.getElementById("store-announcement");
     announcement.textContent = String(config.announcement || "");
     announcement.hidden = !announcement.textContent.trim();
