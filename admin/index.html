@@ -454,7 +454,7 @@ if(SECRET){ rpc("admin_subscribers",{p_secret:SECRET}).then(async r=>{
   if(r.status===200){SUBS=await r.json();$("#login").hidden=true;$("#app").hidden=false;render();loadContact();loadResellers();}
 }); }
 </script>
-<script src="site-admin.js"></script>
+<script src="site-admin.js?v=20261111-panel-repair"></script>
 </body>
 </html>
 
