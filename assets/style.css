@@ -456,3 +456,49 @@ body.store-site .store-hero-cta,body.store-site .store-order{color:#101A27}
 body.store-site .store-chip.active,body.store-site .store-favorites-toggle.active,body.store-site .store-featured{color:#101A27}
 @media(max-width:700px){body.store-site .store-hero-mark{display:grid;width:min(100%,395px);min-height:180px}}
 body.store-site #store-content{--accent:#13CFE1!important;--accent2:#9186FF!important}
+
+/* مكتبة الأطفال الماسية */
+.children-page{max-width:1120px;margin:28px auto;padding:0 18px}
+.children-hero{padding:clamp(24px,5vw,52px);border:1px solid var(--line);border-radius:24px;background:linear-gradient(130deg,#e7f7f5,#eef1ff 65%,#fff);box-shadow:0 18px 55px #26365712}
+.children-hero .eyebrow{color:var(--accent);font-weight:800}
+.children-hero h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.2;margin:8px 0 14px}
+.children-hero p{max-width:760px;color:var(--muted);font-size:1.08rem}
+.children-hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:20px}
+.children-hero-actions a,.children-reading-note>a,.children-hero>a{color:var(--accent);font-weight:800;text-decoration:none}
+.children-primary-link{display:inline-flex;padding:11px 18px;border-radius:12px;background:var(--accent);color:#fff!important}
+.children-section{margin:34px 0}
+.children-section h2{font-size:1.65rem;margin:12px 0}
+.children-section-heading{margin-bottom:16px}
+.children-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));gap:18px}
+.children-card{display:flex;flex-direction:column;gap:10px;padding:18px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 10px 30px #2636570b;color:inherit;text-decoration:none;transition:transform .18s,box-shadow .18s}
+.children-card:hover{transform:translateY(-3px);box-shadow:0 16px 34px #26365717}
+.children-card h3{font-size:1.12rem;line-height:1.45}
+.children-card p{color:var(--muted);margin:0}
+.children-card img{width:100%;height:260px;object-fit:contain;border-radius:12px;background:#edf3fa;padding:10px}
+.children-badge{color:var(--accent);font-weight:800;font-size:.88rem}
+.children-download{margin-top:auto;color:#087d67}
+.children-filters{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 20px}
+.children-reading-note,.children-values-note{padding:20px;border-radius:18px;background:#fff;border:1px solid var(--line)}
+.article-page{max-width:850px;margin:28px auto;padding:0 18px}
+.article-page .breadcrumbs{font-size:.92rem;color:var(--muted);margin-bottom:14px}
+.article-page .article-content{padding:clamp(20px,4vw,42px);border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 14px 44px #2636570b}
+.article-page h1{font-size:clamp(1.9rem,4vw,2.8rem);line-height:1.25;margin:12px 0}
+.article-page .article-lead{font-size:1.13rem;color:var(--muted);line-height:1.9}
+.article-page .article-meta{font-size:.9rem;color:var(--muted);margin:16px 0 26px}
+.article-page h2{font-size:1.48rem;margin:30px 0 10px}
+.article-page h3{font-size:1.13rem;margin:20px 0 8px}
+.article-page p,.article-page li{line-height:1.95}
+.article-page p{margin:12px 0}
+.article-page ul,.article-page ol{padding-inline-start:1.5rem;margin:10px 0 18px}
+.article-page a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.article-page figure{margin:20px auto;max-width:420px;text-align:center}
+.article-page figure img{max-width:100%;max-height:360px;object-fit:contain;border-radius:14px;background:#edf3fa;padding:12px}
+.article-page .source-note,.article-page .tip-box{margin-top:24px;padding:16px;border-radius:14px;background:#eef3fa;color:var(--muted)}
+.article-page .tip-box{border-inline-start:4px solid var(--accent2);background:#f0f8f7}
+.articles-kids{max-width:1160px;margin:28px auto;padding:0 18px}
+.articles-hero{margin-bottom:24px}
+.kids-article-card img{width:100%;height:200px;object-fit:contain;background:#edf3fa;border-radius:12px;padding:8px}
+.store-card.store-downloadable .store-image{object-fit:contain;background:#eef3fa;padding:10px}
+.store-downloadable .store-gallery-main{object-fit:contain;background:#eef3fa;padding:12px}
+.store-price-free{color:#087d67!important;font-weight:800}
+@media(max-width:640px){.children-page,.article-page,.articles-kids{padding:0 12px}.children-card img{height:220px}}

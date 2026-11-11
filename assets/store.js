@@ -140,22 +140,22 @@
     return !query || [item.title, item.description, item.category, item.brand, item.sku].concat(item.highlights || [], item.tags || [], specs).some(function (value) { return String(value || "").toLowerCase().includes(query); });
   }
   function productCard(item, index) {
-    var id = idOf(item, index), images = productImages(item), image = images[0], link = safeUrl(item.url), isSaved = saved.has(id), isCompared = compared.has(id);
+    var id = idOf(item, index), images = productImages(item), image = images[0], link = safeUrl(item.downloadable ? (item.downloadUrl || item.url) : item.url), isSaved = saved.has(id), isCompared = compared.has(id);
     var imageHtml = image ? '<img class="store-image" src="' + esc(image) + '" alt="' + esc(item.imageAlt || item.title) + '" loading="lazy">' : '<div class="store-image store-placeholder" aria-hidden="true"><span>✦</span><b>DIAMOND</b></div>';
     var description = String(item.description || ""), out = unavailable(item);
-    var state = item.availability === "preorder" ? "طلب مسبق" : out ? (item.stock === 0 ? "نفدت الكمية" : "غير متاح مؤقتًا") : "متوفر";
+    var state = item.downloadable ? "متاح مجانًا للتنزيل" : item.availability === "preorder" ? "طلب مسبق" : out ? (item.stock === 0 ? "نفدت الكمية" : "غير متاح مؤقتًا") : "متوفر";
     var oldPrice = priceNumber(item.oldPrice), price = priceNumber(item.price);
     var discount = oldPrice && price && oldPrice > price ? Math.round((oldPrice - price) * 100 / oldPrice) : 0;
-    return '<article class="store-card" data-product-card="' + esc(id) + '">' +
+    return '<article class="store-card' + (item.downloadable ? " store-downloadable" : "") + '" data-product-card="' + esc(id) + '">' +
       '<div class="store-card-media">' + imageHtml + (discount ? '<span class="store-discount">-' + discount + '%</span>' : '') +
       (item.featured ? '<span class="store-featured">اختيار المتجر</span>' : '') +
       '<button type="button" class="store-save ' + (isSaved ? "saved" : "") + '" data-save-product="' + esc(id) + '" aria-pressed="' + isSaved + '" aria-label="' + (isSaved ? "إزالة من المحفوظات" : "حفظ المنتج") + '">' + (isSaved ? "♥" : "♡") + '</button></div>' +
       '<div class="store-card-body"><span class="store-category">' + esc(item.category || "منتج") + '</span>' +
       '<h3>' + esc(item.title || "منتج") + '</h3>' + (item.brand ? '<small class="store-brand-name">' + esc(item.brand) + '</small>' : '') + '<p class="store-card-description">' + esc(description) + '</p>' +
       '<span class="store-availability ' + (out ? "is-unavailable" : "") + '">' + esc(state) + '</span>' +
-      (item.price ? '<p class="store-price">' + esc(item.price) + (item.currency ? ' <small>' + esc(item.currency) + '</small>' : '') + (item.oldPrice ? ' <del>' + esc(item.oldPrice) + (item.currency ? ' ' + esc(item.currency) : '') + '</del>' : '') + '</p>' : '<p class="store-price store-price-unlisted">تواصل لمعرفة السعر</p>') +
+      (item.downloadable || item.free ? '<p class="store-price store-price-free">مجاني للتنزيل</p>' : item.price ? '<p class="store-price">' + esc(item.price) + (item.currency ? ' <small>' + esc(item.currency) + '</small>' : '') + (item.oldPrice ? ' <del>' + esc(item.oldPrice) + (item.currency ? ' ' + esc(item.currency) : '') + '</del>' : '') + '</p>' : '<p class="store-price store-price-unlisted">تواصل لمعرفة السعر</p>') +
       '<div class="store-card-actions"><button type="button" class="store-details" data-open-product="' + esc(id) + '">التفاصيل</button>' +
-      (link && !out ? '<a class="store-order" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">' + (item.availability === "preorder" ? "طلب مسبق" : "اطلب الآن") + ' <span aria-hidden="true">←</span></a>' : '<span class="store-order disabled">' + (out ? "غير متاح حاليًا" : "الطلب غير متاح") + '</span>') +
+      (link && !out ? '<a class="store-order" href="' + esc(link) + '"' + (item.downloadable ? " download" : ' target="_blank" rel="noopener noreferrer"') + '>' + (item.downloadable ? "تحميل مجاني" : item.availability === "preorder" ? "طلب مسبق" : "اطلب الآن") + ' <span aria-hidden="true">←</span></a>' : '<span class="store-order disabled">' + (out ? "غير متاح حاليًا" : "الطلب غير متاح") + '</span>') +
       '</div><button type="button" class="store-compare-toggle ' + (isCompared ? "active" : "") + '" data-compare-product="' + esc(id) + '" aria-pressed="' + isCompared + '">' + (isCompared ? "✓ محدد للمقارنة" : "＋ أضف للمقارنة") + '</button>' +
       (images.length + productVideos(item).length > 1 ? '<span class="store-media-count">✦ ' + images.length + ' صور · ' + productVideos(item).length + ' فيديو</span>' : '') +
       '</div></article>';
@@ -209,8 +209,8 @@
     var index = products.findIndex(function (item, i) { return idOf(item, i) === id; });
     var item = products[index];
     if (!item) return;
-    var images = productImages(item), link = safeUrl(item.url), videos = productVideos(item);
-    var gallery = images.length ? '<div class="store-gallery"><img class="store-gallery-main" id="store-gallery-main" src="' + esc(images[0]) + '" alt="' + esc(item.imageAlt || item.title) + '">' +
+    var images = productImages(item), link = safeUrl(item.downloadable ? (item.downloadUrl || item.url) : item.url), videos = productVideos(item);
+    var gallery = images.length ? '<div class="store-gallery' + (item.downloadable ? " store-downloadable" : "") + '"><img class="store-gallery-main" id="store-gallery-main" src="' + esc(images[0]) + '" alt="' + esc(item.imageAlt || item.title) + '">' +
       (images.length > 1 ? '<div class="store-gallery-thumbs">' + images.map(function (image, imageIndex) { return '<button type="button" class="store-gallery-thumb ' + (imageIndex === 0 ? "active" : "") + '" data-gallery-image="' + esc(image) + '" aria-label="عرض الصورة ' + (imageIndex + 1) + '"><img src="' + esc(image) + '" alt="" loading="lazy"></button>'; }).join("") + '</div>' : '') + '</div>' : '';
     var specs = Array.isArray(item.specifications) ? item.specifications.filter(function (entry) { return entry && entry.name && entry.value; }) : [];
     var videosHtml = videos.length ? '<section class="store-product-videos"><h3>فيديوهات المنتج</h3><div class="store-video-grid">' + videos.map(videoMarkup).join("") + '</div></section>' : '';
@@ -231,8 +231,8 @@
       (Array.isArray(item.tags) && item.tags.length ? '<div class="store-tag-list">' + item.tags.map(function (tag) { return '<span>' + esc(tag) + '</span>'; }).join("") + '</div>' : '') +
       videosHtml +
       '<span class="store-availability ' + (unavailable(item) ? "is-unavailable" : "") + '">' + esc(item.availability === "preorder" ? "طلب مسبق" : (unavailable(item) ? (item.stock === 0 ? "نفدت الكمية" : "غير متاح مؤقتًا") : "متوفر")) + '</span>' +
-      (item.price ? '<p class="store-price">' + esc(item.price) + (item.currency ? ' <small>' + esc(item.currency) + '</small>' : '') + (item.oldPrice ? ' <del>' + esc(item.oldPrice) + (item.currency ? ' ' + esc(item.currency) : '') + '</del>' : '') + '</p>' : '<p class="store-price store-price-unlisted">تواصل لمعرفة السعر</p>') +
-      (link && !unavailable(item) ? '<a class="store-order" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">' + (item.availability === "preorder" ? "طلب مسبق" : "تفاصيل الطلب") + ' <span aria-hidden="true">←</span></a>' : '<span class="store-order disabled">' + (unavailable(item) ? "غير متاح حاليًا" : "الطلب غير متاح حاليًا") + '</span>');
+      (item.downloadable || item.free ? '<p class="store-price store-price-free">مجاني للتنزيل</p>' : item.price ? '<p class="store-price">' + esc(item.price) + (item.currency ? ' <small>' + esc(item.currency) + '</small>' : '') + (item.oldPrice ? ' <del>' + esc(item.oldPrice) + (item.currency ? ' ' + esc(item.currency) : '') + '</del>' : '') + '</p>' : '<p class="store-price store-price-unlisted">تواصل لمعرفة السعر</p>') +
+      (link && !unavailable(item) ? '<a class="store-order" href="' + esc(link) + '"' + (item.downloadable ? " download" : ' target="_blank" rel="noopener noreferrer"') + '>' + (item.downloadable ? "تنزيل الكتاب مجانًا" : item.availability === "preorder" ? "طلب مسبق" : "تفاصيل الطلب") + ' <span aria-hidden="true">←</span></a>' : '<span class="store-order disabled">' + (unavailable(item) ? "غير متاح حاليًا" : "الطلب غير متاح حاليًا") + '</span>');
     dialog.showModal();
   }
   function compareProducts() {

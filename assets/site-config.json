@@ -5,8 +5,10 @@
     "accent2": "#f17e7e"
   },
   "sections": {
-    "live": true,
-    "recommendations": true,
+    "live": false,
+    "recommendations": false,
+    "children": true,
+    "articles": true,
     "store": true
   },
   "leagues": [
@@ -139,10 +141,10 @@
     "movies": []
   },
   "storefront": {
-    "title": "متجر DIAMOND",
-    "subtitle": "اكتشف منتجات وخدمات مختارة بعناية، وتصفّح الأقسام واحفظ ما يناسبك.",
-    "metaDescription": "تصفح متجر DIAMOND TV لاكتشاف المنتجات والخدمات المختارة، واقرأ المواصفات والأسعار قبل الطلب.",
-    "announcement": "",
+    "title": "متجر المكتبة الماسية",
+    "subtitle": "كتب أطفال وقصص وأنشطة مجانية للقراءة والتعلّم في المنزل.",
+    "metaDescription": "تصفح متجر المكتبة الماسية المجاني لكتب الأطفال: تعلم العربية والإنجليزية والقصص والتلوين.",
+    "announcement": "كتب رقمية مجانية للأطفال",
     "logo": "/assets/store-logo-1794418707068-805i3-diamond_wordmark_recolored.png",
     "colors": {
       "primary": "#4dbbff",
@@ -150,12 +152,230 @@
     },
     "categories": [
       {
-        "name": "الاشتراكات الرقمية",
-        "description": "باقات وخدمات رقمية مختارة",
-        "image": "/assets/store-category-1794424501133-ok0og-diamond_digital_subscriptions_banner.png",
-        "color": "#6d4aff"
+        "name": "كتب الأطفال المجانية",
+        "description": "تعلم اللغات والقصص والأنشطة القابلة للتنزيل",
+        "image": "/assets/books/arabic-friends-story-cover.png",
+        "color": "#13a990"
       }
     ]
   },
-  "products": []
+  "products": [
+    {
+      "id": "book-arabic-letters-workbook",
+      "title": "أتعلم العربية خطوة خطوة",
+      "category": "كتب الأطفال المجانية",
+      "description": "دفتر أنشطة PDF من 22 صفحة للتعرّف إلى الحروف العربية والكلمات الأولى. يضم صفحات تتبع ومراجعة وأنشطة بسيطة للأسرة.",
+      "seoTitle": "كتاب تعليم الحروف العربية للأطفال PDF مجانًا",
+      "seoDescription": "نزّل دفتر أتعلم العربية خطوة خطوة مجانًا: 22 صفحة للحروف والكلمات والأنشطة المنزلية.",
+      "brand": "المكتبة الماسية",
+      "sku": "KIDS-AR-LEARN-01",
+      "highlights": [
+        "22 صفحة أنشطة",
+        "تعرّف إلى الحروف والكلمات",
+        "مناسب للقراءة المشتركة مع الأسرة"
+      ],
+      "specifications": [
+        {
+          "name": "النوع",
+          "value": "كتاب أنشطة PDF"
+        },
+        {
+          "name": "الصفحات",
+          "value": "22"
+        },
+        {
+          "name": "اللغة",
+          "value": "العربية"
+        }
+      ],
+      "tags": [
+        "تعليم العربية",
+        "حروف عربية",
+        "أطفال",
+        "PDF مجاني"
+      ],
+      "price": "0",
+      "currency": "ر.س",
+      "image": "/assets/books/arabic-letters-workbook-cover.svg",
+      "images": [],
+      "videos": [],
+      "imageAlt": "غلاف دفتر أتعلم العربية خطوة خطوة",
+      "url": "/assets/books/arabic-letters-workbook-22-pages.pdf",
+      "downloadUrl": "/assets/books/arabic-letters-workbook-22-pages.pdf",
+      "downloadable": true,
+      "free": true,
+      "availability": "available",
+      "featured": true,
+      "active": true,
+      "createdAt": "2026-11-12"
+    },
+    {
+      "id": "book-islamic-values-stories",
+      "title": "حكايات بقيم جميلة",
+      "category": "كتب الأطفال المجانية",
+      "description": "ست حكايات خيالية أصلية في ملف PDF من 10 صفحات، حول الصدق والأمانة والرحمة والتعاون والاهتمام والصبر، مع أسئلة وأنشطة عائلية. لا تنسب الحكايات إلى نصوص شرعية.",
+      "seoTitle": "قصص أطفال تربوية بقيم إسلامية PDF مجانًا",
+      "seoDescription": "قصص أصلية للأطفال عن الصدق والأمانة والرحمة والتعاون، مع أسئلة حوارية بعد كل حكاية.",
+      "brand": "المكتبة الماسية",
+      "sku": "KIDS-STORY-01",
+      "highlights": [
+        "ست قصص خيالية أصلية",
+        "قيم تربوية مناسبة للحوار مع الطفل",
+        "10 صفحات PDF مجانية"
+      ],
+      "specifications": [
+        {
+          "name": "النوع",
+          "value": "قصص تربوية PDF"
+        },
+        {
+          "name": "الصفحات",
+          "value": "10"
+        },
+        {
+          "name": "القيم",
+          "value": "الصدق والرحمة والتعاون"
+        }
+      ],
+      "tags": [
+        "قصص أطفال",
+        "أخلاق",
+        "قيم إسلامية",
+        "PDF مجاني"
+      ],
+      "price": "0",
+      "currency": "ر.س",
+      "image": "/assets/books/stories-islamic-values-cover.svg",
+      "images": [],
+      "videos": [],
+      "imageAlt": "غلاف حكايات بقيم جميلة",
+      "url": "/assets/books/stories-islamic-values-for-children.pdf",
+      "downloadUrl": "/assets/books/stories-islamic-values-for-children.pdf",
+      "downloadable": true,
+      "free": true,
+      "availability": "available",
+      "featured": true,
+      "active": true,
+      "createdAt": "2026-11-12"
+    },
+    {
+      "id": "book-arabic-friends-story",
+      "title": "حكايات ساحة الحي: أصدقاء وعصير عجيب",
+      "category": "كتب الأطفال المجانية",
+      "description": "قصة عربية مصوّرة من 14 صفحة عن الصداقة والتعاون وانتظار الدور، تتضمن أسئلة ونشاطًا عائليًا.",
+      "seoTitle": "قصة أطفال عربية مجانية عن التعاون وانتظار الدور",
+      "seoDescription": "اقرأ ونزّل قصة حكايات ساحة الحي مجانًا، مع أسئلة ونشاط عائلي عن التعاون والصداقة.",
+      "brand": "المكتبة الماسية",
+      "sku": "KIDS-AR-STORY-01",
+      "highlights": [
+        "قصة مصوّرة من 14 صفحة",
+        "تعاون وصداقة واحترام الدور",
+        "مجانية للتنزيل"
+      ],
+      "tags": [
+        "قصة أطفال",
+        "التعاون",
+        "قصة عربية",
+        "PDF"
+      ],
+      "price": "0",
+      "currency": "ر.س",
+      "image": "/assets/books/arabic-friends-story-cover.png",
+      "images": [],
+      "videos": [],
+      "imageAlt": "غلاف قصة أصدقاء وعصير عجيب",
+      "url": "/assets/books/arabic-friends-story.pdf",
+      "downloadUrl": "/assets/books/arabic-friends-story.pdf",
+      "downloadable": true,
+      "free": true,
+      "availability": "available",
+      "featured": false,
+      "active": true,
+      "createdAt": "2026-11-12"
+    },
+    {
+      "id": "book-english-adventure",
+      "title": "My Big First English Adventure",
+      "category": "كتب الأطفال المجانية",
+      "description": "كتاب PDF مصوّر من 39 صفحة يقدّم مفردات إنجليزية أولية بالصور والاستماع والقول والحركة. العمر المدون على الغلاف: 3–5 سنوات.",
+      "seoTitle": "كتاب إنجليزي مصور للأطفال 3–5 سنوات مجانًا",
+      "seoDescription": "نزّل كتاب My Big First English Adventure المصور مجانًا: 39 صفحة للتعلّم بالصور واللعب.",
+      "brand": "المكتبة الماسية",
+      "sku": "KIDS-EN-01",
+      "highlights": [
+        "39 صفحة PDF مصوّرة",
+        "العمر المدون على الغلاف 3–5 سنوات",
+        "أنشطة صور واستماع وتحدث وحركة"
+      ],
+      "tags": [
+        "تعلم الإنجليزية",
+        "كتاب أطفال",
+        "PDF مجاني"
+      ],
+      "price": "0",
+      "currency": "ر.س",
+      "image": "/assets/books/my-big-first-english-adventure-cover.png",
+      "images": [],
+      "videos": [],
+      "imageAlt": "غلاف My Big First English Adventure",
+      "url": "/assets/books/my-big-first-english-adventure.pdf",
+      "downloadUrl": "/assets/books/my-big-first-english-adventure.pdf",
+      "downloadable": true,
+      "free": true,
+      "availability": "available",
+      "featured": true,
+      "active": true,
+      "createdAt": "2026-11-12"
+    },
+    {
+      "id": "book-coloring-22-pages",
+      "title": "ألواني الجميلة: دفتر تلوين للأطفال",
+      "category": "كتب الأطفال المجانية",
+      "description": "دفتر PDF من 22 صفحة إجمالًا: غلاف و21 رسمة أصلية قابلة للطباعة والتلوين، مع مساحة لاسم الطفل.",
+      "seoTitle": "دفتر تلوين أطفال PDF مجاني من 22 صفحة",
+      "seoDescription": "حمّل دفتر ألواني الجميلة مجانًا: 22 صفحة إجمالًا تتضمن 21 رسمة أصلية للتلوين.",
+      "brand": "المكتبة الماسية",
+      "sku": "KIDS-COLOR-22",
+      "highlights": [
+        "22 صفحة إجمالًا تشمل الغلاف",
+        "21 رسمة أصلية للتلوين",
+        "مناسب للطباعة في المنزل"
+      ],
+      "specifications": [
+        {
+          "name": "النوع",
+          "value": "دفتر تلوين PDF"
+        },
+        {
+          "name": "الصفحات",
+          "value": "22 إجمالًا"
+        },
+        {
+          "name": "الرسوم",
+          "value": "21 رسمة + غلاف"
+        }
+      ],
+      "tags": [
+        "دفتر تلوين",
+        "تلوين أطفال",
+        "أنشطة منزلية",
+        "PDF مجاني"
+      ],
+      "price": "0",
+      "currency": "ر.س",
+      "image": "/assets/books/coloring-book-cover.svg",
+      "images": [],
+      "videos": [],
+      "imageAlt": "غلاف دفتر التلوين ألواني الجميلة",
+      "url": "/assets/books/coloring-book-22-pages.pdf",
+      "downloadUrl": "/assets/books/coloring-book-22-pages.pdf",
+      "downloadable": true,
+      "free": true,
+      "availability": "available",
+      "featured": true,
+      "active": true,
+      "createdAt": "2026-11-12"
+    }
+  ],
+  "siteName": "المكتبة الماسية"
 }

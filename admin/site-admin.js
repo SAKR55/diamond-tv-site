@@ -62,7 +62,7 @@
   sitePanel.className = "site-tab-panel";
   sitePanel.hidden = true;
   sitePanel.innerHTML =
-    '<div class="sa-heading"><div><span class="sa-eyebrow">إدارة DIAMOND TV</span><h2>التحكم بالموقع</h2>' +
+    '<div class="sa-heading"><div><span class="sa-eyebrow">إدارة المكتبة الماسية</span><h2>التحكم بالموقع</h2>' +
     '<p class="hint">إدارة الصفحات والمقالات والتصميم من رابط لوحة الاشتراكات نفسه.</p></div>' +
     '<span class="sa-status" id="saStatus">غير متصل</span></div>' +
     '<div class="sa-connect card" id="saConnect">' +
@@ -100,8 +100,8 @@
     '<label>عنوان المقال<input name="title" required maxlength="100" placeholder="عنوان واضح ومفيد للقارئ"></label>' +
     '<label>الرابط المختصر (إنجليزي)<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="80" placeholder="ramadan-2027-series-guide"></label>' +
     '<label>وصف نتائج البحث<textarea name="description" required maxlength="160" rows="3" placeholder="ملخص دقيق يساعد القارئ على معرفة محتوى المقال"></textarea></label>' +
-    '<div class="sa-two-col"><label>القسم<select name="category"><option value="عام">عام</option><option value="مسلسلات">مسلسلات</option><option value="سينما">سينما</option><option value="رياضة">رياضة</option><option value="التطبيق">التطبيق</option></select></label>' +
-    '<label>اسم الكاتب<input name="author" value="فريق DIAMOND TV" maxlength="60"></label></div>' +
+    '<div class="sa-two-col"><label>القسم<select name="category"><option value="عام">عام</option><option value="مسلسلات">مسلسلات</option><option value="سينما">سينما</option><option value="رياضة">رياضة</option><option value="التطبيق">التطبيق</option><option value="الأطفال">الأطفال</option><option value="التربية">التربية</option><option value="التعليم">التعليم</option></select></label>' +
+    '<label>اسم الكاتب<input name="author" value="فريق المكتبة الماسية" maxlength="60"></label></div>' +
     '<label>رابط صورة الغلاف (اختياري)<input name="image" type="url" placeholder="https://..."></label>' +
     '<label>وصف الصورة البديل<input name="imageAlt" maxlength="150" placeholder="وصف موجز للصورة"></label>' +
     '<label>مصادر المقال (رابط في كل سطر)<textarea name="sources" rows="5" placeholder="الصق روابط المصدر المباشرة هنا"></textarea></label>' +
@@ -120,7 +120,7 @@
     '<button type="submit">إضافة الصفحة إلى قائمة النشر</button></form></div></div>' +
     '<div class="sa-view" id="saPublishView" hidden><div class="card sa-publish-card"><div class="sa-editor-head"><div><h3>حالة النشر</h3><p class="hint">تُنشر إعدادات الألوان والأقسام والبطولات والترشيحات والمنتجات تلقائيًا عند حفظها. استخدم الزر هنا للصور أو الملفات المعلقة.</p></div>' +
     '<button id="saPublish" disabled>نشر الملفات المعلقة</button></div><div id="saPendingList" class="sa-pending-list"><p class="hint">لا توجد تعديلات معلّقة.</p></div>' +
-    '<label class="sa-commit-label">وصف التحديث<input id="saCommitMessage" value="تحديث محتوى وتصميم DIAMOND TV" maxlength="120"></label><div id="saPublishError" class="sa-error" role="status"></div></div></div>' +
+    '<label class="sa-commit-label">وصف التحديث<input id="saCommitMessage" value="تحديث محتوى وتصميم المكتبة الماسية" maxlength="120"></label><div id="saPublishError" class="sa-error" role="status"></div></div></div>' +
     '<div id="saToast" class="sa-toast" role="status" aria-live="polite"></div></div>';
 
   const previewDialog = document.createElement("dialog");
@@ -137,7 +137,7 @@
     '<div class="sa-dashboard-actions card"><div><b>أدوات سريعة</b><p class="hint">جهّز مقالًا من الترند أو راجع الصور والملفات التي ما زالت معلّقة.</p></div><button type="button" id="saQuickArticle">كاتب المقالات</button><button type="button" class="ghost" id="saQuickPublish">حالة النشر</button></div>' +
     '<div class="sa-dashboard-grid">' +
     '<section class="card sa-manager-card"><h3>ألوان الموقع</h3><label>اللون الرئيسي<input id="saAccent" type="color"></label><label>اللون المساند<input id="saAccent2" type="color"></label><button type="button" id="saSaveTheme">حفظ ونشر الألوان</button></section>' +
-    '<section class="card sa-manager-card"><h3>أقسام الصفحة الرئيسية</h3><label class="sa-check"><input id="saLiveEnabled" type="checkbox"> المباريات المباشرة</label><label class="sa-check"><input id="saRecommendationsEnabled" type="checkbox"> ترشيحات السهرة</label><label class="sa-check"><input id="saStoreEnabled" type="checkbox"> المتجر</label><button type="button" id="saSaveSections">حفظ ونشر الأقسام</button></section>' +
+    '<section class="card sa-manager-card"><h3>أقسام الصفحة الرئيسية</h3><label class="sa-check"><input id="saChildrenEnabled" type="checkbox"> مكتبة الأطفال</label><label class="sa-check"><input id="saArticlesEnabled" type="checkbox"> مقالات التربية والتعليم</label><label class="sa-check"><input id="saStoreEnabled" type="checkbox"> المتجر</label><button type="button" id="saSaveSections">حفظ ونشر الأقسام</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>هوية المتجر وأقسامه</h3><p class="hint">غيّر شكل المتجر من هنا: ارفع الشعار وصور الأقسام، اختر ألوان المتجر، وأضف أو احذف الأقسام.</p><div class="sa-manager-two"><label>عنوان المتجر<input id="saStoreTitle" maxlength="80"></label><label>رابط الشعار<input id="saStoreLogo" placeholder="/assets/store-logo.svg أو رابط HTTPS"></label></div><div class="sa-manager-two sa-store-logo-row"><img id="saStoreLogoPreview" src="/assets/store-logo.svg" alt="معاينة الشعار"><label class="sa-upload-box">رفع شعار من الجهاز<input id="saStoreLogoUpload" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><span class="hint">PNG أو JPG أو WebP أو AVIF · حتى 4 ميغابايت</span></label></div><label>وصف الواجهة<textarea id="saStoreSubtitle" rows="2" maxlength="240"></textarea></label><label>وصف محركات البحث<textarea id="saStoreMeta" rows="2" maxlength="170" placeholder="وصف موجز لنتيجة البحث"></textarea></label><label>شريط الإعلان<input id="saStoreAnnouncement" maxlength="140" placeholder="اختياري"></label><div class="sa-manager-two"><label>اللون الرئيسي للمتجر<input id="saStoreColor" type="color"></label><label>اللون المساند للمتجر<input id="saStoreColor2" type="color"></label></div><div class="sa-product-list-head"><b>أقسام المتجر</b><button type="button" class="ghost sm" id="saAddStoreCategory">إضافة قسم</button></div><div id="saStoreCategories" class="sa-store-category-editor"></div><button type="button" id="saSaveStorefront">حفظ ونشر هوية المتجر</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>البطولات والقنوات</h3><p class="hint">تشمل الدوريات المحلية والمنافسات الدولية. سطر لكل بطولة: رمز المصدر | الاسم بالعربية | القنوات المؤكدة إن وُجدت.</p><textarea id="saLeagueEditor" rows="12" dir="auto"></textarea><button type="button" id="saSaveLeagues">حفظ ونشر البطولات</button></section>' +
     '<section class="card sa-manager-card sa-manager-wide"><h3>مسلسلات TVMaze</h3><p class="hint">ابحث عن مسلسل وأضفه؛ تُحدّث تقييماته تلقائيًا من المصدر.</p><div class="sa-inline-form"><input id="saTvSearch" placeholder="اسم المسلسل"><button type="button" id="saTvSearchBtn">بحث</button></div><div id="saTvResults" class="sa-manager-list"></div><h4>المسلسلات المختارة</h4><div id="saTvSelected" class="sa-manager-list"></div></section>' +
@@ -145,7 +145,7 @@
     '<section class="card sa-manager-card sa-manager-wide"><h3>استوديو المنتجات</h3><p class="hint">ألصق رابط صفحة منتج عام يسمح بالاستيراد؛ ستُملأ الحقول المتاحة لتراجعها قبل الحفظ. لا يتجاوز الاستيراد تسجيل الدخول أو الحماية. روابط Alibaba وAliExpress تتطلب تغذية API رسمية معتمدة.</p><div class="sa-inline-form sa-product-import"><input id="saProductImportUrl" type="url" placeholder="الصق رابط صفحة المنتج HTTPS"><button type="button" id="saProductImportBtn">استيراد من الرابط</button></div><label class="sa-check sa-product-import-rights"><input id="saProductImportRights" type="checkbox"> أملك إذن استخدام بيانات وصور المنتج من هذا المصدر</label><div id="saProductImportStatus" class="hint" role="status" aria-live="polite"></div><a class="ghost sm" href="/admin/product-importer.html">فتح أداة مستقلة لإضافة المنتج مباشرة إلى المتجر ↗</a>' +
     '<div class="sa-product-editor"><form id="saProductForm" class="sa-manager-form sa-product-form"><input name="id" type="hidden">' +
     '<label>اسم المنتج<input name="title" required maxlength="100" placeholder="اسم واضح للمنتج"></label>' +
-    '<div class="sa-manager-two"><label>القسم<input name="category" maxlength="50" list="saProductCategories" placeholder="مثال: اشتراكات أو أجهزة"><datalist id="saProductCategories"><option value="اشتراكات"><option value="أجهزة"><option value="إكسسوارات"><option value="عروض"></datalist></label><label>العملة<input name="currency" maxlength="12" value="ر.س" placeholder="ر.س"></label></div>' +
+    '<div class="sa-manager-two"><label>القسم<input name="category" maxlength="50" list="saProductCategories" placeholder="مثال: اشتراكات أو أجهزة"><datalist id="saProductCategories"><option value="اشتراكات"><option value="أجهزة"><option value="إكسسوارات"><option value="عروض"><option value="كتب الأطفال المجانية"></datalist></label><label>العملة<input name="currency" maxlength="12" value="ر.س" placeholder="ر.س"></label></div>' +
     '<label>وصف المنتج<textarea name="description" required rows="3" maxlength="700" placeholder="صف المنتج بلغة واضحة، واعتمد على تفاصيل مؤكدة من المورد."></textarea></label>' +
     '<div class="sa-manager-two"><label>عنوان SEO<input name="seoTitle" maxlength="70" placeholder="حتى 70 حرفًا"></label><label>وصف SEO<textarea name="seoDescription" rows="2" maxlength="320" placeholder="وصف موجز لنتيجة البحث"></textarea></label></div>' +
     '<div class="sa-manager-three"><label>العلامة التجارية<input name="brand" maxlength="80" placeholder="اسم العلامة"></label><label>رمز المنتج SKU<input name="sku" maxlength="60" placeholder="اختياري"></label><label>الضمان<input name="warranty" maxlength="100" placeholder="مثال: سنة"></label></div>' +
@@ -161,7 +161,7 @@
     '<label>رابط المصدر أو المورد<input name="sourceUrl" type="url" placeholder="HTTPS — مرجع المنتج عند المراجعة"></label>' +
     '<label>وسوم المنتج (افصل بفاصلة)<input name="tags" maxlength="260" placeholder="جديد، عرض، الأكثر طلبًا"></label>' +
     '<label>وصف الصورة البديل<input name="imageAlt" maxlength="140" placeholder="وصف يوضح ما يظهر في الصورة"></label>' +
-    '<label>رابط الطلب أو التفاصيل<input name="url" type="url" placeholder="https://..."></label>' +
+    '<label>رابط الطلب أو ملف PDF<input name="url" type="text" inputmode="url" placeholder="https://... أو /assets/books/كتاب.pdf"></label><label class="sa-check"><input name="downloadable" type="checkbox"> ملف مجاني للتنزيل</label>' +
     '<div class="sa-manager-two"><label class="sa-check"><input name="featured" type="checkbox"> تمييز المنتج في المتجر</label><label class="sa-check"><input name="active" type="checkbox" checked> عرض المنتج في المتجر</label></div>' +
     '<div class="sa-product-form-actions"><button type="submit">حفظ المنتج</button><button type="button" class="ghost" id="saProductClear">منتج جديد</button></div></form>' +
     '<aside class="sa-product-preview"><b>معاينة البطاقة</b><div id="saProductPreviewCard" class="sa-product-preview-card"><div class="sa-product-preview-image">DIAMOND</div><div class="sa-product-preview-copy"><span class="hint">ستظهر المعاينة هنا</span></div></div><p class="hint">السعر والخصم والتوفر يعكسان البيانات التي أدخلتها فقط.</p></aside></div>' +
@@ -480,21 +480,18 @@
     return {
       version: 1,
       theme: { accent: "#6d4aff", accent2: "#0c9fa2" },
-      sections: { live: true, recommendations: true, store: true },
+      sections: { live: false, recommendations: false, children: true, articles: true, store: true },
       leagues: [],
       recommendations: { tvmazeIds: [], movies: [] },
       storefront: {
-        title: "متجر DIAMOND TV",
-        subtitle: "اكتشف منتجات وخدمات مختارة بعناية، وتصفّح الأقسام واحفظ ما يناسبك.",
-        metaDescription: "تصفح متجر DIAMOND TV لاكتشاف المنتجات والخدمات المختارة، واقرأ المواصفات والأسعار قبل الطلب.",
-        announcement: "اختيارات DIAMOND TV في مكان واحد",
+        title: "متجر المكتبة الماسية",
+        subtitle: "كتب رقمية مجانية للأطفال وقصص وأنشطة للقراءة والتعلم في المنزل.",
+        metaDescription: "تصفح كتب الأطفال المجانية لتعلم العربية والإنجليزية والقصص والتلوين.",
+        announcement: "كتب رقمية مجانية للأطفال",
         logo: "/assets/store-logo.svg",
         colors: { primary: "#6d4aff", secondary: "#0c9fa2" },
         categories: [
-          { name: "الاشتراكات الرقمية", description: "باقات وخدمات رقمية مختارة", image: "/assets/store-category-subscriptions.svg", color: "#6d4aff" },
-          { name: "أجهزة البث", description: "أجهزة وتجهيزات للمشاهدة", image: "/assets/store-category-devices.svg", color: "#0c9fa2" },
-          { name: "الإكسسوارات", description: "إضافات عملية لتجربتك", image: "/assets/store-category-accessories.svg", color: "#d879a3" },
-          { name: "العروض", description: "خيارات وعروض مميزة", image: "/assets/store-category-offers.svg", color: "#339b75" }
+          { name: "كتب الأطفال المجانية", description: "كتب وقصص وأنشطة PDF للأطفال", image: "/assets/books/arabic-friends-story-cover.png", color: "#13a990" }
         ]
       },
       products: []
@@ -507,7 +504,7 @@
       siteConfig = Object.assign(defaultSiteConfig(), JSON.parse(raw));
     } catch (_) { siteConfig = siteConfig || defaultSiteConfig(); }
     siteConfig.theme = Object.assign({ accent: "#6d4aff", accent2: "#0c9fa2" }, siteConfig.theme || {});
-    siteConfig.sections = Object.assign({ live: true, recommendations: true, store: true }, siteConfig.sections || {});
+    siteConfig.sections = Object.assign({ live: false, recommendations: false, children: true, articles: true, store: true }, siteConfig.sections || {});
     siteConfig.storefront = Object.assign(defaultSiteConfig().storefront, siteConfig.storefront || {});
     siteConfig.storefront.colors = Object.assign({ primary: "#6d4aff", secondary: "#0c9fa2" }, siteConfig.storefront.colors || {});
     siteConfig.storefront.categories = Array.isArray(siteConfig.storefront.categories) ? siteConfig.storefront.categories : [];
@@ -520,8 +517,8 @@
     if (!siteConfig) return;
     $("#saAccent").value = /^#[0-9a-f]{6}$/i.test(siteConfig.theme.accent || "") ? siteConfig.theme.accent : "#6d4aff";
     $("#saAccent2").value = /^#[0-9a-f]{6}$/i.test(siteConfig.theme.accent2 || "") ? siteConfig.theme.accent2 : "#0c9fa2";
-    $("#saLiveEnabled").checked = siteConfig.sections.live !== false;
-    $("#saRecommendationsEnabled").checked = siteConfig.sections.recommendations !== false;
+    $("#saChildrenEnabled").checked = siteConfig.sections.children !== false;
+    $("#saArticlesEnabled").checked = siteConfig.sections.articles !== false;
     $("#saStoreEnabled").checked = siteConfig.sections.store !== false;
     $("#saStoreTitle").value = String(siteConfig.storefront.title || "");
     $("#saStoreSubtitle").value = String(siteConfig.storefront.subtitle || "");
@@ -545,7 +542,7 @@
       const availability = product.availability === "preorder" ? "طلب مسبق" : product.availability === "unavailable" ? "غير متاح" : "متوفر";
       const mediaCount = new Set([product.image].concat(Array.isArray(product.images) ? product.images : []).filter(Boolean)).size;
       const videoCount = Array.isArray(product.videos) ? product.videos.length : 0;
-      return '<div class="sa-manager-row"><span><b>' + escapeHtml(product.title) + '</b><small>' + escapeHtml(product.category || "بلا قسم") + " · " + escapeHtml(product.price || "بدون سعر") + (product.currency ? " " + escapeHtml(product.currency) : "") + " · " + availability + " · " + mediaCount + " صور · " + videoCount + " فيديو" + (product.featured ? " · مميز" : "") + (product.active === false ? " · مخفي" : " · ظاهر") + '</small></span>' +
+      return '<div class="sa-manager-row"><span><b>' + escapeHtml(product.title) + '</b><small>' + escapeHtml(product.category || "بلا قسم") + " · " + (product.downloadable ? "مجاني للتنزيل" : escapeHtml(product.price || "بدون سعر") + (product.currency ? " " + escapeHtml(product.currency) : "")) + " · " + availability + " · " + mediaCount + " صور · " + videoCount + " فيديو" + (product.featured ? " · مميز" : "") + (product.active === false ? " · مخفي" : " · ظاهر") + '</small></span>' +
         '<span class="sa-manager-actions"><button type="button" class="ghost sm" data-edit-product="' + index + '">تعديل</button><button type="button" class="ghost sm" data-remove-product="' + index + '">حذف</button></span></div>';
     }).join("") || '<p class="hint">المتجر فارغ؛ أضف أول منتج من النموذج.</p>';
     $("#saProductCount").textContent = siteConfig.products.length + " منتج";
@@ -680,8 +677,8 @@
           "articleSection": data.category || "عام",
           "datePublished": now,
           "dateModified": now,
-          "author": { "@type": "Organization", "name": data.author || "فريق DIAMOND TV", "url": "https://diamond-tv.shop/" },
-          "publisher": { "@type": "Organization", "name": "DIAMOND TV", "url": "https://diamond-tv.shop/", "logo": { "@type": "ImageObject", "url": "https://diamond-tv.shop/assets/og.png" } }
+          "author": { "@type": "Organization", "name": data.author || "فريق المكتبة الماسية", "url": "https://diamond-tv.shop/" },
+          "publisher": { "@type": "Organization", "name": "المكتبة الماسية", "url": "https://diamond-tv.shop/", "logo": { "@type": "ImageObject", "url": "https://diamond-tv.shop/assets/og.png" } }
         },
         { "@type": "BreadcrumbList", "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://diamond-tv.shop/" },
@@ -695,22 +692,22 @@
     };
     return '<!doctype html>\n<html lang="ar" dir="rtl">\n<head>\n' +
       '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n' +
-      '<title>' + safeTitle + ' | DIAMOND TV</title>\n' +
+      '<title>' + safeTitle + ' | المكتبة الماسية</title>\n' +
       '<meta name="description" content="' + safeDescription + '">\n' +
       '<meta name="robots" content="index,follow,max-image-preview:large">\n' +
       '<link rel="canonical" href="' + escapeHtml(canonical) + '">\n' +
-      '<meta property="og:type" content="' + (isArticle ? "article" : "website") + '"><meta property="og:title" content="' + safeTitle + ' | DIAMOND TV">\n' +
+      '<meta property="og:type" content="' + (isArticle ? "article" : "website") + '"><meta property="og:title" content="' + safeTitle + ' | المكتبة الماسية">\n' +
       '<meta property="og:description" content="' + safeDescription + '"><meta property="og:url" content="' + escapeHtml(canonical) + '"><meta property="og:image" content="' + safeImage + '">\n' +
-      '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="' + safeTitle + ' | DIAMOND TV"><meta name="twitter:description" content="' + safeDescription + '"><meta name="twitter:image" content="' + safeImage + '">\n' +
+      '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="' + safeTitle + ' | المكتبة الماسية"><meta name="twitter:description" content="' + safeDescription + '"><meta name="twitter:image" content="' + safeImage + '">\n' +
       (isArticle ? '<meta property="article:published_time" content="' + now + '"><meta property="article:modified_time" content="' + now + '">\n' : '') +
       '<link rel="stylesheet" href="../assets/style.css">\n' +
       '<script src="../assets/site-config.js"></script>\n' +
       '<script type="application/ld+json">' + JSON.stringify(schema).replace(/</g, "\\u003c") + '</script>\n' +
       '</head>\n<body>\n<main class="wrap sa-content-page">\n' +
       '<nav class="sa-breadcrumb"><a href="../index.html">الرئيسية</a> / ' + (isArticle ? '<a href="./">المقالات</a> / ' : "") + safeTitle + '</nav>\n' +
-      '<article class="sa-article"><p class="pill">' + escapeHtml(data.category || "DIAMOND TV") + '</p><h1>' + safeTitle + '</h1>\n' +
+      '<article class="sa-article"><p class="pill">' + escapeHtml(data.category || "المكتبة الماسية") + '</p><h1>' + safeTitle + '</h1>\n' +
       '<p class="sa-article-lead">' + safeDescription + '</p>\n' +
-      (isArticle ? '<p class="sa-article-author">بقلم <b>' + escapeHtml(data.author || "فريق DIAMOND TV") + '</b></p>\n' : "") +
+      (isArticle ? '<p class="sa-article-author">بقلم <b>' + escapeHtml(data.author || "فريق المكتبة الماسية") + '</b></p>\n' : "") +
       (data.image ? '<figure><img src="' + safeImage + '" alt="' + escapeHtml(data.imageAlt || data.title) + '" loading="lazy"></figure>\n' : "") +
       '<div class="sa-article-body">\n' + data.body + '\n</div>\n' +
       (isArticle && data.sources && data.sources.length ? '<section class="sa-article-sources"><h2>المصادر</h2><ul>' + data.sources.map(function (url) {
@@ -879,7 +876,7 @@
     stageDashboardConfig("تم حفظ الألوان للمراجعة.");
   });
   $("#saSaveSections").addEventListener("click", function () {
-    siteConfig.sections = { live: $("#saLiveEnabled").checked, recommendations: $("#saRecommendationsEnabled").checked, store: $("#saStoreEnabled").checked };
+    siteConfig.sections = { live: false, recommendations: false, children: $("#saChildrenEnabled").checked, articles: $("#saArticlesEnabled").checked, store: $("#saStoreEnabled").checked };
     stageDashboardConfig("تم حفظ إعدادات الأقسام للمراجعة.");
   });
   $("#saSaveStorefront").addEventListener("click", function () {
@@ -1014,7 +1011,7 @@
       const item = siteConfig.products[Number(edit.dataset.editProduct)], form = $("#saProductForm");
       if (!item) return;
       Object.keys(item).forEach(function (key) {
-        if (!form.elements[key] || ["active", "featured", "highlights", "images", "videos", "specifications", "tags"].includes(key)) return;
+        if (!form.elements[key] || ["active", "featured", "downloadable", "highlights", "images", "videos", "specifications", "tags"].includes(key)) return;
         form.elements[key].value = item[key] == null ? "" : item[key];
       });
       form.elements.highlights.value = Array.isArray(item.highlights) ? item.highlights.join("\n") : String(item.highlights || "");
@@ -1024,6 +1021,7 @@
       form.elements.tags.value = Array.isArray(item.tags) ? item.tags.join("، ") : "";
       form.elements.active.checked = item.active !== false;
       form.elements.featured.checked = item.featured === true;
+      form.elements.downloadable.checked = item.downloadable === true;
       renderProductPreview();
       form.scrollIntoView({ behavior: "smooth", block: "center" });
     }
@@ -1195,6 +1193,8 @@
       stock: data.get("stock") === "" ? null : Math.max(0, Math.min(999999, Number(data.get("stock")) || 0)),
       image: coverImage, images: images, videos: videos, imageAlt: String(data.get("imageAlt") || title).trim(), url: url, sourceUrl: sourceUrl,
       availability: ["available", "preorder", "unavailable"].includes(String(data.get("availability"))) ? String(data.get("availability")) : "available",
+      downloadable: form.elements.downloadable.checked, free: form.elements.downloadable.checked,
+      downloadUrl: form.elements.downloadable.checked ? url : "",
       featured: form.elements.featured.checked, active: form.elements.active.checked,
       createdAt: existingProduct && existingProduct.createdAt ? existingProduct.createdAt : new Date().toISOString()
     };
@@ -2195,7 +2195,7 @@
       }
       const newTree = await api("/git/trees", { method: "POST", body: { base_tree: baseTree, tree: treeEntries } });
       const commit = await api("/git/commits", { method: "POST", body: {
-        message: ($("#saCommitMessage").value || "تحديث موقع DIAMOND TV").trim(),
+        message: ($("#saCommitMessage").value || "تحديث موقع المكتبة الماسية").trim(),
         tree: newTree.sha,
         parents: [baseCommit]
       } });
