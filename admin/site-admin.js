@@ -1671,116 +1671,99 @@
   function buildTrendArticleDraft(trend, settings) {
     const config = settings || {};
     const topic = String(trend.title || "").trim();
-    const news = selectTrendSources(trend, config.allowUntrusted === true).slice(0, 12);
+    const sourceLimit = config.length === "long" ? 10 : config.length === "short" ? 4 : 7;
+    const news = selectTrendSources(trend, config.allowUntrusted === true).slice(0, sourceLimit);
     const report = createTrendFactReview(trend, news);
     activeTrendFactReport = report;
     const analysis = trendCoverageAnalysis(trend, news, report);
-    const sourceTimestamp = trend.updatedAt || trendUpdatedAt;
-    const checkedAt = sourceTimestamp ? new Date(sourceTimestamp) : null;
-    const dateText = checkedAt && !Number.isNaN(checkedAt.getTime())
+    const updated = trend.updatedAt || trendUpdatedAt;
+    const checkedAt = updated ? new Date(updated) : new Date();
+    const dateText = !Number.isNaN(checkedAt.getTime())
       ? new Intl.DateTimeFormat("ar-SA", { dateStyle: "long", timeZone: "Asia/Riyadh" }).format(checkedAt)
       : "وقت البحث الحالي";
-    const sourcesSection = news.map(function (entry) {
+    const cleanText = function (value) {
+      const parsed = new DOMParser().parseFromString(String(value || ""), "text/html");
+      return String(parsed.body.textContent || "").replace(/\s+/g, " ").trim();
+    };
+    const shortText = function (value, limit) {
+      const words = cleanText(value).split(/\s+/).filter(Boolean);
+      return words.slice(0, limit).join(" ") + (words.length > limit ? "…" : "");
+    };
+    const sourceName = function (entry) {
       const assessment = sourceAssessment(entry.url, entry.domain);
-      const sourceName = entry.source || assessment.host;
-      const dimensions = Array.isArray(entry.coverageDimensions) && entry.coverageDimensions.length
-        ? entry.coverageDimensions.join("، ")
-        : "لم يحدد الفحص الآلي زاوية واضحة من النص المتاح";
-      const terms = Array.isArray(entry.analysisTerms) && entry.analysisTerms.length
-        ? entry.analysisTerms.slice(0, 5).join("، ")
-        : "لا توجد مفردات كافية للتحليل الآلي";
-      const pageStatus = entry.articleRead
-        ? "استُخرج من الصفحة نص يقارب " + (Number(entry.articleWordCount) || 0) + " كلمة" + (entry.articleTextMethod ? " عبر " + entry.articleTextMethod : "") + "."
-        : "تعذرت قراءة نص كافٍ من الصفحة؛ اعتمد الفحص على العنوان والملخص المتاح فقط.";
-      const summaryWords = String(entry.description || "").trim().split(/\s+/).filter(Boolean);
-      const summary = summaryWords.length
-        ? "الوصف التعريفي المتاح: «" + summaryWords.slice(0, 22).join(" ") + (summaryWords.length > 22 ? "…" : "") + "»."
-        : "لا يتوفر وصف نصي كافٍ؛ لا نستنتج من العنوان وحده.";
-      return "### " + sourceName + " — " + entry.title + "\n\n" +
-        pageStatus + " " + summary + " الزوايا التي رصدها الفحص: " + dimensions + ". مفردات بارزة في النص المستخرج: " + terms + ".";
-    }).join("\n\n");
-    const datedSources = news.filter(function (entry) { return entry.publishedAt; }).slice().sort(function (a, b) {
-      return String(a.publishedAt).localeCompare(String(b.publishedAt));
-    }).map(function (entry) {
-      const assessment = sourceAssessment(entry.url, entry.domain);
-      return "- " + entry.publishedAt + " — " + (entry.source || assessment.host) + ": " + entry.title;
+      return cleanText(entry.source || assessment.publisher || assessment.host || "ناشر");
+    };
+    const sourceReports = news.map(function (entry, index) {
+      const publisher = sourceName(entry);
+      const headline = cleanText(entry.title || "تغطية مرتبطة بالموضوع");
+      const summary = cleanText(entry.description || "");
+      const checked = entry.articleRead === true;
+      const opening = index === 0
+        ? "تبدأ الصورة من "
+        : index === news.length - 1 ? "وتكتمل زاوية المتابعة لدى " : "ومن زاوية أخرى، ";
+      const basis = summary
+        ? "يعرض ملخص الصفحة المنشور لدى " + publisher + " ما يرتبط بالموضوع بهذه الخلاصة: «" + shortText(summary, 38) + "»."
+        : "يركز العنوان المنشور لدى " + publisher + " على «" + headline + "». لم يتوفر ملخص كافٍ للصفحة، لذلك لا تضيف المسودة تفاصيل غير ظاهرة في المصدر.";
+      const reading = checked
+        ? " أمكن استخراج نص من الصفحة، لكن ذلك لا يغني عن مراجعة الرابط والسياق الأصلي."
+        : " اقتصر المتاح على بيانات الفهرسة أو العنوان، لذا تبقى التفاصيل بحاجة إلى فتح المصدر.";
+      return opening + publisher + ": " + basis + reading;
     });
-    const sourceOverview = "اعتمدت هذه المسودة على " + report.total + " تغطيات من " + report.domains +
-      " ناشرين وجهات مختلفة؛ أمكن استخراج نص كافٍ من " + report.readablePages + " صفحات، بنحو " + report.extractedWords +
-      " كلمة إجمالًا. بقية الصفحات قد تعرض عنوانًا أو ملخصًا فقط.";
+    const coverageSentence = analysis.sharedDimensions.length
+      ? "تكررت في أكثر من صفحة مقروءة زوايا " + analysis.sharedDimensions.join("، ") + "."
+      : "لم تتكرر زاوية تغطية واضحة في صفحات كافية؛ لذلك لا تنسب المسودة رواية موحدة إلى الناشرين.";
+    const isolated = analysis.dimensionCoverage.filter(function (row) { return row.publisherCount === 1; })
+      .map(function (row) { return row.dimension; }).slice(0, 4);
+    const gapSentence = analysis.missing.length
+      ? "أما النقاط التي لم تتضح من المواد المجموعة فهي " + analysis.missing.join("، ") + "؛ لا ينبغي ملؤها بالتخمين."
+      : "مع ذلك، تظل الأسماء والأرقام والتواريخ بحاجة إلى مطابقة مباشرة مع الجهة الأصلية.";
+    const distinctSentence = isolated.length
+      ? "وتظهر زوايا مثل " + isolated.join("، ") + " في مصدر واحد فقط، ما يجعلها أسئلة متابعة مفيدة لا حقائق محسومة."
+      : "وتفيد المقارنة هنا في معرفة حدود التغطية قبل تبني استنتاج أوسع.";
+    const overview = news.length >= 2
+      ? "جُمعت " + news.length + " مواد من ناشرين مختلفين حتى " + dateText + "؛ وقُرئ نص كافٍ من " + report.readablePages + " صفحات."
+      : "عُثر على مادة واحدة صالحة حتى " + dateText + "؛ لا تكفي وحدها لإجراء مقارنة مستقلة، لذا صيغت المسودة بصفتها بداية للمراجعة.";
     const lead = config.tone === "simple"
-      ? "إذا كنت تبحث عن «" + topic + "»، فهذه قراءة أولية لما نشرته المصادر حتى " + dateText + ". نوضح ما أمكن استخلاصه وما يحتاج إلى الرجوع للأصل."
+      ? "إذا كنت تبحث عن «" + topic + "»، فهذه قراءة مبسطة لأحدث ما ظهر في المصادر المتاحة حتى " + dateText + "."
       : config.tone === "analysis"
-        ? "تُظهر مقارنة التغطيات المتاحة عن «" + topic + "» حتى " + dateText + " تباينًا في الزوايا ومستوى التفاصيل؛ لذلك نفصل بين ما رصده النص وما بقي غير محسوم."
-        : "تجمع هذه المسودة أبرز ما أمكن رصده في تغطيات «" + topic + "» حتى " + dateText + "، مع فصل الإشارات المشتركة عن التفاصيل التي تحتاج إلى تحقق مباشر.";
-    const commonCoverage = analysis.sharedDimensions.length
-      ? "تكررت زوايا " + analysis.sharedDimensions.join("، ") + " في نصوص أكثر من ناشر."
-      : "لم تظهر زاوية تغطية مشتركة بوضوح في نصوص الصفحات التي أمكن قراءتها.";
-    const coverageMatrix = analysis.dimensionCoverage.length
-      ? analysis.dimensionCoverage.map(function (row) { return "- " + row.dimension + ": رصدها الفحص في " + row.publisherCount + " من " + report.readablePages + " صفحات مقروءة."; }).join("\n")
-      : "- لم تُستخرج بيانات كافية لبناء مقارنة بين زوايا المقالات.";
-    const distinctIdeaText = analysis.distinctTerms.length
-      ? "مصطلحات بارزة ظهرت في نص مصدر واحد ضمن المجموعة: " + analysis.distinctTerms.join("، ") + ". ظهورها مرة واحدة لا يؤكد أهميتها أو صحتها، لكنه يوضح زاوية تستحق فتح المصدر ومراجعتها."
-      : "لم يرصد التحليل مفردات منفردة كافية للتمييز بين زوايا الناشرين.";
-    const originality = "الملاحظة التحليلية: " + commonCoverage + (analysis.missing.length
-      ? " بينما لم تتضح معلومات " + analysis.missing.join("، ") + " في المجموعة التي فحصناها."
-      : " ومع ذلك لا يكفي تكرار الزوايا لإثبات صحة الوقائع.");
-    const readerUse = trend.category === "sports"
-      ? "قبل نقل أي موعد أو نتيجة، طابقها مع صفحة البطولة أو النادي، ثم راجع الناقل الرسمي لمعرفة البث. اذكر وقت التحقق لأن هذه التفاصيل تتغير."
+        ? "تضع هذه القراءة «" + topic + "» في سياق تغطيات الناشرين: ما الذي تكرر، وما الذي بقي بلا دليل كافٍ حتى " + dateText + "؟"
+        : "تجمع هذه المسودة أبرز المعلومات المتاحة عن «" + topic + "» حتى " + dateText + "، وتحوّل نتائج البحث إلى قراءة مرتبة تساعد القارئ على متابعة الموضوع دون خلط العناوين بالوقائع.";
+    const practical = trend.category === "sports"
+      ? "للمتابع الرياضي، ابدأ بصفحة البطولة أو النادي لتأكيد الموعد والنتيجة، ثم راجع جدول الناقل الرسمي قبل مشاركة معلومة البث. تتغير الجداول أحيانًا، لذلك يجب ذكر وقت آخر تحقق."
       : trend.category === "entertainment"
-        ? "قبل إضافة أسماء أو مواعيد عرض، ارجع إلى إعلان جهة الإنتاج أو منصة العرض؛ فقد تختلف الإتاحة حسب البلد وتتغير الخطط."
-        : "قبل اعتماد معلومة أو نصيحة، راجع الجهة صاحبة المعلومة وتاريخها والسياق الذي تنطبق عليه، ثم أضف مثالًا عمليًا من تحرير الموقع.";
-    const intentText = config.intent === "compare"
-      ? "تركيز هذه المسودة هو مقارنة ما تغطيه المصادر والفجوات بينها."
-      : config.intent === "list"
-        ? "تقدم المسودة قائمة مراجعة منظمة تساعد القارئ على متابعة جوانب الموضوع."
-        : config.intent === "explainer"
-          ? "تشرح المسودة الموضوع من خلال ما ظهر في المصادر وحدود ما يمكن تأكيده."
-          : "ترتب المسودة المعلومات في قراءة عملية تميز بين الرصد والاستنتاج.";
-    const quick = [
-      "- الموضوع: " + topic + ".",
-      "- المصادر: " + report.total + " من " + report.domains + " ناشرين معروفين.",
-      "- صفحات قُرئ منها نص كافٍ: " + report.readablePages + ".",
-      "- أهم ما يحتاج مراجعة: " + (analysis.missing.length ? analysis.missing.join("، ") : "الأسماء والأرقام والتواريخ من المصدر الأصلي") + "."
-    ].join("\n");
+        ? "للمهتم بالأعمال الفنية، افصل بين خبر الإعلان وبين موعد العرض والإتاحة الفعلية؛ تحقق من حساب جهة الإنتاج أو منصة العرض، لأن البلد وتاريخ التحديث قد يغيران التفاصيل."
+        : "للقارئ، أفضل طريقة للاستفادة هي تحويل كل معلومة متغيرة إلى سؤال محدد: من الجهة صاحبة القرار؟ متى نُشر التحديث؟ وهل يؤيده مصدر مستقل؟";
     const faq = [
-      "### ما الذي تقوله التغطيات المتاحة عن " + topic + "؟",
-      "تعرض المسودة روابط المصادر والزوايا التي أمكن رصدها في نصوصها. افتح كل رابط لقراءة التفاصيل الكاملة وتاريخ التحديث.",
-      "### هل يعني تكرار كلمة أو زاوية أن المعلومة مؤكدة؟",
-      "لا. التشابه اللفظي أو تكرار زاوية التغطية إشارة للمقارنة فقط؛ تأكيد الواقعة يتطلب مصدرًا أصليًا أو تحققًا مستقلًا.",
-      "### ما الذي يجب التحقق منه قبل نشر المقال؟",
-      "راجع أسماء الأشخاص والجهات والأرقام والتواريخ، وطابقها مع المصدر الأصلي. اذكر أي اختلاف بين التغطيات بدل دمج روايات متباينة."
+      "### ما خلاصة «" + topic + "» حتى الآن؟\n" + (news.length > 1
+        ? "المواد التي جُمعت تعرض زوايا متعددة، لكن الخلاصة الدقيقة تظل مرتبطة بما ورد في كل رابط. يلخص المقال ما توفر ولا يدمج التفاصيل المختلف عليها."
+        : "المتوفر حاليًا مصدر واحد فقط؛ لذلك لا تقدم المسودة حكمًا نهائيًا، وتحتاج إلى مصدر مستقل إضافي."),
+      "### هل تحققت الأداة من صحة كل معلومة؟\nلا. الأداة تفحص استجابة الروابط وتستخرج العناوين والملخصات ومؤشرات التغطية؛ لا تثبت وحدها صحة كل ادعاء. طابق الأسماء والأرقام والمواعيد مع مصدرها الأصلي."),
+      "### كيف أتابع أي تحديث جديد؟\nافتح روابط المصادر في نهاية المقال، وتحقق من تاريخ النشر أو التعديل. عند ظهور معلومة جديدة، أعد البحث ثم حدّث تاريخ المقال وخلاصته."
     ];
     const sections = [
-      "## ملخص سريع",
-      lead + " " + intentText,
-      quick,
-      "## ما الأفكار التي تناولها كل ناشر؟",
-      sourceOverview + " يلخص هذا القسم وصف كل صفحة على حدة، ثم تقارن الأقسام التالية الزوايا والمفردات التي تكررت أو غابت.",
-      sourcesSection,
-      datedSources.length ? "## توقيت التغطيات\n\n" + datedSources.join("\n") : "",
-      "## نقاط الالتقاء والاختلاف",
-      analysis.text + " " + analysis.sharedText,
-      "## خريطة الأفكار بحسب عدد المصادر",
-      coverageMatrix + "\n\n" + distinctIdeaText,
-      "## إضافة تحليلية للقارئ",
-      originality + " هذه مقارنة لتوزيع الأفكار في المواد المتاحة، وليست نتيجة تحقق مستقل من الوقائع.",
-      "## ما الذي ينبغي التحقق منه؟",
-      readerUse + (analysis.missing.length ? " وتحتاج الجوانب التالية إلى مصدر مباشر: " + analysis.missing.join("، ") + "." : ""),
+      lead + " " + overview,
+      "## أبرز ما نشرته المصادر",
+      sourceReports.join("\n\n"),
+      "## قراءة مقارنة لما ظهر",
+      coverageSentence + " " + distinctSentence + " " + gapSentence,
+      "## ما الذي يهم القارئ؟",
+      practical,
+      "## خلاصة تحريرية",
+      "القيمة هنا ليست في إعادة سرد العناوين، بل في إظهار حدود ما نعرفه: تعدد التغطيات يساعد على اكتشاف زوايا الموضوع، أما تأكيد الوقائع فيحتاج إلى الرجوع للمصدر الذي يملك المعلومة. إذا تعارضت التفاصيل، اعرض الاختلاف للقارئ وحدّث المقال عند صدور توضيح موثوق.",
       "## أسئلة شائعة",
       faq.join("\n\n"),
       "## المصادر",
       news.map(function (entry) {
         const assessment = sourceAssessment(entry.url, entry.domain);
-        return "- [" + (entry.source || assessment.host) + " — " + entry.title + "](" + entry.url + ")";
+        return "- [" + (cleanText(entry.source || assessment.publisher || assessment.host) + " — " + cleanText(entry.title || "المصدر")) + "](" + safeDashboardUrl(entry.url) + ")";
       }).join("\n"),
-      "## منهجية وحدود المسودة",
-      "بحثت الأداة في خلاصات أخبار معروفة، ثم حاولت قراءة صفحات الناشرين عبر HTTPS. حُللت الكلمات وزوايا التغطية المتاحة فقط؛ لا يُحفظ النص الكامل للناشرين، وقد لا تعرض بعض الصفحات نصًا كافيًا بسبب الحماية أو طريقة تحميلها. الفحص الآلي لا يثبت صحة كل ادعاء ولا يضمن ترتيبًا في نتائج البحث. افتح المصادر الأصلية، أضف معلومة أو تحليلًا خاصًا بالموقع، وراجع المقال قبل نشره."
+      "## منهجية المراجعة",
+      "بُنيت هذه المسودة من خلاصات الأخبار وبيانات صفحات الناشرين المتاحة وقت البحث. النص المستخرج يُستخدم لرصد الكلمات والزوايا فقط، ولا يُحفظ المقال الكامل للناشر. راجع الروابط الأصلية، وأضف معلومة تحريرية مستقلة أو سياقًا محليًا قبل النشر؛ لا تضمن الأداة ترتيبًا معينًا في نتائج البحث."
     ];
     if (config.length === "long") {
       sections.splice(sections.length - 3, 0,
-        "## قائمة تحقق للمحرر",
-        "- هل لكل اسم أو تاريخ أو رقم رابط أصلي يدعمه؟\n- هل تميز المسودة بين ما ظهر في المصدر وما استنتجناه من المقارنة؟\n- هل أضفت سياقًا محليًا أو مثالًا عمليًا لا تكرره التغطيات؟\n- هل حذفت أي معلومة لا يمكن التحقق منها؟");
+        "## نقاط تحقق قبل النشر",
+        "- افتح المصدر الأصلي لكل اسم أو رقم أو تاريخ.\n- تأكد من أن الرابط يخص الناشر المذكور وأنه محدث.\n- وضح للقارئ ما هو تقرير مصدر وما هو استنتاج تحريري.\n- أضف سياقًا مفيدًا خاصًا بالموقع بدل تكرار ملخصات الناشرين.");
     }
     return sections.filter(Boolean).join("\n\n");
   }
@@ -1840,8 +1823,8 @@
       method: "POST",
       body: { event_type: "article-research", client_payload: { topic: topic, request_id: requestId } }
     });
-    for (let attempt = 0; attempt < 75; attempt += 1) {
-      $("#saWriterNotice").textContent = "جارٍ البحث عن تغطيات موثوقة للموضوع (" + (attempt + 1) + "/75)…";
+    for (let attempt = 0; attempt < 180; attempt += 1) {
+      $("#saWriterNotice").textContent = "جارٍ البحث عن تغطيات موثوقة للموضوع (" + (attempt + 1) + "/180)…";
       await waitForResearch(2000);
       try {
         const resultFile = await api("/contents/" + apiPath(resultPath) + "?ref=" + encodeURIComponent(BRANCH));
@@ -1900,7 +1883,7 @@
         body: { event_type: "article-link-check", client_payload: { request_id: requestId, topic: $("#saWriterTopic").value.trim(), urls: urls } }
       });
       let result = null;
-      for (let attempt = 0; attempt < 45; attempt += 1) {
+      for (let attempt = 0; attempt < 180; attempt += 1) {
         panel.innerHTML = "<b>فحص الروابط</b><p class=\"hint\">جارٍ فحص استجابة الناشرين (" + (attempt + 1) + "/45)…</p>";
         await waitForResearch(2000);
         try {
@@ -2010,8 +1993,8 @@
       const readablePages = sources.filter(function (entry) { return entry.articleRead === true; }).length;
       const keywordField = $("#saWriterKeyword"), keyword = keywordField.value.trim() || topic;
       keywordField.value = keyword;
-      const title = (topic + ": ما الذي تقوله المصادر؟ قراءة وتحليل").slice(0, 100);
-      const description = ("قراءة مقارنة عن " + topic + " من مصادر موثوقة، مع توضيح زوايا التغطية وما يحتاج إلى تحقق.").slice(0, 160);
+      const title = (topic + " | أحدث التفاصيل والتحليل").slice(0, 75);
+      const description = ("مسودة تحليلية عن " + topic + " اعتمادًا على تغطيات حديثة، مع عرض المصادر والنقاط التي تحتاج إلى تحقق.").slice(0, 160);
       const slug = transliterateSlug(keyword || topic) || ("article-" + Date.now());
       activeTrendFactReport = null;
       activeLinkCheckReport = null;
@@ -2042,11 +2025,11 @@
           : readablePages >= 2
             ? "استُخرج نص كافٍ من " + readablePages + " صفحات؛ الفحص يرصد الزوايا والمفردات ولا يؤكد صحة الوقائع."
             : "تنبيه: استُخرج نص كافٍ من " + readablePages + " صفحات فقط؛ راجع كل حقيقة وأضف مصدرًا مستقلًا أمكن قراءة نصه قبل النشر.";
-      $("#saWriterNotice").textContent = "أُعدت مسودة أولية عن «" + topic + "» من " + sources.length + " ناشرين معروفين. " + researchNote;
+      $("#saWriterNotice").textContent = "كُتبت مسودة مقال عن «" + topic + "» اعتمادًا على " + sources.length + " مصادر. " + researchNote;
       updateSearchPreview(form);
       articleAudit(form);
       form.elements.body.scrollIntoView({ behavior: "smooth", block: "center" });
-      toast(hasTrustedSource && sources.length >= 2 && readablePages >= 2 ? "اكتملت المسودة الأولية. راجع النص والحقائق قبل النشر." : "ظهرت المسودة والمصادر؛ استكمل التحقق قبل النشر.");
+      toast(hasTrustedSource && sources.length >= 2 ? "كُتب المقال مع المصادر. راجع الوقائع قبل النشر." : "كُتبت مسودة أولية؛ أضف مصدرًا موثوقًا وراجع التفاصيل قبل النشر.");
     } catch (error) {
       activeResearchSources = [];
       activeTrendFactReport = null;
