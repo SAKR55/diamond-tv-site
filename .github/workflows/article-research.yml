@@ -36,4 +36,6 @@ jobs:
             exit 1
           fi
           git commit -m "chore: save article research result"
+          git fetch origin main
+          git rebase origin/main
           git push origin HEAD:main
