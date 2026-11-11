@@ -1,0 +1,28 @@
+{
+  "requestId": "research-mwchw2wo-j866e6tzp",
+  "mode": "article-research",
+  "topic": "مباريات دوري الامم الاوربيه",
+  "updatedAt": "2026-11-11T19:11:55Z",
+  "sources": [
+    {
+      "title": "Google News",
+      "source": "الجزيرة نت",
+      "url": "https://news.google.com/rss/articles/CBMivAJBVV95cUxNTmxhUzFSeXBac2lvVFhjMEtMODUxSUJKTWdQQmZDU25vQ2hjMW1wTXBSOUREQkU5MFI4Z1lEQ3N6QlFrS3RDWFpDZmU4WHF3VUZ3SVludTlWamVIdUJIek5tZVh3VVE4T09sbDBMZnMwUHFKOEpYeS1Nbzc5QWdKbzZCOFMyNG82ZWJubW5mTHJtaW1VNzRsZ0laQ0YxN0tPQWxkZ0pSS3I1MjJjTDI0ZXhwRWZLVzA2VDlNQXNVNjg3bkFiUUUxWm9nc0UxX3BTSnVpNzBEWndLZ2tBbnNEODc5d1JodjhCWE1nMFFoX1VpNTE2bWU4UVZQNnZKZ0hmSFBiM1FDakFlYzQ0ZnowRk9pb3NmTEVKdDRjbEFQUFJzaXRvX3JXSmF2YjMtanN2Vkh1d0hOTjBBNW5t?oc=5&hl=en-US&gl=US&ceid=US:en",
+      "finalUrl": "https://news.google.com/rss/articles/CBMivAJBVV95cUxNTmxhUzFSeXBac2lvVFhjMEtMODUxSUJKTWdQQmZDU25vQ2hjMW1wTXBSOUREQkU5MFI4Z1lEQ3N6QlFrS3RDWFpDZmU4WHF3VUZ3SVludTlWamVIdUJIek5tZVh3VVE4T09sbDBMZnMwUHFKOEpYeS1Nbzc5QWdKbzZCOFMyNG82ZWJubW5mTHJtaW1VNzRsZ0laQ0YxN0tPQWxkZ0pSS3I1MjJjTDI0ZXhwRWZLVzA2VDlNQXNVNjg3bkFiUUUxWm9nc0UxX3BTSnVpNzBEWndLZ2tBbnNEODc5d1JodjhCWE1nMFFoX1VpNTE2bWU4UVZQNnZKZ0hmSFBiM1FDakFlYzQ0ZnowRk9pb3NmTEVKdDRjbEFQUFJzaXRvX3JXSmF2YjMtanN2Vkh1d0hOTjBBNW5t?oc=5&hl=en-US&gl=US&ceid=US:en",
+      "domain": "news.google.com",
+      "description": "Comprehensive up-to-date news coverage, aggregated from sources all over the world by Google News.",
+      "publishedAt": "Wed, 11 Nov 2026 07:48:43 GMT",
+      "reachable": true,
+      "httpStatus": 200,
+      "articleRead": false,
+      "articleWordCount": 0,
+      "analysisTerms": [],
+      "coverageDimensions": [],
+      "articleTextMethod": "استخراج محلي للعناوين والفقرات؛ لم يُحفظ النص الكامل",
+      "publisherTier": "unlisted",
+      "reason": ""
+    }
+  ],
+  "feedErrors": [],
+  "sourceCount": 1
+}
