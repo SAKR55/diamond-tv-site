@@ -2,7 +2,7 @@
   "version": 1,
   "theme": {
     "accent": "#324fe2",
-    "accent2": "#c09191"
+    "accent2": "#f17e7e"
   },
   "sections": {
     "live": true,
@@ -142,7 +142,7 @@
     "title": "متجر DIAMOND",
     "subtitle": "اكتشف منتجات وخدمات مختارة بعناية، وتصفّح الأقسام واحفظ ما يناسبك.",
     "metaDescription": "تصفح متجر DIAMOND TV لاكتشاف المنتجات والخدمات المختارة، واقرأ المواصفات والأسعار قبل الطلب.",
-    "announcement": "اختيارات DIAMOND TV في مكان واحد",
+    "announcement": "",
     "logo": "/assets/store-logo-1794418707068-805i3-diamond_wordmark_recolored.png",
     "colors": {
       "primary": "#6d4aff",
