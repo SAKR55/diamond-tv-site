@@ -1,0 +1,39 @@
+name: Research article sources
+
+on:
+  repository_dispatch:
+    types: [article-research, article-link-check]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: article-research
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Search and inspect publisher pages
+        run: python scripts/article-research.py
+      - name: Save the request result for the admin
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/article-research/
+          if git diff --cached --quiet; then
+            echo "No research result was produced."
+            exit 1
+          fi
+          git commit -m "chore: save article research result"
+          git push origin HEAD:main
