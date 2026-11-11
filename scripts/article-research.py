@@ -53,13 +53,13 @@ the and for with from that this have has are was were your about news latest say
 """.split())
 DIMENSIONS = [
     ("الموعد أو الجدول", r"موعد|توقيت|جدول|schedule|when|kick.?off|fixture"),
-    ("النتيجة أو الأداء", r"نتيجة|فاز|خسر|score|result|innings|\\b\\d{1,3}\\s*[-–/:]\\s*\\d{1,3}\\b"),
+    ("النتيجة أو الأداء", r"نتيجة|فاز|خسر|score|result|innings|\b\d{1,3}\s*[-–/:]\s*\d{1,3}\b"),
     ("البث والمتابعة", r"بث|قناة|شاهد|stream|watch|broadcast|live"),
     ("المنصة أو الإتاحة", r"منصة|نتفليكس|شاهد|netflix|prime video|streaming|watch"),
     ("الأسماء أو فريق العمل", r"ممثل|بطولة|أبطال|cast|actor|actress|starring|director"),
-    ("الجهة المنظمة أو الرسمية", r"fifa|uefa|the-afc|cafonline|icc-cricket|nba\\.com|premierleague|رسمي|وزارة|هيئة"),
+    ("الجهة المنظمة أو الرسمية", r"fifa|uefa|the-afc|cafonline|icc-cricket|nba\.com|premierleague|رسمي|وزارة|هيئة"),
 ]
-ARABIC_WORDS = re.compile(r"[a-z0-9\\u0600-\\u06ff]{3,}", re.I)
+ARABIC_WORDS = re.compile(r"[a-z0-9\u0600-\u06ff]{3,}", re.I)
 
 
 def now_iso() -> str:
@@ -130,7 +130,7 @@ def plain_html(value: str) -> str:
         parser.feed(value or "")
     except Exception:
         pass
-    return re.sub(r"\\s+", " ", html.unescape(" ".join(parser.parts))).strip()
+    return re.sub(r"\s+", " ", html.unescape(" ".join(parser.parts))).strip()
 
 
 class PageParser(HTMLParser):
@@ -153,7 +153,7 @@ class PageParser(HTMLParser):
         if tag == "meta" and not self.description:
             key = (values.get("property") or values.get("name") or "").lower()
             if key in {"description", "og:description", "twitter:description"}:
-                self.description = re.sub(r"\\s+", " ", values.get("content", "")).strip()[:700]
+                self.description = re.sub(r"\s+", " ", values.get("content", "")).strip()[:700]
         if tag in self.BLOCK:
             self.blocked += 1
         if tag == "title":
@@ -179,7 +179,7 @@ class PageParser(HTMLParser):
             self.current.append(data)
 
     def _flush(self):
-        value = re.sub(r"\\s+", " ", " ".join(self.current)).strip()
+        value = re.sub(r"\s+", " ", " ".join(self.current)).strip()
         if len(value) >= 35:
             self.blocks.append(value[:1000])
         self.current_tag = ""
@@ -198,7 +198,7 @@ def article_metadata(url: str):
             return result
         parser = PageParser()
         parser.feed(raw)
-        result["title"] = re.sub(r"\\s+", " ", parser.title).strip()[:240]
+        result["title"] = re.sub(r"\s+", " ", parser.title).strip()[:240]
         result["description"] = parser.description[:700]
         body = " ".join(parser.blocks)
         words = ARABIC_WORDS.findall(body)
@@ -215,7 +215,7 @@ def article_metadata(url: str):
         result["coverageDimensions"] = [label for label, pattern in DIMENSIONS if re.search(pattern, evidence, re.I)]
         if not result["description"] and parser.blocks:
             # Keep only page metadata in the result, never the body text.
-            result["description"] = re.sub(r"\\s+", " ", parser.blocks[0]).strip()[:260]
+            result["description"] = re.sub(r"\s+", " ", parser.blocks[0]).strip()[:260]
         if not result["title"]:
             result["title"] = urllib.parse.urlsplit(final_url).hostname or ""
         return result
@@ -280,7 +280,7 @@ def parse_feed(raw: str, feed_name: str) -> list[dict]:
 
 def normalized(value: str) -> str:
     value = value.lower().translate(str.maketrans({"أ": "ا", "إ": "ا", "آ": "ا", "ى": "ي", "ة": "ه"}))
-    return re.sub(r"[^a-z0-9\\u0600-\\u06ff]+", " ", value).strip()
+    return re.sub(r"[^a-z0-9\u0600-\u06ff]+", " ", value).strip()
 
 
 def topic_terms(topic: str) -> list[str]:
@@ -387,7 +387,7 @@ def main():
     if not re.fullmatch(r"[a-zA-Z0-9-]{1,90}", request_id):
         raise SystemExit("معرّف الطلب غير صالح.")
     mode = str(event.get("action", ""))
-    topic = re.sub(r"\\s+", " ", str(payload.get("topic", ""))).strip()[:180]
+    topic = re.sub(r"\s+", " ", str(payload.get("topic", ""))).strip()[:180]
     if mode == "article-research":
         if len(topic) < 2:
             raise SystemExit("اكتب موضوعًا واضحًا للبحث.")
@@ -402,7 +402,7 @@ def main():
         raise SystemExit("نوع طلب غير مدعوم.")
     RESULT_DIR.mkdir(parents=True, exist_ok=True)
     output = RESULT_DIR / (request_id + ".json")
-    output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("Saved", output.relative_to(ROOT), "sources=", len(result.get("sources", result.get("links", []))))
 
 
