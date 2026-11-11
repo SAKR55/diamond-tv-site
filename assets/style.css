@@ -437,3 +437,21 @@ footer{margin-top:50px;border-top:1px solid var(--line);padding:24px 0;color:var
 .store-category-card:hover,.store-category-card:focus-visible{border-color:var(--category-color,var(--accent))}
 .store-category-card-copy em{color:var(--category-color,var(--accent))}
 @media(max-width:650px){.sa-store-category-media{grid-template-columns:70px 1fr}.sa-store-category-media .sa-upload-box{grid-column:1/-1}.sa-store-category-image-preview{width:70px;height:58px}.sa-store-category-media button{grid-column:2;justify-self:end}.store-brand img{width:126px;height:74px}}
+
+/* DIAMOND Store: midnight cinema palette */
+body.store-site{
+  color-scheme:dark;
+  --bg:#070D16;--bg2:#0C1726;--card:#101D2F;--card2:#14253B;--line:#263B53;
+  --text:#F2F7FC;--muted:#A6B7CB;--accent:#13CFE1;--accent2:#8477FF;
+  background-color:var(--bg);
+  background-image:radial-gradient(900px 520px at 86% -12%,rgba(19,207,225,.13),transparent 62%),radial-gradient(780px 470px at 0% 8%,rgba(132,119,255,.12),transparent 64%);
+}
+body.store-site .top{background:rgba(7,13,22,.91);border-color:var(--line)}
+body.store-site .nav a.on,body.store-site .nav-group-button.on{color:#07111A}
+body.store-site .dl{color:#07111A;background:linear-gradient(125deg,var(--accent),var(--accent2));box-shadow:0 8px 24px rgba(19,207,225,.14)}
+body.store-site .store-hero{border:1px solid color-mix(in srgb,var(--accent) 24%,var(--line));background:radial-gradient(circle at 82% 36%,color-mix(in srgb,var(--accent) 14%,var(--card)),transparent 36%),linear-gradient(135deg,#14263B,#09111D)}
+body.store-site .store-hero-mark{display:grid;place-items:center;width:min(100%,395px);aspect-ratio:395/225;min-height:180px;justify-self:center;overflow:hidden;border:1px solid color-mix(in srgb,var(--accent) 48%,var(--line));border-radius:26px;background:#030507;box-shadow:0 22px 50px #0008,inset 0 0 30px rgba(19,207,225,.1)}
+body.store-site .store-hero-mark img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+body.store-site .store-hero-cta,body.store-site .store-order{color:#07111A}
+body.store-site .store-chip.active,body.store-site .store-favorites-toggle.active,body.store-site .store-featured{color:#07111A}
+@media(max-width:700px){body.store-site .store-hero-mark{display:grid;width:min(100%,395px);min-height:180px}}
