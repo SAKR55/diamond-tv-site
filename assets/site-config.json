@@ -142,20 +142,20 @@
   },
   "storefront": {
     "title": "متجر المكتبة الماسية",
-    "subtitle": "كتب أطفال وقصص وأنشطة مجانية للقراءة والتعلّم في المنزل.",
-    "metaDescription": "تصفح متجر المكتبة الماسية المجاني لكتب الأطفال: تعلم العربية والإنجليزية والقصص والتلوين.",
+    "subtitle": "كتب وقصص وأنشطة مجانية للأطفال، مع خيارات قراءة مباشرة أو تنزيل PDF.",
+    "metaDescription": "تصفح كتب وقصص مكتبة الأطفال الماسية المجانية بالعربية والإنجليزية، واقرأها مباشرة أو نزّل ملفات PDF.",
     "announcement": "كتب رقمية مجانية للأطفال",
     "logo": "/assets/books/library-logo.svg",
     "colors": {
-      "primary": "#4dbbff",
-      "secondary": "#0c25a1"
+      "primary": "#65c4f7",
+      "secondary": "#7889e8"
     },
     "categories": [
       {
         "name": "كتب الأطفال المجانية",
         "description": "تعلم اللغات والقصص والأنشطة القابلة للتنزيل",
         "image": "/assets/books/arabic-friends-story-cover.png",
-        "color": "#13a990"
+        "color": "#44bba8"
       }
     ]
   },
@@ -375,6 +375,446 @@
       "featured": true,
       "active": true,
       "createdAt": "2026-11-12"
+    },
+    {
+      "id": "library-reading-mariam-and-the-balcony-seed",
+      "title": "مريم وبذرة الشرفة",
+      "category": "كتب الأطفال المجانية",
+      "description": "قصة عربية أصلية عن الفضول والصبر والعناية بالنبات، مع أسئلة نشاط في نهاية الكتاب.",
+      "seoTitle": "مريم وبذرة الشرفة | قراءة مجانية للأطفال",
+      "seoDescription": "قصة عربية أصلية عن الفضول والصبر والعناية بالنبات، مع أسئلة نشاط في نهاية الكتاب.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-01",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/mariam-seed-cover.svg",
+      "imageAlt": "غلاف مريم وبذرة الشرفة مع شعار المكتبة الماسية",
+      "url": "/books/mariam-and-the-balcony-seed.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": true,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "values"
+      ]
+    },
+    {
+      "id": "library-reading-lina-and-the-feelings-lantern",
+      "title": "لينا وفانوس المشاعر",
+      "category": "كتب الأطفال المجانية",
+      "description": "حكاية لطيفة عن تسمية المشاعر والتعبير عنها باحترام وطلب المساعدة عند الحاجة.",
+      "seoTitle": "لينا وفانوس المشاعر | قراءة مجانية للأطفال",
+      "seoDescription": "حكاية لطيفة عن تسمية المشاعر والتعبير عنها باحترام وطلب المساعدة عند الحاجة.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-02",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/lina-lantern-cover.svg",
+      "imageAlt": "غلاف لينا وفانوس المشاعر مع شعار المكتبة الماسية",
+      "url": "/books/lina-and-the-feelings-lantern.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": true,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "values"
+      ]
+    },
+    {
+      "id": "library-reading-yasser-word-market",
+      "title": "ياسر في سوق الكلمات",
+      "category": "كتب الأطفال المجانية",
+      "description": "كتاب قراءة مبسّط للأطفال: كلمات عربية مألوفة، جمل قصيرة، وأسئلة وأنشطة لغوية صغيرة.",
+      "seoTitle": "ياسر في سوق الكلمات | قراءة مجانية للأطفال",
+      "seoDescription": "كتاب قراءة مبسّط للأطفال: كلمات عربية مألوفة، جمل قصيرة، وأسئلة وأنشطة لغوية صغيرة.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-03",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/yasser-words-cover.svg",
+      "imageAlt": "غلاف ياسر في سوق الكلمات مع شعار المكتبة الماسية",
+      "url": "/books/yasser-word-market.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": true,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "arabic"
+      ]
+    },
+    {
+      "id": "library-reading-star-shines-together",
+      "title": "نجمة تضيء مع الأصدقاء",
+      "category": "كتب الأطفال المجانية",
+      "description": "قصة أصلية عن التعاون واختلاف المواهب وكيف ينجح الفريق عندما يستمع أفراده إلى بعضهم.",
+      "seoTitle": "نجمة تضيء مع الأصدقاء | قراءة مجانية للأطفال",
+      "seoDescription": "قصة أصلية عن التعاون واختلاف المواهب وكيف ينجح الفريق عندما يستمع أفراده إلى بعضهم.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-04",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/star-shines-cover.svg",
+      "imageAlt": "غلاف نجمة تضيء مع الأصدقاء مع شعار المكتبة الماسية",
+      "url": "/books/star-shines-together.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": false,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "values"
+      ]
+    },
+    {
+      "id": "library-reading-quiet-goodnight",
+      "title": "ليلة هادئة مع ندى",
+      "category": "كتب الأطفال المجانية",
+      "description": "حكاية مسائية دافئة عن ترتيب الأشياء المفضلة، والحديث عن يوم جميل، والاستعداد للنوم بهدوء.",
+      "seoTitle": "ليلة هادئة مع ندى | قراءة مجانية للأطفال",
+      "seoDescription": "حكاية مسائية دافئة عن ترتيب الأشياء المفضلة، والحديث عن يوم جميل، والاستعداد للنوم بهدوء.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-05",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/quiet-goodnight-cover.svg",
+      "imageAlt": "غلاف ليلة هادئة مع ندى مع شعار المكتبة الماسية",
+      "url": "/books/quiet-goodnight.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": false,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "values"
+      ]
+    },
+    {
+      "id": "library-reading-sara-and-the-library-card",
+      "title": "سارة وبطاقة المكتبة",
+      "category": "كتب الأطفال المجانية",
+      "description": "قصة تشجع الطفل على اختيار كتاب يناسب اهتمامه، واستكشاف الصور، ومشاركة الحكاية مع الأسرة.",
+      "seoTitle": "سارة وبطاقة المكتبة | قراءة مجانية للأطفال",
+      "seoDescription": "قصة تشجع الطفل على اختيار كتاب يناسب اهتمامه، واستكشاف الصور، ومشاركة الحكاية مع الأسرة.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-06",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/sara-library-cover.svg",
+      "imageAlt": "غلاف سارة وبطاقة المكتبة مع شعار المكتبة الماسية",
+      "url": "/books/sara-and-the-library-card.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": false,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "arabic"
+      ]
+    },
+    {
+      "id": "library-reading-omar-makes-it-right",
+      "title": "عمر يصلح ما أفسده",
+      "category": "كتب الأطفال المجانية",
+      "description": "قصة عن تحمل المسؤولية بعد الخطأ، والاعتذار الصادق، والبحث عن خطوة تصلح أثر التصرف.",
+      "seoTitle": "عمر يصلح ما أفسده | قراءة مجانية للأطفال",
+      "seoDescription": "قصة عن تحمل المسؤولية بعد الخطأ، والاعتذار الصادق، والبحث عن خطوة تصلح أثر التصرف.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-07",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/omar-repairs-cover.svg",
+      "imageAlt": "غلاف عمر يصلح ما أفسده مع شعار المكتبة الماسية",
+      "url": "/books/omar-makes-it-right.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": false,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "values"
+      ]
+    },
+    {
+      "id": "library-reading-garden-of-colors",
+      "title": "حديقة الألوان والأشكال",
+      "category": "كتب الأطفال المجانية",
+      "description": "كتاب نشاط مصور للقراءة مع الطفل: ألوان وأشكال ومفردات بسيطة وأسئلة للملاحظة والرسم.",
+      "seoTitle": "حديقة الألوان والأشكال | قراءة مجانية للأطفال",
+      "seoDescription": "كتاب نشاط مصور للقراءة مع الطفل: ألوان وأشكال ومفردات بسيطة وأسئلة للملاحظة والرسم.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-08",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/garden-colors-cover.svg",
+      "imageAlt": "غلاف حديقة الألوان والأشكال مع شعار المكتبة الماسية",
+      "url": "/books/garden-of-colors.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": false,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "arabic"
+      ]
+    },
+    {
+      "id": "library-reading-journey-of-arabic-letters",
+      "title": "رحلة الحروف: أ، ب، ت",
+      "category": "كتب الأطفال المجانية",
+      "description": "كتاب تمهيدي ممتع للتعرف إلى الحروف الأولى من العربية مع كلمات مألوفة وأنشطة استماع ورسم.",
+      "seoTitle": "رحلة الحروف: أ، ب، ت | قراءة مجانية للأطفال",
+      "seoDescription": "كتاب تمهيدي ممتع للتعرف إلى الحروف الأولى من العربية مع كلمات مألوفة وأنشطة استماع ورسم.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-09",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "قصة أو كتاب قراءة للأطفال"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/arabic-letters-journey-cover.svg",
+      "imageAlt": "غلاف رحلة الحروف: أ، ب، ت مع شعار المكتبة الماسية",
+      "url": "/books/journey-of-arabic-letters.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": false,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "arabic"
+      ]
+    },
+    {
+      "id": "library-reading-my-first-everyday-english-words",
+      "title": "My First Everyday English Words",
+      "category": "كتب الأطفال المجانية",
+      "description": "كتاب ثنائي اللغة للأطفال الصغار: كلمات يومية بالإنجليزية والعربية مع جمل قصيرة وأفكار لعب.",
+      "seoTitle": "My First Everyday English Words | قراءة مجانية للأطفال",
+      "seoDescription": "كتاب ثنائي اللغة للأطفال الصغار: كلمات يومية بالإنجليزية والعربية مع جمل قصيرة وأفكار لعب.",
+      "brand": "المكتبة الماسية",
+      "sku": "READ-10",
+      "highlights": [
+        "قراءة مجانية عبر الإنترنت",
+        "غلاف يحمل شعار المكتبة الماسية",
+        "زر للطباعة أو الحفظ بصيغة PDF"
+      ],
+      "specifications": [
+        {
+          "name": "نوع المحتوى",
+          "value": "كتاب قراءة إنجليزي مبسط"
+        },
+        {
+          "name": "السعر",
+          "value": "مجاني"
+        },
+        {
+          "name": "طريقة الوصول",
+          "value": "قراءة مباشرة وطباعة اختيارية"
+        }
+      ],
+      "image": "/assets/books/everyday-english-cover.svg",
+      "imageAlt": "غلاف My First Everyday English Words مع شعار المكتبة الماسية",
+      "url": "/books/my-first-everyday-english-words.html",
+      "price": "0",
+      "currency": "SAR",
+      "free": true,
+      "freeReading": true,
+      "active": true,
+      "availability": "in_stock",
+      "featured": false,
+      "tags": [
+        "كتاب أطفال",
+        "قراءة مجانية",
+        "english"
+      ]
     }
   ],
   "siteName": "المكتبة الماسية"
