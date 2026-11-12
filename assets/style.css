@@ -513,3 +513,17 @@ body.store-site .store-book-brand{object-fit:cover!important;background:#030507!
 .book-cover-frame>.book-logo-overlay{object-fit:cover!important;background:#030507!important;padding:0!important;border-color:#18212b!important}
 .book-cover-brand>.brand-over-logo{object-fit:cover!important;background:#030507!important;padding:0!important;border-color:#18212b!important}
 @media(max-width:560px){body.store-site .store-brand img{width:min(182px,56vw);height:64px}}
+
+
+/* رسومات هوية مكتبة الأطفال الماسية */
+.children-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(250px,.9fr);gap:clamp(16px,3vw,32px);align-items:center;position:relative;overflow:hidden}
+.children-hero .eyebrow,.children-hero h1,.children-hero p,.children-hero-actions{grid-column:1}
+.children-hero-art{grid-column:2;grid-row:1 / span 4;display:block;width:100%;height:auto;max-height:340px;object-fit:contain;filter:drop-shadow(0 18px 20px #59759014)}
+.children-hero:after{content:"";position:absolute;inset-inline-end:-44px;inset-block-end:-54px;width:140px;height:140px;border:18px solid #fff8;border-radius:50%;pointer-events:none}
+.store-hero-mark{background:#edf8f8!important;border-color:#cde8e4!important}
+.store-hero-mark img{object-fit:contain!important}
+@media(max-width:760px){
+  .children-hero{grid-template-columns:minmax(0,1fr);gap:12px}
+  .children-hero .eyebrow,.children-hero h1,.children-hero p,.children-hero-actions,.children-hero-art{grid-column:1;grid-row:auto}
+  .children-hero-art{max-height:240px}
+}
