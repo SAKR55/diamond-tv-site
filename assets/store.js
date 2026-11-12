@@ -28,9 +28,19 @@
     var title = String(config.title || "متجر DIAMOND TV");
     document.getElementById("store-title").textContent = title;
     document.getElementById("store-subtitle").textContent = String(config.subtitle || "اكتشف منتجات وخدمات مختارة بعناية، وتصفّح الأقسام واحفظ ما يناسبك.");
-    document.title = title + " | DIAMOND TV";
+    document.title = String(config.seoTitle || (title + " | DIAMOND TV"));
     var metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription && config.metaDescription) metaDescription.content = String(config.metaDescription).slice(0, 170);
+    var ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.content = String(config.seoTitle || title);
+    var ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription && config.metaDescription) ogDescription.content = String(config.metaDescription).slice(0, 170);
+    var ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage && config.logo) ogImage.content = new URL(config.logo, location.origin).href;
+    var twitterImage = document.querySelector('meta[name="twitter:image"]');
+    if (twitterImage && config.logo) twitterImage.content = new URL(config.logo, location.origin).href;
+    var twitterAlt = document.querySelector('meta[name="twitter:image:alt"]');
+    if (twitterAlt && config.logoAlt) twitterAlt.content = String(config.logoAlt);
     var storeRoot = document.getElementById("store-content");
     var primaryColor = /^#[0-9a-f]{6}$/i.test((config.colors || {}).primary || "") ? config.colors.primary : "#6d4aff";
     var secondaryColor = /^#[0-9a-f]{6}$/i.test((config.colors || {}).secondary || "") ? config.colors.secondary : "#0c9fa2";
@@ -40,13 +50,15 @@
     if (logoNode) {
       if (logo) { logoNode.src = logo; logoNode.hidden = false; }
       else logoNode.hidden = true;
-      logoNode.alt = title;
+      logoNode.alt = String(config.logoAlt || title);
     }
     var heroLogoNode = document.getElementById("store-hero-logo");
     if (heroLogoNode) {
       if (logo) { heroLogoNode.src = logo; heroLogoNode.hidden = false; }
       else heroLogoNode.hidden = true;
     }
+    var brandLabel = document.getElementById("store-brand-label");
+    if (brandLabel) brandLabel.textContent = String(config.brandLabel || "متجر المكتبة الماسية");
     var announcement = document.getElementById("store-announcement");
     announcement.textContent = String(config.announcement || "");
     announcement.hidden = !announcement.textContent.trim();
@@ -143,7 +155,7 @@
     var id = idOf(item, index), images = productImages(item), image = images[0], link = safeUrl(item.freeReading ? item.url : item.downloadable ? (item.downloadUrl || item.url) : item.url), isSaved = saved.has(id), isCompared = compared.has(id);
     var imageHtml = image ? '<img class="store-image" src="' + esc(image) + '" alt="' + esc(item.imageAlt || item.title) + '" loading="lazy">' : '<div class="store-image store-placeholder" aria-hidden="true"><span>✦</span><b>DIAMOND</b></div>';
     var brandLogo = safeUrl(storefront.logo || "/assets/books/library-logo.svg");
-    var brandOverlay = brandLogo ? '<img class="store-book-brand" src="' + esc(brandLogo) + '" alt="شعار المكتبة الماسية" loading="lazy">' : '';
+    var brandOverlay = brandLogo ? '<img class="store-book-brand" src="' + esc(brandLogo) + '" alt="' + esc(storefront.logoAlt || "شعار متجر DIAMOND TV") + '" loading="lazy">' : '';
     var description = String(item.description || ""), out = unavailable(item);
     var state = item.freeReading ? "قراءة مجانية عبر الإنترنت" : item.downloadable ? "متاح مجانًا للتنزيل" : item.availability === "preorder" ? "طلب مسبق" : out ? (item.stock === 0 ? "نفدت الكمية" : "غير متاح مؤقتًا") : "متوفر";
     var oldPrice = priceNumber(item.oldPrice), price = priceNumber(item.price);
@@ -213,7 +225,7 @@
     if (!item) return;
     var images = productImages(item), link = safeUrl(item.freeReading ? item.url : item.downloadable ? (item.downloadUrl || item.url) : item.url), videos = productVideos(item);
     var brandLogo = safeUrl(storefront.logo || "/assets/books/library-logo.svg");
-    var brandOverlay = brandLogo ? '<img class="store-book-brand" src="' + esc(brandLogo) + '" alt="شعار المكتبة الماسية" loading="lazy">' : '';
+    var brandOverlay = brandLogo ? '<img class="store-book-brand" src="' + esc(brandLogo) + '" alt="' + esc(storefront.logoAlt || "شعار متجر DIAMOND TV") + '" loading="lazy">' : '';
     var gallery = images.length ? '<div class="store-gallery' + (item.downloadable ? " store-downloadable" : "") + '"><img class="store-gallery-main" id="store-gallery-main" src="' + esc(images[0]) + '" alt="' + esc(item.imageAlt || item.title) + '">' + brandOverlay +
       (images.length > 1 ? '<div class="store-gallery-thumbs">' + images.map(function (image, imageIndex) { return '<button type="button" class="store-gallery-thumb ' + (imageIndex === 0 ? "active" : "") + '" data-gallery-image="' + esc(image) + '" aria-label="عرض الصورة ' + (imageIndex + 1) + '"><img src="' + esc(image) + '" alt="" loading="lazy"></button>'; }).join("") + '</div>' : '') + '</div>' : '';
     var specs = Array.isArray(item.specifications) ? item.specifications.filter(function (entry) { return entry && entry.name && entry.value; }) : [];

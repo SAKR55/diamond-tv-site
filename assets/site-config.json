@@ -142,22 +142,25 @@
   },
   "storefront": {
     "title": "متجر المكتبة الماسية",
-    "subtitle": "كتب وقصص وأنشطة مجانية للأطفال، مع خيارات قراءة مباشرة أو تنزيل PDF.",
-    "metaDescription": "تصفح كتب وقصص مكتبة الأطفال الماسية المجانية بالعربية والإنجليزية، واقرأها مباشرة أو نزّل ملفات PDF.",
+    "subtitle": "كتب وقصص وأنشطة مجانية للأطفال، بالعربية والإنجليزية، مع قراءة مباشرة وتنزيل PDF.",
+    "metaDescription": "متجر المكتبة الماسية للكتب والقصص المجانية للأطفال. اقرأ كتبًا مباشرة أو نزّل كتب PDF بالعربية والإنجليزية والتلوين.",
     "announcement": "كتب رقمية مجانية للأطفال",
-    "logo": "/assets/books/library-logo.svg",
+    "logo": "/assets/store-logo-1794418707068-805i3-diamond_wordmark_recolored.png",
     "colors": {
-      "primary": "#65c4f7",
-      "secondary": "#7889e8"
+      "primary": "#218EAA",
+      "secondary": "#7186D8"
     },
     "categories": [
       {
         "name": "كتب الأطفال المجانية",
         "description": "تعلم اللغات والقصص والأنشطة القابلة للتنزيل",
         "image": "/assets/books/arabic-friends-story-cover.png",
-        "color": "#44bba8"
+        "color": "#53B9AC"
       }
-    ]
+    ],
+    "logoAlt": "شعار متجر DIAMOND TV ودياموند",
+    "brandLabel": "كتب وقصص مجانية",
+    "seoTitle": "كتب وقصص أطفال مجانية | متجر المكتبة الماسية"
   },
   "products": [
     {
@@ -199,7 +202,7 @@
       "image": "/assets/books/arabic-letters-workbook-cover.svg",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف دفتر أتعلم العربية خطوة خطوة",
+      "imageAlt": "غلاف أتعلم العربية خطوة خطوة مع شعار متجر DIAMOND TV",
       "url": "/assets/books/arabic-letters-workbook-22-pages.pdf",
       "downloadUrl": "/assets/books/arabic-letters-workbook-22-pages.pdf",
       "downloadable": true,
@@ -248,7 +251,7 @@
       "image": "/assets/books/stories-islamic-values-cover.svg",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف حكايات بقيم جميلة",
+      "imageAlt": "غلاف حكايات بقيم جميلة مع شعار متجر DIAMOND TV",
       "url": "/assets/books/stories-islamic-values-for-children.pdf",
       "downloadUrl": "/assets/books/stories-islamic-values-for-children.pdf",
       "downloadable": true,
@@ -283,7 +286,7 @@
       "image": "/assets/books/arabic-friends-story-cover.png",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف قصة أصدقاء وعصير عجيب",
+      "imageAlt": "غلاف حكايات ساحة الحي: أصدقاء وعصير عجيب مع شعار متجر DIAMOND TV",
       "url": "/assets/books/arabic-friends-story.pdf",
       "downloadUrl": "/assets/books/arabic-friends-story.pdf",
       "downloadable": true,
@@ -317,7 +320,7 @@
       "image": "/assets/books/my-big-first-english-adventure-cover.png",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف My Big First English Adventure",
+      "imageAlt": "غلاف My Big First English Adventure مع شعار متجر DIAMOND TV",
       "url": "/assets/books/my-big-first-english-adventure.pdf",
       "downloadUrl": "/assets/books/my-big-first-english-adventure.pdf",
       "downloadable": true,
@@ -366,7 +369,7 @@
       "image": "/assets/books/coloring-book-cover.svg",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف دفتر التلوين ألواني الجميلة",
+      "imageAlt": "غلاف ألواني الجميلة: دفتر تلوين للأطفال مع شعار متجر DIAMOND TV",
       "url": "/assets/books/coloring-book-22-pages.pdf",
       "downloadUrl": "/assets/books/coloring-book-22-pages.pdf",
       "downloadable": true,
@@ -405,7 +408,7 @@
         }
       ],
       "image": "/assets/books/mariam-seed-cover.svg",
-      "imageAlt": "غلاف مريم وبذرة الشرفة مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف مريم وبذرة الشرفة مع شعار متجر DIAMOND TV",
       "url": "/books/mariam-and-the-balcony-seed.html",
       "price": "0",
       "currency": "SAR",
@@ -449,7 +452,7 @@
         }
       ],
       "image": "/assets/books/lina-lantern-cover.svg",
-      "imageAlt": "غلاف لينا وفانوس المشاعر مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف لينا وفانوس المشاعر مع شعار متجر DIAMOND TV",
       "url": "/books/lina-and-the-feelings-lantern.html",
       "price": "0",
       "currency": "SAR",
@@ -493,7 +496,7 @@
         }
       ],
       "image": "/assets/books/yasser-words-cover.svg",
-      "imageAlt": "غلاف ياسر في سوق الكلمات مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف ياسر في سوق الكلمات مع شعار متجر DIAMOND TV",
       "url": "/books/yasser-word-market.html",
       "price": "0",
       "currency": "SAR",
@@ -537,7 +540,7 @@
         }
       ],
       "image": "/assets/books/star-shines-cover.svg",
-      "imageAlt": "غلاف نجمة تضيء مع الأصدقاء مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف نجمة تضيء مع الأصدقاء مع شعار متجر DIAMOND TV",
       "url": "/books/star-shines-together.html",
       "price": "0",
       "currency": "SAR",
@@ -581,7 +584,7 @@
         }
       ],
       "image": "/assets/books/quiet-goodnight-cover.svg",
-      "imageAlt": "غلاف ليلة هادئة مع ندى مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف ليلة هادئة مع ندى مع شعار متجر DIAMOND TV",
       "url": "/books/quiet-goodnight.html",
       "price": "0",
       "currency": "SAR",
@@ -625,7 +628,7 @@
         }
       ],
       "image": "/assets/books/sara-library-cover.svg",
-      "imageAlt": "غلاف سارة وبطاقة المكتبة مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف سارة وبطاقة المكتبة مع شعار متجر DIAMOND TV",
       "url": "/books/sara-and-the-library-card.html",
       "price": "0",
       "currency": "SAR",
@@ -669,7 +672,7 @@
         }
       ],
       "image": "/assets/books/omar-repairs-cover.svg",
-      "imageAlt": "غلاف عمر يصلح ما أفسده مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف عمر يصلح ما أفسده مع شعار متجر DIAMOND TV",
       "url": "/books/omar-makes-it-right.html",
       "price": "0",
       "currency": "SAR",
@@ -713,7 +716,7 @@
         }
       ],
       "image": "/assets/books/garden-colors-cover.svg",
-      "imageAlt": "غلاف حديقة الألوان والأشكال مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف حديقة الألوان والأشكال مع شعار متجر DIAMOND TV",
       "url": "/books/garden-of-colors.html",
       "price": "0",
       "currency": "SAR",
@@ -757,7 +760,7 @@
         }
       ],
       "image": "/assets/books/arabic-letters-journey-cover.svg",
-      "imageAlt": "غلاف رحلة الحروف: أ، ب، ت مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف رحلة الحروف: أ، ب، ت مع شعار متجر DIAMOND TV",
       "url": "/books/journey-of-arabic-letters.html",
       "price": "0",
       "currency": "SAR",
@@ -801,7 +804,7 @@
         }
       ],
       "image": "/assets/books/everyday-english-cover.svg",
-      "imageAlt": "غلاف My First Everyday English Words مع شعار المكتبة الماسية",
+      "imageAlt": "غلاف My First Everyday English Words مع شعار متجر DIAMOND TV",
       "url": "/books/my-first-everyday-english-words.html",
       "price": "0",
       "currency": "SAR",

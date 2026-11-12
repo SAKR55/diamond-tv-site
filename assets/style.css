@@ -438,24 +438,23 @@ footer{margin-top:50px;border-top:1px solid var(--line);padding:24px 0;color:var
 .store-category-card-copy em{color:var(--category-color,var(--accent))}
 @media(max-width:650px){.sa-store-category-media{grid-template-columns:70px 1fr}.sa-store-category-media .sa-upload-box{grid-column:1/-1}.sa-store-category-image-preview{width:70px;height:58px}.sa-store-category-media button{grid-column:2;justify-self:end}.store-brand img{width:126px;height:74px}}
 
-/* DIAMOND Store: lighter midnight palette */
+/* DIAMOND Store: bright, light library palette */
 body.store-site{
-  color-scheme:dark;
-  --bg:#111B29;--bg2:#192638;--card:#202F43;--card2:#293B52;--line:#3A4D64;
-  --text:#F5F8FC;--muted:#B5C2D2;--accent:#13CFE1;--accent2:#9186FF;
+  color-scheme:light;
+  --bg:#F4FAFD;--bg2:#EAF4F9;--card:#FFFFFF;--card2:#F0F7FB;--line:#D7E6EE;
+  --text:#183044;--muted:#60798C;--accent:#218EAA;--accent2:#7186D8;
   background-color:var(--bg);
-  background-image:radial-gradient(900px 520px at 86% -12%,rgba(19,207,225,.16),transparent 62%),radial-gradient(780px 470px at 0% 8%,rgba(145,134,255,.15),transparent 64%);
+  background-image:radial-gradient(900px 520px at 86% -12%,rgba(53,174,200,.11),transparent 62%),radial-gradient(780px 470px at 0% 8%,rgba(113,134,216,.09),transparent 64%);
 }
-body.store-site .top{background:rgba(17,27,41,.93);border-color:var(--line)}
-body.store-site .nav a.on,body.store-site .nav-group-button.on{color:#101A27}
-body.store-site .dl{color:#101A27;background:linear-gradient(125deg,var(--accent),var(--accent2));box-shadow:0 8px 24px rgba(19,207,225,.2)}
-body.store-site .store-hero{border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));background:radial-gradient(circle at 82% 36%,color-mix(in srgb,var(--accent) 17%,var(--card)),transparent 36%),linear-gradient(135deg,#293B52,#172334)}
-body.store-site .store-hero-mark{display:grid;place-items:center;width:min(100%,395px);aspect-ratio:395/225;min-height:180px;justify-self:center;overflow:hidden;border:1px solid color-mix(in srgb,var(--accent) 50%,var(--line));border-radius:26px;background:#030507;box-shadow:0 22px 50px #0008,inset 0 0 30px rgba(19,207,225,.13)}
+body.store-site .top{background:rgba(255,255,255,.94);border-color:var(--line);color:var(--text)}
+body.store-site .nav a.on,body.store-site .nav-group-button.on{color:#17384A}
+body.store-site .dl{color:#17384A;background:linear-gradient(125deg,#78D1E2,#B6E5EE);box-shadow:0 8px 24px rgba(33,142,170,.16)}
+body.store-site .store-hero{border:1px solid color-mix(in srgb,var(--accent) 24%,var(--line));background:radial-gradient(circle at 82% 36%,color-mix(in srgb,var(--accent) 10%,var(--card)),transparent 36%),linear-gradient(135deg,#F8FCFF,#EAF8FB)}
+body.store-site .store-hero-mark{display:grid;place-items:center;width:min(100%,395px);aspect-ratio:395/225;min-height:180px;justify-self:center;overflow:hidden;border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));border-radius:22px;background:#030507;box-shadow:0 18px 38px #18304420}
 body.store-site .store-hero-mark img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
-body.store-site .store-hero-cta,body.store-site .store-order{color:#101A27}
-body.store-site .store-chip.active,body.store-site .store-favorites-toggle.active,body.store-site .store-featured{color:#101A27}
+body.store-site .store-hero-cta,body.store-site .store-order{color:#17384A}
+body.store-site .store-chip.active,body.store-site .store-favorites-toggle.active,body.store-site .store-featured{color:#17384A}
 @media(max-width:700px){body.store-site .store-hero-mark{display:grid;width:min(100%,395px);min-height:180px}}
-body.store-site #store-content{--accent:#65c4f7;--accent2:#7889e8}
 
 /* مكتبة الأطفال الماسية */
 .children-page{max-width:1120px;margin:28px auto;padding:0 18px}
@@ -507,3 +506,10 @@ body.store-site #store-content{--accent:#65c4f7;--accent2:#7889e8}
 
 /* متجر المكتبة: ألوان أفتح وهوية ظاهرة على الأغلفة */
 .store-card-media,.store-gallery{position:relative}.store-card-media>.store-book-brand,.store-gallery>.store-book-brand{position:absolute;inset-inline-end:12px;inset-block-end:12px;z-index:2;width:126px;height:38px;object-fit:contain;padding:3px 6px;background:#fff;border:1px solid #e1e7f0;border-radius:8px;box-shadow:0 3px 12px #13234022;pointer-events:none}
+
+/* متجر المكتبة: شعار DIAMOND TV وألوان فاتحة */
+body.store-site .store-brand img{display:block;width:clamp(156px,23vw,218px);height:80px;object-fit:cover;object-position:center;background:#030507;border:1px solid #121820;border-radius:10px;box-shadow:0 5px 16px #18304420}
+body.store-site .store-book-brand{object-fit:cover!important;background:#030507!important;padding:0!important;border-color:#18212b!important}
+.book-cover-frame>.book-logo-overlay{object-fit:cover!important;background:#030507!important;padding:0!important;border-color:#18212b!important}
+.book-cover-brand>.brand-over-logo{object-fit:cover!important;background:#030507!important;padding:0!important;border-color:#18212b!important}
+@media(max-width:560px){body.store-site .store-brand img{width:min(182px,56vw);height:64px}}
