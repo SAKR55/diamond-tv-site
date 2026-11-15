@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مغرّد: غرّد بالإنجليزية بطلاقة</title>
+<meta name="description" content="مغرّد تطبيق مجاني لتعلم الإنجليزية بالمحادثة: مقابلات عمل مع تصحيح فوري، 672 محادثة، 72 كتاباً صوتياً، وتدرّب مع صديق.">
+<meta property="og:title" content="مغرّد: غرّد بالإنجليزية بطلاقة">
+<meta property="og:description" content="تطبيق مجاني لتعلم الإنجليزية بالمحادثة والتصحيح الفوري.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--indigo:#4B3BCB;--deep:#2E2395;--ink:#1B1840;--coral:#FF6B4A;--gold:#FFC233;--sand:#F6F5FC;--lav:#ECE9FC;--muted:#5d5a86;
+--font:'Cairo',Tahoma,'Segoe UI',sans-serif}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--sand);color:var(--ink);line-height:1.7;font-size:17px}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3{text-wrap:balance;line-height:1.25}
+header.top{position:absolute;inset:0 0 auto 0;z-index:5}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:18px;padding-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:900;font-size:22px}
+.brand .logo{width:42px;height:42px;border-radius:12px;background:#ffffff26;display:grid;place-items:center;font-size:24px}
+nav.links{display:flex;gap:22px;color:#e3e0ff;font-weight:600;font-size:15px}
+nav.links a:hover{color:#fff}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 24px;border-radius:14px;font-weight:800;font-size:17px;border:0;cursor:pointer;font-family:inherit}
+.btn.coral{background:var(--coral);color:#fff;box-shadow:0 8px 24px #ff6b4a55}
+.btn.ghost{background:#ffffff1f;color:#fff;border:1.5px solid #ffffff55}
+.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.hero{background:linear-gradient(160deg,var(--deep),var(--indigo) 70%);color:#fff;padding:120px 0 0;overflow:hidden;position:relative}
+.hero::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:#ffffff0d;inset:-160px auto auto -120px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:end;position:relative}
+.pill{display:inline-block;background:var(--gold);color:var(--ink);font-weight:800;border-radius:30px;padding:4px 16px;font-size:14px}
+.hero h1{font-size:clamp(34px,5.6vw,58px);font-weight:900;margin:14px 0}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p.lead{font-size:19px;color:#e7e4ff;max-width:520px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 8px}
+.note{font-size:14px;color:#cfcaff;padding-bottom:40px}
+.phone{justify-self:center;width:min(300px,78vw);background:var(--ink);border:8px solid #0e0c26;border-bottom:0;border-radius:38px 38px 0 0;padding:16px 14px 0;box-shadow:0 -10px 60px #00000055}
+.screen{background:var(--sand);border-radius:26px 26px 0 0;padding:14px;color:var(--ink);min-height:420px}
+.screen .bar{display:flex;justify-content:space-between;font-weight:800;font-size:14px;margin-bottom:10px}
+.q{background:#fff;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px #4b3bcb14;font-size:14px}
+.q b{display:block;color:var(--indigo);font-size:12px;margin-bottom:2px}
+.score{display:flex;gap:6px;align-items:center;margin:8px 0}
+.score i{flex:1;height:8px;border-radius:5px;background:var(--lav)}
+.score i.on{background:var(--indigo)}
+.sug{background:var(--lav);border-radius:14px;padding:10px;font-size:13px;direction:ltr;text-align:left}
+.sug span{display:block;font-weight:800;color:var(--deep);direction:rtl;text-align:right;margin-bottom:2px}
+.stats{background:#fff;border-bottom:1px solid var(--lav)}
+.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-top:26px;padding-bottom:26px;text-align:center}
+.stats b{display:block;font-size:34px;font-weight:900;color:var(--indigo);line-height:1.1}
+.stats span{color:var(--muted);font-size:15px}
+section{padding:72px 0}
+h2{font-size:clamp(28px,4vw,40px);font-weight:900;margin-bottom:12px}
+.sub{color:var(--muted);max-width:620px;margin-bottom:34px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.card{background:#fff;border-radius:22px;padding:24px;grid-column:span 2;box-shadow:0 2px 14px #4b3bcb12}
+.card.w3{grid-column:span 3}.card.w4{grid-column:span 4}
+.card.dark{background:var(--ink);color:#fff}.card.dark p{color:#cfcaf5}
+.card.ind{background:var(--indigo);color:#fff}.card.ind p{color:#e4e1ff}
+.card h3{font-size:21px;font-weight:800;margin:10px 0 6px}
+.card p{color:var(--muted);font-size:16px}
+.ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--lav);font-size:24px}
+.card.dark .ico,.card.ind .ico{background:#ffffff1f}
+.tag{display:inline-block;background:var(--coral);color:#fff;border-radius:20px;padding:0 10px;font-size:12px;font-weight:800;margin-inline-start:6px;vertical-align:middle}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:s}
+.step{background:var(--lav);border-radius:22px;padding:26px;position:relative}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--indigo);color:#fff;font-weight:900;margin-bottom:10px}
+.step h3{font-size:20px;margin-bottom:4px}.step p{color:var(--muted);font-size:16px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel{border-radius:26px;padding:34px;color:#fff}
+.panel.a{background:linear-gradient(150deg,var(--indigo),var(--deep))}
+.panel.k{background:linear-gradient(150deg,#ff8a6a,var(--coral))}
+.panel h3{font-size:26px;font-weight:900;margin-bottom:8px}
+.panel ul{padding-inline-start:20px;margin-top:10px}.panel li{margin:4px 0}
+.banner{background:linear-gradient(100deg,var(--gold),#ffd96a);color:var(--ink);border-radius:28px;padding:38px 34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.banner h2{margin:0;font-size:clamp(26px,3.6vw,36px)}
+.dl{background:var(--ink);color:#fff;text-align:center}
+.dl h2{color:#fff}.dl p{color:#cfcaf5;max-width:520px;margin:0 auto 24px}
+details{background:#fff;border-radius:16px;padding:16px 20px;margin-bottom:10px;box-shadow:0 2px 10px #4b3bcb10}
+summary{cursor:pointer;font-weight:800;font-size:18px}
+details p{color:var(--muted);margin-top:8px}
+footer{background:#120f30;color:#bdb9e6;padding:34px 0;font-size:15px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+footer a{color:#fff;font-weight:700}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}.phone{margin-top:10px}.stats .wrap{grid-template-columns:repeat(2,1fr)}
+.card,.card.w3,.card.w4{grid-column:span 6}.steps,.split{grid-template-columns:1fr}nav.links{display:none}.hero{padding-top:96px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<link rel="canonical" href="https://diamond-tv.shop/mugharrid/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#4B3BCB">
+<meta property="og:type" content="website"><meta property="og:locale" content="ar_SA"><meta property="og:url" content="https://diamond-tv.shop/mugharrid/"><meta property="og:site_name" content="مغرّد">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MobileApplication","name":"مغرّد","alternateName":"Mugharrid","description":"تطبيق مجاني لتعلم الإنجليزية بالمحادثة والتصحيح الفوري، مقابلات عمل و672 محادثة و72 كتاباً صوتياً.","applicationCategory":"EducationalApplication","operatingSystem":"Android","inLanguage":"ar","url":"https://diamond-tv.shop/mugharrid/","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"هل التطبيق مجاني فعلاً؟","acceptedAnswer":{"@type":"Answer","text":"نعم، بالكامل ولا يحتاج اشتراكاً."}},{"@type":"Question","name":"على أي أجهزة يعمل؟","acceptedAnswer":{"@type":"Answer","text":"على هواتف أندرويد."}},{"@type":"Question","name":"هل أحتاج إنترنت؟","acceptedAnswer":{"@type":"Answer","text":"نعم لتسجيل الدخول وميزات الأصدقاء والمحتوى الجديد."}}]}</script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#"><span class="logo" aria-hidden="true">🐦</span> مغرّد</a>
+  <nav class="links"><a href="#features">المميزات</a><a href="#how">كيف يعمل</a><a href="#guide">الشرح الكامل</a><a href="#faq">أسئلة شائعة</a><a href="#download">التحميل</a></nav>
+</div></header>
+
+<section class="hero" style="padding-bottom:0"><div class="wrap">
+  <div>
+    <span class="pill">مجاني بالكامل · بدون اشتراك</span>
+    <h1>غرّد <em>بالإنجليزية</em> بطلاقة</h1>
+    <p class="lead">تتكلم، يصحح لك التطبيق فوراً، وتتحسن كل يوم. مقابلات عمل حقيقية، مئات المحادثات، وصديق تتدرب معه.</p>
+    <div class="cta">
+      <a class="btn coral" href="#download">حمّله مجاناً</a>
+      <a class="btn ghost" href="#features">اكتشف المميزات</a>
+    </div>
+    <p class="note">لأندرويد · للكبار وللأطفال</p>
+  </div>
+  <div class="phone" aria-label="مثال من التطبيق">
+    <div class="screen">
+      <div class="bar"><span>مقابلة عمل</span><span style="color:var(--coral)">سؤال 3 من 6</span></div>
+      <div class="q"><b>المحاور يسأل</b><span dir="ltr" style="display:block;text-align:left">Why do you want this job?</span></div>
+      <div class="q"><b>أجبت بصوتك</b><span dir="ltr" style="display:block;text-align:left">I want this job because I like sales.</span></div>
+      <div class="score"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      <div class="sug"><span>إجابة مقترحة أقوى</span>I am excited about this role because it matches my skills in sales and customer service.</div>
+    </div>
+  </div>
+</div></section>
+
+<div class="stats"><div class="wrap">
+  <div><b>672</b><span>محادثة تدريبية</span></div>
+  <div><b>36</b><span>وظيفة في المقابلات</span></div>
+  <div><b>72</b><span>كتاباً صوتياً</span></div>
+  <div><b>10</b><span>مجالات حياتية</span></div>
+</div></div>
+
+<section id="features"><div class="wrap">
+  <h2>كل ما تحتاجه لتتكلم بثقة</h2>
+  <p class="sub">تدرّب بالصوت، وصحّح أخطاءك، وتابع تقدمك. كل ذلك في تطبيق واحد.</p>
+  <div class="grid">
+    <div class="card w4 dark"><div class="ico">🎤</div><h3>مقابلة عمل حقيقية <span class="tag">الأشهر</span></h3>
+      <p>تجيب عن السؤال بصوتك، ثم يعرض لك التطبيق تصحيح جملك وتقييماً من 100، وإجابات مقترحة: نموذجية، ومختصرة، وأقوى بمثال. 36 وظيفة من المبيعات إلى الطب والبرمجة.</p></div>
+    <div class="card"><div class="ico">💬</div><h3>672 محادثة</h3><p>في السفر والمطاعم والتسوق والعمل والصحة والخدمات والمكالمات الهاتفية والبيت، مع اقتراحات للردود.</p></div>
+    <div class="card"><div class="ico">🤝</div><h3>تدرّب مع صديق</h3><p>محادثة ومكالمات صوتية ومجموعات دراسية وتحديات كلمات مع أصدقائك.</p></div>
+    <div class="card"><div class="ico">🔊</div><h3>أصوات واضحة</h3><p>يختار التطبيق أوضح صوت متاح في جوالك، وتتحكم بسرعة النطق كما تريد.</p></div>
+    <div class="card ind"><div class="ico">🎧</div><h3>72 كتاباً صوتياً وبودكاست</h3><p>حوارات بصوتين وحلقات في عدة برامج تسمعها في الطريق.</p></div>
+    <div class="card w3"><div class="ico">🧠</div><h3>مفرداتك لا تُنسى</h3><p>مراجعة ذكية للكلمات في مواعيدها، ودفتر لأخطائك يعيدها لك حتى تتقنها.</p></div>
+    <div class="card w3"><div class="ico">🏆</div><h3>دوري وشهادات</h3><p>تنافس أسبوعياً مع بقية المتعلمين، واحصل على شهادة لكل مستوى تشاركها.</p></div>
+  </div>
+</div></section>
+
+<section id="how" style="background:#fff"><div class="wrap">
+  <h2>ابدأ في دقيقتين</h2>
+  <p class="sub">بلا اشتراك وبلا بطاقة بنكية.</p>
+  <div class="steps">
+    <div class="step"><h3>حمّل التطبيق وسجّل</h3><p>بريدك وكلمة مرور تكفيان لحفظ تقدمك.</p></div>
+    <div class="step"><h3>اختر مستواك</h3><p>اختبار قصير يحدد مستواك من A1 إلى C1.</p></div>
+    <div class="step"><h3>تكلم كل يوم</h3><p>تمرين اليوم، وتذكير يومي يساعدك على الاستمرار.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="split">
+    <div class="panel a"><h3>للكبار</h3><p>طلاقة للعمل والسفر والحياة.</p>
+      <ul><li>مقابلات عمل وإنجليزية مهنتك</li><li>قراءة وقصص بمستواك</li><li>تحدي الدقيقة لقياس طلاقتك</li></ul></div>
+    <div class="panel k"><h3>للأطفال</h3><p>قسم مستقل بكلمات مصورة وخطوات بسيطة.</p>
+      <ul><li>كلمات مصورة بنطق واضح</li><li>خطوات قصيرة تناسب التركيز</li><li>تعلم بالتكرار</li></ul></div>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="banner">
+    <div><h2>مجاني، وسيبقى بسيطاً</h2><p>لا حدود يومية ولا مميزات مقفلة بالدفع.</p></div>
+    <a class="btn" style="background:var(--ink);color:#fff" href="#download">حمّل الآن</a>
+  </div>
+</div></section>
+
+<section id="guide"><div class="wrap" style="max-width:900px">
+  <h2>شرح كامل للتطبيق</h2>
+  <p class="sub">هذا ما ستجده داخل مغرّد، قسماً قسماً.</p>
+
+  <details open><summary>١. البداية والحساب</summary>
+    <p>تختار قسمك (كبار أو أطفال)، ثم تسجل ببريدك. للكبار اختبار مستوى قصير يحدد مستواك من A1 إلى C1، وتُبنى عليه الدروس والنصوص المقترحة. بياناتك وتقدمك محفوظة في حسابك، وتجد في «حسابي» بياناتك ووسيلة التواصل معنا.</p></details>
+
+  <details><summary>٢. تعلّم</summary>
+    <p><b>الدروس:</b> كل درس خطوات قصيرة (اختر المعنى، رتّب الكلمات)، ثم محادثة مع المدرب، مع شرح لكل خطأ.</p>
+    <p><b>المحادثات:</b> محادثة اليوم و10 مجالات تختار منها: سفر، مطاعم، تسوق، عمل، صحة، خدمات، علاقات، دراسة، مكالمات هاتفية، البيت. المدرب يقترح لك ردوداً، وتحقق أهدافاً في كل موقف.</p>
+    <p><b>قسم القراءة:</b> نصوص في القصص والعلوم والحياة اليومية والعمل والسفر، بمفردات وأسئلة فهم.</p>
+    <p><b>قصص بلا حدود:</b> قصة جديدة بمستواك مع أسئلة فهم.</p></details>
+
+  <details><summary>٣. تمرّن</summary>
+    <p><b>قلها بالإنجليزية:</b> ترى الجملة بالعربية وتقولها بصوتك.</p>
+    <p><b>مفرداتي:</b> كلماتك المحفوظة تعود للمراجعة في مواعيدها حتى تثبت.</p>
+    <p><b>تركيب الجمل وإملاء ذكي:</b> رتّب الكلمات، واسمع الجملة واكتب الناقص.</p>
+    <p><b>ردد بعدي:</b> تسمع الجملة وتكررها، ويحدد الجوال الكلمات التي لم تتضح.</p>
+    <p><b>دفتر أخطائي ومدرّب أخطائي:</b> يجمع أخطاءك المتكررة ويبني لك تمارين علاجية.</p>
+    <p><b>تحدي الدقيقة:</b> تتحدث دقيقة كاملة عن موضوع، ويقيس طلاقتك وكلماتك في الدقيقة.</p>
+    <p><b>أذن عربية:</b> تمييز الأصوات التي نخلط بينها مثل P و B وV وF.</p></details>
+
+  <details><summary>٤. المقابلات والإنجليزية المهنية</summary>
+    <p><b>مقابلة عمل حقيقية:</b> يطرح التطبيق أسئلة عامة وأسئلة خاصة بوظيفتك (36 وظيفة). تجيب بصوتك، ثم تحصل على تقييم من 100 يشمل الطول والقواعد والملاءمة والمثال والطلاقة، وتصحيح جملك، وإجابات مقترحة بعد كل سؤال، وتقرير في النهاية.</p>
+    <p><b>إنجليزية مهنتك:</b> عبارات وحوارات للمبيعات والطب والضيافة والبرمجة.</p></details>
+
+  <details><summary>٥. استمع</summary>
+    <p><b>وضع الاستماع:</b> جمل تُقرأ لك تلقائياً وأنت في الطريق بلا لمس الشاشة.</p>
+    <p><b>بودكاست مغرّد:</b> حوارات بصوتين وحلقات في 6 برامج.</p>
+    <p><b>المكتبة الصوتية:</b> 72 كتاباً صوتياً مرتبة حسب مستواك.</p>
+    <p><b>الأصوات:</b> من الإعدادات تختار الصوت وتضبط سرعة النطق.</p></details>
+
+  <details><summary>٦. مع الأصدقاء والمنافسة</summary>
+    <p><b>تدرّب مع صديق:</b> محادثة ومكالمات صوتية ومجموعات دراسية (حتى 20 عضواً) وتحديات كلمات. غرف المحادثة خاصة بأعضائها فقط.</p>
+    <p><b>الدوري الأسبوعي:</b> تنافس بدقائق تعلمك. <b>تحدي صديق:</b> لاعبان على جوال واحد.</p>
+    <p><b>شهادات المستوى:</b> امتحان لكل مستوى وشهادة تشاركها.</p></details>
+
+  <details><summary>٧. تقدمك وتحفيزك</summary>
+    <p>رسم أسبوعي لتقدمك، ومستوى خبرة، وشارات، وسلسلة أيام متتالية، ومهمة يومية، وتذكير يومي، واقتراح «اليوم» على الرئيسية يوجهك لأنفع تمرين.</p></details>
+
+  <details><summary>٨. قسم الأطفال</summary>
+    <p>واجهة مستقلة بكلمات مصورة ونطق واضح وخطوات قصيرة. تناسب الأطفال الذين يبدؤون الإنجليزية.</p></details>
+
+  <details><summary>٩. محتوى يتجدد</summary>
+    <p>يضيف فريق مغرّد دروساً وجملاً ومحادثات جديدة، وتصلك تلقائياً دون تحديث من المتجر.</p></details>
+</div></section>
+
+<section id="faq" style="background:#fff"><div class="wrap" style="max-width:820px">
+  <h2>أسئلة شائعة</h2>
+  <details><summary>هل التطبيق مجاني فعلاً؟</summary><p>نعم، بالكامل ولا يحتاج اشتراكاً. تحتاج فقط حساباً لحفظ تقدمك وميزات الأصدقاء.</p></details>
+  <details><summary>على أي أجهزة يعمل؟</summary><p>على هواتف أندرويد. نسخة آيفون غير متاحة حالياً.</p></details>
+  <details><summary>كيف يصحح التطبيق إجابتي؟</summary><p>يحلل جملك داخل التطبيق ويقترح تحسينات للقواعد والطول والمثال. هو مدرّب تعليمي ولا يغني عن معلم متخصص.</p></details>
+  <details><summary>هل أحتاج إنترنت؟</summary><p>تحتاج اتصالاً بالإنترنت لتسجيل الدخول وميزات الأصدقاء والمحتوى الجديد.</p></details>
+  <details><summary>كيف أتواصل معكم؟</summary><p>عبر واتساب على +966507844688 أو البريد sales@diamond-tv.shop.</p></details>
+</div></section>
+
+<section class="dl" id="download"><div class="wrap">
+  <h2>جاهز لتبدأ التغريد؟</h2>
+  <p>مغرّد مجاني بالكامل، وسيصلك رابط التحميل هنا قريباً.</p>
+  <p style="margin-bottom:18px;color:#ffd96a;font-weight:700">قريباً على Google Play. اطلب النسخة الآن عبر واتساب.</p>
+  <p><a class="btn coral" href="https://wa.me/966507844688?text=%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%AA%D8%B7%D8%A8%D9%8A%D9%82%20%D9%85%D8%BA%D8%B1%D9%91%D8%AF">اسألنا على واتساب</a></p>
+</div></section>
+
+<footer><div class="wrap">
+  <span>© مغرّد · غرّد بالإنجليزية بطلاقة</span>
+  <span><a href="https://wa.me/966507844688">واتساب +966507844688</a> · <a href="mailto:sales@diamond-tv.shop">sales@diamond-tv.shop</a></span>
+</div></footer>
+</body></html>
