@@ -50,7 +50,7 @@ String polishSpoken(String t) {
 
 const _stop = {
   'about', 'after', 'again', 'because', 'before', 'being', 'could', 'every', 'which', 'their', 'there', 'these', 'those', 'would', 'should',
-  'where', 'while', 'other', 'really', 'always', 'something', 'through', 'thing', 'things', 'people', 'little', 'under', 'always',
+  'where', 'while', 'other', 'really', 'always', 'something', 'through', 'thing', 'things', 'people', 'little', 'under',
 };
 
 List<String> _keywords(String model) {
