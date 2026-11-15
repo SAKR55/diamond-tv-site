@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "announcement": "درس جديد هذا الأسبوع: في البنك 🏦",
+  "lessons": [
+    {
+      "id": "a2_bank",
+      "level": "A2",
+      "titleAr": "في البنك",
+      "emoji": "🏦",
+      "steps": [
+        {
+          "type": "mcq",
+          "promptAr": "استمع واختر المعنى",
+          "en": "I would like to open an account.",
+          "options": [
+            "أريد إغلاق حسابي",
+            "أريد فتح حساب",
+            "أريد سحب مبلغ"
+          ],
+          "answer": 1,
+          "why": "open an account = يفتح حساباً."
+        },
+        {
+          "type": "build",
+          "promptAr": "رتّب: «أريد تحويل مبلغ»",
+          "words": [
+            "I",
+            "want",
+            "to",
+            "transfer",
+            "money"
+          ],
+          "why": "transfer money = يحوّل مبلغاً.",
+          "kind": "grammar"
+        },
+        {
+          "type": "mcq",
+          "promptAr": "أي الجملتين صحيحة؟",
+          "options": [
+            "How much is the fee?",
+            "How many is the fee?"
+          ],
+          "answer": 0,
+          "enOptions": true,
+          "why": "How much للمبالغ.",
+          "kind": "grammar"
+        }
+      ]
+    }
+  ],
+  "phrases": [
+    {
+      "en": "Where is the nearest ATM?",
+      "ar": "أين أقرب صراف آلي؟",
+      "level": "A2"
+    }
+  ],
+  "idioms": [
+    {
+      "en": "save for a rainy day",
+      "ar": "يدخر لوقت الحاجة",
+      "example": "I save a little every month for a rainy day."
+    }
+  ],
+  "topics": [
+    {
+      "en": "Talk about how you save money.",
+      "ar": "تحدث عن طريقتك في الادخار."
+    }
+  ],
+  "missions": [
+    "اقرأ شاشة الصراف الآلي بالإنجليزية في المرة القادمة."
+  ],
+  "readings": [
+    {
+      "cat": "daily",
+      "level": "A2",
+      "title": "A Rainy Weekend",
+      "lines": [
+        "It rained all weekend in our city.",
+        "We could not go to the park, so we stayed at home.",
+        "My father made hot soup, and we played board games.",
+        "In the evening, we watched an old film together.",
+        "It was a simple weekend, but everyone enjoyed it."
+      ],
+      "vocab": [
+        {
+          "en": "board games",
+          "ar": "ألعاب الطاولة"
+        },
+        {
+          "en": "enjoyed",
+          "ar": "استمتع"
+        }
+      ],
+      "quiz": [
+        {
+          "q": "Why did the family stay at home?",
+          "options": [
+            "It rained",
+            "They were sick",
+            "The park was closed"
+          ],
+          "answer": 0
+        }
+      ]
+    }
+  ],
+  "talks": [
+    {
+      "cat": "services",
+      "titleAr": "في محل تصليح السيارات",
+      "roleAr": "سيارتك فيها عطل، والمدرب هو الميكانيكي",
+      "scenarioEn": "Talking to a mechanic about a car problem",
+      "turns": [
+        {
+          "coach": "Good morning. What is wrong with the car?",
+          "hints": [
+            "It makes a strange noise.",
+            "The engine does not start."
+          ]
+        },
+        {
+          "coach": "When did it start?",
+          "hints": [
+            "Two days ago.",
+            "This morning."
+          ]
+        },
+        {
+          "coach": "I need to check it. Can you leave it here until tomorrow?",
+          "hints": [
+            "Yes, no problem.",
+            "Can you do it today?"
+          ]
+        },
+        {
+          "coach": "It will cost about eighty dollars.",
+          "hints": [
+            "That is fine.",
+            "Can you give me a discount?"
+          ]
+        },
+        {
+          "coach": "I will call you when it is ready.",
+          "hints": [
+            "Thank you.",
+            "Here is my number."
+          ]
+        }
+      ],
+      "goals": [
+        {
+          "label": "اشرح العطل",
+          "keys": [
+            "noise",
+            "start",
+            "engine",
+            "problem"
+          ]
+        },
+        {
+          "label": "اسأل عن الموعد أو السعر",
+          "keys": [
+            "today",
+            "tomorrow",
+            "discount",
+            "how much"
+          ]
+        }
+      ]
+    }
+  ]
+}

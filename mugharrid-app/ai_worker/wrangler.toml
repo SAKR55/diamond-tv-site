@@ -1,0 +1,14 @@
+name = "mugharrid-ai"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+PROVIDER = "gemini"          # gemini | anthropic | deepseek
+GEMINI_MODEL = "gemini-3.1-flash-lite"
+DAILY_PER_USER = "30"        # طلبات يومياً لكل جهاز وكل IP
+DAILY_GLOBAL = "3000"        # سقف يومي لكل المستخدمين (يحميك من فاتورة مفاجئة)
+
+# أنشئ KV: wrangler kv namespace create LIMITS  ثم ضع الـ id هنا
+[[kv_namespaces]]
+binding = "LIMITS"
+id = "69743bef11924ed1b62ff5008c14671c"

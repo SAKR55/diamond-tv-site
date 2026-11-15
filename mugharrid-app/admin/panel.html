@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة تحكم مغرّد</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Cairo,sans-serif;background:#F6F5FC;color:#1B1840}
+header{background:#4B3BCB;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px}
+header h1{font-size:18px;margin:0;flex:1}header button{background:#fff2;color:#fff;border:0;padding:6px 12px;border-radius:8px;cursor:pointer}
+nav{display:flex;gap:6px;padding:10px 16px;background:#fff;flex-wrap:wrap;border-bottom:1px solid #ECE9FC}
+nav button{border:0;background:#ECE9FC;padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:700;color:#2E2395}
+nav button.on{background:#4B3BCB;color:#fff}
+main{max-width:980px;margin:0 auto;padding:18px}
+.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 6px #4B3BCB14}
+h2{margin:0 0 10px;font-size:16px}label{display:block;font-weight:700;margin:10px 0 4px;font-size:13px}
+input,textarea,select{width:100%;padding:9px;border:1px solid #cfcaf2;border-radius:9px;font:inherit;background:#fff}
+textarea{min-height:140px;direction:ltr;text-align:left;font-family:monospace;font-size:13px}
+textarea.ar{direction:rtl;text-align:right;font-family:inherit}
+.btn{background:#4B3BCB;color:#fff;border:0;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;margin-top:10px}
+.btn.o{background:#FF6B4A}.btn.g{background:#ECE9FC;color:#2E2395}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:#ECE9FC;border-radius:12px;padding:14px;text-align:center}.stat b{font-size:26px;display:block;color:#4B3BCB}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px;border-bottom:1px solid #ECE9FC;text-align:right}
+.tag{padding:2px 8px;border-radius:8px;font-size:11px;background:#ECE9FC}.bad{background:#ffd9d1;color:#a02a10}
+.hint{color:#6b678f;font-size:12px;margin:4px 0}.msg{padding:10px;border-radius:10px;margin:10px 0;background:#ECE9FC}.err{background:#ffd9d1}
+.hide{display:none}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
+.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #ECE9FC;font-size:14px}
+.mini{border:0;background:#ECE9FC;border-radius:7px;padding:4px 9px;cursor:pointer;margin-inline-start:4px}.mini.bad{background:#ffd9d1;color:#a02a10}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{border:0;background:#ECE9FC;color:#2E2395;border-radius:20px;padding:6px 12px;cursor:pointer}.chip:hover{background:#4B3BCB;color:#fff}
+.bars{display:flex;align-items:flex-end;gap:4px;height:90px}.bars i{flex:1;background:#4B3BCB;border-radius:4px 4px 0 0;position:relative;min-height:2px}.bars i b{position:absolute;top:-16px;font-size:10px;width:100%;text-align:center;font-style:normal;color:#6b678f}
+</style></head><body>
+<header><h1>🐦 لوحة تحكم مغرّد</h1><span id="who"></span><button id="logout" class="hide">خروج</button><button id="resetcfg">إعدادات Firebase</button></header>
+<nav id="nav" class="hide"></nav>
+<main id="app"></main>
+
+<script type="module">
+import {initializeApp,deleteApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc,updateDoc,deleteDoc,collection,getDocs,query,orderBy,limit,getCountFromServer,where,Timestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const $=s=>document.querySelector(s), app=$('#app'), nav=$('#nav');
+const dt=v=>v&&v.toDate?v.toDate().toLocaleString('ar'):(v||'');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let db,auth,content={},tab='dash',users=[];
+const TABS=[['dash','📊 الرئيسية'],['users','👥 المستخدمون'],['ann','📢 إعلان'],['upd','🚀 تحديثات وإشعارات'],['app','🎛 التحكم بالتطبيق والصوت'],['phrases','💬 جمل'],['idioms','🎭 تعابير'],['topics','🎤 مواضيع تحدث'],['missions','🎯 مهمات'],['kidWords','🧒 كلمات الأطفال'],['readings','📖 قراءة'],['lessons','📘 دروس'],['talks','🗣 محادثات'],['gen','🌐 توليد وجلب'],['json','🗂 JSON ونشر']];
+const LV=['A1','A2','B1','B2','C1'];
+const RCATS=[['stories','قصص'],['science','علوم وطبيعة'],['daily','حياة يومية'],['work','عمل'],['travel','ثقافة وسفر']];
+const TCATS=[['travel','سفر'],['food','مطاعم وطعام'],['shopping','تسوق'],['work','عمل'],['health','صحة ورياضة'],['services','خدمات'],['social','علاقات اجتماعية'],['study','دراسة'],['phone','مكالمات هاتفية'],['home','البيت والحياة اليومية']];
+
+const DEFAULT_CFG={apiKey:"AIzaSyBCRF5Fx0cZK4fpSwNSlHJokSQhA14ni_U",authDomain:"bulbul-english.firebaseapp.com",projectId:"bulbul-english",storageBucket:"bulbul-english.firebasestorage.app",messagingSenderId:"604958602517",appId:"1:604958602517:web:3e3186eb9715fede90251c"};
+function cfg(){try{return JSON.parse(localStorage.getItem('mg_cfg')||'null')||DEFAULT_CFG}catch(e){return DEFAULT_CFG}}
+$('#resetcfg').onclick=()=>{localStorage.removeItem('mg_cfg');location.reload()};
+$('#logout').onclick=()=>signOut(auth);
+
+function showCfg(){
+  app.innerHTML=`<div class="card"><h2>الخطوة 1: إعدادات Firebase للويب</h2>
+  <p class="hint">Firebase ← إعدادات المشروع ← تطبيقاتك ← أضف تطبيق ويب (</>) ← انسخ كائن firebaseConfig والصقه هنا. يُحفظ في متصفحك فقط.</p>
+  <textarea id="c" placeholder='{"apiKey":"...","authDomain":"...","projectId":"bulbul-english","appId":"..."}'></textarea>
+  <button class="btn" id="sv">حفظ</button><div id="m"></div></div>`;
+  $('#sv').onclick=()=>{try{let t=$('#c').value.trim();const a=t.indexOf('{'),b=t.lastIndexOf('}');t=t.slice(a,b+1);
+    // يقبل صيغة JS بلا علامات اقتباس على المفاتيح
+    t=t.replace(/([{,]\s*)([A-Za-z_]\w*)\s*:/g,'$1"$2":').replace(/'/g,'"').replace(/,\s*}/g,'}');
+    const o=JSON.parse(t);if(!o.apiKey||!o.projectId)throw 0;localStorage.setItem('mg_cfg',JSON.stringify(o));location.reload()}
+    catch(e){$('#m').innerHTML='<div class="msg err">الإعدادات غير صالحة، انسخها كاملة.</div>'}};
+}
+
+function showLogin(msg){
+  app.innerHTML=`<div class="card" style="max-width:380px;margin:30px auto"><h2>دخول المشرف</h2>
+  <label>البريد</label><input id="e" type="email" dir="ltr"><label>كلمة المرور</label><input id="p" type="password" dir="ltr">
+  <button class="btn" id="go">دخول</button><div id="m">${msg?`<div class="msg err">${msg}</div>`:''}</div></div>`;
+  $('#go').onclick=async()=>{try{await signInWithEmailAndPassword(auth,$('#e').value.trim(),$('#p').value)}
+    catch(e){$('#m').innerHTML='<div class="msg err">بيانات الدخول غير صحيحة.</div>'}};
+}
+
+function renderNav(){nav.classList.remove('hide');nav.innerHTML=TABS.map(([k,t])=>`<button data-k="${k}" class="${k===tab?'on':''}">${t}</button>`).join('');
+  nav.querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.k;renderNav();render()})}
+
+async function loadContent(){
+  try{const s=await getDoc(doc(db,'config','content'));content=s.exists()&&s.data().json?JSON.parse(s.data().json):{}}catch(e){content={}}
+  content.version=content.version||1;
+  for(const k of ['lessons','phrases','idioms','topics','missions','readings','talks','kidWords'])content[k]=content[k]||[];
+}
+
+async function publish(){
+  content.version=(content.version||1)+1;
+  const json=JSON.stringify(content);
+  const at=new Date().toISOString();
+  await setDoc(doc(db,'config','content'),{json,updatedAt:at});
+  try{await setDoc(doc(db,'config','backup_'+at.replace(/[^0-9]/g,'')),{json,updatedAt:at})}catch(e){}
+  toast('✅ تم النشر. يصل المستخدمين عند فتح التطبيق القادم.');
+}
+function toast(t,bad){const m=document.createElement('div');m.className='msg'+(bad?' err':'');m.textContent=t;app.prepend(m);setTimeout(()=>m.remove(),6000)}
+
+function render(){if(tab==='dash')dash();else if(tab==='users')usersTab();else if(tab==='ann')ann();else if(tab==='upd')updTab();else if(tab==='gen')gen();else if(tab==='app')appTab();else if(tab==='json')jsonTab();else section(tab)}
+
+/* ===== التحكم بالتطبيق والصوت ===== */
+const TILES=['كل الدروس','المحادثات','قسم القراءة','قصص بلا حدود','قلها بالإنجليزية','مفرداتي','تركيب الجمل','إملاء ذكي','ردد بعدي','دفتر أخطائي','تحدي الدقيقة','أذن عربية','وضع الاستماع','بودكاست مغرّد','المكتبة الصوتية','تدرّب مع صديق','مدرّب أخطائي','مقابلة عمل حقيقية','إنجليزية مهنتك','الدوري الأسبوعي','شهادات المستوى','تحدي صديق','تقدّمي وشاراتي'];
+const VOICE_PRESETS=[['ElevenLabs (يتطلب مفتاحك، عبر وسيط/Worker)','https://YOUR-WORKER.example.com/tts?text={text}&lang={lang}'],['Google Cloud TTS عبر وسيط خاص','https://YOUR-WORKER.example.com/gcloud?text={text}&lang={lang}'],['Azure Speech عبر وسيط خاص','https://YOUR-WORKER.example.com/azure?text={text}&lang={lang}'],['ملفات صوت مرفوعة (اسم الملف = الجملة)','https://YOUR-HOST.example.com/audio/{text}.mp3']];
+
+function appTab(){
+  const st=content.settings=content.settings||{};
+  const hid=new Set(st.hiddenTiles||[]);
+  app.innerHTML=`<div class="card"><h2>🔊 الصوت</h2>
+   <label>صوت الجوال المفضّل (جزء من اسم الصوت، يُطبَّق على من لم يختر صوتاً بنفسه)</label><input id="vn" dir="ltr" placeholder="مثال: en-us-x-tpf أو Samantha" value="${esc(st.voiceName||'')}">
+   <div class="row"><div><label>سرعة النطق الافتراضية (0.2 – 0.8، العادي 0.45)</label><input id="rt" type="number" step="0.05" min="0.2" max="0.8" value="${st.rate??''}"></div>
+   <div><label>حدّة الصوت (0.7 – 1.3، العادي 1)</label><input id="pt" type="number" step="0.05" min="0.7" max="1.3" value="${st.pitch??''}"></div></div>
+   <label>🌐 صوت من الإنترنت (رابط يرجع ملف صوت mp3 للجملة) — اتركه فارغاً لاستعمال أصوات الجوال</label>
+   <input id="vu" dir="ltr" placeholder="https://…/tts?text={text}&lang={lang}" value="${esc(st.voiceUrl||'')}">
+   <div class="chips" style="margin:6px 0">${VOICE_PRESETS.map((p,i)=>`<button class="chip" data-p="${i}">${p[0]}</button>`).join('')}</div>
+   <div class="row"><input id="tt" dir="ltr" value="Hello! Welcome to Mugharrid. Let's practice English together."><button class="btn g" id="tv" style="flex:0 0 auto;margin:0">▶ جرّب الصوت</button></div>
+   <p class="hint">يستبدل التطبيق نطق الجوال بهذا الصوت، وإن تعطل الرابط يرجع تلقائياً لصوت الجوال. {text} تُستبدل بالجملة و{lang} بـ en-US. لا تضع مفتاح الخدمة داخل الرابط لأنه سيظهر لكل من يفحص التطبيق، بل استعمل وسيطاً (Cloudflare Worker مثلاً) يحمل المفتاح عندك. أصوات الجوال نفسها تتحسن بتثبيت حزمة أصوات من إعدادات الجوال ← اللغة ← محرك تحويل النص إلى كلام.</p></div>
+  <div class="card"><h2>🧩 إظهار وإخفاء أقسام الرئيسية</h2><div class="chips">${TILES.map(t=>`<label class="chip" style="font-weight:400"><input type="checkbox" data-h="${t}" ${hid.has(t)?'':'checked'} style="width:auto"> ${t}</label>`).join('')}</div>
+   <p class="hint">المؤشَّر ظاهر، وإلغاء المؤشر يخفيه عن الجميع بعد النشر.</p></div>
+  <div class="card"><h2>🤖 رابط الذكاء الاصطناعي لكل المستخدمين</h2><label>رابط الخادم (https فقط) — اتركه فارغاً لإيقاف الذكاء الاصطناعي والعودة للوضع المحلي</label><input id="ai" dir="ltr" placeholder="https://mugharrid-ai.sakrmoyed.workers.dev" value="${esc(st.aiEndpoint||'')}"><p class="hint">بعد النشر يعمل الذكاء الاصطناعي عند كل المستخدمين دون أن يلصق أحد رابطاً. الحدود اليومية تضبطها في الخادم نفسه.</p></div>
+  <div class="card"><h2>🛠 وضع الصيانة</h2><label>رسالة (اتركها فارغة لتشغيل التطبيق عادياً)</label><input id="mt" class="ar" value="${esc(st.maintenance||'')}" placeholder="نعمل على تحسينات، نعود خلال ساعة 🙏"><p class="hint">تغلق التطبيق للجميع وتعرض الرسالة. استعملها بحذر.</p></div>
+  <button class="btn" id="sv">🚀 حفظ ونشر</button>`;
+  app.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{$('#vu').value=VOICE_PRESETS[+b.dataset.p][1]});
+  $('#tv').onclick=async()=>{const u=$('#vu').value.trim();const text=$('#tt').value.trim();
+    if(u){try{const a=new Audio(u.replace('{text}',encodeURIComponent(text)).replace('{lang}','en-US'));await a.play()}catch(e){toast('تعذّر تشغيل الرابط: '+e.message,1)}}
+    else{const s=new SpeechSynthesisUtterance(text);s.lang='en-US';const r=parseFloat($('#rt').value);if(r)s.rate=r/0.45;const p=parseFloat($('#pt').value);if(p)s.pitch=p;speechSynthesis.speak(s);toast('تجربة بصوت متصفحك (للمعاينة فقط)')}};
+  $('#sv').onclick=async()=>{const n={};const vn=$('#vn').value.trim(),vu=$('#vu').value.trim(),mt=$('#mt').value.trim();
+    if(vn)n.voiceName=vn;if(vu)n.voiceUrl=vu;if(mt)n.maintenance=mt;
+    const ai=$('#ai').value.trim();if(ai&&!/^https:\/\//.test(ai)){toast('رابط الذكاء الاصطناعي يجب أن يبدأ بـ https',1);return}if(ai)n.aiEndpoint=ai;
+    const r=parseFloat($('#rt').value),p=parseFloat($('#pt').value);if(r)n.rate=r;if(p)n.pitch=p;
+    n.hiddenTiles=[...app.querySelectorAll('[data-h]')].filter(c=>!c.checked).map(c=>c.dataset.h);
+    if(mt&&!confirm('وضع الصيانة سيغلق التطبيق للجميع. متأكد؟'))return;
+    content.settings=n;await publish()};
+}
+
+/* ===== لوحة رئيسية محسّنة ===== */
+async function dash(){
+  app.innerHTML='<div class="card"><h2>نظرة عامة</h2><div class="stats" id="st">جارٍ التحميل…</div></div><div id="ex"></div>';
+  try{
+    const c=await getCountFromServer(collection(db,'users'));
+    const b=await getCountFromServer(query(collection(db,'users'),where('blocked','==',true)));
+    const wk=Timestamp.fromMillis(Date.now()-7*864e5);
+    let act=0;try{act=(await getCountFromServer(query(collection(db,'users'),where('lastActive','>=',wk)))).data().count}catch(e){}
+    $('#st').innerHTML=[['إجمالي المستخدمين',c.data().count],['نشطون آخر 7 أيام',act],['موقوفون',b.data().count],
+      ['جمل مضافة',content.phrases.length],['دروس مضافة',content.lessons.length],['نصوص قراءة',content.readings.length],['محادثات مضافة',content.talks.length]]
+      .map(([t,n])=>`<div class="stat"><b>${n}</b>${t}</div>`).join('');
+  }catch(e){$('#st').textContent='تعذّر جلب الأعداد: '+e.message}
+  try{
+    const s=await getDocs(query(collection(db,'users'),limit(1000)));const us=s.docs.map(d=>({id:d.id,...d.data()}));
+    const days=[...Array(14)].map((_,i)=>{const d=new Date(Date.now()-(13-i)*864e5);return d.toISOString().slice(0,10)});
+    const cnt=Object.fromEntries(days.map(d=>[d,0]));us.forEach(u=>{const d=u.createdAt?.toDate?.().toISOString().slice(0,10);if(d in cnt)cnt[d]++});
+    const mx=Math.max(1,...Object.values(cnt));
+    const lv={};us.forEach(u=>{const l=u.level||'—';lv[l]=(lv[l]||0)+1});
+    const top=[...us].sort((a,b)=>(b.xp||0)-(a.xp||0)).slice(0,5);
+    const idle=us.filter(u=>u.phone&&!u.blocked&&u.lastActive?.toMillis&&Date.now()-u.lastActive.toMillis()>5*864e5).slice(0,12);
+    $('#ex').innerHTML=`<div class="card"><h2>📈 تسجيلات آخر 14 يوماً</h2><div class="bars">${days.map(d=>`<i style="height:${cnt[d]/mx*100}%"><b>${cnt[d]||''}</b></i>`).join('')}</div></div>
+    <div class="row"><div class="card"><h2>🎓 توزيع المستويات</h2>${Object.entries(lv).map(([k,v])=>`<div class="item"><span>${k}</span><b>${v}</b></div>`).join('')||'—'}</div>
+    <div class="card"><h2>🏆 الأعلى نقاطاً</h2>${top.map(u=>`<div class="item"><span>${esc(u.name||u.email)}</span><b>${u.xp||0} XP</b></div>`).join('')||'—'}</div></div>
+    <div class="card"><h2>💌 استعادة المنقطعين (لم يدخلوا منذ 5 أيام)</h2>${idle.map(u=>`<div class="item"><span>${esc(u.name||u.email)}</span><a class="mini" target="_blank" href="https://wa.me/${String(u.phone).replace(/\D/g,'')}?text=${encodeURIComponent('مرحباً '+(u.name||'')+' 👋 اشتقنا لك في مغرّد! جملة اليوم بانتظارك، ادخل وكمّل تعلمك 🐦')}">واتساب</a></div>`).join('')||'<p class="hint">لا أحد حالياً 👏</p>'}</div>`;
+  }catch(e){}
+}
+
+/* ===== نسخ احتياطية ===== */
+async function backupsUi(){
+  const el=$('#bk');el.innerHTML='جارٍ التحميل…';
+  try{const l=await backups();el.innerHTML=l.length?l.map(b=>`<div class="item"><span>${esc(b.at||b.id)}</span><button class="mini" data-b="${b.id}">استرجاع</button></div>`).join(''):'<p class="hint">لا نسخ بعد. تُحفظ نسخة تلقائياً عند كل نشر.</p>';
+    el.querySelectorAll('[data-b]').forEach(x=>x.onclick=()=>{if(!confirm('استرجاع هذه النسخة كمسودة؟'))return;content=JSON.parse(l.find(b=>b.id===x.dataset.b).json);toast('استُرجعت كمسودة. اضغط نشر لتعتمدها.');jsonTab()})}
+  catch(e){el.textContent=e.message}
+}
+
+async function usersTab(){
+  app.innerHTML='<div class="card"><h2>المستخدمون</h2><input id="q" placeholder="ابحث بالاسم أو البريد أو الجوال"><div id="t">جارٍ التحميل…</div></div>';
+  try{const s=await getDocs(query(collection(db,'users'),limit(500)));users=s.docs.map(d=>({id:d.id,...d.data()}));drawUsers('')}
+  catch(e){$('#t').innerHTML='<div class="msg err">'+esc(e.message)+'</div>'}
+  $('#q').oninput=e=>drawUsers(e.target.value.trim().toLowerCase());
+}
+function drawUsers(q){
+  const f=users.filter(u=>!q||[u.name,u.email,u.phone].join(' ').toLowerCase().includes(q)).filter(u=>!window._onlyB||u.blocked);
+  $('#t').innerHTML=`<div class="row" style="margin:8px 0"><label style="margin:0;font-weight:400"><input type="checkbox" id="ob" style="width:auto" ${window._onlyB?'checked':''}> الموقوفون فقط</label><button class="btn g" id="csv" style="margin:0">تصدير CSV</button></div>
+  <p class="hint">${f.length} مستخدم</p><div style="overflow:auto"><table><tr><th>الاسم</th><th>البريد</th><th>الجوال</th><th>المستوى</th><th>XP</th><th>سلسلة</th><th>دقائق</th><th>آخر نشاط</th><th>إدارة</th></tr>`+
+  f.map(u=>`<tr><td>${esc(u.name)} ${u.blocked?'<span class="tag bad">موقوف</span>':''}</td><td dir="ltr">${esc(u.email)}</td><td dir="ltr">${esc(u.phone)}</td><td>${esc(u.level)}</td><td>${esc(u.xp)}</td><td>${esc(u.streak)}</td><td>${esc(u.minutes)}</td><td>${esc(dt(u.lastActive))}</td>
+  <td style="white-space:nowrap"><button class="btn g" style="margin:0;padding:5px 9px" data-e="${u.id}">تعديل</button>
+  <button class="btn ${u.blocked?'g':'o'}" style="margin:0;padding:5px 9px" data-id="${u.id}" data-b="${u.blocked?0:1}">${u.blocked?'فك الإيقاف':'إيقاف'}</button>
+  <button class="btn o" style="margin:0;padding:5px 9px;background:#a02a10" data-del="${u.id}">حذف</button></td></tr>`).join('')+'</table></div>';
+  $('#ob').onchange=e=>{window._onlyB=e.target.checked;drawUsers($('#q').value.trim().toLowerCase())};
+  $('#csv').onclick=()=>{const rows=[['name','email','phone','level','xp','streak','minutes','lastActive','blocked'],...f.map(u=>[u.name,u.email,u.phone,u.level,u.xp,u.streak,u.minutes,dt(u.lastActive),u.blocked?1:0])];
+    const t='\ufeff'+rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download='users.csv';a.click()};
+  const refresh=()=>drawUsers($('#q').value.trim().toLowerCase());
+  $('#t').querySelectorAll('button[data-id]').forEach(b=>b.onclick=async()=>{
+    const bl=b.dataset.b==='1';if(bl&&!confirm('إيقاف هذا الحساب؟'))return;
+    await updateDoc(doc(db,'users',b.dataset.id),{blocked:bl});users.find(x=>x.id===b.dataset.id).blocked=bl;refresh()});
+  $('#t').querySelectorAll('button[data-e]').forEach(b=>b.onclick=async()=>{
+    const u=users.find(x=>x.id===b.dataset.e);const n=prompt('الاسم',u.name||'');if(n===null)return;const p=prompt('الجوال',u.phone||'');if(p===null)return;
+    await updateDoc(doc(db,'users',u.id),{name:n.trim(),phone:p.trim()});u.name=n.trim();u.phone=p.trim();refresh()});
+  $('#t').querySelectorAll('button[data-del]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('حذف بيانات هذا المستخدم من قاعدة البيانات نهائياً؟ (حساب الدخول نفسه يُحذف من Firebase ← Authentication)'))return;
+    await deleteDoc(doc(db,'users',b.dataset.del));users=users.filter(x=>x.id!==b.dataset.del);refresh()});
+}
+
+function ann(){
+  app.innerHTML=`<div class="card"><h2>إعلان يظهر أعلى الصفحة الرئيسية</h2><textarea class="ar" id="a" style="min-height:80px">${esc(content.announcement||'')}</textarea>
+  <p class="hint">اتركه فارغاً لإخفائه.</p><button class="btn" id="s">حفظ ونشر</button></div>`;
+  $('#s').onclick=async()=>{content.announcement=$('#a').value.trim();await publish()};
+}
+
+/* ===== تحديثات وإشعارات ===== */
+function updTab(){
+  const u=content.update||{};const ns=content.notices=content.notices||[];
+  app.innerHTML=`<div class="card"><h2>🚀 إرسال تحديث للتطبيق</h2>
+  <p class="hint">بعد بناء نسخة جديدة وتحميلها (على موقعك أو Google Play) ضع رقمها هنا. يظهر لكل مستخدم نسخته أقدم إشعار ونافذة «حدّث الآن». رقم الـbuild هو الرقم بعد علامة + في <code dir="ltr">version: 1.0.0+5</code> داخل pubspec.yaml.</p>
+  <div class="row"><div><label>رقم build الجديد (مثل 5)</label><input id="ub" type="number" min="1" value="${u.build||''}"></div>
+  <div><label>اسم الإصدار (مثل 1.1.0)</label><input id="uv" dir="ltr" value="${esc(u.version||'')}"></div></div>
+  <label>رابط التحميل (Google Play أو رابط APK على موقعك)</label><input id="ul" dir="ltr" placeholder="https://play.google.com/store/apps/details?id=..." value="${esc(u.url||'')}">
+  <label>ما الجديد (يظهر في النافذة)</label><textarea class="ar" id="un" style="min-height:70px">${esc(u.notes||'')}</textarea>
+  <label class="chip" style="font-weight:400;margin:8px 0"><input type="checkbox" id="uf" ${u.force?'checked':''} style="width:auto"> تحديث إلزامي (لا يمكن إغلاق النافذة حتى يحدّث)</label>
+  <div><button class="btn" id="us">🚀 نشر التحديث</button> <button class="btn g" id="uc">إلغاء التحديث الحالي</button></div></div>
+  <div class="card"><h2>🔔 إرسال إشعار لكل المستخدمين</h2>
+  <p class="hint">يصل الإشعار عند فتح المستخدمين للتطبيق (إشعار على الجوال + نافذة) مرة واحدة لكل مستخدم. هذا ليس دفعاً فورياً والتطبيق مغلق؛ الدفع الفوري يتطلب خدمة Firebase Cloud Messaging.</p>
+  <label>العنوان</label><input id="nt" class="ar"><label>النص</label><textarea class="ar" id="nb" style="min-height:70px"></textarea>
+  <label>رابط اختياري</label><input id="nl" dir="ltr" placeholder="https://…">
+  <button class="btn" id="ns">📤 إرسال الإشعار</button></div>
+  <div class="card"><h2>الإشعارات المرسلة (${ns.length})</h2>${ns.length?ns.slice().reverse().map(n=>`<div class="item"><b>${esc(n.title||'')}</b> — ${esc(n.body||'')} <button class="btn g" data-d="${esc(n.id)}" style="margin:0 8px">حذف</button></div>`).join(''):'<p class="hint">لا توجد.</p>'}</div>`;
+  $('#us').onclick=async()=>{const b=parseInt($('#ub').value),url=$('#ul').value.trim();
+    if(!b||!/^https:\/\//.test(url)){toast('أدخل رقم build ورابطاً يبدأ بـ https',1);return}
+    if($('#uf').checked&&!confirm('التحديث الإلزامي يمنع الجميع من استخدام التطبيق حتى يحدّثوا. تأكد أن الرابط يعمل. متابعة؟'))return;
+    content.update={build:b,version:$('#uv').value.trim(),url,notes:$('#un').value.trim(),force:$('#uf').checked};await publish();updTab()};
+  $('#uc').onclick=async()=>{delete content.update;await publish();updTab()};
+  $('#ns').onclick=async()=>{const t=$('#nt').value.trim(),b=$('#nb').value.trim(),l=$('#nl').value.trim();
+    if(!t&&!b){toast('اكتب عنواناً أو نصاً',1);return}
+    if(l&&!/^https:\/\//.test(l)){toast('الرابط يجب أن يبدأ بـ https',1);return}
+    if(!confirm('إرسال هذا الإشعار لكل المستخدمين؟'))return;
+    ns.push({id:'n'+Date.now(),title:t,body:b,url:l});content.notices=ns.slice(-30);await publish();updTab()};
+  app.querySelectorAll('[data-d]').forEach(x=>x.onclick=async()=>{content.notices=ns.filter(n=>n.id!==x.dataset.d);await publish();updTab()});
+}
+
+/* ===== الأقسام ===== */
+const SIMPLE={
+ phrases:{t:'جمل',f:[['en','English'],['ar','العربية'],['level','المستوى','lv']],ex:'Where is the nearest ATM? | أين أقرب صراف آلي؟ | A2',
+  sum:i=>`${i.en} — ${i.ar} <span class="tag">${i.level||'A1'}</span>`,from:l=>{const[a,b,c]=l.split('|').map(x=>x.trim());return a&&b?{en:a,ar:b,level:LV.includes(c)?c:'A1'}:null}},
+ idioms:{t:'تعابير',f:[['en','English'],['ar','العربية'],['example','مثال']],ex:'save for a rainy day | يدخر لوقت الحاجة | I save a little every month.',
+  sum:i=>`${i.en} — ${i.ar}`,from:l=>{const[a,b,c]=l.split('|').map(x=>x.trim());return a&&b?{en:a,ar:b,example:c||''}:null}},
+ topics:{t:'مواضيع تحدث دقيقة',f:[['en','English'],['ar','العربية']],ex:'Talk about how you save money. | تحدث عن طريقتك في الادخار.',
+  sum:i=>`${i.en} — ${i.ar}`,from:l=>{const[a,b]=l.split('|').map(x=>x.trim());return a&&b?{en:a,ar:b}:null}},
+ missions:{t:'مهمات يومية',f:[['_','نص المهمة']],ex:'اقرأ لافتة بالإنجليزية اليوم.',sum:i=>esc(i),from:l=>l.trim()||null,str:true},
+ kidWords:{t:'كلمات الأطفال',f:[['en','English'],['emoji','إيموجي'],['ar','العربية']],ex:'rabbit | 🐰 | أرنب',
+  sum:i=>`${i.emoji||''} ${i.en} — ${i.ar}`,from:l=>{const[a,b,c]=l.split('|').map(x=>x.trim());return a&&c?{en:a,emoji:b||'⭐',ar:c}:null}},
+};
+const CUSTOM={
+ readings:{t:'نصوص القراءة',sum:i=>`${i.title} <span class="tag">${i.cat}/${i.level}</span> ${i.lines.length} سطر`},
+ lessons:{t:'الدروس',sum:i=>`${i.emoji||''} ${i.titleAr} <span class="tag">${i.level}</span> ${i.steps.length} خطوة`},
+ talks:{t:'المحادثات',sum:i=>`${i.titleAr} <span class="tag">${i.cat}</span> ${i.turns.length} أدوار`},
+};
+const opts=(arr,sel)=>arr.map(x=>Array.isArray(x)?`<option value="${x[0]}" ${x[0]===sel?'selected':''}>${x[1]}</option>`:`<option ${x===sel?'selected':''}>${x}</option>`).join('');
+
+function listHtml(k){
+  const d=SIMPLE[k]||CUSTOM[k];
+  return `<div class="card"><h2>المضاف حالياً (${content[k].length})</h2>`+(content[k].length?content[k].map((it,i)=>`<div class="item"><span>${d.sum(it)}</span><span><button class="mini" data-ed="${i}">تعديل</button><button class="mini bad" data-rm="${i}">حذف</button></span></div>`).join(''):'<p class="hint">لا شيء مضاف بعد. ما تضيفه هنا يُضاف فوق محتوى التطبيق المدمج.</p>')+'</div>';
+}
+function bindList(k,redraw){
+  app.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{content[k].splice(+b.dataset.rm,1);redraw()});
+  app.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>{const i=+b.dataset.ed;const t=prompt('عدّل JSON العنصر',JSON.stringify(content[k][i]));if(t===null)return;
+    try{content[k][i]=JSON.parse(t);redraw()}catch(e){toast('JSON غير صالح',1)}});
+}
+const pubBar='<div class="card"><button class="btn" id="pub">🚀 نشر للمستخدمين</button> <span class="hint">التعديلات تبقى مسودة حتى تضغط نشر.</span></div>';
+
+function section(k){
+  if(SIMPLE[k])return simpleSection(k);
+  if(k==='readings')return readingSection();
+  if(k==='lessons')return lessonSection();
+  if(k==='talks')return talkSection();
+}
+function simpleSection(k){
+  const d=SIMPLE[k];
+  const draw=()=>{
+    app.innerHTML=`<div class="card"><h2>➕ إضافة ${d.t}</h2><div class="row">${d.f.map(([n,l,ty])=>`<div><label>${l}</label>${ty==='lv'?`<select data-f="${n}">${opts(LV,'A1')}</select>`:`<input data-f="${n}" ${n==='en'||n==='example'?'dir="ltr"':''}>`}</div>`).join('')}</div>
+    <button class="btn" id="add">إضافة</button>
+    <label>أو الصق عدة أسطر دفعة واحدة (فاصل | )</label><textarea id="bulk" placeholder="${esc(d.ex)}" ${k==='missions'?'class="ar"':''}></textarea>
+    <div class="row"><button class="btn g" id="addb">إضافة الأسطر</button><button class="btn g" id="aiv">✨ ولّد 10 بالذكاء الاصطناعي</button></div></div>`+listHtml(k)+pubBar;
+    $('#add').onclick=()=>{const l=[...app.querySelectorAll('[data-f]')].map(x=>x.value.trim()).join(' | ');const it=d.from(l);if(!it)return toast('أكمل الحقول',1);
+      if(dupe(k,it))return toast('موجود مسبقاً',1);content[k].push(it);draw()};
+    $('#addb').onclick=()=>{let n=0;$('#bulk').value.split('\n').forEach(l=>{const it=d.from(l);if(it&&!dupe(k,it)){content[k].push(it);n++}});toast('أضيف '+n);draw()};
+    $('#aiv').onclick=async()=>{const s=await aiItems(k,'10 new items for the learning app section');if(s){s.forEach(it=>{if(!dupe(k,it))content[k].push(it)});draw()}};
+    bindList(k,draw);$('#pub').onclick=safePublish;
+  };draw();
+}
+const dupe=(k,it)=>content[k].some(x=>typeof it==='string'?x===it:JSON.stringify(x)===JSON.stringify(it)||(x.en&&x.en===it.en));
+
+function sentences(t){return t.replace(/\s+/g,' ').match(/[^.!?]+[.!?]+/g)?.map(s=>s.trim())||t.split('\n').map(s=>s.trim()).filter(Boolean)}
+function parseVocab(t){return t.split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]&&a[1]).map(([en,ar])=>({en,ar}))}
+function parseQuiz(t){return t.split('\n').map(l=>l.split('|').map(x=>x.trim()).filter(Boolean)).filter(a=>a.length>=3).map(a=>{
+  const q=a[0],o=a.slice(1);let ans=o.findIndex(x=>x.endsWith('*'));return{q,options:o.map(x=>x.replace(/\*$/,'')),answer:Math.max(ans,0)}})}
+
+function readingSection(prefill){
+  const draw=()=>{
+    const p=prefill||{};
+    app.innerHTML=`<div class="card"><h2>➕ نص قراءة جديد</h2>
+    <div class="row"><div><label>القسم</label><select id="cat">${opts(RCATS,p.cat)}</select></div><div><label>المستوى</label><select id="lv">${opts(LV,p.level||'A2')}</select></div></div>
+    <label>العنوان (English)</label><input id="ti" dir="ltr" value="${esc(p.title||'')}">
+    <label>النص (جملة في كل سطر، أو فقرة كاملة وسأقسمها)</label><textarea id="bd" style="min-height:160px">${esc((p.lines||[]).join('\n'))}</textarea>
+    <label>مفردات (كلمة | ترجمة) سطر لكل كلمة</label><textarea id="vc" class="ar" style="min-height:90px;direction:ltr">${esc((p.vocab||[]).map(v=>v.en+' | '+v.ar).join('\n'))}</textarea>
+    <label>أسئلة (السؤال | خيار | خيار* | خيار) — النجمة على الإجابة الصحيحة</label><textarea id="qz" style="min-height:90px">${esc((p.quiz||[]).map(q=>[q.q,...q.options.map((o,i)=>i===q.answer?o+'*':o)].join(' | ')).join('\n'))}</textarea>
+    <div class="row"><button class="btn" id="add">إضافة</button><button class="btn g" id="aiq">✨ ولّد المفردات والأسئلة</button></div></div>`+listHtml('readings')+pubBar;
+    const build=()=>({cat:$('#cat').value,level:$('#lv').value,title:$('#ti').value.trim(),lines:sentences($('#bd').value),vocab:parseVocab($('#vc').value),quiz:parseQuiz($('#qz').value)});
+    $('#add').onclick=()=>{const it=build();if(!it.title||!it.lines.length)return toast('العنوان والنص مطلوبان',1);content.readings.push(it);prefill=null;draw()};
+    $('#aiq').onclick=async()=>{const it=build();if(!it.lines.length)return toast('اكتب النص أولاً',1);
+      const r=await aiJSON(`Text:\n${it.lines.join(' ')}\n\nReturn JSON {"vocab":[{"en":"","ar":""}] (6 useful words with Arabic meaning),"quiz":[{"q":"","options":["","",""],"answer":0}] (3 comprehension questions)}`);
+      if(r){prefill={...it,vocab:r.vocab||[],quiz:r.quiz||[]};draw()}};
+    bindList('readings',draw);$('#pub').onclick=safePublish;
+  };draw();
+}
+
+function lessonSection(){
+  const draw=()=>{
+    app.innerHTML=`<div class="card"><h2>➕ درس جديد</h2>
+    <div class="row"><div><label>العنوان بالعربية</label><input id="ta" placeholder="في البنك"></div><div><label>إيموجي</label><input id="em" value="📘"></div><div><label>المستوى</label><select id="lv">${opts(LV,'A2')}</select></div></div>
+    <label>الخطوات — سطر لكل خطوة:</label>
+    <p class="hint" dir="ltr" style="text-align:left">mcq | prompt | English sentence (or empty) | option | option* | option | why<br>build | prompt | words separated by spaces | why</p>
+    <textarea id="st" style="min-height:170px" placeholder="mcq | استمع واختر المعنى | I would like to open an account. | أريد إغلاق حسابي | أريد فتح حساب* | أريد سحب مبلغ | open an account = يفتح حساباً&#10;build | رتّب: أريد تحويل مبلغ | I want to transfer money | transfer money = يحوّل مبلغاً"></textarea>
+    <div class="row"><button class="btn" id="add">إضافة الدرس</button><button class="btn g" id="aig">✨ ولّد درساً بالذكاء الاصطناعي</button></div></div>`+listHtml('lessons')+pubBar;
+    $('#add').onclick=()=>{const steps=[];for(const l of $('#st').value.split('\n')){const a=l.split('|').map(x=>x.trim());if(!a[0])continue;
+      if(a[0]==='build'){steps.push({type:'build',promptAr:a[1]||'',words:(a[2]||'').split(/\s+/).filter(Boolean),why:a[3]||'',kind:'grammar'})}
+      else if(a[0]==='mcq'){const en=a[2]||'';const rest=a.slice(3);const why=rest.length>3?rest.pop():'';const ans=rest.findIndex(x=>x.endsWith('*'));
+        steps.push({type:'mcq',promptAr:a[1]||'',...(en?{en}:{}),options:rest.map(x=>x.replace(/\*$/,'')),answer:Math.max(ans,0),why})}}
+      const t=$('#ta').value.trim();if(!t||!steps.length)return toast('العنوان والخطوات مطلوبة',1);
+      content.lessons.push({id:'x_'+Date.now().toString(36),level:$('#lv').value,titleAr:t,emoji:$('#em').value||'📘',steps});draw()};
+    $('#aig').onclick=async()=>{const t=prompt('موضوع الدرس (مثال: في المطار)');if(!t)return;
+      const r=await aiJSON(`Create one English lesson for Arabic speakers about "${t}" at level A2. Return JSON {"id":"snake_case","level":"A2","titleAr":"","emoji":"","steps":[ 6 steps mixing {"type":"mcq","promptAr":"","en":"English sentence","options":["","",""],"answer":0,"why":"Arabic explanation"} and {"type":"build","promptAr":"","words":["w1","w2"],"why":""} ]}`);
+      if(r&&r.steps){r.id='x_'+Date.now().toString(36);content.lessons.push(r);draw()}};
+    bindList('lessons',draw);$('#pub').onclick=safePublish;
+  };draw();
+}
+
+function talkSection(){
+  const draw=()=>{
+    app.innerHTML=`<div class="card"><h2>➕ محادثة جديدة</h2>
+    <div class="row"><div><label>القسم</label><select id="cat">${opts(TCATS)}</select></div><div><label>العنوان بالعربية</label><input id="ti" placeholder="في محل تصليح السيارات"></div></div>
+    <div class="row"><div><label>دورك ودور المدرب</label><input id="ro" placeholder="سيارتك فيها عطل والمدرب هو الميكانيكي"></div><div><label>الموقف بالإنجليزية</label><input id="sc" dir="ltr" placeholder="Talking to a mechanic"></div></div>
+    <label>الأدوار — سطر لكل دور: جملة المدرب | اقتراح1 | اقتراح2</label><textarea id="tu" style="min-height:130px" placeholder="What is wrong with the car? | It makes a noise. | It does not start."></textarea>
+    <label>الأهداف — سطر لكل هدف: النص بالعربية | كلمة1, كلمة2</label><textarea id="go" class="ar" style="min-height:70px" placeholder="اشرح العطل | noise, start, engine"></textarea>
+    <div class="row"><button class="btn" id="add">إضافة</button><button class="btn g" id="aig">✨ ولّد محادثة بالذكاء الاصطناعي</button></div></div>`+listHtml('talks')+pubBar;
+    $('#add').onclick=()=>{const turns=$('#tu').value.split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]).map(a=>({coach:a[0],hints:a.slice(1).filter(Boolean)}));
+      const goals=$('#go').value.split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]).map(a=>({label:a[0],keys:(a[1]||'').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean)}));
+      const t=$('#ti').value.trim();if(!t||!turns.length)return toast('العنوان والأدوار مطلوبة',1);
+      content.talks.push({cat:$('#cat').value,titleAr:t,roleAr:$('#ro').value.trim(),scenarioEn:$('#sc').value.trim(),turns,goals});draw()};
+    $('#aig').onclick=async()=>{const t=prompt('موقف المحادثة (مثال: حجز غرفة فندق)');if(!t)return;
+      const r=await aiJSON(`Create one practice conversation for Arabic learners of English: "${t}". Return JSON {"cat":"one of ${TCATS.map(x=>x[0]).join('|')}","titleAr":"","roleAr":"","scenarioEn":"","turns":[5 items {"coach":"English line","hints":["short reply","short reply"]}],"goals":[2 items {"label":"Arabic","keys":["lowercase keyword"]}]}`);
+      if(r&&r.turns){content.talks.push(r);draw()}};
+    bindList('talks',draw);$('#pub').onclick=safePublish;
+  };draw();
+}
+
+/* ===== الذكاء الاصطناعي (اختياري، بمفتاحك أنت) ===== */
+async function aiJSON(prompt){
+  let key=localStorage.getItem('mg_ai');
+  if(!key){key=prompt_('الصق مفتاح Anthropic API (يُحفظ في متصفحك فقط، ويُرسل لـ api.anthropic.com مباشرة)');if(!key)return null;localStorage.setItem('mg_ai',key.trim())}
+  toast('⏳ جارٍ التوليد…');
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':localStorage.getItem('mg_ai'),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-5-5',max_tokens:4000,messages:[{role:'user',content:prompt+'\n\nReturn ONLY valid JSON, no markdown.'}]})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);
+    const t=j.content.map(c=>c.text||'').join('');const m=t.match(/[\[{][\s\S]*[\]}]/);return JSON.parse(m[0]);
+  }catch(e){toast('فشل التوليد: '+e.message+' (تحقق من المفتاح من تبويب «توليد وجلب»)',1);return null}
+}
+const prompt_=m=>window.prompt(m);
+async function aiItems(k,what){
+  const ex={phrases:'{"en":"","ar":"","level":"A1|A2|B1|B2|C1"}',idioms:'{"en":"","ar":"","example":""}',topics:'{"en":"speaking prompt","ar":"Arabic"}',missions:'"Arabic daily mission string"',kidWords:'{"en":"","emoji":"","ar":""}'}[k];
+  const have=content[k].slice(-15).map(x=>x.en||x).join(', ');
+  const r=await aiJSON(`Generate ${what}. Section: ${SIMPLE[k].t}, for Arabic speakers learning English. Each item: ${ex}. Avoid: ${have}. Return a JSON array.`);
+  return Array.isArray(r)?r:null;
+}
+
+/* ===== التحقق والنشر الآمن + النسخ الاحتياطي ===== */
+function validate(){
+  const e=[];
+  content.phrases.forEach((p,i)=>{if(!p.en||!p.ar)e.push('جملة #'+(i+1)+' ناقصة')});
+  content.readings.forEach(r=>{if(!r.lines?.length)e.push('قراءة «'+r.title+'» بلا نص');(r.quiz||[]).forEach(q=>{if(q.answer>=q.options.length)e.push('سؤال خاطئ في «'+r.title+'»')})});
+  content.lessons.forEach(l=>l.steps.forEach((s,i)=>{if(s.type==='mcq'&&(s.options.length<2||s.answer>=s.options.length))e.push('درس «'+l.titleAr+'» خطوة '+(i+1)+' بلا إجابة صحيحة');if(s.type==='build'&&s.words.length<2)e.push('درس «'+l.titleAr+'» خطوة ترتيب قصيرة')}));
+  content.talks.forEach(t=>{if(!t.turns?.length)e.push('محادثة «'+t.titleAr+'» بلا أدوار')});
+  return e;
+}
+async function safePublish(){
+  const e=validate();if(e.length&&!confirm('تنبيهات:\n- '+e.slice(0,8).join('\n- ')+'\n\nانشر رغم ذلك؟'))return;
+  await publish();
+}
+async function backups(){
+  const s=await getDocs(query(collection(db,'config'),limit(60)));
+  return s.docs.filter(d=>d.id.startsWith('backup_')).map(d=>({id:d.id,at:d.data().updatedAt,json:d.data().json})).sort((a,b)=>b.id.localeCompare(a.id));
+}
+
+/* ===== توليد وجلب من الإنترنت ===== */
+const STOP=new Set('about after again also because before being between could during every first other should their there these those through under which while would where there into from with that this have been were they them then than when what will your more most some such only over very just like make made many much'.split(' '));
+async function tr(w){try{const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(w)+'&langpair=en|ar');const j=await r.json();return j.responseData.translatedText}catch(e){return ''}}
+async function vocabFrom(text,n=6){
+  const ws=[...new Set((text.toLowerCase().match(/[a-z]{6,}/g)||[]).filter(w=>!STOP.has(w)))].slice(0,n);
+  const out=[];for(const w of ws){out.push({en:w,ar:await tr(w)})}return out.filter(v=>v.ar);
+}
+async function wikiDraft(title){
+  for(const host of ['simple.wikipedia.org','en.wikipedia.org']){
+    try{const r=await fetch(`https://${host}/api/rest_v1/page/summary/${encodeURIComponent(title)}`);if(!r.ok)continue;const j=await r.json();if(!j.extract)continue;
+      const lines=sentences(j.extract).slice(0,8);return{title:j.title,lines,src:`${host}/wiki/${encodeURIComponent(title)}`}}catch(e){}
+  }return null;
+}
+function gen(){
+  app.innerHTML=`<div class="card"><h2>🔥 اقتراحات اليوم (الأكثر قراءة في ويكيبيديا)</h2><p class="hint">مواضيع حقيقية يتحدث عنها الناس اليوم. اضغط أي موضوع لتحويله إلى نص قراءة جاهز.</p><div id="trend" class="chips">جارٍ التحميل…</div></div>
+  <div class="card"><h2>🔎 من موضوع أو كلمة</h2><div class="row"><input id="kw" dir="ltr" placeholder="Solar system / Coffee / Pyramids"><button class="btn" id="go1" style="flex:0 0 auto;margin:0">جلب نص قراءة</button></div></div>
+  <div class="card"><h2>📋 من نص أو رابط تلصقه</h2><textarea id="pt" placeholder="الصق نصاً إنجليزياً أو رابط صفحة (مقال، ويكيبيديا، مدونة)…"></textarea><button class="btn" id="go2">حوّله إلى نص قراءة</button>
+  <p class="hint">الروابط تُقرأ عبر خدمة r.jina.ai. تأكد أنك تملك حق استخدام النص.</p></div>
+  <div class="card"><h2>🔤 كلمات ⟵ جمل بأمثلة حقيقية</h2><textarea id="wl" style="min-height:70px" placeholder="كلمة في كل سطر: reservation, delay, receipt"></textarea><button class="btn" id="go3">ولّد جملاً مترجمة</button></div>
+  <div class="card"><h2>✨ الذكاء الاصطناعي</h2><p class="hint">اختياري. يتطلب مفتاح Anthropic API خاصاً بك، يُحفظ في هذا المتصفح فقط.</p>
+  <div class="row"><input id="key" type="password" dir="ltr" placeholder="sk-ant-…" value="${esc(localStorage.getItem('mg_ai')||'')}"><button class="btn g" id="sk" style="flex:0 0 auto;margin:0">حفظ المفتاح</button></div></div>`;
+  $('#sk').onclick=()=>{localStorage.setItem('mg_ai',$('#key').value.trim());toast('حُفظ')};
+  const open=d=>{tab='readings';renderNav();readingSection({cat:'daily',level:'A2',...d})};
+  const mk=async(title)=>{toast('⏳ جارٍ الجلب والترجمة…');const d=await wikiDraft(title);if(!d)return toast('لم أجد الموضوع',1);d.vocab=await vocabFrom(d.lines.join(' '));open(d)};
+  (async()=>{try{const t=new Date(Date.now()-864e5);const r=await fetch(`https://en.wikipedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/${t.getUTCFullYear()}/${String(t.getUTCMonth()+1).padStart(2,'0')}/${String(t.getUTCDate()).padStart(2,'0')}`);
+    const j=await r.json();const names=j.items[0].articles.map(a=>a.article).filter(a=>!/:|Main_Page|Special/.test(a)).slice(0,20);
+    $('#trend').innerHTML=names.map(n=>`<button class="chip" data-t="${esc(n)}">${esc(n.replace(/_/g,' '))}</button>`).join('');
+    $('#trend').querySelectorAll('.chip').forEach(b=>b.onclick=()=>mk(b.dataset.t))}catch(e){$('#trend').textContent='تعذّر الجلب'}})();
+  $('#go1').onclick=()=>$('#kw').value.trim()&&mk($('#kw').value.trim().replace(/ /g,'_'));
+  $('#go2').onclick=async()=>{let t=$('#pt').value.trim();if(!t)return;toast('⏳');
+    if(/^https?:\/\//.test(t)){try{t=await(await fetch('https://r.jina.ai/'+t)).text()}catch(e){return toast('تعذّر قراءة الرابط',1)}}
+    const lines=sentences(t).filter(s=>s.length>20&&s.length<220).slice(0,10);if(!lines.length)return toast('لا نص صالح',1);
+    open({title:lines[0].slice(0,40),lines,vocab:await vocabFrom(lines.join(' '))})};
+  $('#go3').onclick=async()=>{const ws=$('#wl').value.split('\n').map(x=>x.trim()).filter(Boolean);toast('⏳ جارٍ الجلب…');let n=0;
+    for(const w of ws){try{const j=await(await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(w))).json();
+      const ex=j[0].meanings.flatMap(m=>m.definitions).map(d=>d.example).find(Boolean);if(!ex)continue;
+      const ar=await tr(ex);if(ar&&!dupe('phrases',{en:ex})){content.phrases.push({en:ex,ar,level:'B1'});n++}}catch(e){}}
+    toast('أضيفت '+n+' جملة إلى «جمل» كمسودة. راجعها ثم انشر.')};
+}
+
+function jsonTab(){
+  app.innerHTML=`<div class="card"><h2>JSON كامل</h2><textarea id="j" style="min-height:360px">${esc(JSON.stringify(content,null,2))}</textarea>
+  <div class="row"><button class="btn" id="p">نشر</button><button class="btn g" id="d">تنزيل نسخة</button><button class="btn g" id="r">استرجاع المنشور</button></div></div><div class="card"><h2>🕘 النسخ السابقة</h2><div id="bk"></div></div>`;backupsUi();
+  $('#p').onclick=async()=>{try{content=JSON.parse($('#j').value);await publish();jsonTab()}catch(e){toast('JSON غير صالح',1)}};
+  $('#d').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('#j').value],{type:'application/json'}));a.download='content.json';a.click()};
+  $('#r').onclick=async()=>{await loadContent();jsonTab()};
+}
+
+// ---- تشغيل ----
+const c=cfg();
+if(!c){showCfg()}else{
+  const fa=initializeApp(c);auth=getAuth(fa);db=getFirestore(fa);
+  onAuthStateChanged(auth,async u=>{
+    if(!u){nav.classList.add('hide');$('#logout').classList.add('hide');$('#who').textContent='';return showLogin()}
+    let ok=false;try{ok=(await getDoc(doc(db,'admins',u.uid))).exists()}catch(e){}
+    if(!ok){await signOut(auth);return showLogin('هذا الحساب ليس مشرفاً. أنشئ مستند admins/'+u.uid+' في Firestore.')}
+    $('#who').textContent=u.email;$('#logout').classList.remove('hide');
+    await loadContent();renderNav();render();
+  });
+}
+</script></body></html>

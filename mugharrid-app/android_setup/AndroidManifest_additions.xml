@@ -1,0 +1,31 @@
+<!--
+  أضف هذه الأجزاء إلى الملف: android/app/src/main/AndroidManifest.xml
+  لا تستبدل الملف كله. انسخ كل جزء إلى موضعه المشروح.
+-->
+
+<!-- (1) الأذونات: ضعها مباشرة بعد سطر <manifest ...> وقبل <application -->
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+<!-- (2) المستقبِلات: ضعها داخل <application ...> ، مثلاً قبل </application> مباشرة -->
+<receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"/>
+<receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+    <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+        <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+    </intent-filter>
+</receiver>
+
+<!-- (3) queries: يوجد في الملف قسم <queries> جاهز في آخره. أضف هذين العنصرين داخله (لا تنشئ قسماً ثانياً) -->
+<intent>
+    <action android:name="android.speech.RecognitionService"/>
+</intent>
+<intent>
+    <action android:name="android.intent.action.TTS_SERVICE"/>
+</intent>
+
+<!-- اختياري: لتغيير اسم التطبيق الظاهر على الجوال غيّر android:label في وسم <application> إلى "كلمة" -->

@@ -1,0 +1,52 @@
+التعديلات على ملف Gradle الخاص بالتطبيق
+=========================================
+
+الملف: android/app/build.gradle.kts
+(إن كان مشروعك قديماً فاسم الملف build.gradle والصيغة مختلفة قليلاً، انظر آخر هذا الملف)
+
+------------------------------------------------------------
+أ) داخل android { ... }
+------------------------------------------------------------
+
+1. تأكد أن compileSdk يساوي 35 أو أكثر. إن كان السطر:
+       compileSdk = flutter.compileSdkVersion
+   فاتركه كما هو، وإن فشل البناء برسالة تطلب 35 فاجعله:
+       compileSdk = 35
+
+2. داخل compileOptions { ... } أضف السطر الأول:
+
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+   (اترك سطري sourceCompatibility و targetCompatibility كما وجدتهما في مشروعك.)
+
+3. داخل defaultConfig { ... } تأكد أن minSdk يساوي 21 أو أكثر. إن كان:
+       minSdk = flutter.minSdkVersion
+   فاتركه كما هو.
+
+------------------------------------------------------------
+ب) في آخر الملف
+------------------------------------------------------------
+
+أضف (أو أكمل إن كان القسم موجوداً):
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+}
+
+------------------------------------------------------------
+الصيغة القديمة (ملف build.gradle بلغة Groovy)
+------------------------------------------------------------
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    dependencies {
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    }
