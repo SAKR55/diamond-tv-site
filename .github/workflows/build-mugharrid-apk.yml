@@ -2,7 +2,9 @@ name: Build Mugharrid APK
 on:
   workflow_dispatch:
   push:
-    paths: ['mugharrid-app/**']
+    paths: ['mugharrid-app/**', '.github/workflows/build-mugharrid-apk.yml']
+permissions:
+  contents: write
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -22,3 +24,9 @@ jobs:
         with:
           name: mugharrid-apk
           path: mugharrid-app/build/app/outputs/flutter-apk/app-release.apk
+      - run: cp build/app/outputs/flutter-apk/app-release.apk MUGHARED.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.2.0
+          name: مغرّد 1.2.0
+          files: mugharrid-app/MUGHARED.apk
