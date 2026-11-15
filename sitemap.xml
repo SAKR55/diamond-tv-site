@@ -39,4 +39,10 @@
   <url><loc>https://diamond-tv.shop/assets/books/garden-of-kind-words-15-pages.pdf</loc><lastmod>2026-11-12</lastmod><changefreq>yearly</changefreq><priority>0.55</priority></url>
   <url><loc>https://diamond-tv.shop/assets/books/rayans-little-steps-15-pages.pdf</loc><lastmod>2026-11-12</lastmod><changefreq>yearly</changefreq><priority>0.55</priority></url>
   <url><loc>https://diamond-tv.shop/assets/books/neighborhood-kindness-day-15-pages.pdf</loc><lastmod>2026-11-12</lastmod><changefreq>yearly</changefreq><priority>0.55</priority></url>
+  <url>
+    <loc>https://diamond-tv.shop/mugharrid/</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
