@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حاسبة استيراد الصين</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1c2430;--mut:#667085;--line:#e4e7ec;--acc:#0b7a55;--bad:#c0392b;--warn:#b7791f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;line-height:1.6}
+.wrap{max-width:980px;margin:0 auto;padding:20px 14px 48px}
+h1{font-size:26px;margin:8px 0 4px}
+.sub{color:var(--mut);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{font-size:16px;margin:0 0 10px}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 3px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:15px;background:#fff;color:var(--ink);font-family:inherit}
+input:focus,select:focus{outline:2px solid #9bd7bf;border-color:var(--acc)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:12px;color:var(--mut);margin-top:3px}
+.big{font-size:30px;font-weight:700}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fafbfc}
+.kpi small{display:block;color:var(--mut);font-size:12px}
+.kpi b{font-size:20px}
+.good{color:var(--acc)}.neg{color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{padding:7px 4px;border-bottom:1px solid var(--line)}
+td:last-child{text-align:left;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.tot td{font-weight:700;border-bottom:2px solid var(--ink)}
+.verdict{padding:10px 12px;border-radius:10px;font-size:14px;margin-top:12px}
+.v-ok{background:#e8f6ef;color:#0b5a3f}.v-mid{background:#fff6e0;color:#7a5200}.v-bad{background:#fdeceb;color:#8a1f14}
+.note{font-size:12px;color:var(--mut);margin-top:16px}
+.cta{margin-top:16px;background:#0f2b22;color:#fff;border-radius:14px;padding:18px}
+.cta h2{margin:0 0 6px;font-size:18px}
+.cta p{margin:0 0 12px;color:#cfe8dd}
+.cta a{display:inline-block;background:#25d366;color:#06331a;font-weight:700;text-decoration:none;padding:10px 16px;border-radius:10px;margin-left:8px}
+.cta a.alt{background:transparent;border:1px solid #6fb79d;color:#fff}
+button.sec{background:none;border:1px solid var(--line);border-radius:9px;padding:7px 12px;cursor:pointer;font-family:inherit;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>حاسبة استيراد الصين</h1>
+  <p class="sub">اعرف التكلفة الواصلة الحقيقية وهامش الربح قبل أن تدفع للمورّد. كل الأرقام قابلة للتعديل.</p>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>1) المنتج والمورّد</h2>
+        <div class="row">
+          <div><label>سعر القطعة عند المورّد</label><input id="price" type="number" step="any" value="12"></div>
+          <div><label>العملة</label>
+            <select id="cur"><option value="CNY">يوان (¥)</option><option value="USD">دولار ($)</option></select></div>
+        </div>
+        <label>سعر الصرف إلى الريال (تقدير، حدّثه)</label>
+        <input id="rate" type="number" step="any" value="0.52">
+        <div class="hint">اليوان تقريبًا 0.52 ريال، والدولار 3.75 ريال.</div>
+        <div class="row">
+          <div><label>الكمية</label><input id="qty" type="number" value="250"></div>
+          <div><label>وزن القطعة مع التغليف (كجم)</label><input id="wt" type="number" step="any" value="0.2"></div>
+        </div>
+        <label>عمولة الوسيط / الوكيل (%)</label>
+        <input id="agent" type="number" step="any" value="3">
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>2) الشحن والرسوم</h2>
+        <div class="row">
+          <div><label>سعر الشحن للكيلو (ريال، تقدير)</label><input id="ship" type="number" step="any" value="25"></div>
+          <div><label>شحن داخل الصين (ريال إجمالي)</label><input id="cnship" type="number" step="any" value="60"></div>
+        </div>
+        <div class="row">
+          <div><label>الرسوم الجمركية (%)</label><input id="duty" type="number" step="any" value="5"></div>
+          <div><label>ضريبة القيمة المضافة (%)</label><input id="vat" type="number" step="any" value="15"></div>
+        </div>
+        <label>رسوم التخليص والمعالجة والتخزين (ريال إجمالي)</label>
+        <input id="clear" type="number" step="any" value="150">
+        <div class="hint">تختلف حسب الشحنة. اسأل شركة الشحن عن رقم فعلي. الرسوم الجمركية العامة 5% لمعظم السلع، وبعض الفئات أعلى.</div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>3) البيع</h2>
+        <div class="row">
+          <div><label>سعر البيع للعميل (ريال)</label><input id="sell" type="number" step="any" value="59"></div>
+          <div><label>التوصيل المحلي على حسابك (ريال/طلب)</label><input id="local" type="number" step="any" value="12"></div>
+        </div>
+        <div class="row">
+          <div><label>عمولة الدفع والمنصة (%)</label><input id="fee" type="number" step="any" value="3"></div>
+          <div><label>نسبة المرتجعات (%)</label><input id="ret" type="number" step="any" value="5"></div>
+        </div>
+        <div class="row">
+          <div><label>تكلفة الإعلان لكل بيعة (ريال)</label><input id="cac" type="number" step="any" value="12"></div>
+          <div><label>تكاليف ثابتة أخرى (ريال)</label><input id="fixed" type="number" step="any" value="0"></div>
+        </div>
+        <div class="hint">إن كانت أسعارك تشمل الضريبة فلا تغيّرها هنا؛ الحاسبة تعامل سعر البيع كما هو وتخصم منه ضريبة المبيعات إن فعّلت الخيار التالي.</div>
+        <label>هل أنت مسجّل في ضريبة القيمة المضافة؟</label>
+        <select id="reg"><option value="0">لا (لا أحصّل ضريبة على المبيعات)</option><option value="1">نعم (سعر البيع يشمل 15%)</option></select>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>النتيجة</h2>
+        <div class="kpis">
+          <div class="kpi"><small>التكلفة الواصلة للقطعة</small><b id="k-landed">-</b></div>
+          <div class="kpi"><small>الربح الصافي للقطعة</small><b id="k-profit">-</b></div>
+          <div class="kpi"><small>هامش الربح</small><b id="k-margin">-</b></div>
+          <div class="kpi"><small>إجمالي الربح المتوقع</small><b id="k-total">-</b></div>
+          <div class="kpi"><small>رأس المال المطلوب</small><b id="k-cap">-</b></div>
+          <div class="kpi"><small>أقصى تكلفة إعلان للبيعة</small><b id="k-maxcac">-</b></div>
+        </div>
+        <div id="verdict" class="verdict"></div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>تفصيل التكلفة (للقطعة الواحدة)</h2>
+        <table id="tbl"></table>
+        <button class="sec" id="copy">نسخ الملخص</button>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>ماذا لو تغيّر السعر؟</h2>
+        <table id="sens"></table>
+        <div class="hint">يوضح الربح الإجمالي عند تغيّر سعر البيع بنفس الكمية.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta" id="cta">
+    <h2>تريد أن نراجع منتجك معك قبل الشراء؟</h2>
+    <p>أرسل لي المنتج وسعر المورّد وأحسبها معك بتفصيل، أو احصل على الكتيّبات الجاهزة للبدء.</p>
+    <a id="wa" href="#">راسلنا بالبريد</a>
+    <a class="alt" id="guide" href="#" target="_blank" rel="noopener">دليل: كيف تستورد من الصين</a>
+  </div>
+
+  <p class="note">الأرقام تقديرية للتخطيط فقط وليست استشارة قانونية أو ضريبية أو جمركية. تحقق من الرسوم والتسعيرة الفعلية مع شركة الشحن والجهات الرسمية، وتأكد من اشتراطات منتجك (شهادات المطابقة والمنع والتقييد).</p>
+</div>
+
+<script>
+/* غيّر هذه الروابط لتظهر لعملائك */
+var CONFIG = {
+  email: "sales@diamond-tv.shop",
+  guideUrl: "index.html#book1"
+};
+
+var $ = function(id){return document.getElementById(id)};
+var ids=["price","cur","rate","qty","wt","agent","ship","cnship","duty","vat","clear","sell","local","fee","ret","cac","fixed","reg"];
+function n(id){var v=parseFloat($(id).value);return isFinite(v)?v:0}
+function f(x){return (Math.round(x*100)/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function f0(x){return Math.round(x).toLocaleString("en-US")}
+
+function calc(sell){
+  var qty=Math.max(n("qty"),1);
+  var rate=$("cur").value==="USD"?(n("rate")||3.75):n("rate");
+  var goods=n("price")*rate;
+  var agent=goods*n("agent")/100;
+  var cn=n("cnship")/qty;
+  var freight=n("wt")*n("ship");
+  var cif=goods+agent+cn+freight;
+  var duty=cif*n("duty")/100;
+  var vat=(cif+duty)*n("vat")/100;          /* ضريبة الاستيراد تُسترد إن كنت مسجّلًا، لكن نحسبها تكلفة بتحفظ */
+  var clear=n("clear")/qty;
+  var landed=cif+duty+vat+clear;
+  var net=$("reg").value==="1"?sell/(1+n("vat")/100):sell;
+  var fee=net*n("fee")/100;
+  var ret=net*n("ret")/100;                  /* خسارة مبسطة: قيمة البيع المسترجعة */
+  var local=n("local");
+  var preAd=net-landed-fee-ret-local;
+  var profit=preAd-n("cac")-n("fixed")/qty;
+  return {qty:qty,goods:goods,agent:agent,cn:cn,freight:freight,duty:duty,vat:vat,clear:clear,landed:landed,net:net,fee:fee,ret:ret,local:local,preAd:preAd,profit:profit,cac:n("cac")};
+}
+
+function render(){
+  var r=calc(n("sell"));
+  $("k-landed").textContent=f(r.landed)+" ر.س";
+  var p=$("k-profit");p.textContent=f(r.profit)+" ر.س";p.className=r.profit>=0?"good":"neg";
+  var m=r.net>0?r.profit/r.net*100:0;
+  var mk=$("k-margin");mk.textContent=f(m)+"%";mk.className=m>=0?"good":"neg";
+  var t=$("k-total");t.textContent=f0(r.profit*r.qty)+" ر.س";t.className=r.profit>=0?"good":"neg";
+  $("k-cap").textContent=f0(r.landed*r.qty+n("fixed"))+" ر.س";
+  var mc=r.preAd-n("fixed")/r.qty;
+  $("k-maxcac").textContent=f(Math.max(mc,0))+" ر.س";
+
+  var v=$("verdict");
+  if(r.profit<=0){v.className="verdict v-bad";v.textContent="هذا المنتج بهذه الأرقام يخسرك. ارفع السعر أو خفّض تكلفة الإعلان أو ابحث عن مورّد أرخص. أقصى إعلان تتحمله للبيعة: "+f(Math.max(mc,0))+" ر.س.";}
+  else if(m<15||r.cac>mc*0.7){v.className="verdict v-mid";v.textContent="الربح موجود لكنه هش. أي ارتفاع بسيط في الإعلان أو الشحن قد يمحوه. اختبر بكمية صغيرة أولًا.";}
+  else{v.className="verdict v-ok";v.textContent="هامش جيد على الورق. تذكّر أن التقدير مبني على أرقامك: تحقق من الشحن والرسوم الفعلية ثم اختبر بكمية صغيرة.";}
+
+  var rows=[["سعر المنتج عند المورّد",r.goods],["عمولة الوكيل",r.agent],["الشحن داخل الصين",r.cn],["الشحن الدولي",r.freight],["الرسوم الجمركية",r.duty],["ضريبة القيمة المضافة على الاستيراد",r.vat],["التخليص والمعالجة",r.clear]];
+  var h="";rows.forEach(function(x){h+="<tr><td>"+x[0]+"</td><td>"+f(x[1])+"</td></tr>"});
+  h+="<tr class='tot'><td>التكلفة الواصلة</td><td>"+f(r.landed)+"</td></tr>";
+  h+="<tr><td>سعر البيع (صافي من الضريبة)</td><td>"+f(r.net)+"</td></tr>";
+  h+="<tr><td>عمولة الدفع</td><td>-"+f(r.fee)+"</td></tr>";
+  h+="<tr><td>خسارة المرتجعات (تقدير)</td><td>-"+f(r.ret)+"</td></tr>";
+  h+="<tr><td>توصيل محلي</td><td>-"+f(r.local)+"</td></tr>";
+  h+="<tr><td>الإعلان لكل بيعة</td><td>-"+f(r.cac)+"</td></tr>";
+  h+="<tr class='tot'><td>الربح الصافي للقطعة</td><td class='"+(r.profit>=0?"good":"neg")+"'>"+f(r.profit)+"</td></tr>";
+  $("tbl").innerHTML=h;
+
+  var s="<tr><td><b>سعر البيع</b></td><td><b>ربح القطعة</b></td><td><b>الإجمالي</b></td></tr>";
+  [-0.15,-0.1,0,0.1,0.2].forEach(function(d){
+    var sp=n("sell")*(1+d),x=calc(sp);
+    s+="<tr><td>"+f(sp)+(d?" ("+(d>0?"+":"")+Math.round(d*100)+"%)":" (الحالي)")+"</td><td class='"+(x.profit>=0?"good":"neg")+"'>"+f(x.profit)+"</td><td>"+f0(x.profit*x.qty)+"</td></tr>";
+  });
+  $("sens").innerHTML=s;
+  window.__sum="تكلفة واصلة: "+f(r.landed)+" ر.س | ربح القطعة: "+f(r.profit)+" ر.س | هامش: "+f(m)+"% | إجمالي: "+f0(r.profit*r.qty)+" ر.س | رأس المال: "+f0(r.landed*r.qty)+" ر.س";
+}
+
+ids.forEach(function(i){$(i).addEventListener("input",render);$(i).addEventListener("change",render)});
+$("cur").addEventListener("change",function(){$("rate").value=$("cur").value==="USD"?"3.75":"0.52";render()});
+$("copy").addEventListener("click",function(){
+  var b=$("copy");
+  try{navigator.clipboard.writeText(window.__sum).then(function(){b.textContent="تم النسخ"})}catch(e){b.textContent="انسخ يدويًا: "+window.__sum}
+  setTimeout(function(){b.textContent="نسخ الملخص"},2000);
+});
+$("wa").href="mailto:"+CONFIG.email+"?subject="+encodeURIComponent("مراجعة منتج قبل الاستيراد");
+$("guide").href=CONFIG.guideUrl;
+render();
+</script>
+</body>
+</html>
