@@ -4,20 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="robots" content="noindex,nofollow">
 <title>لوحة اشتراكات DIAMOND TV</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
 <style>
 /* Layout: login gate → stats row → add form → searchable subscriber list */
 :root{
-  --bg:#f6f8fc; --panel:#ffffff; --panel2:#eef2f8; --line:#dbe3ef;
-  --fg:#1d2940; --muted:#64728b; --accent:#6d4aff; --on-accent:#ffffff;
-  --gold:#a96d00; --danger:#d9365b; --ok:#16856f; --warn:#a76500;
-  --font:"Tajawal",system-ui,"Segoe UI",Tahoma,sans-serif; color-scheme:light;
+  --bg:#070b1a; --panel:#111a38; --panel2:#1b2652; --line:#2a3566;
+  --fg:#eef1ff; --muted:#9aa3c7; --accent:#7c3aed; --on-accent:#04241b;
+  --gold:#ffc94d; --danger:#ff5c7a; --ok:#7c3aed; --warn:#ffb020;
+  --font:"Tajawal",system-ui,"Segoe UI",Tahoma,sans-serif; color-scheme:dark;
 }
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
-  --bg:#f6f8fc; --panel:#ffffff; --panel2:#eef2f8; --line:#dbe3ef;
-  --fg:#1d2940; --muted:#64728b; --accent:#6d4aff; --on-accent:#ffffff; color-scheme:light;
+  --bg:#eef2fb; --panel:#ffffff; --panel2:#eaeefb; --line:#d4daf0;
+  --fg:#0c142e; --muted:#5a6488; --accent:#7c3aed; --on-accent:#ffffff; color-scheme:light;
 }}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--font);margin:0;direction:rtl}
@@ -73,7 +72,6 @@ label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
 @media(max-width:560px){.stats{grid-template-columns:1fr 1fr}.grid2,.grid3{grid-template-columns:1fr}}
 [hidden]{display:none!important}
 </style>
-<link rel="stylesheet" href="site-admin.css">
 </head>
 <body>
 
@@ -85,7 +83,7 @@ label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
         <stop offset="0" stop-color="#7C3AED"/><stop offset=".5" stop-color="#EC4899"/><stop offset="1" stop-color="#FB923C"/></linearGradient></defs>
       <rect width="108" height="108" rx="26" fill="url(#g)"/>
       <path d="M44 34 78 54 44 74Z" fill="#fff" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></svg>
-    <h1 style="text-align:center">لوحة إدارة DIAMOND TV<small>إدارة الموقع والاشتراكات</small></h1>
+    <h1 style="text-align:center">لوحة اشتراكات<small>DIAMOND TV</small></h1>
     <input id="secret" type="password" placeholder="كلمة سر المالك" style="direction:ltr">
     <div class="err" id="loginErr"></div>
     <button id="loginBtn" style="width:100%">دخول</button>
@@ -110,6 +108,23 @@ label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:5px}
       <div class="stat"><b id="sExp" style="color:var(--danger)">0</b><span>منتهي</span></div>
       <div class="stat"><b id="sDevices" style="color:var(--accent)">0</b><span>الأجهزة المفعّلة</span></div>
       <div class="stat"><b id="sResellers" style="color:var(--gold)">0</b><span>الموزّعون</span></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <b style="color:var(--accent)">🔔 إرسال إشعار / تحديث لكل مستخدمي التطبيق</b>
+      <p class="hint" style="margin-top:6px">يظهر للمستخدم مرة واحدة كنافذة عند فتح التطبيق التالي.</p>
+      <input id="ann_t" placeholder="العنوان (اختياري) — مثال: تحديث جديد 1.4.0" style="margin-bottom:8px">
+      <textarea id="ann_b" rows="3" placeholder="نص الإشعار…" style="width:100%"></textarea>
+      <button id="ann_send" style="margin-top:8px">إرسال للجميع</button>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <b style="color:var(--accent)">📱 مستخدمو التطبيق (كل الأجهزة)</b>
+        <span class="hint" id="devSummary" style="margin:0"></span>
+      </div>
+      <div id="devList" style="margin-top:10px;display:grid;gap:8px"></div>
+      <p class="hint" id="devEmpty" hidden>لا أجهزة مسجّلة بعد. تظهر هنا تلقائيًا بمجرد فتح التطبيق.</p>
     </div>
 
     <details class="card" style="margin-bottom:14px">
@@ -254,13 +269,13 @@ async function login(){
   const r=await rpc("admin_subscribers",{p_secret:sec});
   $("#loginBtn").disabled=false;
   if(r.status===200){ SECRET=sec; try{localStorage.setItem("ds_secret",sec);}catch(e){}
-    SUBS=await r.json(); $("#login").hidden=true; $("#app").hidden=false; render(); loadContact(); loadResellers(); }
+    SUBS=await r.json(); $("#login").hidden=true; $("#app").hidden=false; render(); loadContact(); loadResellers(); loadDevices(); }
   else $("#loginErr").textContent="كلمة السر غير صحيحة أو تعذّر الاتصال.";
 }
 $("#loginBtn").onclick=login;
 $("#secret").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
 $("#logout").onclick=()=>{try{localStorage.removeItem("ds_secret");}catch(e){}SECRET="";$("#app").hidden=true;$("#login").hidden=false;$("#secret").value="";};
-$("#refresh").onclick=load;
+$("#refresh").onclick=()=>{load();loadDevices();};
 
 async function load(){
   const r=await rpc("admin_subscribers",{p_secret:SECRET});
@@ -449,12 +464,40 @@ function showCode(code,name){
   m.querySelector("#closeNew").onclick=()=>{m.hidden=true; location.reload();};
 }
 
+
+// ---- app devices (all app users)
+let DEVS=[];
+function ago(ep){const m=Math.max(0,Math.floor((Date.now()/1000-ep)/60));if(m<2)return "الآن";if(m<60)return "قبل "+m+" د";const h=Math.floor(m/60);if(h<24)return "قبل "+h+" س";return "قبل "+Math.floor(h/24)+" يوم";}
+function esc2(t){return String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+async function loadDevices(){
+  const r=await rpc("admin_devices",{p_secret:SECRET});
+  if(r.status!==200){$("#devSummary").textContent="تعذّر جلب الأجهزة";return;}
+  DEVS=(await r.json())||[];
+  const nameOf={}; SUBS.forEach(s=>{nameOf[s.code_hash]=s.name||"مشترك";});
+  const now=Date.now()/1000, online=DEVS.filter(d=>now-d.last_epoch<600).length;
+  const day=DEVS.filter(d=>now-d.last_epoch<86400).length;
+  const activated=DEVS.filter(d=>d.code_hash).length;
+  $("#devSummary").textContent=DEVS.length+" جهاز · متصل الآن "+online+" · نشط اليوم "+day+" · مفعّل بكود "+activated;
+  $("#devEmpty").hidden=DEVS.length>0;
+  DEVS.sort((a,b)=>b.last_epoch-a.last_epoch);
+  $("#devList").innerHTML=DEVS.slice(0,200).map(d=>`<div class="sub" style="padding:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <span style="direction:ltr;font-family:monospace">${esc2(d.device_id)}</span>
+    <span class="hint" style="margin:0">${d.code_hash?esc2(nameOf[d.code_hash]||"مشترك"):"بدون كود"} · ${esc2(d.platform||"")} ${esc2(d.app_version||"")} · ${ago(d.last_epoch)}</span>
+    <span class="spacer"></span>
+    <button class="ghost sm" data-blk="${esc2(d.device_id)}" data-to="${d.blocked?0:1}">${d.blocked?"فك الحظر":"حظر"}</button></div>`).join("");
+}
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-blk]"); if(!b)return;
+  const r=await rpc("admin_block",{p_secret:SECRET,p_device_id:b.dataset.blk,p_blocked:b.dataset.to==="1"});
+  toast(r.status===200?"تم ✓":"فشل"); loadDevices();});
+
+$("#ann_send").onclick=async()=>{const body=$("#ann_b").value.trim(); if(!body){toast("اكتب نص الإشعار");return;}
+  const r=await rpc("admin_post_announcement",{p_secret:SECRET,p_title:$("#ann_t").value.trim(),p_body:body});
+  if(r.status===200){toast("أُرسل لكل المستخدمين ✓");$("#ann_b").value="";$("#ann_t").value="";}else toast("فشل الإرسال");};
+
 // boot
 if(SECRET){ rpc("admin_subscribers",{p_secret:SECRET}).then(async r=>{
-  if(r.status===200){SUBS=await r.json();$("#login").hidden=true;$("#app").hidden=false;render();loadContact();loadResellers();}
+  if(r.status===200){SUBS=await r.json();$("#login").hidden=true;$("#app").hidden=false;render();loadContact();loadResellers();loadDevices();}
 }); }
 </script>
-<script src="site-admin.js?v=20261111-panel-repair"></script>
 </body>
 </html>
-
