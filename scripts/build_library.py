@@ -10,6 +10,7 @@ from books5 import B11, B12
 BOOKS = [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11, B12]
 RAW = json.load(open(os.path.join(_d,'lib','raw5.json'),encoding='utf-8'))
 def raw_html(b, i): return RAW.get(b['slug'],{}).get(str(i),'')
+def raw_words(b, i): import re as _re; return len(_re.sub(r'<[^>]+>',' ',raw_html(b,i)).split())
 from ext1 import EXT
 from ext2 import EXT2
 from ext3 import EXT3
@@ -28,7 +29,7 @@ def deep_html(b, i):
             out += f'<p>{e(p)}</p>'
         if ul: out += '<ul>' + ''.join(f'<li>{e(x)}</li>' for x in ul) + '</ul>'
     return out
-def deep_words(b, i): return sum(len(p.split()) for _, ps in deep(b, i) for p in ps)
+def deep_words(b, i): return sum(len(p.split()) for _, ps in deep(b, i) for p in ps) + raw_words(b, i)
 EXTS = {}; EXTS.update(EXT); EXTS.update(EXT2); EXTS.update(EXT3)
 def ext(b, i):
     x = EXTS.get(b['slug'], [])
