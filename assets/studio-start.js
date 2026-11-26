@@ -31,7 +31,7 @@ function keys(){var m=document.createElement('div');m.className='st-modal';m.onc
 var CATS=[['all','الكل'],['social','السوشال ميديا'],['print','طباعة'],['screen','عروض وتطبيقات'],['ads','إعلانات وبنرات المتاجر']];
 function cat(n,after){if(after)return 'ads';if(/إنستغرام|ستوري|يوتيوب|فيسبوك|X|لينكدإن|واتساب/.test(n))return 'social';if(/بوستر|فلاير|بطاقة/.test(n))return 'print';return 'screen'}
 function list(){var a=[],after=false;SD.sizes.forEach(function(z,i){if(!z[1]){after=true;return}a.push({i:i,n:z[0],w:z[1],h:z[2],c:cat(z[0],after)})});return a}
-function saved(){try{var s=JSON.parse(localStorage.getItem('dh_studio'));if(s&&s.els&&(s.els.length||s.bg))return s}catch(e){}return null}
+function saved(){try{var s=JSON.parse(localStorage.getItem('dh_studio_prev')||localStorage.getItem('dh_studio'));if(s&&s.els&&(s.els.length||s.bg))return s}catch(e){}return null}
 function create(w,h,tpl){var d={w:w,h:h,bg:{t:'solid',c:['#ffffff']},els:[],assets:{}};S.api.setD(d);var idx=SD.sizes.findIndex(function(z){return z[1]===w&&z[2]===h});var sel=$('#st-size');if(sel)sel.value=idx>-1?idx:'0';close();var tb=$('#st-tabs [data-t="tpl"]');if(tb)tb.click();S.api.toast('✨ مشروع جديد '+w+'×'+h)}
 function close(){if(ov){ov.remove();ov=null}}
 function start(fromBtn){close();var cur='all',q='',all=list(),sv=saved();ov=document.createElement('div');ov.className='st-start';ov.setAttribute('role','dialog');ov.setAttribute('aria-label','مشروع جديد');
@@ -48,7 +48,7 @@ function start(fromBtn){close();var cur='all',q='',all=list(),sv=saved();ov=docu
  draw();$('#st-sq',ov).oninput=function(){q=this.value.trim();draw()};
  $('#st-cgo',ov).onclick=function(){var w=Math.round(+$('#st-cw2',ov).value),h=Math.round(+$('#st-ch2',ov).value);if(w>=50&&h>=50&&w<=6000&&h<=6000)create(w,h);else S.api.toast('أدخل أبعادًا بين 50 و6000 بكسل')};
  var A=$('#st-acts',ov),btn=function(t,fn,cls){var b=document.createElement('button');b.type='button';b.className=cls||'st-ghost';b.innerHTML=t;b.onclick=fn;A.appendChild(b)};
- if(sv)btn('↩ متابعة آخر مشروع <small>('+sv.w+'×'+sv.h+')</small>',close,'st-go');
+ if(sv)btn('↩ متابعة آخر مشروع <small>('+sv.w+'×'+sv.h+')</small>',function(){try{S.api.setD(sv);var i=SD.sizes.findIndex(function(z){return z[1]===sv.w&&z[2]===sv.h}),sl=$('#st-size');if(sl)sl.value=i>-1?i:'c'}catch(e){}close()},'st-go');
  btn('📂 فتح صورة أو مشروع',function(){close();$('#st-open').click()});
  var pj=$('#st-proj2');if(pj)btn('📁 مشاريعي',function(){close();pj.click()});
  $('.st-sx',ov).onclick=close;ov.addEventListener('click',function(e){if(e.target===ov)close()});
@@ -64,8 +64,12 @@ function organize(){var t=$('#st-tabs');if(!t||t.dataset.org==='1'&&t.querySelec
  GR.forEach(function(g){var w=document.createElement('div');w.className='st-tg';w.innerHTML='<div class="st-tgl">'+g[0]+'</div>';var gr=document.createElement('div');gr.className='st-tgg';g[1].forEach(function(k){if(by[k]){if(LB[k]){by[k].innerHTML='<i>'+LB[k][0]+'</i><span>'+LB[k][1]+'</span>'}gr.appendChild(by[k]);used[k]=1}});w.appendChild(gr);t.appendChild(w)});
  var rest=Object.keys(by).filter(function(k){return !used[k]});if(rest.length){var w=document.createElement('div');w.className='st-tg';w.innerHTML='<div class="st-tgl">أخرى</div>';var gr=document.createElement('div');gr.className='st-tgg';rest.forEach(function(k){gr.appendChild(by[k])});w.appendChild(gr);t.appendChild(w)}
  t.dataset.org='1'}
+function emptyCard(){var st=$('#st-stage');if(!st)return;var c=$('#st-empty'),D=S.api.D(),show=D.els.length===0&&!ov&&!(D.pages&&D.pages.length>1);
+ if(!show){if(c)c.remove();return}if(c)return;c=document.createElement('div');c.id='st-empty';c.className='st-empty';
+ c.innerHTML='<b>لوحة بيضاء جاهزة</b><span>ابدأ بإضافة عنصر أو اختر قالبًا من اللوحة اليمنى</span><div><button type="button" data-a="text">🔤 نص</button><button type="button" data-a="tpl">🎨 قالب</button><button type="button" data-a="img">🖼️ صورة</button><button type="button" data-a="shape">◼ شكل</button><button type="button" data-a="orn">💠 زخرفة</button></div>';
+ c.onclick=function(e){var b=e.target.closest('button');if(!b)return;var a=b.dataset.a;if(a==='img'){$('#st-file').click();return}var t=$('#st-tabs [data-t="'+a+'"]');if(t)t.click()};st.appendChild(c)}
 function boot(){root=document.getElementById('studio');if(!root||!$('.st-top',root)){return setTimeout(boot,120)}
- polish();setTimeout(organize,500);setTimeout(organize,1400);var skip=/[?&]tpl=/.test(location.search)||location.hash==='#continue'||location.hash==='#edit';if(!skip)start();
- var obs=new MutationObserver(function(){polish()});var t=$('#st-tabs');if(t)obs.observe(t,{childList:true});}
+ polish();setTimeout(organize,500);setTimeout(organize,1400);var skip0=/[?&]tpl=/.test(location.search)||location.hash==='#continue'||location.hash==='#edit';if(!skip0){try{var cur=JSON.parse(localStorage.getItem('dh_studio'));if(cur&&cur.els&&cur.els.length)localStorage.setItem('dh_studio_prev',JSON.stringify(cur));var D0=S.api.D();if(D0.els.length||D0.pages){S.api.setD({w:1080,h:1080,bg:{t:'solid',c:['#ffffff']},els:[],assets:{}});var sl0=$('#st-size');if(sl0)sl0.value='0'}}catch(e){}}var skip=/[?&]tpl=/.test(location.search)||location.hash==='#continue'||location.hash==='#edit';if(!skip)start();
+ setInterval(emptyCard,500);var obs=new MutationObserver(function(){polish()});var t=$('#st-tabs');if(t)obs.observe(t,{childList:true});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0)});else setTimeout(boot,0);
 })();

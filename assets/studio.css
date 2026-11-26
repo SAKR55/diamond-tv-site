@@ -120,3 +120,7 @@ body:has(#studio),body:has(#vstudio){overflow:hidden}
 #studio .st-right h3{display:flex;align-items:center;gap:6px;padding-bottom:8px;border-bottom:1px solid #243049;margin-bottom:10px}
 #studio .st-sc{box-sizing:border-box}
 @media(max-width:900px){#studio .st-tgg{grid-template-columns:repeat(4,1fr)}}
+.st-empty{position:absolute;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:92%;text-align:center;background:rgba(17,24,45,.88);border:1px dashed #3d4f7c;border-radius:16px;padding:12px 18px;display:flex;flex-direction:column;gap:6px;align-items:center;z-index:3;backdrop-filter:blur(6px)}
+.st-empty b{color:#fff;font-size:15px}.st-empty span{color:#94a3b8;font-size:12px}.st-empty div{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.st-empty button{background:#1b2540;border:1px solid #2c3a5c;color:#e2e8f0;border-radius:10px;padding:7px 12px;cursor:pointer;font-family:inherit}.st-empty button:hover{background:#7c3aed;border-color:#a78bfa}
+#studio .st-stage{position:relative}

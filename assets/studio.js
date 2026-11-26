@@ -258,11 +258,11 @@ function toVideo(){var sc=Math.min(1,960/Math.max(D.w,D.h));var c=out(sc);var ur
 /* ---------- بدء ---------- */
 function init(){root=document.getElementById('studio');if(!root)return;var link=document.createElement('link');link.rel='stylesheet';link.href=SD.fontsURL;document.head.appendChild(link);ui();
  var s=null;try{s=JSON.parse(localStorage.getItem('dh_studio'))}catch(e){}
- if(s&&s.els&&(s.els.length||s.bg)&&location.hash!=='#new'){D=s;D.assets=D.assets||{};if(D.pages){D.bg=D.pages[D.pi||0].bg;D.els=D.pages[D.pi||0].els}}else{D=newDesign(1080,1080);D.bg={t:'grad',c:['#7c3aed','#06b6d4',135]}}
+ if(s&&s.els&&(s.els.length||s.bg)&&location.hash!=='#new'){D=s;D.assets=D.assets||{};if(D.pages){D.bg=D.pages[D.pi||0].bg;D.els=D.pages[D.pi||0].els}}else{D=newDesign(1080,1080)}
  D.els.forEach(function(e){if(e.id){var n=+String(e.id).slice(1);if(n>=uid)uid=n+1}if(e.ff)loadFont(e.ff)});
  var q=location.search.match(/tpl=(\w+)/);cv.width=ov.width=D.w;cv.height=ov.height=D.h;
  var idx=SD.sizes.findIndex(function(z){return z[1]===D.w&&z[2]===D.h});$('#st-size').value=idx>-1?idx:'0';
- if(!D.els.length){applyTpl(SD.templates[q?Math.max(0,SD.templates.findIndex(function(t){return t.id===q[1]})):0])}
+ if(!D.els.length&&q){applyTpl(SD.templates[q?Math.max(0,SD.templates.findIndex(function(t){return t.id===q[1]})):0])}
  push();ptabs();props();pbar();setTimeout(fit,60);window.addEventListener('resize',fit);
  if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',function(){draw()})}
 window.Studio={init:init,api:{D:function(){return D},setD:function(d){D=d;IM={};sel=[];cv.width=ov.width=D.w;cv.height=D.h;push();fit();props();pbar()},draw:draw,push:push,props:props,sel:function(){return sel},setSel:function(x){sel=x;props();draw()},selEls:selEls,nid:nid,norm:norm,addAsset:addAsset,getImg:getImg,toast:toast,out:out,dl:dl,render:render,clone:clone,loadFont:loadFont,ptabs:ptabs,stash:stash,pbar:pbar,setBg:setBg,fit:fit,byId:byId,resize:resize,addImage:addImage,readImg:readImg,tabs:function(){return tab},outPage:outPage,pageList:pageList,bytes:bytes,sizeTo:function(w,h){D.w=w;D.h=h}}};
