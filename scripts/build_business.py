@@ -7,9 +7,12 @@ from biz_tools import T, CATS
 import biz_tools2  # يضيف أدوات وفئات
 import biz_tools3
 import biz_tools4
+import biz_tools5
+import biz_tools6
 from biz_articles import BIZ
 from prompt_articles import PROMPT
-BIZ = BIZ + PROMPT
+from extra_articles import CV, AI
+BIZ = BIZ + PROMPT + CV + AI
 from biz_runtime import RT
 URLS = []
 NOTE = "الأدوات تقديرية للتخطيط والتعلّم، وتعمل في متصفحك دون إرسال بياناتك. للقرارات المالية والنظامية راجع مختصًا مرخصًا."
