@@ -4,9 +4,50 @@ from biz_tools import F, S, add, CATS, T
 OL="function ol(a){return'<ol>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>'}"
 D="const nrm=s=>String(s).replace(/[,\\s]/g,'');const P=t=>lines(t).map(r=>({d:r[0],n:r[1],a:num(r[2])}));"
 
-add('bank-reconciliation-matcher','finance','🏦','مطابقة التسوية البنكية الذكية','الصق كشف البنك ودفتر الأستاذ لتُطابَق العمليات وتظهر غير المطابقة والفروق.',
- [F('b','كشف البنك (تاريخ | بيان | مبلغ)','textarea','2026-11-01 | تحويل عميل أ | 5000\n2026-11-03 | رسوم بنكية | -25\n2026-11-05 | شيك مورد 101 | -3200\n2026-11-09 | إيداع نقدي | 1500',r=6),F('l','دفتر الأستاذ (تاريخ | بيان | مبلغ)','textarea','2026-11-01 | قبض عميل أ | 5000\n2026-11-05 | سداد مورد شيك 101 | -3200\n2026-11-08 | مبيعات نقدية | 1500\n2026-11-10 | سداد إيجار | -4000',r=6),F('t','تسامح أيام','n',3)],
- r'''function compute(v){'''+D+r'''const B=P(v.b),L=P(v.l),used=new Set(),M=[],ub=[];const dd=(x,y)=>Math.abs((new Date(x)-new Date(y))/864e5);B.forEach(b=>{let j=L.findIndex((l,i)=>!used.has(i)&&Math.abs(l.a-b.a)<0.005&&dd(b.d,l.d)<=v.t);if(j>=0){used.add(j);M.push([b.d,b.n,L[j].n,f(b.a)])}else ub.push(b)});const ul=L.filter((l,i)=>!used.has(i));const sb=B.reduce((s,x)=>s+x.a,0),sl=L.reduce((s,x)=>s+x.a,0);const dup=B.filter((b,i)=>B.findIndex(x=>x.a===b.a&&x.d===b.d)!==i);return kpis([kpi('مطابقة',M.length,'good'),kpi('في البنك فقط',ub.length,ub.length?'bad':'good'),kpi('في الدفتر فقط',ul.length,ul.length?'bad':'good'),kpi('فرق الأرصدة',f(sb-sl),Math.abs(sb-sl)<0.01?'good':'bad')])+'<h4>عمليات مطابقة</h4>'+tbl(['التاريخ','بيان البنك','بيان الدفتر','المبلغ'],M)+'<h4>في البنك ولم تُسجَّل بالدفتر (قيود مطلوبة)</h4>'+tbl(['التاريخ','البيان','المبلغ'],ub.map(x=>[x.d,x.n,f(x.a)]))+'<h4>في الدفتر ولم تظهر بالبنك (معلّقة: شيكات/إيداع بالطريق)</h4>'+tbl(['التاريخ','البيان','المبلغ'],ul.map(x=>[x.d,x.n,f(x.a)]))+rec([ub.some(x=>x.a<0&&Math.abs(x.a)<100)?'رسوم بنكية صغيرة غير مسجلة: سجّلها كمصروف بنكي.':'راجع كل بند غير مطابق مع المستند.',dup.length?'يوجد تشابه في عمليات البنك: افحص تكرارًا محتملًا.':'لا تكرارات ظاهرة.','نفّذ التسوية في نهاية كل شهر.'])+aiOut('اقترح قيود تسوية للبنود غير المطابقة: '+JSON.stringify(ub.map(x=>x.n+' '+x.a)))}''')
+add('bank-reconciliation-matcher','finance','🏦','مطابقة التسوية البنكية الذكية المتقدمة','مطابقة بالمبلغ والتاريخ والمرجع وتشابه البيان، مطابقة مجمّعة (واحد لعدة)، قيود تسوية مقترحة، وكشف تسوية رسمي بدرجات ثقة. ارفع الكشوف من Excel/CSV.',
+ [F('b','كشف البنك (تاريخ | بيان | مبلغ)','textarea','2026-11-01 | تحويل عميل أ فاتورة 2201 | 5000\n2026-11-03 | رسوم بنكية | -25\n2026-11-05 | شيك رقم 101 مورد | -3200\n2026-11-09 | إيداع نقدي | 1500\n2026-11-12 | فائدة دائنة | 12.5\n2026-11-15 | تحويل عميل ب | 3000\n2026-11-20 | ارتداد شيك عميل ج | -800',r=7),F('l','دفتر الأستاذ (تاريخ | بيان | مبلغ)','textarea','2026-11-01 | قبض عميل أ فاتورة 2201 | 5000\n2026-11-05 | سداد مورد شيك 101 | -3200\n2026-11-08 | مبيعات نقدية | 1500\n2026-11-10 | سداد إيجار | -4000\n2026-11-14 | قبض عميل ب دفعة 1 | 1800\n2026-11-14 | قبض عميل ب دفعة 2 | 1200\n2026-11-25 | إيداع بالطريق عميل د | 2000',r=7),F('t','تسامح أيام','n',3),F('at','تسامح المبلغ (ريال)','n',0.5),S('fz','مطابقة تقريبية بتشابه البيان',[('1','مفعّلة'),('0','معطّلة')]),S('g','المطابقة المجمّعة (واحد لعدة)',[('1','مفعّلة'),('0','معطّلة')]),F('bb','رصيد البنك الختامي حسب الكشف (اختياري)','n',0),F('lb','رصيد الدفتر الختامي (اختياري)','n',0)],
+ r'''function compute(v){'''+D+r'''
+const tokens=s=>String(s).toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).filter(w=>w.length>1&&!/^(ال|من|الى|إلى|عن|في|رقم)$/.test(w));
+const sim=(a,b)=>{const A=new Set(tokens(a)),B2=new Set(tokens(b));if(!A.size||!B2.size)return 0;let c=0;A.forEach(x=>{if(B2.has(x))c++});return c/(A.size+B2.size-c)};
+const refs=s=>(String(s).match(/\d{3,}/g)||[]);
+const dd=(x,y)=>Math.abs((new Date(x)-new Date(y))/864e5)||0;
+const B=P(v.b).map((x,i)=>({...x,i,src:'b'})),L=P(v.l).map((x,i)=>({...x,i,src:'l'}));
+const ub=new Set(B.map(x=>x.i)),ul=new Set(L.map(x=>x.i));const M=[];
+const tol=Math.max(0,+v.at||0),T=+v.t||0,fz=v.fz==='1',gr=v.g==='1';
+// المرور 1: مبلغ + تاريخ + مرجع/وصف
+[['مطابقة تامة',0.005],['مطابقة بتسامح المبلغ',tol]].forEach(([typ,tl])=>{B.filter(b=>ub.has(b.i)).forEach(b=>{let best=null;L.filter(l=>ul.has(l.i)).forEach(l=>{if(Math.abs(l.a-b.a)>tl+1e-9)return;const d=dd(b.d,l.d);if(d>T)return;const rs=refs(b.n).some(r=>refs(l.n).includes(r)),sm=sim(b.n,l.n);const sc=60-d*5+(rs?25:0)+sm*15-(Math.abs(l.a-b.a)>0.005?10:0);if(!best||sc>best.sc)best={l,sc,d,rs,sm}});if(best){ub.delete(b.i);ul.delete(best.l.i);M.push({typ,b:[b],l:[best.l],conf:Math.max(40,Math.min(99,Math.round(best.sc+ (fz?0:0)))),note:(best.rs?'مرجع مشترك':'')+(best.d?' · فرق '+best.d+' يوم':'')})}})});
+// المرور 2: تقريبي بالوصف (مبلغ مختلف قليلًا حتى 2% أو تاريخ بعيد حتى 3×)
+if(fz)B.filter(b=>ub.has(b.i)).forEach(b=>{let best=null;L.filter(l=>ul.has(l.i)).forEach(l=>{const sm=sim(b.n,l.n),rs=refs(b.n).some(r=>refs(l.n).includes(r));if(sm<0.34&&!rs)return;const df=Math.abs(l.a-b.a);if(df>Math.max(1,Math.abs(b.a)*0.02))return;if(dd(b.d,l.d)>T*3+5)return;const sc=sm*50+(rs?30:0)-df;if(!best||sc>best.sc)best={l,sc,df}});if(best){ub.delete(b.i);ul.delete(best.l.i);M.push({typ:'مطابقة تقريبية (وصف)',b:[b],l:[best.l],conf:Math.max(35,Math.min(85,Math.round(best.sc+30))),note:best.df?'فرق مبلغ '+f(best.df):'تشابه بيان'})}});
+// المرور 3: مجمّعة (واحد مقابل عدة) حتى 4 بنود
+const subsets=(arr,target,max)=>{let res=null;const go=(st,cur,sum)=>{if(res)return;if(cur.length>=2&&Math.abs(sum-target)<=Math.max(0.01,tol)){res=cur.slice();return}if(cur.length>=max)return;for(let k=st;k<arr.length;k++){cur.push(arr[k]);go(k+1,cur,sum+arr[k].a);cur.pop();if(res)return}};go(0,[],0);return res};
+if(gr){B.filter(b=>ub.has(b.i)).forEach(b=>{const cand=L.filter(l=>ul.has(l.i)&&dd(b.d,l.d)<=T*3+7&&Math.sign(l.a)===Math.sign(b.a)).slice(0,18);const r=subsets(cand,b.a,4);if(r){ub.delete(b.i);r.forEach(x=>ul.delete(x.i));M.push({typ:'مجمّعة: بند بنك ↔ '+r.length+' بنود دفتر',b:[b],l:r,conf:78,note:'مجموع الدفتر '+f(r.reduce((s,x)=>s+x.a,0))})}});L.filter(l=>ul.has(l.i)).forEach(l=>{const cand=B.filter(b=>ub.has(b.i)&&dd(b.d,l.d)<=T*3+7&&Math.sign(b.a)===Math.sign(l.a)).slice(0,18);const r=subsets(cand,l.a,4);if(r){ul.delete(l.i);r.forEach(x=>ub.delete(x.i));M.push({typ:'مجمّعة: '+r.length+' بنود بنك ↔ بند دفتر',b:r,l:[l],conf:78,note:'مجموع البنك '+f(r.reduce((s,x)=>s+x.a,0))})}})}
+const UB=B.filter(x=>ub.has(x.i)),UL=L.filter(x=>ul.has(x.i));
+// تصنيف بنود البنك غير المسجلة وقيود مقترحة
+const cls=x=>{const n=x.n;if(/رسوم|عمولة|مصاريف بنك|fee|charge|commission/i.test(n))return['رسوم بنكية','مصروف رسوم بنكية','البنك'];if(/فائدة|عائد|interest/i.test(n))return['فائدة دائنة','البنك','إيراد فوائد'];if(/ارتداد|مرتجع|رفض|nsf|bounced|dishonou?r/i.test(n))return['شيك مرتد','الذمم المدينة (العميل)','البنك'];if(/ضريب|vat|tax/i.test(n))return['ضريبة','ضريبة مدخلات/مخرجات','البنك'];return x.a>=0?['إيداع/تحويل وارد غير مسجل','البنك','يُحدد (عميل/إيراد)']:['سحب/دفعة غير مسجلة','يُحدد (مورد/مصروف)','البنك']};
+const JE=UB.map(x=>{const c=cls(x),a=Math.abs(x.a);return[x.d,c[0],x.n,c[1],c[2],f(a)]});
+// بنود الدفتر المعلّقة
+const maxD=B.concat(L).reduce((m,x)=>Math.max(m,new Date(x.d)||0),0);const age=x=>Math.round((maxD-new Date(x.d))/864e5);
+const OUT=UL.filter(x=>x.a<0),DIT=UL.filter(x=>x.a>0);
+const sum=a=>a.reduce((s,x)=>s+x.a,0);
+// أرصدة وكشف التسوية
+const bankBal=v.bb?+v.bb:sum(B),bookBal=v.lb?+v.lb:sum(L);
+const jeNet=UB.reduce((s,x)=>s+x.a,0);
+const adjBank=bankBal+sum(DIT)+sum(OUT),adjBook=bookBal+jeNet,diff=Math.round((adjBank-adjBook)*100)/100;
+// تكرارات وانعكاسات وبنود شاذة
+const dupB=[],seen={};B.forEach(b=>{const k=b.d+'|'+b.a;if(seen[k]!==undefined)dupB.push(b);else seen[k]=b.i});const dupL=[],seenL={};L.forEach(l=>{const k=l.d+'|'+l.a;if(seenL[k]!==undefined)dupL.push(l);else seenL[k]=l.i});
+const rev=[];B.concat(L).forEach((x,i,arr)=>{arr.forEach((y,j)=>{if(j>i&&x.src===y.src&&Math.abs(x.a+y.a)<0.005&&x.a!==0&&dd(x.d,y.d)<=10)rev.push([x.src==='b'?'البنك':'الدفتر',x.d+' / '+y.d,f(x.a)+' / '+f(y.a)])})});
+const stale=UL.filter(x=>age(x)>90);const big=M.filter(m=>m.conf<60).length;
+const cf=m=>'<span style="font-weight:700;color:'+(m.conf>=80?'#0a7':m.conf>=60?'#c80':'#c33')+'">'+m.conf+'%</span>';
+const mrows=M.map(m=>[m.b.map(x=>x.d).join('، '),m.b.map(x=>x.n).join(' + '),m.l.map(x=>x.n).join(' + '),f(m.b.reduce((s,x)=>s+x.a,0)),m.typ,cf(m)+' '+m.note]);
+const rate=B.length+L.length?Math.round(M.reduce((s,m)=>s+m.b.length+m.l.length,0)/(B.length+L.length)*100):0;
+return kpis([kpi('نسبة المطابقة',rate+'%',rate>=85?'good':'bad'),kpi('مجموعات مطابقة',M.length,'good'),kpi('بنك فقط',UB.length,UB.length?'bad':'good'),kpi('دفتر فقط',UL.length,UL.length?'bad':'good'),kpi('فرق بعد التسوية',f(diff),Math.abs(diff)<0.01?'good':'bad')])
++'<h4>كشف التسوية الرسمي</h4>'+tbl(['البند','المبلغ'],[['رصيد البنك حسب الكشف',f(bankBal)],['+ إيداعات بالطريق',f(sum(DIT))],['− شيكات/مدفوعات معلقة',f(sum(OUT))],['<b>الرصيد المعدّل للبنك</b>',f(adjBank)],['رصيد الدفتر',f(bookBal)],['± بنود البنك غير المسجلة بالدفتر (رسوم/فوائد/ارتداد…)',f(jeNet)],['<b>الرصيد المعدّل للدفتر</b>',f(adjBook)],['<b>الفرق (يجب أن يكون صفرًا)</b>',f(diff)]])
++'<h4>عمليات مطابقة (مع درجة الثقة)</h4>'+tbl(['التاريخ','بيان البنك','بيان الدفتر','مبلغ البنك','نوع المطابقة','الثقة'],mrows)
++'<h4>قيود التسوية المقترحة (بنود في البنك لم تُسجَّل)</h4>'+tbl(['التاريخ','النوع','البيان','مدين','دائن','المبلغ'],JE)
++'<h4>إيداعات بالطريق</h4>'+tbl(['التاريخ','البيان','المبلغ','العمر (يوم)'],DIT.map(x=>[x.d,x.n,f(x.a),age(x)]))
++'<h4>شيكات ومدفوعات معلقة</h4>'+tbl(['التاريخ','البيان','المبلغ','العمر (يوم)'],OUT.map(x=>[x.d,x.n,f(x.a),age(x)]))
++((dupB.length||dupL.length||rev.length||stale.length)?'<h4>تنبيهات</h4>'+tbl(['النوع','التفاصيل','المبلغ'],dupB.map(x=>['تكرار محتمل في البنك',x.d+' '+x.n,f(x.a)]).concat(dupL.map(x=>['تكرار محتمل في الدفتر',x.d+' '+x.n,f(x.a)]),rev,stale.map(x=>['بند معلّق قديم (>90 يوم)',x.d+' '+x.n,f(x.a)]))):'')
++rec([UB.length?'سجّل قيود التسوية المقترحة في الدفتر ثم أعد المطابقة لتصل إلى صفر.':'لا بنود بنكية غير مسجلة.',big?big+' مطابقة بثقة أقل من 60%: راجعها يدويًا قبل الاعتماد.':'كل المطابقات بثقة جيدة.',Math.abs(diff)>0.01?'الفرق غير صفري: تحقق من الأرصدة الافتتاحية أو بنود مفقودة من الملفين.':'الفرق صفر: التسوية سليمة.',stale.length?'شيكات/إيداعات معلقة منذ أكثر من 90 يومًا: راجع الإلغاء أو التحصيل (شيكات قديمة).':'لا بنود معلقة قديمة.','احتفظ بكشف التسوية موقّعًا مع الكشف البنكي (إثبات مراجعة).'])+aiOut('اكتب قيود تسوية بنكية بصيغة مدين/دائن للبنود التالية وراجع منطقيتها: '+JSON.stringify(JE.map(r=>r.slice(0,5))))}''')
 
 add('duplicate-invoice-detector','finance','🧾','كاشف الفواتير المكررة والمشبوهة','يلتقط تكرار الرقم أو المبلغ والمورد وفواتير بمبالغ مدورة وتسلسل مفقود.',
  [F('d','الفواتير (رقم | مورد | مبلغ | تاريخ)','textarea','1001 | شركة الأمل | 5000 | 2026-11-01\n1002 | شركة الأمل | 5000 | 2026-11-02\n1003 | مؤسسة النور | 1234.5 | 2026-11-03\n1003 | مؤسسة النور | 1234.5 | 2026-11-04\n1006 | شركة الأمل | 10000 | 2026-11-05',r=7)],
@@ -67,3 +108,36 @@ add('loan-amortization-schedule','finance','🏧','جدول سداد القرو�
 add('supplier-statement-reconciliation','finance','📨','مطابقة كشف حساب المورد','قارن كشف المورد بدفاترك لاكتشاف الفواتير والدفعات الناقصة.',
  [F('s','كشف المورد (مرجع | مبلغ)','textarea','INV-101 | 5000\nINV-102 | 3000\nINV-103 | 2000\nPAY-9 | -4000',r=5),F('b','دفاترك (مرجع | مبلغ)','textarea','INV-101 | 5000\nINV-103 | 2000\nPAY-9 | -3500',r=5)],
  r'''function compute(v){const S=lines(v.s).map(r=>({k:r[0],a:num(r[1])})),B=lines(v.b).map(r=>({k:r[0],a:num(r[1])}));const rows=[];S.forEach(x=>{const y=B.find(b=>b.k===x.k);if(!y)rows.push([x.k,f(x.a),'—','لم تُسجَّل عندك']);else if(Math.abs(y.a-x.a)>0.005)rows.push([x.k,f(x.a),f(y.a),'فرق مبلغ '+f(x.a-y.a)])});B.forEach(y=>{if(!S.find(x=>x.k===y.k))rows.push([y.k,'—',f(y.a),'غير موجودة عند المورد'])});const ss=S.reduce((a,x)=>a+x.a,0),sb=B.reduce((a,x)=>a+x.a,0);return kpis([kpi('رصيد المورد',f(ss)),kpi('رصيدك',f(sb)),kpi('الفرق',f(ss-sb),Math.abs(ss-sb)<0.01?'good':'bad')])+tbl(['المرجع','عند المورد','عندك','الملاحظة'],rows)+rec(['اطلب من المورد المستند الداعم للفروق.','سجّل الفواتير الناقصة بتاريخها الصحيح.'])}''')
+
+add('sales-commission-calculator','sales','💰','حاسبة عمولات المبيعات (حسب الموديل والمندوب)','أدخل عمولة كل موديل (نسبة و/أو مبلغ ثابت لكل وحدة) وشرائح التحفيز، أو ارفع تقرير المبيعات (Excel/CSV) لتُولَّد تقارير العمولة لكل مندوب وموديل تلقائيًا.',
+ [F('s','تقرير المبيعات (مندوب | موديل | كمية | مبلغ البيع | تاريخ)','textarea','أحمد | موديل A | 4 | 12000 | 2026-11-02\nأحمد | موديل B | 8 | 8000 | 2026-11-05\nسارة | موديل A | 7 | 20000 | 2026-11-07\nسارة | موديل C | 5 | 15000 | 2026-11-10\nخالد | موديل B | 6 | 6000 | 2026-11-12\nخالد | موديل A | 3 | 9000 | 2026-11-15\nأحمد | موديل C | -1 | -2000 | 2026-11-18',r=8),
+  F('r','عمولة كل موديل (موديل | نسبة % من البيع | مبلغ ثابت لكل وحدة)','textarea','موديل A | 2 | 50\nموديل B | 3 | 0\nموديل C | 0 | 120',r=4),
+  F('d','النسبة الافتراضية لأي موديل غير مدرج %','n',2),
+  F('fx','مبلغ ثابت لكل وحدة لموديل غير مدرج (ريال)','n',0),
+  F('tr','شرائح تحفيز على إجمالي مبيعات المندوب (حد المبيعات | نسبة إضافية %)','textarea','30000 | 1\n50000 | 2',r=3),
+  S('tm','طريقة الشرائح',[('b','إضافة نسبة على كل مبيعات المندوب'),('m','نسبة على الجزء الأعلى من الحد فقط')]),
+  F('mn','حد أدنى للمبيعات لاستحقاق العمولة (ريال)','n',0),
+  F('cp','سقف العمولة لكل مندوب (0 = بلا سقف)','n',0),
+  S('rt','المرتجعات (مبالغ سالبة)',[('d','تخصم من العمولة'),('i','تُتجاهل')])],
+ r'''function compute(v){
+const R={};lines(v.r).forEach(x=>{R[String(x[0]).trim()]={p:num(String(x[1]).replace('%','')),u:num(x[2]||0)}});
+const tiers=lines(v.tr).map(x=>({t:num(x[0]),p:num(String(x[1]).replace('%',''))})).sort((a,b)=>a.t-b.t);
+let S=lines(v.s).map(x=>({rep:String(x[0]).trim(),m:String(x[1]).trim(),q:num(x[2]),a:num(x[3]),d:x[4]||''})).filter(x=>x.rep&&!isNaN(x.a));
+if(v.rt==='i')S=S.filter(x=>x.a>=0);
+const reps={},mods={};const rate=m=>R[m]?R[m].p:v.d,unit=m=>R[m]?R[m].u:v.fx,cm=x=>x.a*rate(x.m)/100+x.q*unit(x.m);
+S.forEach(x=>{const c=cm(x);const r=reps[x.rep]=reps[x.rep]||{s:0,n:0,q:0,c:0,m:{}};r.s+=x.a;r.q+=x.q;if(x.a>0)r.n++;r.c+=c;r.m[x.m]=(r.m[x.m]||0)+c;const o=mods[x.m]=mods[x.m]||{s:0,n:0,q:0,c:0,rate:rate(x.m),u:unit(x.m)};o.q+=x.q;o.s+=x.a;if(x.a>0)o.n++;o.c+=c});
+const rows=[];let tS=0,tC=0,tB=0;
+Object.keys(reps).sort((a,b)=>reps[b].s-reps[a].s).forEach(k=>{const r=reps[k];let bonus=0,tier='—';if(tiers.length){if(v.tm==='b'){const hit=tiers.filter(t=>r.s>=t.t).pop();if(hit){bonus=r.s*hit.p/100;tier='≥ '+f(hit.t)+' (+'+hit.p+'%)'}}else{tiers.forEach((t,i)=>{if(r.s>t.t){const up=Math.min(r.s,i+1<tiers.length?tiers[i+1].t:Infinity);bonus+=(up-t.t)*t.p/100;tier='≥ '+f(t.t)}})}}
+let tot=r.c+bonus,note='';if(r.s<v.mn){tot=0;bonus=0;tier='—';note='لم يبلغ الحد الأدنى'}if(v.cp>0&&tot>v.cp){tot=v.cp;note='طُبّق السقف'}
+r.tot=tot;r.bonus=bonus;tS+=r.s;tC+=r.c;tB+=bonus;rows.push([k,r.q,f(r.s),f(r.c),tier,f(bonus),'<b>'+f(tot)+'</b>',note])});
+const total=Object.values(reps).reduce((s,r)=>s+r.tot,0);
+const mrows=Object.keys(mods).sort((a,b)=>mods[b].s-mods[a].s).map(k=>{const o=mods[k];return[k,o.q,f(o.s),o.rate+'%',f(o.u)+' / وحدة',f(o.c),tS?f(o.s/tS*100,1)+'%':'—']});
+const mk=Object.keys(mods);const matrix=Object.keys(reps).map(k=>[k].concat(mk.map(m=>reps[k].m[m]?f(reps[k].m[m]):'—')));
+const top=rows[0];const eff=tS?total/tS*100:0;
+return kpis([kpi('إجمالي المبيعات',f(tS)),kpi('إجمالي العمولات',f(total),'good'),kpi('نسبة العمولة الفعلية',f(eff,2)+'%'),kpi('عدد المندوبين',rows.length),kpi('أعلى مندوب',top?top[0]:'—')])
++'<h4>تقرير عمولة كل مندوب</h4>'+tbl(['المندوب','الكمية','المبيعات','عمولة الموديلات','الشريحة','مكافأة الشريحة','إجمالي المستحق','ملاحظة'],rows)
++'<h4>تقرير العمولة حسب الموديل</h4>'+tbl(['الموديل','الكمية','المبيعات','النسبة','مبلغ الوحدة','العمولة','حصة من المبيعات'],mrows)
++'<h4>مصفوفة العمولة: مندوب × موديل</h4>'+tbl(['المندوب'].concat(mk),matrix)
++'<h4>تفاصيل كل عملية</h4>'+tbl(['المندوب','الموديل','الكمية','المبلغ','النسبة','مبلغ الوحدة','العمولة','التاريخ'],S.map(x=>[x.rep,x.m,x.q,f(x.a),rate(x.m)+'%',f(unit(x.m)),f(cm(x)),x.d]))
++rec([eff>10?'نسبة العمولة الفعلية مرتفعة: راجع هامش الربح لكل موديل.':'نسبة العمولة الفعلية ضمن نطاق معتاد.',mods&&mk.some(m=>!R[m])?'موديلات غير مدرجة طُبّقت عليها القيم الافتراضية: أضفها لقائمة النسب.':'كل الموديلات لها عمولة معرّفة.','اربط العمولة بالمبالغ المحصَّلة لا المفوترة فقط لتقليل مخاطر الديون المعدومة.','اعتمد التقرير من المدير المالي قبل الصرف، وصدّره Excel/PDF من الأزرار أعلاه.'])
++aiOut('راجع خطة عمولات المبيعات التالية واقترح تحسينات للتحفيز والعدالة: '+JSON.stringify({نسب:R,شرائح:tiers,مندوبون:rows.map(r=>[r[0],r[2],r[6]])}))}''')
