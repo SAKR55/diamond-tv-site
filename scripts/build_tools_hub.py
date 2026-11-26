@@ -34,7 +34,8 @@ EXTRA = [
   ('/ecommerce/tools/product-idea-score/', '💡', 'تقييم فكرة منتج', 'درجة جدوى سريعة.'),
   ('/ecommerce/tools/supplier-compare/', '⚖️', 'مقارنة الموردين', 'السعر والجودة والشحن.'),
   ('/ecommerce/tools/supplier-message/', '💬', 'رسالة للمورد', 'قوالب تفاوض ومراسلة.'),
-  ('/ecommerce/tools/launch-checklist/', '🚀', 'قائمة إطلاق المتجر', 'تحقق قبل الإطلاق.')]),
+  ('/ecommerce/tools/launch-checklist/', '🚀', 'قائمة إطلاق المتجر', 'تحقق قبل الإطلاق.'),
+  ('/tools/whatsapp-link-generator/', '🟢', 'رابط واتساب ورمز QR', 'رابط مباشر مع رسالة جاهزة ورمز QR وكود زر لموقعك.')]),
 ]
 def card(url, ic, title, desc, key, new=False, ai=False):
     badge = ('<span class="tbadge">جديد</span>' if new else '') + ('<span class="badge-ai">AI</span>' if ai else '')

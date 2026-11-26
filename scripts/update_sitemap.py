@@ -4,7 +4,7 @@ ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)));B="https://diam
 sm=open(ROOT+"/sitemap.xml",encoding="utf-8").read()
 have=set(re.findall(r"<loc>%s(/[^<]*)</loc>"%B,sm))
 cands=[]
-for pat in ("claude/course/*/index.html","articles/*/index.html","ecommerce/**/index.html","business/**/index.html","cv/**/index.html","library/**/index.html","accounting/**/index.html","studio/**/index.html","claude/*/index.html"):
+for pat in ("claude/course/*/index.html","articles/*/index.html","ecommerce/**/index.html","business/**/index.html","cv/**/index.html","library/**/index.html","accounting/**/index.html","studio/**/index.html","tools/**/index.html","en/**/index.html","claude/*/index.html"):
     for f in glob.glob(ROOT+"/"+pat,recursive=True):
         u="/"+os.path.relpath(os.path.dirname(f),ROOT).replace(os.sep,"/")+"/"
         h=open(f,encoding="utf-8",errors="ignore").read()
