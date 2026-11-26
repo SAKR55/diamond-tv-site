@@ -4,10 +4,15 @@ import os, sys, json
 sys.path.insert(0, os.path.dirname(__file__))
 from portal_common import *
 from biz_tools import T, CATS
+import biz_tools2  # يضيف أدوات وفئات
 from biz_articles import BIZ
+from prompt_articles import PROMPT
+BIZ = BIZ + PROMPT
 from biz_runtime import RT
 URLS = []
 NOTE = "الأدوات تقديرية للتخطيط والتعلّم، وتعمل في متصفحك دون إرسال بياناتك. للقرارات المالية والنظامية راجع مختصًا مرخصًا."
+from tool_guides import guide
+BIZ = BIZ + [guide(t, CATS) for t in T]
 CR = '<a href="/">الرئيسية</a> › <a href="/business/">أدوات الأعمال</a>'
 byslug = {t['slug']: t for t in T}
 bycat = {c: [t for t in T if t['cat'] == c] for c in CATS}
