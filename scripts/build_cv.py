@@ -16,20 +16,20 @@ def tool_page(slug, title, desc, icon, body_html, js, faq, extra_h=""):
     path = f"/cv/{slug}/"
     b = hero(f"{icon} {e(title)}", e(desc), CR, "مجانًا · بالعربية · على جهازك")
     b += '<main><section class="s"><div class="wrap">' + body_html + '</div></section>'
-    b += '<section class="s alt"><div class="wrap narrow"><h2 class="h2">أسئلة شائعة</h2>' + faq_html(faq) + '</div></section></main>' + PRE + '<script>' + js + '</script>'
+    b += '<section class="s alt"><div class="wrap narrow"><h2 class="h2">أسئلة شائعة</h2>' + faq_html(faq) + '</div></section></main>' + PRE + '<script>' + js + '</script><script src="/assets/cv-import.js" defer></script>'
     ldx = breadcrumb([("الرئيسية", "/"), ("السيرة الذاتية", "/cv/"), (title, path)]) + faq_ld(faq) + ld({"@context": "https://schema.org", "@type": "WebApplication", "name": title, "url": BASE + path, "applicationCategory": "BusinessApplication", "operatingSystem": "Any", "inLanguage": "ar", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "SAR"}, "description": desc})
     write(f"cv/{slug}/index.html", page(path, f"{title} | DIAMOND HUB", desc, b, ldx, "/cv/", css_extra=CSS))
     URLS.append((path, "0.9"))
 
 # ================= BUILDER =================
-TPLS = [("classic", "كلاسيكي"), ("modern", "عصري بشريط جانبي"), ("minimal", "بسيط"), ("executive", "تنفيذي"), ("compact", "مضغوط"), ("timeline", "خط زمني"), ("bold", "عنوان بارز"), ("elegant", "أنيق"), ("left", "شريط يسار"), ("ats", "ATS نظيف")]
+TPLS = [("classic", "كلاسيكي"), ("modern", "عصري بشريط جانبي"), ("minimal", "بسيط"), ("executive", "تنفيذي"), ("compact", "مضغوط"), ("timeline", "خط زمني"), ("bold", "عنوان بارز"), ("elegant", "أنيق"), ("left", "شريط يسار"), ("ats", "ATS نظيف"), ("sidebar", "شريط جانبي داكن كامل"), ("split", "عمودان متساويان"), ("cards", "بطاقات"), ("tech", "تقني (كود)"), ("creative", "إبداعي بشكل هندسي"), ("ribbon", "عناوين شريطية"), ("framed", "بإطار رسمي"), ("soft", "ناعم بمنحنى"), ("newspaper", "صحيفة"), ("rightbar", "شريط ملوّن عمودي"), ("duo", "رأس ثنائي"), ("pills", "كبسولات")]
 PJ = {k: v[1] for k, v in PRESETS.items()}
 PN = {k: v[0] for k, v in PRESETS.items()}
 builder_html = '''
 <div class="cvapp">
  <div class="cvpanel">
   <div class="tpls"><span class="tpl-h">نموذج جاهز:</span>''' + ''.join(f'<button type="button" class="chip" data-pre="{k}">{n}</button>' for k, n in PN.items()) + '''<button type="button" class="chip add" id="clr">سيرة فارغة</button></div>
-  <h3>القالب</h3><div class="tpls" id="tsel"></div><details class="galbox"><summary>🎨 معرض 200 قالب (10 تصاميم × 10 ألوان × خطين)</summary><label class="field">التصميم<select id="gl"></select></label><div class="gal" id="gal"></div></details>
+  <h3>القالب</h3><div class="tpls" id="tsel"></div><details class="galbox"><summary>🎨 معرض 440 قالبًا (22 تصميمًا × 10 ألوان × خطين)</summary><label class="field">التصميم<select id="gl"></select></label><div class="gal" id="gal"></div></details>
   <div class="row2"><label class="field">اللون<div class="sw" id="sw"></div></label><label class="field">حجم الخط<select id="fs"><option value="12">صغير</option><option value="13" selected>متوسط</option><option value="14">كبير</option></select></label>
   <label class="field">لغة السيرة<select id="dir"><option value="rtl">عربية (يمين لليسار)</option><option value="ltr">English (LTR)</option></select></label></div>
   <h3>البيانات</h3>
@@ -58,6 +58,7 @@ $('tsel').innerHTML=TP.map(t=>'<button type="button" class="chip" data-t="'+t[0]
 $('sw').innerHTML=COLORS.map(c=>'<i data-c="'+c+'" style="background:'+c+'"></i>').join('');
 function parseExp(t){return t.split(/\n\s*\n/).map(b=>{const L=b.split('\n').map(x=>x.trim()).filter(Boolean);if(!L.length)return null;const h=L[0].split('|').map(x=>x.trim());return{role:h[0]||'',org:h[1]||'',per:h[2]||'',pts:L.slice(1).map(x=>x.replace(/^[-•*]\s*/,''))}}).filter(Boolean)}
 function lines(t){return t.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split('|').map(y=>y.trim()))}
+let LAST=null;function cvHtml(st,fs){const q=LAST;return '<div class="cv t-'+st.tpl+'" dir="'+st.dir+'" style="--ac:'+st.color+';font-size:'+(fs||st.fs)+'px;font-family:'+(st.font==='serif'?"Georgia,'Times New Roman',serif":'Cairo,Arial,sans-serif')+'"><header class="cvh"><h1>'+esc(q.d.name)+'</h1><div class="ttl">'+esc(q.d.title)+'</div><div class="ct">'+q.ct+'</div></header><div class="cvb"><div class="cvm">'+q.main+'</div><aside class="cva">'+q.side+'</aside></div></div>'}
 function render(){const d=get(),ar=S.dir==='rtl';const T=ar?{sum:'الملخص المهني',exp:'الخبرات',edu:'التعليم',sk:'المهارات',lg:'اللغات',cr:'الدورات والشهادات'}:{sum:'Summary',exp:'Experience',edu:'Education',sk:'Skills',lg:'Languages',cr:'Courses & Certificates'};
  const ct=[d.email,d.phone,d.city,d.link].filter(Boolean).map(x=>'<span>'+esc(x)+'</span>').join('');
  const exp=parseExp(d.exp).map(x=>'<div class="it"><div class="r1"><b>'+esc(x.role)+'</b><em>'+esc(x.per)+'</em></div><div class="org">'+esc(x.org)+'</div>'+(x.pts.length?'<ul>'+x.pts.map(p=>'<li>'+esc(p)+'</li>').join('')+'</ul>':'')+'</div>').join('');
@@ -68,7 +69,7 @@ function render(){const d=get(),ar=S.dir==='rtl';const T=ar?{sum:'الملخص �
  const sec=(h,c)=>c?'<section><h2>'+h+'</h2>'+c+'</section>':'';
  const side=sec(T.sk,sk?'<div class="tags">'+sk+'</div>':'')+sec(T.lg,lg?'<ul class="pl">'+lg+'</ul>':'')+sec(T.cr,cr?'<ul class="pl">'+cr+'</ul>':'');
  const main=sec(T.sum,d.summary?'<p>'+esc(d.summary)+'</p>':'')+sec(T.exp,exp)+sec(T.edu,edu);
- $('cv').innerHTML='<div class="cv t-'+S.tpl+'" dir="'+S.dir+'" style="--ac:'+S.color+';font-size:'+S.fs+'px;font-family:'+(S.font==='serif'?"Georgia,'Times New Roman',serif":'Cairo,Arial,sans-serif')+'"><header class="cvh"><h1>'+esc(d.name)+'</h1><div class="ttl">'+esc(d.title)+'</div><div class="ct">'+ct+'</div></header><div class="cvb"><div class="cvm">'+main+'</div><aside class="cva">'+side+'</aside></div></div>';
+ LAST={d:d,ct:ct,main:main,side:side};$('cv').innerHTML=cvHtml(S);
  fit();recs();try{localStorage.setItem(KEY,JSON.stringify({S:S,d:d}));localStorage.setItem('dt-cv-text',plain())}catch(e){}
  document.querySelectorAll('#tsel .chip').forEach(b=>b.classList.toggle('my',b.dataset.t===S.tpl));
  document.querySelectorAll('#sw i').forEach(i=>i.classList.toggle('on',i.dataset.c===S.color))}
@@ -99,7 +100,7 @@ $('clr').onclick=()=>{load({});render()};
 $('pdf').onclick=()=>print();$('txt').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+plain()],{type:'text/plain;charset=utf-8'}));a.download='cv-ats.txt';a.click()};
 $('exp1').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({S:S,d:get()})],{type:'application/json'}));a.download='cv.json';a.click()};
 $('imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const o=JSON.parse(t);S=Object.assign(S,o.S||{});load(o.d||{});$('fs').value=S.fs;$('dir').value=S.dir;render()}catch(x){alert('ملف غير صالح')}})};
-function gal(){const g=$('gl').value,h=[];COLORS.forEach((c,ci)=>['sans','serif'].forEach(fo=>h.push('<button type="button" class="gc" data-t="'+g+'" data-c="'+c+'" data-f="'+fo+'"><i class="gh" style="background:'+c+'"></i><i class="gl1"></i><i class="gl2"></i><b>'+CN[ci]+(fo==='serif'?' · سيريف':' · سانس')+'</b></button>')));$('gal').innerHTML=h.join('')}
+function gal(){if(!LAST)render();const g=$('gl').value,h=[];COLORS.forEach((c,ci)=>['sans','serif'].forEach(fo=>{const st={tpl:g,color:c,font:fo,dir:S.dir,fs:'13'};h.push('<button type="button" class="gc" data-t="'+g+'" data-c="'+c+'" data-f="'+fo+'"><span class="gpv"><span class="gpi">'+cvHtml(st,13)+'</span></span><b>'+CN[ci]+(fo==='serif'?' · سيريف':'')+'</b></button>')}));$('gal').innerHTML=h.join('')}
 $('gl').innerHTML=TP.map(t=>'<option value="'+t[0]+'">'+t[1]+'</option>').join('');$('gl').onchange=gal;gal();
 $('gal').onclick=e=>{const b=e.target.closest('.gc');if(!b)return;S.tpl=b.dataset.t;S.color=b.dataset.c;S.font=b.dataset.f;render()};
 addEventListener('resize',fit);render();
@@ -109,7 +110,7 @@ faq_b = [("هل منشئ السيرة الذاتية مجاني؟", "نعم مج
          ("أي قالب أفضل لأنظمة ATS؟", "قالب «ATS نظيف» أو «الكلاسيكي»: عمود واحد، عناوين واضحة، بلا صور أو جداول. بعدها افحص سيرتك في أداة فحص ATS."),
          ("هل أضع صورتي؟", "في السعودية ودول الخليج قد تُقبل الصورة بحسب الشركة، لكن أنظمة ATS لا تقرؤها ولذلك لا نضعها في القوالب. أضفها فقط إن طلبت الجهة."),
          ("كم صفحة يجب أن تكون السيرة؟", "صفحة واحدة لمن خبرته أقل من 5 سنوات، وحتى صفحتين لمن لديه خبرة أطول. اكتب الأهم أولًا.")]
-tool_page("builder", "منشئ السيرة الذاتية الاحترافي (200 قالب + PDF)", "أنشئ سيرة ذاتية احترافية بالعربية أو الإنجليزية: 200 قالب، نماذج جاهزة لـ10 وظائف، ألوان، تنزيل PDF ونص ATS، مجانًا.", "📄", builder_html, builder_js, faq_b)
+tool_page("builder", "منشئ السيرة الذاتية الاحترافي (440 قالبًا + PDF)", "أنشئ سيرة ذاتية احترافية بالعربية أو الإنجليزية: 440 قالبًا، نماذج جاهزة لـ10 وظائف، ألوان، تنزيل PDF ونص ATS، مجانًا.", "📄", builder_html, builder_js, faq_b)
 
 # ================= ATS =================
 ats_html = '''<div class="tool-layout"><div class="tool"><h3>سيرتك</h3><label class="field wide">الصق نص السيرة الذاتية<textarea id="cvt" rows="14" placeholder="الصق هنا نص سيرتك الذاتية…"></textarea></label><div class="toolbar"><button class="btn btn-s" id="fromb" type="button">استيراد من منشئ السير</button><button class="btn btn-s" id="demo" type="button">مثال</button></div>
@@ -266,13 +267,13 @@ b = b.replace('</main>', '<section class="s alt"><div class="wrap narrow"><h2 cl
 write("cv/samples/index.html", page(path, "نماذج سيرة ذاتية جاهزة بالعربية لـ10 وظائف | DIAMOND HUB", "نماذج سيرة ذاتية بالعربية لمندوب مبيعات ومحاسب ومطور وتسويق وموارد بشرية وخدمة عملاء وحديث التخرج ومهندس ومعلم ومصمم.", b, breadcrumb([("الرئيسية", "/"), ("السيرة الذاتية", "/cv/"), ("نماذج", path)]) + faq_ld(fq), "/cv/", css_extra=CSS)); URLS.append((path, "0.9"))
 
 # ================= hub =================
-cards = [("builder", "📄", "منشئ السيرة الذاتية", "200 قالب احترافية و10 نماذج جاهزة وتنزيل PDF."), ("ats-checker", "✅", "فاحص ATS", "درجة ومطابقة كلمات الوظيفة."), ("bullet-improver", "✍️", "محسّن النقاط", "حوّل المهام إلى إنجازات."),
+cards = [("builder", "📄", "منشئ السيرة الذاتية", "440 قالبًا احترافية و10 نماذج جاهزة وتنزيل PDF."), ("ats-checker", "✅", "فاحص ATS", "درجة ومطابقة كلمات الوظيفة."), ("bullet-improver", "✍️", "محسّن النقاط", "حوّل المهام إلى إنجازات."),
          ("cover-letter", "💌", "خطاب التقديم", "3 نبرات وبرومت للتخصيص."), ("interview-prep", "🎤", "التحضير للمقابلة", "أسئلة وSTAR وتقييم."), ("linkedin-summary", "💼", "نبذة لينكدإن", "عنوان ونبذة جاهزة."),
          ("keywords", "🔑", "كلمات مفتاحية", "14 مجالًا."), ("samples", "📑", "نماذج جاهزة", "10 نماذج سير.")]
-hub = hero("السيرة الذاتية و<span class='g-text'>التوظيف</span>: أنشئ سيرتك وافحص ATS وتجهّز للمقابلة", "أدوات مجانية بالعربية: منشئ سيرة ذاتية بـ200 قالب، فحص ATS، تحسين النقاط، خطاب تقديم، أسئلة مقابلة، ولينكدإن.", CR, "🎯 لتحصل على الوظيفة")
+hub = hero("السيرة الذاتية و<span class='g-text'>التوظيف</span>: أنشئ سيرتك وافحص ATS وتجهّز للمقابلة", "أدوات مجانية بالعربية: منشئ سيرة ذاتية بـ440 قالبًا، فحص ATS، تحسين النقاط، خطاب تقديم، أسئلة مقابلة، ولينكدإن.", CR, "🎯 لتحصل على الوظيفة")
 hub += '<main><section class="s"><div class="wrap"><div class="grid g3">' + ''.join(f'<a class="card" href="/cv/{s}/"><div class="ic">{i}</div><h3>{t}</h3><p>{d}</p><span class="more">افتح ←</span></a>' for s, i, t, d in cards) + '</div></div></section>'
 hub += '<section class="s alt"><div class="wrap narrow"><h2 class="h2">مقالات تساعدك</h2><div id="cvarts" class="grid g2"></div></div></section></main><script>fetch("/search-index.json").then(r=>r.json()).then(d=>{const a=d.filter(x=>x.u.includes("/articles/cv-")).slice(0,8);document.getElementById("cvarts").innerHTML=a.map(x=>`<a class="card" href="${x.u}"><h3>${x.t}</h3></a>`).join("")}).catch(()=>{})</script>'
-write("cv/index.html", page("/cv/", "السيرة الذاتية: منشئ وفاحص ATS وأدوات التوظيف | DIAMOND HUB", "أنشئ سيرة ذاتية احترافية مجانًا بـ200 قالب، افحص ATS، حسّن نقاط خبراتك، واكتب خطاب تقديم وتجهّز للمقابلة وحسّن لينكدإن.", hub,
+write("cv/index.html", page("/cv/", "السيرة الذاتية: منشئ وفاحص ATS وأدوات التوظيف | DIAMOND HUB", "أنشئ سيرة ذاتية احترافية مجانًا بـ440 قالبًا، افحص ATS، حسّن نقاط خبراتك، واكتب خطاب تقديم وتجهّز للمقابلة وحسّن لينكدإن.", hub,
     breadcrumb([("الرئيسية", "/"), ("السيرة الذاتية", "/cv/")]) + ld({"@context": "https://schema.org", "@type": "CollectionPage", "name": "السيرة الذاتية والتوظيف", "url": BASE + "/cv/", "inLanguage": "ar"}), "/cv/", css_extra=CSS)); URLS.append(("/cv/", "0.9"))
 json.dump([u for u, _ in URLS], open('.cv_urls.json', 'w'))
 print("cv built", len(URLS))

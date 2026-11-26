@@ -29,7 +29,7 @@ function run(){const L=$('b').value.split('\n').map(x=>x.trim()).filter(Boolean)
  const pr='أنت خبير سير ذاتية. أعد كتابة النقاط التالية لوظيفة '+role+' بصيغة: فعل قوي + ما أنجزت + رقم + الأثر على العمل. اعطني 3 صيغ لكل نقطة بأسلوب مختلف. لا تخترع أرقامًا؛ ضع [الرقم] حيث ينقص.\nالنقاط:\n'+L.join('\n');
  $('res').innerHTML=h+'<h4>تحسين بالذكاء الاصطناعي</h4>'+aiBox(pr)}
 ['b','role','num'].forEach(i=>$(i).addEventListener('input',run));run();
-</script>
+</script><script src="/assets/cv-import.js" defer></script>
 <footer class="pf"><div class="wrap"><div class="cols"><div><h4>DIAMOND HUB</h4><p>منصة عربية للتعلّم والأدوات والتجارة الإلكترونية.</p></div><div><h4>تعلّم</h4><ul><li><a href="/claude/">أكاديمية Claude</a></li><li><a href="/prompt-studio/">مختبر ChatGPT</a></li><li><a href="/mugharrid/">تعلّم الإنجليزية</a></li><li><a href="/store/">مكتبة الأطفال</a></li></ul></div><div><h4>التجارة الإلكترونية</h4><ul><li><a href="/ecommerce/">المركز</a></li><li><a href="/ecommerce/tools/">الأدوات</a></li><li><a href="/business/">أدوات الأعمال</a></li><li><a href="/ecommerce/faq/">أسئلة شائعة</a></li><li><a href="/ecommerce/glossary/">القاموس</a></li><li><a href="/ecommerce/templates/">القوالب</a></li></ul></div><div><h4>المزيد</h4><ul><li><a href="/app/">تطبيق DIAMOND TV</a></li><li><a href="/articles/">المقالات</a></li><li><a href="/#contact">تواصل معنا</a></li><li><a href="/sitemap.xml">خريطة الموقع</a></li></ul></div></div><div class="copy">© 2026 DIAMOND HUB — المحتوى للتعريف والتعلّم ولا يغني عن استشارة مختص.</div></div></footer>
 <script src="/assets/spark.js" defer></script><script src="/assets/share.js" defer></script><script src="/assets/pwa.js" defer></script>
 </body></html>
