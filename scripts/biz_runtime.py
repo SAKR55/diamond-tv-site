@@ -130,5 +130,20 @@ function drawC(){const SC=gSC(),ks=Object.keys(SC);if(ks.length<2){cb.style.disp
   $('cm-o').innerHTML=tbl(['المؤشر',esc(A),esc(B),'الفرق'],ra.map((r,i)=>{const y=rb[i]?rb[i][1]:'—',x=pn(r[1]),z=pn(y);const df=isFinite(x)&&isFinite(z)&&x!==z?((z>x?'▲ +':'▼ ')+(Math.abs(z-x)<1e-9?0:Math.abs(z-x).toLocaleString('en-US',{maximumFractionDigits:2}))):'—';return[esc(r[0]),esc(r[1]),esc(y),df]}))}}
 drawC();document.addEventListener('click',e=>{if(e.target&&(e.target.id==='scs'||e.target.id==='scd'))setTimeout(drawC,80)});
 }catch(e){}})();
+
+// ---- تحسينات عامة: تحقق المدخلات، تنسيق الأرقام، زر النتيجة، آخر الأدوات، Ctrl+Enter ----
+(function(){try{
+const css=document.createElement('style');css.textContent='.field input.bad{border-color:#dc2626!important;background:#fef2f2}.fld-err{color:#b91c1c;font-size:.78rem;display:block;margin-top:3px}.go-out{position:fixed;inset-inline-end:14px;bottom:70px;z-index:35;background:#7c3aed;color:#fff;border:0;border-radius:999px;padding:10px 16px;font:inherit;font-weight:700;box-shadow:0 8px 22px -8px #5b21b6aa;display:none}@media(min-width:900px){.go-out{display:none!important}}';document.head.appendChild(css);
+FIELDS.filter(fl=>fl.t==='n').forEach(fl=>{const el=$(fl.id);if(!el)return;
+ const chk=()=>{const raw=el.value.trim();const ok=raw===''||/^[-+]?[0-9٠-٩][0-9٠-٩,٬]*([.٫][0-9٠-٩]+)?$/.test(raw)||/^[-+]?[.٫][0-9٠-٩]+$/.test(raw);el.classList.toggle('bad',!ok);let m=el.parentNode.querySelector('.fld-err');if(!ok){if(!m){m=document.createElement('small');m.className='fld-err';el.parentNode.appendChild(m)}m.textContent='أدخل رقمًا صحيحًا (مثال: 1500 أو 12.5)'}else if(m)m.remove();return ok};
+ el.addEventListener('input',chk);
+ el.addEventListener('blur',()=>{if(!chk())return;const raw=el.value.trim();if(raw==='')return;const n=num(raw);if(Math.abs(n)>=1000&&/^[-+]?[0-9٠-٩,٬]*([.٫][0-9٠-٩]*)?$/.test(raw)){el.value=n.toLocaleString('en-US',{maximumFractionDigits:6});}});
+});
+const o=$('out');const gb=document.createElement('button');gb.type='button';gb.className='go-out';gb.textContent='↓ النتيجة';gb.onclick=()=>o.scrollIntoView({behavior:'smooth',block:'start'});document.body.appendChild(gb);
+const upd=()=>{const r=o.getBoundingClientRect();gb.style.display=(r.top>innerHeight||r.bottom<0)&&innerWidth<900&&o.innerText.trim()?'block':'none'};addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);setTimeout(upd,300);
+document.addEventListener('keydown',ev=>{if((ev.ctrlKey||ev.metaKey)&&ev.key==='Enter'){ev.preventDefault();run();o.scrollIntoView({behavior:'smooth',block:'start'})}});
+const h=document.querySelector('h1').innerText.trim(),m=h.match(/^(\S+)\s+(.*)$/);let R=[];try{R=JSON.parse(localStorage.getItem('dh-recent')||'[]')}catch(e){}
+R=R.filter(x=>x.s!==SLUG);R.unshift({s:SLUG,i:m?m[1]:'🧰',t:m?m[2]:h});R=R.slice(0,8);try{localStorage.setItem('dh-recent',JSON.stringify(R))}catch(e){}
+}catch(e){}})();
 run();
 '''

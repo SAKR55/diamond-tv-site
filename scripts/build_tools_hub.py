@@ -65,18 +65,19 @@ CSS = '''<style>
 @media(max-width:600px){.tbar{padding:8px 0}.thub-hero{padding-top:16px}}
 </style>'''
 JS = '''<script>(function(){var K='dh-favs',F=[];try{F=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
-var q=document.getElementById('tq'),cards=[].slice.call(document.querySelectorAll('.tc')),secs=[].slice.call(document.querySelectorAll('.tsec')),cur='all',em=document.getElementById('tempty');
+var q=document.getElementById('tq'),cards=[].slice.call(document.querySelectorAll('.tc')),secs=[].slice.call(document.querySelectorAll('.tsec[data-g]')),cur='all',em=document.getElementById('tempty');
 function sv(){try{localStorage.setItem(K,JSON.stringify(F))}catch(e){}document.getElementById('favn').textContent=F.length}
 cards.forEach(function(c){var b=c.querySelector('.fav'),k=c.dataset.k;if(F.indexOf(k)>=0){b.classList.add('on');b.textContent='★'}b.onclick=function(ev){ev.preventDefault();var i=F.indexOf(k);if(i>=0){F.splice(i,1);b.classList.remove('on');b.textContent='☆'}else{F.push(k);b.classList.add('on');b.textContent='★'}sv();apply()}});
 function apply(){var w=q.value.trim().toLowerCase(),n=0;cards.forEach(function(c){var g=c.closest('.tsec').dataset.g,ok=(!w||c.dataset.t.toLowerCase().indexOf(w)>=0)&&(cur==='all'||(cur==='fav'?F.indexOf(c.dataset.k)>=0:cur==='new'?c.hasAttribute('data-new'):g===cur));c.style.display=ok?'':'none';if(ok)n++});
  secs.forEach(function(s){s.style.display=[].some.call(s.querySelectorAll('.tc'),function(c){return c.style.display!=='none'})?'':'none'});em.style.display=n?'none':'block'}
 q.oninput=apply;[].forEach.call(document.querySelectorAll('.chip'),function(b){b.onclick=function(){cur=b.dataset.f;[].forEach.call(document.querySelectorAll('.chip'),function(x){x.classList.toggle('on',x===b)});apply();if(window.scrollY>260)document.querySelector('.tbar').scrollIntoView({behavior:'smooth'})}});
+(function(){var R=[];try{R=JSON.parse(localStorage.getItem('dh-recent')||'[]')}catch(e){}if(!R.length)return;var g=document.getElementById('recentg');R.slice(0,6).forEach(function(r){var a=document.createElement('a');a.className='card';a.href='/business/tools/'+r.s+'/';a.innerHTML='<div class="ic"></div><h3></h3><span class="more">افتح ←</span>';a.querySelector('.ic').textContent=r.i;a.querySelector('h3').textContent=r.t;g.appendChild(a)});document.getElementById('recent').style.display=''})();
 sv();var h=location.hash.slice(1);if(h&&document.querySelector('.chip[data-f="'+h+'"]'))document.querySelector('.chip[data-f="'+h+'"]').click();
 document.addEventListener('keydown',function(ev){if(ev.key==='/'&&document.activeElement!==q){ev.preventDefault();q.focus()}})})();</script>'''
 body = (f'<header class="thub-hero"><div class="wrap narrow"><div class="crumbs"><a href="/">الرئيسية</a> › الأدوات</div><h1>🛠️ كل <span class="g-text">الأدوات</span> في مكان واحد</h1>'
         f'<p>{total} أداة مجانية تعمل في متصفحك، مرتّبة بالفئات. ابحث، رشّح، وأضف المفضلة لتعود إليها بسرعة. اضغط «/» للبحث.</p></div></header>'
         f'<div class="tbar"><div class="wrap"><input id="tq" type="search" placeholder="ابحث في {total} أداة: ضريبة، سيرة، تصميم، شحن…" aria-label="بحث في الأدوات"><div class="chips">{chips}</div></div></div>'
-        f'<main class="wrap">{sections}<div class="tempty" id="tempty">لا توجد أدوات مطابقة. جرّب كلمة أخرى أو اختر «الكل».</div></main>' + JS)
+        f'<main class="wrap"><section class="tsec" id="recent" style="display:none"><div class="thead"><h2>🕘 آخر ما استخدمت</h2><p>أدوات فتحتها مؤخرًا على هذا الجهاز.</p></div><div class="grid g3" id="recentg"></div></section>{sections}<div class="tempty" id="tempty">لا توجد أدوات مطابقة. جرّب كلمة أخرى أو اختر «الكل».</div></main>' + JS)
 t = f'كل الأدوات المجانية ({total}) — أعمال وتصميم وسيرة ذاتية وذكاء اصطناعي | DIAMOND HUB'
 d = f'دليل منظّم لـ {total} أداة مجانية بالعربية: حاسبات مالية وتسويق وتجارة إلكترونية واستيراد وموارد بشرية، محرر تصميم وفيديو، سيرة ذاتية، وأدوات الذكاء الاصطناعي.'
 items = [(u, ti) for g in EXTRA for u, ic, ti, de in g[4]][:0]
