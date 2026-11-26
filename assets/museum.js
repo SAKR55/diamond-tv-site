@@ -260,9 +260,14 @@ async function aiAnime(img){if(!SESS)await aiLoad();
  for(i=0;i<N;i++){for(var k=0;k<3;k++){var val=isC?o[k*N+i]:o[i*3+k];im.data[i*4+k]=Math.max(0,Math.min(255,(val+1)*127.5))}im.data[i*4+3]=255}
  ox.putImageData(im,0,0);
  var fc=document.createElement('canvas');fc.width=fc.height=1024;var fx=fc.getContext('2d');fx.imageSmoothingEnabled=true;fx.imageSmoothingQuality='high';fx.filter='saturate(1.3) contrast(1.1) brightness(1.03)';fx.drawImage(oc,0,0,1024,1024);fx.filter='none';
- var id2=fx.getImageData(0,0,1024,1024),D=id2.data,cp=new Uint8ClampedArray(D),W=1024,a=.55,j,q;
- for(j=1;j<W-1;j++)for(q=1;q<W-1;q++){var p0=(j*W+q)*4;for(var c3=0;c3<3;c3++){var nb=cp[p0-4+c3]+cp[p0+4+c3]+cp[p0-W*4+c3]+cp[p0+W*4+c3];D[p0+c3]=Math.max(0,Math.min(255,cp[p0+c3]+a*(4*cp[p0+c3]-nb)/4*1.0))}}
- fx.putImageData(id2,0,0);return fc}
+ var W=1024,id2=fx.getImageData(0,0,W,W),D=id2.data,cp=new Uint8ClampedArray(D),j,q,c3,L=new Float32Array(W*W);
+ for(j=0;j<W*W;j++)L[j]=.299*cp[j*4]+.587*cp[j*4+1]+.114*cp[j*4+2];
+ var st=36;
+ for(j=1;j<W-1;j++)for(q=1;q<W-1;q++){var i0=j*W+q,gx=L[i0+1]+2*L[i0+1+W]+2*L[i0+1-W]-L[i0-1]-2*L[i0-1+W]-2*L[i0-1-W],gy=L[i0+W]+2*L[i0+W+1]+2*L[i0+W-1]-L[i0-W]-2*L[i0-W+1]-2*L[i0-W-1],ed=Math.sqrt(gx*gx+gy*gy),p0=i0*4,ln=Math.max(0,Math.min(1,(ed-70)/110));
+  for(c3=0;c3<3;c3++){var v=cp[p0+c3],qv=Math.round(v/st)*st;v=v*.45+qv*.55;v=v*(1-ln*.88)+8*ln*.88;D[p0+c3]=v}}
+ fx.putImageData(id2,0,0);
+ var gl=document.createElement('canvas');gl.width=gl.height=256;var gx2=gl.getContext('2d');gx2.drawImage(fc,0,0,256,256);fx.save();fx.globalCompositeOperation='screen';fx.globalAlpha=.28;fx.filter='blur(10px) saturate(1.4)';fx.drawImage(gl,0,0,W,W);fx.restore();fx.filter='none';
+ return fc}
 function startAI(){if(AIC||AIST||!PH)return;AIST=1;aiMsg(AR?'⏳ جارٍ تحويل صورتك إلى أنمي بالذكاء الاصطناعي (أول مرة يحمّل النموذج ~9MB)…':'⏳ Converting your photo to anime with AI (first run downloads ~9MB)…');
  aiAnime(PH).then(function(c){AIC=c;AIST=2;aiMsg(AR?'✅ تم التحويل بالذكاء الاصطناعي':'✅ AI anime conversion done');if(mode==='pc')draw()}).catch(function(e){AIST=3;aiMsg(AR?'تعذّر تشغيل نموذج الأنمي، استُخدم التأثير الكرتوني البديل':'Anime AI model unavailable, used the cartoon effect instead')})}
 function toon(img,hu){var W2=600,H2=370,c=document.createElement('canvas');c.width=W2;c.height=H2;var x=c.getContext('2d'),sc=Math.max(W2/img.width,H2/img.height),sw=img.width*sc,sh=img.height*sc;try{x.filter='saturate(1.25) contrast(1.08) brightness(1.06)'}catch(e){}x.drawImage(img,(W2-sw)/2,Math.min(0,(H2-sh)*.2),sw,sh);try{x.filter='none'}catch(e){}
