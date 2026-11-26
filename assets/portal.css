@@ -128,3 +128,4 @@ body:after{content:"DIAMOND HUB — diamond-tv.shop";display:block;text-align:ce
 
 @media print{.tool-layout>.tool:first-child{display:none!important}.tool-layout{display:block!important}}
 @media print{#dt-share,.phero,.wa-float,.float,.fab,.sticky-cta{display:none!important}}
+@media print{#adv{display:none}}

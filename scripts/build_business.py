@@ -9,10 +9,14 @@ import biz_tools3
 import biz_tools4
 import biz_tools5
 import biz_tools6
+import biz_tools7
+import biz_tools8
+import biz_tools9
+import biz_tools10
 from biz_articles import BIZ
 from prompt_articles import PROMPT
-from extra_articles import CV, AI
-BIZ = BIZ + PROMPT + CV + AI
+from extra_articles import CV, AI, ACC
+BIZ = BIZ + PROMPT + CV + AI + ACC
 from biz_runtime import RT
 URLS = []
 NOTE = "الأدوات تقديرية للتخطيط والتعلّم، وتعمل في متصفحك دون إرسال بياناتك. للقرارات المالية والنظامية راجع مختصًا مرخصًا."
