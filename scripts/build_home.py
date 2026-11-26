@@ -7,7 +7,7 @@ from ecom_articles2 import ARTICLES2
 from ecom_content import ARTICLES as A1
 
 SITE_FAQ = [
- ("ما هو DIAMOND TV؟", "منصة عربية مجانية تضم أكاديمية Claude وكورس ChatGPT، مكتبة أطفال، تعلّم الإنجليزية، قسم التجارة الإلكترونية بأدواته ومقالاته، وتطبيق IPTV للمشاهدة."),
+ ("ما هو DIAMOND HUB؟", "منصة عربية مجانية تضم أكاديمية Claude وكورس ChatGPT، مكتبة أطفال، تعلّم الإنجليزية، قسم التجارة الإلكترونية بأدواته ومقالاته، وتطبيق IPTV للمشاهدة."),
  ("هل المحتوى والأدوات مجانية؟", "نعم، الكورسات والأدوات والمقالات مجانية وتعمل في متصفحك دون تسجيل. كذلك تطبيق المشاهدة مجاني بكود تفعيل."),
  ("من أين أبدأ في تعلّم Claude؟", "ابدأ من أكاديمية Claude: كورس من درسين إلى عشرين درسًا بمستويات، ثم استخدم أداة كتابة المتطلبات والبرومت والخطة."),
  ("هل يوجد قسم للتجار؟", "نعم، قسم التجارة الإلكترونية فيه حاسبات الهامش وROAS وتكلفة الاستيراد وقوالب الموردين والعملاء ومقالات الإدارة وحل المشكلات."),
@@ -44,11 +44,11 @@ body += '''<section class="s alt" id="contact"><div class="wrap narrow center"><
 body += '<script>/* مصادر الروابط الاجتماعية */</script>' + open('/tmp/contact_script.html', encoding='utf-8').read()
 
 org = {"@context": "https://schema.org", "@graph": [
- {"@type": "Organization", "name": "DIAMOND TV", "url": BASE + "/", "email": "sales@diamond-tv.shop", "logo": BASE + "/assets/og.png", "description": "منصة عربية مجانية للتعلّم والأدوات والتجارة الإلكترونية."},
- {"@type": "WebSite", "name": "DIAMOND TV", "url": BASE + "/", "inLanguage": "ar", "potentialAction": {"@type": "SearchAction", "target": BASE + "/search/?q={search_term_string}", "query-input": "required name=search_term_string"}}]}
-title = "DIAMOND TV | أكاديمية Claude والتجارة الإلكترونية وتعلّم الإنجليزية ومكتبة الأطفال"
+ {"@type": "Organization", "name": "DIAMOND HUB", "url": BASE + "/", "email": "sales@diamond-tv.shop", "logo": BASE + "/assets/og.png", "description": "منصة عربية مجانية للتعلّم والأدوات والتجارة الإلكترونية."},
+ {"@type": "WebSite", "name": "DIAMOND HUB", "url": BASE + "/", "inLanguage": "ar", "potentialAction": {"@type": "SearchAction", "target": BASE + "/search/?q={search_term_string}", "query-input": "required name=search_term_string"}}]}
+title = "DIAMOND HUB | أكاديمية Claude والتجارة الإلكترونية وتعلّم الإنجليزية ومكتبة الأطفال"
 desc = "منصة عربية مجانية: كورس Claude الاحترافي وأداة البرومت، أدوات التجار وحاسبة الهامش، مكتبة الأطفال، تعلّم الإنجليزية، وتطبيق DIAMOND TV."
 h = page("/", title, desc, body, ld(org) + faq_ld(SITE_FAQ), "/",
-         css_extra='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="alternate" type="application/rss+xml" title="مقالات DIAMOND TV" href="/feed.xml"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1133894458639371" crossorigin="anonymous"></script>')
+         css_extra='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="alternate" type="application/rss+xml" title="مقالات DIAMOND HUB" href="/feed.xml"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1133894458639371" crossorigin="anonymous"></script>')
 write("index.html", h)
 print("home", len(h))

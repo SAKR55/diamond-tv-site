@@ -38,7 +38,7 @@ body += '<section class="s"><div class="wrap"><h2 class="h2 center">مقالات
 body += '<section class="s alt"><div class="wrap narrow"><h2 class="h2 center">موارد جاهزة</h2><br><div class="grid g3"><a class="card" href="/ecommerce/faq/"><h3>❓ الأسئلة الشائعة</h3><p>%d سؤالًا بإجابات عملية.</p></a><a class="card" href="/ecommerce/glossary/"><h3>📖 قاموس المصطلحات</h3><p>MOQ وFOB وROAS وغيرها.</p></a><a class="card" href="/ecommerce/templates/"><h3>💬 قوالب الرسائل</h3><p>ردود وسياسات جاهزة للنسخ.</p></a></div></div></section>' % len(FAQ)
 body += '<section class="s"><div class="wrap narrow"><h2 class="h2 center">أسئلة سريعة</h2><br>' + faq_html(hub_faq) + '<p class="center"><a class="btn btn-o" href="/ecommerce/faq/">كل الأسئلة</a></p><div class="note">' + e(NOTE_LEGAL) + '</div></div></section>'
 body += '<section class="s alt"><div class="wrap"><div data-spark="import"></div></div></section></main>'
-t = "التجارة الإلكترونية: أدوات وأدلة الاستيراد والبيع أونلاين | DIAMOND TV"
+t = "التجارة الإلكترونية: أدوات وأدلة الاستيراد والبيع أونلاين | DIAMOND HUB"
 d = "مركز عربي للتجارة الإلكترونية: حاسبة الهامش وROAS، مقيّم المنتج، قوالب الموردين والعملاء، مقالات إدارة وحلول المشكلات، وأسئلة شائعة."
 write("ecommerce/index.html", page("/ecommerce/", t, d, body, faq_ld(hub_faq) + breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/")]) +
   ld({"@context":"https://schema.org","@type":"CollectionPage","name":"التجارة الإلكترونية","url":BASE+"/ecommerce/","description":d,"inLanguage":"ar"}), "/ecommerce/"))
@@ -46,7 +46,7 @@ URLS.append(("/ecommerce/", "0.9"))
 
 # ---- tools index + tools
 body = hero("أدوات التجار", "سبع أدوات عملية تعمل داخل متصفحك.", CRUMB + ' › الأدوات') + '<main><section class="s"><div class="wrap">' + tool_cards() + '</div></section></main>'
-write("ecommerce/tools/index.html", page("/ecommerce/tools/", "أدوات التجارة الإلكترونية المجانية | DIAMOND TV", "حاسبة هامش، ROAS، مولّد رسالة مورد، مقارنة موردين، مقيّم منتج، قائمة إطلاق ومولّد وصف.", body, breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/"),("الأدوات","/ecommerce/tools/")]), "/ecommerce/"))
+write("ecommerce/tools/index.html", page("/ecommerce/tools/", "أدوات التجارة الإلكترونية المجانية | DIAMOND HUB", "حاسبة هامش، ROAS، مولّد رسالة مورد، مقارنة موردين، مقيّم منتج، قائمة إطلاق ومولّد وصف.", body, breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/"),("الأدوات","/ecommerce/tools/")]), "/ecommerce/"))
 URLS.append(("/ecommerce/tools/", "0.8"))
 rel = {"margin-calculator": ["pricing","ecommerce-pricing-margin-guide"], "roas-breakeven": ["ads-roas-cpa-beginners"], "supplier-message": ["talk-to-suppliers-template"], "supplier-compare": ["new-importer-mistakes"], "product-idea-score": ["choose-first-product-idea"], "launch-checklist": ["build-customer-trust-online-store"], "product-description": ["product-description-that-sells"]}
 for s, ic, tt, dd, h, j in TOOLS:
@@ -57,14 +57,14 @@ for s, ic, tt, dd, h, j in TOOLS:
     if r: body += '<h2 class="h2">اقرأ أيضًا</h2><br>' + art_cards(r)
     body += '<h2 class="h2">أدوات أخرى</h2><br><div class="grid g3">' + ''.join(f'<a class="card" href="/ecommerce/tools/{x[0]}/"><div class="ic">{x[1]}</div><h3>{e(x[2])}</h3></a>' for x in more) + '</div></div></section></main>'
     body += '<script>' + COMMON + j + '</script>'
-    write(f"ecommerce/tools/{s}/index.html", page(f"/ecommerce/tools/{s}/", f"{tt} — مجانًا | DIAMOND TV", dd, body,
+    write(f"ecommerce/tools/{s}/index.html", page(f"/ecommerce/tools/{s}/", f"{tt} — مجانًا | DIAMOND HUB", dd, body,
       breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/"),("الأدوات","/ecommerce/tools/"),(tt,f"/ecommerce/tools/{s}/")]) +
       ld({"@context":"https://schema.org","@type":"WebApplication","name":tt,"url":BASE+f"/ecommerce/tools/{s}/","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":"ar","offers":{"@type":"Offer","price":"0","priceCurrency":"SAR"},"description":dd}), "/ecommerce/"))
     URLS.append((f"/ecommerce/tools/{s}/", "0.8"))
 
 # ---- faq
 body = hero("الأسئلة الشائعة في التجارة الإلكترونية", f"{len(FAQ)} سؤالًا وجوابًا للتاجر المبتدئ والمستورد.", CRUMB + ' › الأسئلة الشائعة') + '<main><section class="s"><div class="wrap narrow">' + faq_html(FAQ) + '<div class="note">' + e(NOTE_LEGAL) + '</div></div></section></main>'
-write("ecommerce/faq/index.html", page("/ecommerce/faq/", "أسئلة شائعة في التجارة الإلكترونية والاستيراد | DIAMOND TV", "إجابات عملية عن بدء المتجر، الموردين، التسعير، الإعلانات، الشحن والمرتجعات.", body, faq_ld(FAQ) + breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/"),("الأسئلة الشائعة","/ecommerce/faq/")]), "/ecommerce/"))
+write("ecommerce/faq/index.html", page("/ecommerce/faq/", "أسئلة شائعة في التجارة الإلكترونية والاستيراد | DIAMOND HUB", "إجابات عملية عن بدء المتجر، الموردين، التسعير، الإعلانات، الشحن والمرتجعات.", body, faq_ld(FAQ) + breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/"),("الأسئلة الشائعة","/ecommerce/faq/")]), "/ecommerce/"))
 URLS.append(("/ecommerce/faq/", "0.8"))
 
 # ---- glossary
@@ -77,7 +77,7 @@ URLS.append(("/ecommerce/glossary/", "0.7"))
 # ---- templates
 tp = ''.join(f'<h3>{e(a)}</h3><pre class="tpl">{e(b)}</pre><button class="btn btn-s" onclick="cp(this)">نسخ</button>' for a, b in TEMPLATES)
 body = hero("قوالب رسائل وسياسات جاهزة", "انسخ وعدّل الأقواس المربعة حسب حالتك.", CRUMB + ' › القوالب') + '<main><section class="s"><div class="wrap narrow">' + tp + '</div></section></main><script>function cp(b){var t=b.previousElementSibling.textContent;navigator.clipboard.writeText(t).then(function(){b.textContent="✅ تم"},function(){b.textContent="انسخ يدويًا"})}</script>'
-write("ecommerce/templates/index.html", page("/ecommerce/templates/", "قوالب رسائل العملاء وسياسات المتجر الجاهزة | DIAMOND TV", "عشرة قوالب جاهزة: تأكيد الطلب، الشحن، الاعتذار، الإرجاع، السلة المتروكة وغيرها.", body, breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/"),("القوالب","/ecommerce/templates/")]), "/ecommerce/"))
+write("ecommerce/templates/index.html", page("/ecommerce/templates/", "قوالب رسائل العملاء وسياسات المتجر الجاهزة | DIAMOND HUB", "عشرة قوالب جاهزة: تأكيد الطلب، الشحن، الاعتذار، الإرجاع، السلة المتروكة وغيرها.", body, breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/"),("القوالب","/ecommerce/templates/")]), "/ecommerce/"))
 URLS.append(("/ecommerce/templates/", "0.7"))
 
 # ---- articles
@@ -91,9 +91,9 @@ for a in ALL:
     b += f'<div class="tip">🛠️ جرّب: <a href="{a["tool"][0]}">{e(a["tool"][1])}</a></div>'
     if fq: b += '<h2>أسئلة شائعة</h2>' + faq_html(fq)
     b += '<div class="note">' + e(NOTE_LEGAL) + '</div></div><h2 class="h2 center">مقالات ذات صلة</h2><br>' + art_cards(others) + '</div></article></main>'
-    ldx = ld({"@context":"https://schema.org","@type":"Article","headline":a['title'],"description":a['desc'],"inLanguage":"ar","datePublished":DATE,"dateModified":DATE,"mainEntityOfPage":BASE+path,"image":BASE+"/assets/og.png","author":{"@type":"Organization","name":"DIAMOND TV"},"publisher":{"@type":"Organization","name":"DIAMOND TV"}})
+    ldx = ld({"@context":"https://schema.org","@type":"Article","headline":a['title'],"description":a['desc'],"inLanguage":"ar","datePublished":DATE,"dateModified":DATE,"mainEntityOfPage":BASE+path,"image":BASE+"/assets/og.png","author":{"@type":"Organization","name":"DIAMOND HUB"},"publisher":{"@type":"Organization","name":"DIAMOND HUB"}})
     ldx += breadcrumb([("الرئيسية","/"),("التجارة الإلكترونية","/ecommerce/"),(a['title'],path)]) + (faq_ld(fq) if fq else "")
-    write(f"articles/{a['slug']}/index.html", page(path, a['title'] + " | DIAMOND TV", a['desc'], b, ldx, "/ecommerce/", "article"))
+    write(f"articles/{a['slug']}/index.html", page(path, a['title'] + " | DIAMOND HUB", a['desc'], b, ldx, "/ecommerce/", "article"))
     URLS.append((path, "0.7"))
 
 import json

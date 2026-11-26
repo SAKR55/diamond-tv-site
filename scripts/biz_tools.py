@@ -91,7 +91,7 @@ add('utm-builder', 'marketing', '🔗', 'منشئ روابط التتبع UTM', 
 return '<pre class="tpl" id="pr" dir="ltr" style="text-align:left">'+esc(o)+'</pre>'+note('استخدم أسماء موحدة (أحرف صغيرة بلا مسافات) لتجمع التقارير بشكل صحيح.')}''')
 
 add('seo-meta-checker', 'marketing', '🔎', 'فاحص العنوان والوصف للسيو', 'عدّاد أحرف ومعاينة تقريبية لنتيجة جوجل.',
- [F('t', 'عنوان الصفحة', 't', 'حاسبة الهامش وسعر البيع للمتاجر | DIAMOND TV'), F('d', 'وصف الصفحة', 'textarea', 'احسب سعر البيع المناسب لمتجرك بعد الشحن والعمولات والإعلان والضريبة، مجانًا.', r=3), F('k', 'الكلمة المفتاحية', 't', 'حاسبة الهامش')],
+ [F('t', 'عنوان الصفحة', 't', 'حاسبة الهامش وسعر البيع للمتاجر | DIAMOND HUB'), F('d', 'وصف الصفحة', 'textarea', 'احسب سعر البيع المناسب لمتجرك بعد الشحن والعمولات والإعلان والضريبة، مجانًا.', r=3), F('k', 'الكلمة المفتاحية', 't', 'حاسبة الهامش')],
  r'''function compute(v){const tl=v.t.length,dl=v.d.length;const ok=(x,a,b)=>x>=a&&x<=b?'good':'bad';const kw=v.k.trim();const inT=kw&&v.t.includes(kw),inD=kw&&v.d.includes(kw);
 return kpis([kpi('طول العنوان',tl+' (الأفضل 30-60)',ok(tl,30,60)),kpi('طول الوصف',dl+' (الأفضل 90-160)',ok(dl,90,160)),kpi('الكلمة في العنوان',inT?'نعم':'لا',inT?'good':'bad'),kpi('الكلمة في الوصف',inD?'نعم':'لا',inD?'good':'bad')])+'<div style="background:#fff;border:1px solid #e6e0f5;border-radius:12px;padding:14px"><div style="color:#1a0dab;font-size:19px">'+esc(v.t.slice(0,62))+'</div><div style="color:#006621;font-size:14px">example.com › page</div><div style="color:#545454">'+esc(v.d.slice(0,160))+'</div></div>'+note('الحدود تقريبية: جوجل يعدّل العرض بحسب الجهاز.')}''')
 

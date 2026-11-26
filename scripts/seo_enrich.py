@@ -15,7 +15,7 @@ for f in sorted(glob.glob(R + "/**/*.html", recursive=True)):
     add = ""
     if 'og:title' not in s:
         tt, dd, cc = t.group(1).strip(), d.group(1), c.group(1)
-        add += (f'<meta property="og:type" content="website"><meta property="og:site_name" content="DIAMOND TV"><meta property="og:locale" content="ar_AR">'
+        add += (f'<meta property="og:type" content="website"><meta property="og:site_name" content="DIAMOND HUB"><meta property="og:locale" content="ar_AR">'
                 f'<meta property="og:title" content="{tt}"><meta property="og:description" content="{dd}"><meta property="og:url" content="{cc}"><meta property="og:image" content="{B}/og.png">'
                 f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{tt}"><meta name="twitter:description" content="{dd}"><meta name="twitter:image" content="{B}/og.png">')
     if "application/ld+json" not in s:
@@ -25,7 +25,7 @@ for f in sorted(glob.glob(R + "/**/*.html", recursive=True)):
         crumbs += [(name, url.replace(B, ""))]
         typ = "Article" if rel.startswith("/articles/") and rel != "/articles/index.html" else ("CollectionPage" if rel == "/articles/index.html" else "WebPage")
         main = {"@context": "https://schema.org", "@type": typ, "name": name, "description": html.unescape(d.group(1)), "url": url, "inLanguage": "ar",
-                "publisher": {"@type": "Organization", "name": "DIAMOND TV", "url": B}}
+                "publisher": {"@type": "Organization", "name": "DIAMOND HUB", "url": B}}
         if typ == "Article":
             main.update({"headline": name, "image": B + "/og.png", "dateModified": "2026-11-26", "mainEntityOfPage": url})
         bc = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": B + u} for i, (n, u) in enumerate(crumbs)]}

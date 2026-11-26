@@ -26,6 +26,15 @@ function run(){try{$('out').innerHTML=compute(vals())}catch(e){$('out').textCont
 box.addEventListener('input',run);box.addEventListener('change',run);
 $('cpy').onclick=()=>{const t=($('pr')||$('out')).innerText;navigator.clipboard.writeText(t).then(()=>{$('cpy').textContent='✅ تم النسخ'},()=>{});setTimeout(()=>$('cpy').textContent='📋 نسخ النتيجة',1800)};
 $('prt').onclick=()=>print();
+if($('dl'))$('dl').onclick=()=>{const t=document.title+'\n'+location.href+'\n\n'+(($('pr')||$('out')).innerText);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/plain;charset=utf-8'}));a.download=SLUG+'.txt';a.click()};
 $('rst').onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()};
+
+(function(){const T=$('tpls');if(!T)return;let MY=[];const MK='dt-biz-my-'+SLUG;try{MY=JSON.parse(localStorage.getItem(MK)||'[]')}catch(e){}
+function apply(d){Object.keys(d).forEach(k=>{if($(k))$(k).value=d[k]});run()}
+function draw(){T.innerHTML='<span class="tpl-h">قوالب جاهزة:</span>';
+ PRESETS.concat(MY.map(x=>[x.n,x.d,1])).forEach((p,i)=>{const b=document.createElement('button');b.type='button';b.className='chip'+(p[2]?' my':'');b.textContent=p[0];b.onclick=()=>apply(p[1]);T.appendChild(b)});
+ const s=document.createElement('button');s.type='button';s.className='chip add';s.textContent='＋ احفظ قالبي';
+ s.onclick=()=>{const n=prompt('اسم القالب؟');if(!n)return;const d={};FIELDS.forEach(fl=>d[fl.id]=$(fl.id).value);MY.push({n:'⭐ '+n,d:d});try{localStorage.setItem(MK,JSON.stringify(MY))}catch(e){}draw()};T.appendChild(s)}
+draw()})();
 run();
 '''

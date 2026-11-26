@@ -78,3 +78,20 @@ footer.pf{background:#1f1747;color:#d9d2f2;padding:34px 0 26px;margin-top:20px}f
 h2.h2:after{content:"";display:block;width:56px;height:5px;border-radius:9px;background:var(--grad);margin:8px auto 0}
 .prose h2:after,.left h2.h2:after{margin-inline:0}
 @media print{body *{visibility:hidden}#out,#out *{visibility:visible}#out{position:absolute;inset:0 0 auto 0}}
+
+/* === polish v3: brand + pro look === */
+.logo{gap:10px}.logo span{display:flex;flex-direction:column;line-height:1.05}.logo small{font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.2px;margin-top:2px}
+.logo .gem{filter:drop-shadow(0 4px 8px rgba(124,58,237,.35))}
+.pnav{box-shadow:0 1px 0 rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.25)}
+.card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.card:hover{transform:translateY(-3px);box-shadow:0 14px 34px -16px rgba(91,33,182,.35);border-color:rgba(124,58,237,.35)}
+.tool-layout .panel,.tool-layout form{border-radius:18px}
+.field input,.field select,.field textarea{border-radius:12px;transition:border-color .15s,box-shadow .15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:#7c3aed;box-shadow:0 0 0 4px rgba(124,58,237,.14)}
+.kpis .kpi,.kpi{border-radius:14px;box-shadow:0 6px 18px -14px rgba(15,23,42,.35)}
+#out{border-radius:18px}
+table{border-radius:12px;overflow:hidden}
+.btn{border-radius:12px;font-weight:800;transition:transform .12s,box-shadow .12s}.btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px -12px rgba(91,33,182,.5)}
+:focus-visible{outline:3px solid rgba(124,58,237,.45);outline-offset:2px}
+.tpls{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;align-items:center}.tpl-h{font-weight:800;font-size:13px;color:var(--muted)}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink);transition:.15s}
+.chip:hover{border-color:#7c3aed;background:#f5f3ff;color:#5b21b6}.chip.add{border-style:dashed;color:#7c3aed}.chip.my{background:#fffbeb;border-color:#fcd34d}

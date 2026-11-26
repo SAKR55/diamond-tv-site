@@ -35,17 +35,17 @@ def breadcrumb(items):
     })
 
 
-NAV = ('<header><nav aria-label="التنقل الرئيسي"><a href="/">DIAMOND TV</a><a href="/claude/">أكاديمية Claude</a>'
+NAV = ('<header><nav aria-label="التنقل الرئيسي"><a href="/">DIAMOND HUB</a><a href="/claude/">أكاديمية Claude</a>'
        '<a href="/claude/course/">الكورس</a><a href="/claude/prompt-builder/">أداة البرومت</a>'
        '<a href="/claude/reference/">الموسوعة</a><a href="/ecommerce/">التجارة الإلكترونية</a><a href="/articles/#ai">المقالات</a></nav></header>')
-FOOT = ('<footer><div><a href="/#sections">كل أقسام DIAMOND TV</a> · <a href="/claude/">أكاديمية Claude</a> · '
+FOOT = ('<footer><div><a href="/#sections">كل أقسام DIAMOND HUB</a> · <a href="/claude/">أكاديمية Claude</a> · '
         '<a href="/prompt-studio/">مختبر ChatGPT</a> · <a href="/articles/">المقالات</a> · <a href="/sitemap.xml">خريطة الموقع</a>'
         '<p><small>محتوى تعليمي مستقل، وليس تابعًا لشركة Anthropic. Claude علامة تجارية لشركتها. تتغير ميزات الأدوات بمرور الوقت، فراجع الصفحات الرسمية للتفاصيل المحدثة.</small></p></div></footer>')
 
 
 def page(title, desc, url, body, schema="", og_type="website", extra_head=""):
     full_url = BASE + url
-    return f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(title)} | DIAMOND TV</title><meta name="description" content="{e(desc)}"><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="{full_url}"><meta name="theme-color" content="#7c3aed"><meta property="og:type" content="{og_type}"><meta property="og:site_name" content="DIAMOND TV"><meta property="og:locale" content="ar_AR"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}"><meta property="og:url" content="{full_url}"><meta property="og:image" content="{BASE}/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{e(title)}"><meta name="twitter:description" content="{e(desc)}"><meta name="twitter:image" content="{BASE}/og.png"><link rel="stylesheet" href="/prompt-studio/academy.css"><link rel="stylesheet" href="/claude/claude.css">{extra_head}{schema}</head><body>{NAV}<main>{body}</main>{FOOT}<script src="/assets/share.js" defer></script><script src="/assets/pwa.js" defer></script></body></html>'''
+    return f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(title)} | DIAMOND HUB</title><meta name="description" content="{e(desc)}"><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="{full_url}"><meta name="theme-color" content="#7c3aed"><meta property="og:type" content="{og_type}"><meta property="og:site_name" content="DIAMOND HUB"><meta property="og:locale" content="ar_AR"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}"><meta property="og:url" content="{full_url}"><meta property="og:image" content="{BASE}/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{e(title)}"><meta name="twitter:description" content="{e(desc)}"><meta name="twitter:image" content="{BASE}/og.png"><link rel="stylesheet" href="/prompt-studio/academy.css"><link rel="stylesheet" href="/claude/claude.css">{extra_head}{schema}</head><body>{NAV}<main>{body}</main>{FOOT}<script src="/assets/share.js" defer></script><script src="/assets/pwa.js" defer></script></body></html>'''
 
 
 # ---------- CSS ----------
@@ -80,7 +80,7 @@ course_body = f'''<small><a href="/claude/">أكاديمية Claude</a> / الك
 course_schema = ld({
     "@context": "https://schema.org", "@type": "Course", "name": "كورس Claude الاحترافي",
     "description": f"{N} درسًا عمليًا بالعربية في ستة مستويات: كتابة الطلبات، التقنيات المتقدمة، الأمان والاختبار، والمتطلبات وClaude Code.",
-    "provider": {"@type": "Organization", "name": "DIAMOND TV", "sameAs": BASE},
+    "provider": {"@type": "Organization", "name": "DIAMOND HUB", "sameAs": BASE},
     "url": BASE + "/claude/course/", "inLanguage": "ar", "isAccessibleForFree": True,
     "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT5H"},
 }) + breadcrumb([("الرئيسية", "/"), ("أكاديمية Claude", "/claude/"), ("الكورس", "/claude/course/")])
@@ -128,7 +128,7 @@ for a in ARTICLES:
     body = f'''<small><a href="/articles/">مركز المقالات</a> / <a href="/articles/#ai">الذكاء الاصطناعي</a></small><div class="tag">{e(a["tag"])}</div><h1>{e(a["title"])}</h1><p><small>آخر تحديث: {DATE} · زمن القراءة {a["read"]} دقائق</small></p><p>{e(a["desc"])}</p><div class="art">{"".join(secs)}</div>{faq_html}<div class="related"><h2>تابع التعلّم</h2><ul>{rel}</ul></div><section><h2>مقالات مقترحة</h2><ul>{more}</ul></section>'''
     sch = ld({"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"], "inLanguage": "ar",
               "datePublished": DATE, "dateModified": DATE, "mainEntityOfPage": BASE + art_url(a), "image": BASE + "/og.png",
-              "author": {"@type": "Organization", "name": "DIAMOND TV"}, "publisher": {"@type": "Organization", "name": "DIAMOND TV", "url": BASE}}) \
+              "author": {"@type": "Organization", "name": "DIAMOND HUB"}, "publisher": {"@type": "Organization", "name": "DIAMOND HUB", "url": BASE}}) \
         + breadcrumb([("الرئيسية", "/"), ("المقالات", "/articles/"), (a["title"], art_url(a))]) + schema_faq
     write(f"articles/{a['slug']}/index.html", page(a["title"], a["desc"], art_url(a), body, sch, "article"))
 
@@ -394,4 +394,4 @@ _pub = format_datetime(_dt.datetime(2026, 11, 26, 12, 0, tzinfo=_dt.timezone.utc
 _items = "".join(
     f"<item><title>{e(a['title'])}</title><link>{BASE}{art_url(a)}</link><guid>{BASE}{art_url(a)}</guid><pubDate>{_pub}</pubDate><description>{e(a['desc'])}</description></item>"
     for a in ARTICLES)
-write("feed.xml", f'<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>مقالات DIAMOND TV</title><link>{BASE}/articles/</link><description>مقالات عن Claude والذكاء الاصطناعي والسيو وتعلّم الإنجليزية</description><language>ar</language>{_items}</channel></rss>')
+write("feed.xml", f'<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>مقالات DIAMOND HUB</title><link>{BASE}/articles/</link><description>مقالات عن Claude والذكاء الاصطناعي والسيو وتعلّم الإنجليزية</description><language>ar</language>{_items}</channel></rss>')
