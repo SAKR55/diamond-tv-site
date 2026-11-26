@@ -145,3 +145,12 @@ body:has(#studio),body:has(#vstudio){overflow:hidden}
 .tl-back{background:#1b2540;border:1px solid #2c3a5c;color:#c4b5fd;border-radius:10px;padding:6px 12px;font-family:inherit;cursor:pointer;margin-bottom:8px}
 .tl-title{font-size:15px;font-weight:800;color:#fff;margin:4px 0 8px}.tl-panel[hidden]{display:none}.tl-panel h4{display:none}
 .tl-grid[hidden],.st-hint[hidden]{display:none!important}
+/* horizontal tool bar above the editor */
+#st-hbar{background:#0c1222;border-bottom:1px solid #243049;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#3b4a73 transparent;flex:none}
+#st-hbar #st-tabs{display:flex!important;flex-wrap:nowrap;gap:16px;padding:6px 12px;border:0!important;background:transparent!important;width:max-content;min-width:100%}
+#st-hbar .st-tg{margin:0!important;flex:none;display:flex;flex-direction:column}
+#st-hbar .st-tgl{margin:0 2px 3px!important;font-size:10px!important}
+#st-hbar #st-tabs .st-tgg{display:flex!important;gap:5px!important;grid-template-columns:none!important}
+#st-hbar #st-tabs button{width:66px;flex:none!important;padding:5px 2px!important}
+#st-hbar #st-tabs button i{font-size:18px!important}
+@media(max-width:900px){#st-hbar #st-tabs button{width:60px}}
