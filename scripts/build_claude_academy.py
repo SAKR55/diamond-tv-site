@@ -5,10 +5,11 @@ sys.path.insert(0, os.path.dirname(__file__))
 from claude_lessons import LESSONS as BASE_LESSONS
 from claude_lessons_extra import EXTRA, MODULES as _M0
 from claude_lessons_more import MORE, MODULES_MORE
-MODULES = list(_M0) + list(MODULES_MORE)
+from claude_lessons_pro import PRO, MODULES_PRO
+MODULES = list(_M0) + list(MODULES_MORE) + list(MODULES_PRO)
 from claude_articles import ARTICLES
 
-_all = {l['slug']: l for l in BASE_LESSONS + EXTRA + MORE}
+_all = {l['slug']: l for l in BASE_LESSONS + EXTRA + MORE + PRO}
 LESSONS = [_all[sl] for m in MODULES for sl in m[2]]
 N = len(LESSONS)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

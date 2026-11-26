@@ -34,7 +34,7 @@ def faq_ld(pairs):
 
 def nav(active=""):
     links = "".join('<a href="%s"%s>%s</a>' % (u, ' class="on"' if u == active else "", t) for u, t in NAV_ITEMS)
-    return ('<nav class="pnav" aria-label="التنقل الرئيسي"><div class="wrap"><a class="logo" href="/"><svg class="gem" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><path d="M20 3 36 15 20 37 4 15Z" fill="url(#gg)"/><path d="M4 15h32M20 3l-6 12 6 22 6-22z" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/></svg><span>DIAMOND <span class="tv">HUB</span><small>منصة الأدوات والتعلّم</small></span></a>'
+    return ('<nav class="pnav" aria-label="التنقل الرئيسي"><div class="wrap"><a class="logo" href="/"><svg class="gem" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><path d="M20 3 36 15 20 37 4 15Z" fill="url(#gg)"/><path d="M4 15h32M20 3l-6 12 6 22 6-22z" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/></svg><span class="lt"><b dir="ltr">DIAMOND <i class="tv">HUB</i></b><small>دايموند هب · الأدوات والتعلّم</small></span></a>'
             '<div class="links">%s<a class="keep" href="/search/">🔍 بحث</a></div></div></nav>' % links)
 
 

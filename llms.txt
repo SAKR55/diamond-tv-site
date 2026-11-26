@@ -16,7 +16,7 @@
 
 ## أكاديمية Claude
 - [الصفحة الرئيسية للأكاديمية](https://diamond-tv.shop/claude/): نظرة عامة وتحدي البرومت اليومي
-- [كورس Claude الاحترافي](https://diamond-tv.shop/claude/course/): 33 درسًا في 6 مستويات
+- [كورس Claude الاحترافي](https://diamond-tv.shop/claude/course/): 46 درسًا في 8 مستويات
 - [موسوعة Claude](https://diamond-tv.shop/claude/reference/): 40 مصطلحًا وورقة غش
 - [أداة المتطلبات والبرومت والخطة](https://diamond-tv.shop/claude/prompt-builder/): أداة مجانية تعمل في المتصفح
 

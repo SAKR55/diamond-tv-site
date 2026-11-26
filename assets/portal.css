@@ -95,3 +95,7 @@ table{border-radius:12px;overflow:hidden}
 .tpls{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;align-items:center}.tpl-h{font-weight:800;font-size:13px;color:var(--muted)}
 .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink);transition:.15s}
 .chip:hover{border-color:#7c3aed;background:#f5f3ff;color:#5b21b6}.chip.add{border-style:dashed;color:#7c3aed}.chip.my{background:#fffbeb;border-color:#fcd34d}
+.aimeter{margin-bottom:10px}.aimeter .bar{height:8px;background:#ede9fe;border-radius:9px;overflow:hidden}.aimeter .bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3ee,#7c3aed);border-radius:9px}.aimeter span{font-size:12.5px;color:var(--muted);font-weight:700}
+.aiopts{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;align-items:center;font-size:13px}.aiopts .chip{cursor:pointer}
+.logo .lt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1}.logo .lt b{font-size:20px;font-weight:900;letter-spacing:.3px;white-space:nowrap}.logo .lt i{font-style:normal;color:var(--violet)}.logo .lt small{display:block;white-space:nowrap;font-size:11.5px;margin-top:3px}
+.logo .lt small,.logo .lt b{text-align:start}
