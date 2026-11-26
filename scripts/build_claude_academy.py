@@ -2,6 +2,11 @@
 """يولّد صفحات أكاديمية Claude (الكورس، الأداة، المقالات). تشغيل: python3 scripts/build_claude_academy.py"""
 import html, json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
+import glob as _g, importlib as _il, os as _os
+sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'lib'))
+LD = {}
+for _f in sorted(_g.glob(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'lib', 'lessondeep*.py'))):
+    LD.update(_il.import_module(_os.path.basename(_f)[:-3]).LD)
 from claude_lessons import LESSONS as BASE_LESSONS
 from claude_lessons_extra import EXTRA, MODULES as _M0
 from claude_lessons_more import MORE, MODULES_MORE
@@ -93,12 +98,22 @@ for i, l in enumerate(LESSONS):
     next_l = LESSONS[i + 1] if i + 1 < len(LESSONS) else None
     opts = "".join(f'<button data-answer="{k}">{e(o)}</button>' for k, o in enumerate(l["quiz_options"]))
     intro = "".join(f"<p>{e(p)}</p>" for p in l["intro"])
+    deep = ""
+    for _h, _ps in LD.get(l["slug"], []):
+        deep += f"<section class=\"box\"><h2>{e(_h)}</h2>"
+        _ul = []
+        for _p in _ps:
+            if _p.startswith("• "): _ul.append(_p[2:]); continue
+            if _ul: deep += "<ul>" + "".join(f"<li>{e(x)}</li>" for x in _ul) + "</ul>"; _ul = []
+            deep += f"<p>{e(_p)}</p>"
+        if _ul: deep += "<ul>" + "".join(f"<li>{e(x)}</li>" for x in _ul) + "</ul>"
+        deep += "</section>"
     nav_prev = f'<a href="{lesson_url(prev_l)}">الدرس السابق</a>' if prev_l else '<a href="/claude/course/">فهرس الكورس</a>'
     nav_next = f'<a class="action" href="{lesson_url(next_l)}">التالي · {e(next_l["title"])}</a>' if next_l else '<a class="action" href="/claude/prompt-builder/">ابنِ مشروعك في الأداة</a>'
     body = f'''<small><a href="/claude/course/">الكورس</a> / الدرس {i+1} من {len(LESSONS)}</small><h1>{e(l["title"])}</h1>{intro}
 <article><h2>{e(l["example_title"])}</h2><pre>{e(l["example"])}</pre><p>{e(l["example_note"])}</p><p><a href="/claude/prompt-builder/">{e(l["lab"])}</a></p>
 <h3>طبّق بنفسك</h3><p>{e(l["practice"])}</p><label for="note">دوّن نتيجتك</label><textarea id="note" rows="3"></textarea><small>تُحفظ ملاحظاتك على هذا الجهاز فقط.</small></article>
-<section class="box"><h2>اختبر فهمك</h2><p>{e(l["quiz_q"])}</p>{opts}<output id="feedback" aria-live="polite"></output><label><input type="checkbox" id="done"> أتممت التطبيق</label></section>
+{deep}<section class="box"><h2>اختبر فهمك</h2><p>{e(l["quiz_q"])}</p>{opts}<output id="feedback" aria-live="polite"></output><label><input type="checkbox" id="done"> أتممت التطبيق</label></section>
 <div class="actions">{nav_prev}{nav_next}</div>
 <script>const key='diamond-claude-course-v1',idx='{i}',ok={l["quiz_correct"]},why={json.dumps(l["quiz_why"], ensure_ascii=False)},nkey='diamond-claude-note-{l["slug"]}';const note=document.querySelector('#note'),done=document.querySelector('#done');function completed(){{try{{const v=JSON.parse(localStorage.getItem(key));return Array.isArray(v)?v:[]}}catch{{return[]}}}}done.checked=completed().includes(idx);done.onchange=()=>{{const v=new Set(completed());done.checked?v.add(idx):v.delete(idx);try{{localStorage.setItem(key,JSON.stringify([...v]))}}catch{{}}}};try{{note.value=localStorage.getItem(nkey)||''}}catch{{}}note.oninput=()=>{{try{{localStorage.setItem(nkey,note.value)}}catch{{}}}};document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{{document.querySelector('#feedback').textContent=(Number(b.dataset.answer)===ok?'إجابة صحيحة. ':'راجع اختيارك. ')+why}});</script>'''
     sch = ld({"@context": "https://schema.org", "@type": "LearningResource", "name": l["title"], "description": l["summary"],
