@@ -13,7 +13,7 @@ SPARK = '<script src="/assets/spark.js" defer></script>'
 # ---------- home ----------
 s = rd("index.html")
 if "spark-home" not in s:
-    s = s.replace("DIAMOND TV | التعليم والأدوات والمكتبة والترفيه", "DIAMOND TV | أكاديمية Claude، التعليم، المكتبة والترفيه")
+    s = s.replace("DIAMOND HUB | التعليم والأدوات والمكتبة والترفيه", "DIAMOND HUB | أكاديمية Claude، التعليم، المكتبة والترفيه")
     s = s.replace("استكشف كورس ChatGPT ومختبر الطلبات", "استكشف كورس Claude الاحترافي وأداة كتابة البرومت والخطة وكورس ChatGPT")
     s = must(s, '<a href="/prompt-studio/course/">الكورس</a><a href="/prompt-studio/">المختبر</a>',
              '<a href="/claude/">Claude</a><a href="/claude/course/">الكورس</a><a href="/claude/prompt-builder/">أداة البرومت</a><a href="/prompt-studio/">ChatGPT</a>')

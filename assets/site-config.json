@@ -158,7 +158,7 @@
         "color": "#53B9AC"
       }
     ],
-    "logoAlt": "شعار متجر DIAMOND TV ودياموند",
+    "logoAlt": "شعار متجر DIAMOND HUB ودياموند",
     "brandLabel": "كتب وقصص مجانية",
     "seoTitle": "كتب وقصص أطفال مجانية | متجر المكتبة الماسية"
   },
@@ -202,7 +202,7 @@
       "image": "/assets/books/arabic-letters-workbook-cover.svg",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف أتعلم العربية خطوة خطوة مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف أتعلم العربية خطوة خطوة مع شعار متجر DIAMOND HUB",
       "url": "/assets/books/arabic-letters-workbook-22-pages.pdf",
       "downloadUrl": "/assets/books/arabic-letters-workbook-22-pages.pdf",
       "downloadable": true,
@@ -251,7 +251,7 @@
       "image": "/assets/books/stories-islamic-values-cover.svg",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف حكايات بقيم جميلة مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف حكايات بقيم جميلة مع شعار متجر DIAMOND HUB",
       "url": "/assets/books/stories-islamic-values-for-children.pdf",
       "downloadUrl": "/assets/books/stories-islamic-values-for-children.pdf",
       "downloadable": true,
@@ -286,7 +286,7 @@
       "image": "/assets/books/arabic-friends-story-cover.png",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف حكايات ساحة الحي: أصدقاء وعصير عجيب مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف حكايات ساحة الحي: أصدقاء وعصير عجيب مع شعار متجر DIAMOND HUB",
       "url": "/assets/books/arabic-friends-story.pdf",
       "downloadUrl": "/assets/books/arabic-friends-story.pdf",
       "downloadable": true,
@@ -320,7 +320,7 @@
       "image": "/assets/books/my-big-first-english-adventure-cover.png",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف My Big First English Adventure مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف My Big First English Adventure مع شعار متجر DIAMOND HUB",
       "url": "/assets/books/my-big-first-english-adventure.pdf",
       "downloadUrl": "/assets/books/my-big-first-english-adventure.pdf",
       "downloadable": true,
@@ -369,7 +369,7 @@
       "image": "/assets/books/coloring-book-cover.svg",
       "images": [],
       "videos": [],
-      "imageAlt": "غلاف ألواني الجميلة: دفتر تلوين للأطفال مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف ألواني الجميلة: دفتر تلوين للأطفال مع شعار متجر DIAMOND HUB",
       "url": "/assets/books/coloring-book-22-pages.pdf",
       "downloadUrl": "/assets/books/coloring-book-22-pages.pdf",
       "downloadable": true,
@@ -408,7 +408,7 @@
         }
       ],
       "image": "/assets/books/mariam-seed-cover.svg",
-      "imageAlt": "غلاف مريم وبذرة الشرفة مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف مريم وبذرة الشرفة مع شعار متجر DIAMOND HUB",
       "url": "/books/mariam-and-the-balcony-seed.html",
       "price": "0",
       "currency": "SAR",
@@ -452,7 +452,7 @@
         }
       ],
       "image": "/assets/books/lina-lantern-cover.svg",
-      "imageAlt": "غلاف لينا وفانوس المشاعر مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف لينا وفانوس المشاعر مع شعار متجر DIAMOND HUB",
       "url": "/books/lina-and-the-feelings-lantern.html",
       "price": "0",
       "currency": "SAR",
@@ -496,7 +496,7 @@
         }
       ],
       "image": "/assets/books/yasser-words-cover.svg",
-      "imageAlt": "غلاف ياسر في سوق الكلمات مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف ياسر في سوق الكلمات مع شعار متجر DIAMOND HUB",
       "url": "/books/yasser-word-market.html",
       "price": "0",
       "currency": "SAR",
@@ -540,7 +540,7 @@
         }
       ],
       "image": "/assets/books/star-shines-cover.svg",
-      "imageAlt": "غلاف نجمة تضيء مع الأصدقاء مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف نجمة تضيء مع الأصدقاء مع شعار متجر DIAMOND HUB",
       "url": "/books/star-shines-together.html",
       "price": "0",
       "currency": "SAR",
@@ -584,7 +584,7 @@
         }
       ],
       "image": "/assets/books/quiet-goodnight-cover.svg",
-      "imageAlt": "غلاف ليلة هادئة مع ندى مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف ليلة هادئة مع ندى مع شعار متجر DIAMOND HUB",
       "url": "/books/quiet-goodnight.html",
       "price": "0",
       "currency": "SAR",
@@ -628,7 +628,7 @@
         }
       ],
       "image": "/assets/books/sara-library-cover.svg",
-      "imageAlt": "غلاف سارة وبطاقة المكتبة مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف سارة وبطاقة المكتبة مع شعار متجر DIAMOND HUB",
       "url": "/books/sara-and-the-library-card.html",
       "price": "0",
       "currency": "SAR",
@@ -672,7 +672,7 @@
         }
       ],
       "image": "/assets/books/omar-repairs-cover.svg",
-      "imageAlt": "غلاف عمر يصلح ما أفسده مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف عمر يصلح ما أفسده مع شعار متجر DIAMOND HUB",
       "url": "/books/omar-makes-it-right.html",
       "price": "0",
       "currency": "SAR",
@@ -716,7 +716,7 @@
         }
       ],
       "image": "/assets/books/garden-colors-cover.svg",
-      "imageAlt": "غلاف حديقة الألوان والأشكال مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف حديقة الألوان والأشكال مع شعار متجر DIAMOND HUB",
       "url": "/books/garden-of-colors.html",
       "price": "0",
       "currency": "SAR",
@@ -760,7 +760,7 @@
         }
       ],
       "image": "/assets/books/arabic-letters-journey-cover.svg",
-      "imageAlt": "غلاف رحلة الحروف: أ، ب، ت مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف رحلة الحروف: أ، ب، ت مع شعار متجر DIAMOND HUB",
       "url": "/books/journey-of-arabic-letters.html",
       "price": "0",
       "currency": "SAR",
@@ -804,7 +804,7 @@
         }
       ],
       "image": "/assets/books/everyday-english-cover.svg",
-      "imageAlt": "غلاف My First Everyday English Words مع شعار متجر DIAMOND TV",
+      "imageAlt": "غلاف My First Everyday English Words مع شعار متجر DIAMOND HUB",
       "url": "/books/my-first-everyday-english-words.html",
       "price": "0",
       "currency": "SAR",
