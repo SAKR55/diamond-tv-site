@@ -1,6 +1,8 @@
 User-agent: *
-Disallow: /admin/
 Allow: /
+Disallow: /admin/
 Disallow: /distributor
+Disallow: /mugharrid-app/admin/
+Disallow: /scripts/
 
 Sitemap: https://diamond-tv.shop/sitemap.xml

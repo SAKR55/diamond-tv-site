@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://diamond-tv.shop/app/</loc></url>
+  <url><loc>https://diamond-tv.shop/app/</loc><lastmod>2026-11-26</lastmod></url>
   <url><loc>https://diamond-tv.shop/arabic.html</loc></url>
   <url><loc>https://diamond-tv.shop/articles/about-app/</loc></url>
   <url><loc>https://diamond-tv.shop/articles/activate/</loc></url>
@@ -19,7 +19,7 @@
   <url><loc>https://diamond-tv.shop/articles/free-english-listening-practice.html</loc></url>
   <url><loc>https://diamond-tv.shop/articles/free-english-speaking-practice-alone.html</loc></url>
   <url><loc>https://diamond-tv.shop/articles/help-child-name-feelings.html</loc></url>
-  <url><loc>https://diamond-tv.shop/articles/</loc></url>
+  <url><loc>https://diamond-tv.shop/articles/</loc><lastmod>2026-11-26</lastmod></url>
   <url><loc>https://diamond-tv.shop/articles/kids-safe-home-chores.html</loc></url>
   <url><loc>https://diamond-tv.shop/articles/language-grows-in-conversation.html</loc></url>
   <url><loc>https://diamond-tv.shop/articles/learn-english-with-mugharrid-app.html</loc></url>
@@ -50,14 +50,14 @@
   <url><loc>https://diamond-tv.shop/import/book1/</loc></url>
   <url><loc>https://diamond-tv.shop/import/book2/</loc></url>
   <url><loc>https://diamond-tv.shop/import/calc.html</loc></url>
-  <url><loc>https://diamond-tv.shop/import/</loc></url>
+  <url><loc>https://diamond-tv.shop/import/</loc><lastmod>2026-11-26</lastmod></url>
   <url><loc>https://diamond-tv.shop/import/service/</loc></url>
-  <url><loc>https://diamond-tv.shop/</loc></url>
+  <url><loc>https://diamond-tv.shop/</loc><lastmod>2026-11-26</lastmod></url>
   <url><loc>https://diamond-tv.shop/movies.html</loc></url>
-  <url><loc>https://diamond-tv.shop/mugharrid/</loc></url>
+  <url><loc>https://diamond-tv.shop/mugharrid/</loc><lastmod>2026-11-26</lastmod></url>
   <url><loc>https://diamond-tv.shop/privacy/</loc></url>
-  <url><loc>https://diamond-tv.shop/prompt-studio/</loc></url>
-  <url><loc>https://diamond-tv.shop/store/</loc></url>
+  <url><loc>https://diamond-tv.shop/prompt-studio/</loc><lastmod>2026-11-26</lastmod></url>
+  <url><loc>https://diamond-tv.shop/store/</loc><lastmod>2026-11-26</lastmod></url>
   <url><loc>https://diamond-tv.shop/prompt-studio/course/</loc></url>
   <url><loc>https://diamond-tv.shop/prompt-studio/course/first-conversation/</loc></url>
   <url><loc>https://diamond-tv.shop/prompt-studio/course/define-deliverable/</loc></url>
@@ -73,4 +73,34 @@
   <url><loc>https://diamond-tv.shop/articles/prompt-build-a-tutor/</loc></url>
   <url><loc>https://diamond-tv.shop/articles/prompt-compare-prompts/</loc></url>
   <url><loc>https://diamond-tv.shop/articles/prompt-analyze-feedback/</loc></url>
+  <url><loc>https://diamond-tv.shop/claude/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/prompt-builder/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/api-and-tools-intro/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/assign-a-role/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/be-clear-and-direct/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/business-workflows/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/capstone/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/claude-code-intro/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/control-output-format/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/give-context/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/learn-by-examples/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/privacy-and-safety/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/projects-and-artifacts/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/prompt-chaining/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/start-with-claude/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/structure-with-xml/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/test-and-improve-prompts/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/think-and-plan/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/verify-and-reduce-errors/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/work-with-long-documents/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/claude/course/write-requirements/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/articles/ai-content-for-seo-without-penalty/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/articles/claude-projects-save-time/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/articles/claude-prompt-writing-guide/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/articles/claude-vs-chatgpt-how-to-choose/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/articles/learn-english-with-ai-conversation/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/articles/reduce-ai-hallucinations/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/articles/ten-claude-prompts-small-business/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://diamond-tv.shop/articles/website-indexing-checklist/</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
 </urlset>
