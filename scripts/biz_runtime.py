@@ -106,7 +106,7 @@ try{const gb=document.createElement('button');gb.type='button';gb.id='gocalc';gb
 (function(){try{
 const nf=FIELDS.filter(fl=>fl.t==='n');if(!nf.length)return;
 const w=document.createElement('div');w.className='dhc';w.id='wif';
-w.innerHTML='<b>🎚 ماذا لو؟</b> <small>حرّك المنزلق لترى أثر تغيير مُدخل واحد على النتائج مباشرة</small><div class="dhr"><select id="wif-f">'+nf.map(fl=>'<option value="'+fl.id+'">'+esc(fl.l)+'</option>').join('')+'</select><input type="range" id="wif-s" min="-50" max="100" step="5" value="0" style="flex:1"><em id="wif-v">0%</em><button type="button" class="dhb" id="wif-r">↺</button></div><div id="wif-d" class="note" style="display:none"></div>';
+w.innerHTML='<b>🎚 ماذا لو؟</b> <small>حرّك المنزلق لترى أثر تغيير مُدخل واحد على النتائج مباشرة</small><div class="dhr" style="flex-wrap:wrap"><select id="wif-f" style="flex:1 1 100%;max-width:100%">'+nf.map(fl=>'<option value="'+fl.id+'">'+esc(fl.l)+'</option>').join('')+'</select><input type="range" id="wif-s" min="-50" max="100" step="5" value="0" style="flex:1 1 140px;min-width:0"><em id="wif-v">0%</em><button type="button" class="dhb" id="wif-r">↺</button></div><div id="wif-d" class="note" style="display:none"></div>';
 const out=$('out');out.parentNode.insertBefore(w,out);
 const kv=()=>[...out.querySelectorAll('.kpi')].map(k=>[k.querySelector('span')?k.querySelector('span').innerText:'',k.querySelector('b')?k.querySelector('b').innerText:'']);
 let base=null,bv=null,bid=null;
