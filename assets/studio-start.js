@@ -74,12 +74,21 @@ function boot(){root=document.getElementById('studio');if(!root||!$('.st-top',ro
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0)});else setTimeout(boot,0);
 })();
 
-/* hub: all add-ons as expandable cards */
-(function(){var E0=SD.tabFn.ext,H0=SD.tabFn.help;if(!E0||!H0)return;
-SD.tabFn.ext=function(p){var t=document.createElement('div');E0(t);var tmp=[].slice.call(t.childNodes);p.innerHTML='<p class="st-hint ad-top">كل الإضافات هنا — اضغط على أي إضافة لعرض مكوّناتها.</p>';
- var cards=[],cur=null;tmp.forEach(function(n){if(n.nodeName==='H4'){cur={t:n.textContent,n:[]};cards.push(cur)}else if(cur)cur.n.push(n)});
- var HP=document.createElement('div');H0(HP);cards.push({t:'🛠 مساعد التصميم (ألوان، ترتيب، مقاسات، ملصقات)',n:[HP]});
- cards.forEach(function(c,i){var d=document.createElement('details');d.className='ad-card';var sm=document.createElement('summary');sm.textContent=c.t;d.appendChild(sm);var b=document.createElement('div');b.className='ad-body';c.n.forEach(function(x){b.appendChild(x)});d.appendChild(b);
-  d.addEventListener('toggle',function(){if(d.open)[].forEach.call(p.querySelectorAll('details.ad-card'),function(o){if(o!==d)o.open=false})});p.appendChild(d)});
- /* ext internals look up by p.querySelector: keep them working */
-};})();
+/* hub: tools as a grid; click a tool to show only its options */
+(function(){
+function hub(name,extra,intro){var O=SD.tabFn[name];if(!O)return;
+ SD.tabFn[name]=function(p){var t=document.createElement('div');t.className='tl-wrap';O(t);var nodes=[].slice.call(t.childNodes),panels=[],cur=null;
+  nodes.forEach(function(n){if(n.nodeName==='H4'){cur={t:n.textContent.trim(),n:[]};panels.push(cur)}else if(cur)cur.n.push(n)});
+  if(extra)extra.forEach(function(e){var c=document.createElement('div');e.fn(c);panels.push({t:e.t,n:[c]})});
+  t.innerHTML='';var grid=document.createElement('div');grid.className='tl-grid';
+  var intr=document.createElement('p');intr.className='st-hint';intr.textContent=intro;
+  panels.forEach(function(c){var w=document.createElement('div');w.className='tl-panel';w.hidden=true;
+   var bar=document.createElement('button');bar.type='button';bar.className='tl-back';bar.textContent='→ كل الأدوات';w.appendChild(bar);
+   var h=document.createElement('div');h.className='tl-title';h.textContent=c.t;w.appendChild(h);c.n.forEach(function(x){w.appendChild(x)});t.appendChild(w);
+   var m=c.t.match(/^(\S+)\s+(.*)$/),ic=m?m[1]:'🔧',lb=(m?m[2]:c.t).replace(/\s*\(.*\)\s*$/,'');
+   var b=document.createElement('button');b.type='button';b.className='tl-btn';b.innerHTML='<i>'+ic+'</i><span>'+lb+'</span>';
+   b.onclick=function(){grid.hidden=true;intr.hidden=true;w.hidden=false;p.scrollTop=0};bar.onclick=function(){w.hidden=true;grid.hidden=false;intr.hidden=false};grid.appendChild(b)});
+  p.innerHTML='';p.appendChild(intr);p.appendChild(grid);p.appendChild(t)}}
+hub('ext',[{t:'🛠 مساعد التصميم',fn:function(c){SD.tabFn.help(c)}}],'اختر أداة لتظهر خياراتها هنا:');
+hub('fx',null,'اختر أداة لتظهر خياراتها هنا:');
+})();

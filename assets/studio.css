@@ -139,3 +139,9 @@ body:has(#studio),body:has(#vstudio){overflow:hidden}
 #st-pane h4{font-size:13px;color:#c4b5fd;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid #22304f}
 .st-empty{bottom:14px}
 .st-aboutb{inset-inline-end:auto!important;inset-inline-start:14px!important;bottom:14px!important;opacity:.6;transform:scale(.85)}.st-aboutb:hover{opacity:1}
+.tl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:6px 0 10px}
+.tl-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px;background:#131c33;border:1px solid #26345a;border-radius:12px;color:#e2e8f0;font-family:inherit;cursor:pointer;text-align:center}
+.tl-btn i{font-style:normal;font-size:22px}.tl-btn span{font-size:12px;font-weight:700;line-height:1.3}.tl-btn:hover{background:#1b2850;border-color:#7c3aed}
+.tl-back{background:#1b2540;border:1px solid #2c3a5c;color:#c4b5fd;border-radius:10px;padding:6px 12px;font-family:inherit;cursor:pointer;margin-bottom:8px}
+.tl-title{font-size:15px;font-weight:800;color:#fff;margin:4px 0 8px}.tl-panel[hidden]{display:none}.tl-panel h4{display:none}
+.tl-grid[hidden],.st-hint[hidden]{display:none!important}
