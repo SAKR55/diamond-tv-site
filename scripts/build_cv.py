@@ -29,7 +29,7 @@ builder_html = '''
 <div class="cvapp">
  <div class="cvpanel">
   <div class="tpls"><span class="tpl-h">نموذج جاهز:</span>''' + ''.join(f'<button type="button" class="chip" data-pre="{k}">{n}</button>' for k, n in PN.items()) + '''<button type="button" class="chip add" id="clr">سيرة فارغة</button></div>
-  <h3>القالب</h3><div class="tpls" id="tsel"></div><details class="galbox"><summary>🎨 معرض 440 قالبًا (22 تصميمًا × 10 ألوان × خطين)</summary><label class="field">التصميم<select id="gl"></select></label><div class="gal" id="gal"></div></details>
+  <h3>اختر شكل القالب (22 تصميمًا — معاينة حقيقية بسيرتك)</h3><div class="tgrid" id="tsel"></div><details class="galbox"><summary>🎨 معرض 440 قالبًا (22 تصميمًا × 10 ألوان × خطين)</summary><label class="field">التصميم<select id="gl"></select></label><div class="gal" id="gal"></div></details>
   <div class="row2"><label class="field">اللون<div class="sw" id="sw"></div></label><label class="field">حجم الخط<select id="fs"><option value="12">صغير</option><option value="13" selected>متوسط</option><option value="14">كبير</option></select></label>
   <label class="field">لغة السيرة<select id="dir"><option value="rtl">عربية (يمين لليسار)</option><option value="ltr">English (LTR)</option></select></label></div>
   <h3>البيانات</h3>
@@ -54,7 +54,7 @@ function load(o){F.forEach(f=>$(f).value=o[f]||'')}
 function get(){const o={};F.forEach(f=>o[f]=$(f).value);return o}
 try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s){S=Object.assign(S,s.S||{});load(s.d||{})}else load(PRES.sales)}catch(e){load(PRES.sales)}
 $('fs').value=S.fs;$('dir').value=S.dir;
-$('tsel').innerHTML=TP.map(t=>'<button type="button" class="chip" data-t="'+t[0]+'">'+t[1]+'</button>').join('');
+let _tt=null;function thumbs(){clearTimeout(_tt);_tt=setTimeout(()=>{if(!LAST)return;$('tsel').innerHTML=TP.map(t=>'<button type="button" class="gc tp'+(t[0]===S.tpl?' on':'')+'" data-t="'+t[0]+'" title="'+t[1]+'"><span class="gpv"><span class="gpi">'+cvHtml({tpl:t[0],color:S.color,font:S.font,dir:S.dir,fs:'13'},13)+'</span></span><b>'+t[1]+'</b></button>').join('')},350)}
 $('sw').innerHTML=COLORS.map(c=>'<i data-c="'+c+'" style="background:'+c+'"></i>').join('');
 function parseExp(t){return t.split(/\n\s*\n/).map(b=>{const L=b.split('\n').map(x=>x.trim()).filter(Boolean);if(!L.length)return null;const h=L[0].split('|').map(x=>x.trim());return{role:h[0]||'',org:h[1]||'',per:h[2]||'',pts:L.slice(1).map(x=>x.replace(/^[-•*]\s*/,''))}}).filter(Boolean)}
 function lines(t){return t.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split('|').map(y=>y.trim()))}
@@ -71,7 +71,7 @@ function render(){const d=get(),ar=S.dir==='rtl';const T=ar?{sum:'الملخص �
  const main=sec(T.sum,d.summary?'<p>'+esc(d.summary)+'</p>':'')+sec(T.exp,exp)+sec(T.edu,edu);
  LAST={d:d,ct:ct,main:main,side:side};$('cv').innerHTML=cvHtml(S);
  fit();recs();try{localStorage.setItem(KEY,JSON.stringify({S:S,d:d}));localStorage.setItem('dt-cv-text',plain())}catch(e){}
- document.querySelectorAll('#tsel .chip').forEach(b=>b.classList.toggle('my',b.dataset.t===S.tpl));
+ thumbs();document.querySelectorAll('#tsel .gc').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tpl));
  document.querySelectorAll('#sw i').forEach(i=>i.classList.toggle('on',i.dataset.c===S.color))}
 const WK=%s,VB=%s;
 function recs(){const d=get(),E=parseExp(d.exp),R=[];let sc=0;const ok=(c,pts,good,bad)=>{R.push({ok:c,t:c?good:bad});if(c)sc+=pts};
@@ -93,7 +93,7 @@ function recs(){const d=get(),E=parseExp(d.exp),R=[];let sc=0;const ok=(c,pts,go
 function fit(){const w=$('cvwrap').clientWidth,z=Math.min(1,(w-2)/794);$('cv').style.zoom=z}
 function plain(){const d=get();let o=[d.name,d.title,[d.email,d.phone,d.city,d.link].filter(Boolean).join(' | '),'','الملخص المهني / SUMMARY',d.summary,'','الخبرات / EXPERIENCE'];parseExp(d.exp).forEach(x=>{o.push(x.role+' - '+x.org+' ('+x.per+')');x.pts.forEach(p=>o.push('- '+p));o.push('')});o.push('التعليم / EDUCATION',d.edu,'','المهارات / SKILLS',d.skills,'','اللغات / LANGUAGES',d.langs,'','الدورات / COURSES',d.courses);return o.join('\n')}
 document.querySelectorAll('input,textarea,select').forEach(x=>{if(x.id&&x.id!=='imp')x.addEventListener('input',()=>{S.fs=$('fs').value;S.dir=$('dir').value;render()})});
-$('tsel').onclick=e=>{const t=e.target.dataset.t;if(t){S.tpl=t;render()}};
+$('tsel').onclick=e=>{const b=e.target.closest('[data-t]');if(b){S.tpl=b.dataset.t;render()}};
 $('sw').onclick=e=>{const c=e.target.dataset.c;if(c){S.color=c;render()}};
 document.querySelectorAll('[data-pre]').forEach(b=>b.onclick=()=>{load(PRES[b.dataset.pre]);render()});
 $('clr').onclick=()=>{load({});render()};

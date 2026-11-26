@@ -11,7 +11,15 @@ NAV_ITEMS = [("/", "الرئيسية"), ("/claude/", "Claude"), ("/prompt-studio
              ("/store/", "المكتبة"), ("/app/", "التطبيق"), ("/articles/", "المقالات")]
 
 
+import re as _re, time as _time
+ASSET_V = _time.strftime("%Y%m%d%H%M")
+def _bust(c):
+    return _re.sub(r'(/assets/[\w.-]+\.(?:css|js))(?=["\'])', r'\1?v=' + ASSET_V, c)
+
+
 def write(path, content):
+    if path.endswith('.html'):
+        content = _bust(content)
     full = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
     with open(full, "w", encoding="utf-8") as f:

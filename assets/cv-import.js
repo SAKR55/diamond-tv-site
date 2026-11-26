@@ -49,4 +49,11 @@ document.addEventListener('DOMContentLoaded',function(){
  else if($('cvt')){var h=$('cvt').closest('label')||$('cvt');ui(h,'يُوضع النص في خانة الفحص ويُحسب التقييم فورًا.',function(r){if(r.json)return;$('cvt').value=r.text;$('cvt').dispatchEvent(new Event('input',{bubbles:true}));fixBox(r.text,function(){$('cvt').value=applyWeak($('cvt').value);$('cvt').dispatchEvent(new Event('input',{bubbles:true}))})})}
  else if($('b')&&$('role')){var h2=$('b').closest('label')||$('b');ui(h2,'تُستخرج نقاط الخبرات إلى خانة التحسين.',function(r){if(r.json)return;var o=parse(r.text),pts=(o.exp||r.text).split('\n').map(function(x){return x.replace(/^-\s*/,'').trim()}).filter(function(x){return x.length>12}).slice(0,12);$('b').value=pts.join('\n');$('b').dispatchEvent(new Event('input',{bubbles:true}));fixBox(pts.join('\n'),null)})}
 });
+
+document.addEventListener('DOMContentLoaded',function(){var res=$('res'),ta=$('cvt');if(!res||!ta||!$('jd'))return;
+ var hint=document.createElement('p');hint.style.cssText='font-size:.85em;opacity:.75;margin:4px 0';hint.textContent='💡 انقر على أي كلمة حمراء ناقصة (إن كانت لديك فعلًا) لتُضاف تلقائيًا إلى قسم المهارات في سيرتك.';
+ res.addEventListener('click',function(e){var t=e.target.closest('.tg.bad');if(!t)return;var kw=t.textContent.trim();if(!kw||t.dataset.done)return;var L=ta.value.split('\n'),i=L.findIndex(function(x){return/^(المهارات|مهارات|skills)\s*:?$/i.test(x.trim())});
+  if(i>=0){var j=i+1;if(L[j]!==undefined&&L[j].trim()&&!/^(اللغات|الدورات|الخبرات|التعليم|languages|courses|education|experience)/i.test(L[j].trim()))L[j]=L[j].replace(/[,،\s]+$/,'')+', '+kw;else L.splice(j,0,kw);ta.value=L.join('\n')}else ta.value=ta.value.replace(/\s+$/,'')+'\nالمهارات\n'+kw;
+  ta.dispatchEvent(new Event('input',{bubbles:true}))});
+ var mo=new MutationObserver(function(){if(res.querySelector('.tg.bad')&&!res.querySelector('.kwhint')){var h=hint.cloneNode(true);h.className='kwhint';var f=res.querySelector('.tg.bad').parentNode;f.parentNode.insertBefore(h,f)}});mo.observe(res,{childList:true,subtree:true})});
 window.CVImport={read:readFile,parse:parse}})();
