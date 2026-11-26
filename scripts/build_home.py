@@ -20,7 +20,9 @@ SECS = [
  ("📚","مكتبة الأطفال","كتب وقصص وأنشطة للأطفال مع نصائح للقراءة.","#ec4899",[("المكتبة","/store/")]),
  ("🗣️","تعلّم الإنجليزية","خطة تعلّم وعبارات يومية وممارسة للمحادثة.","#2563eb",[("ابدأ","/mugharrid/")]),
  ("🛒","التجارة الإلكترونية","أدوات وقوالب ومقالات للاستيراد والبيع أونلاين وإدارة المتجر وحل المشكلات.","#fb923c",[("المركز","/ecommerce/"),("الأدوات","/ecommerce/tools/"),("حاسبة الاستيراد","/import/calc.html")]),
- ("🧰","أدوات الأعمال","أكثر من 40 أداة للمحاسبة والتسويق والإدارة والموارد البشرية، وبعضها يجهّز لك برومت للذكاء الاصطناعي.","#0ea5e9",[("كل الأدوات","/business/"),("محاسبة","/business/finance/"),("تسويق","/business/marketing/"),("موارد بشرية","/business/hr/")]),
+ ("🧰","أدوات الأعمال","أكثر من 150 أداة للمحاسبة والتسويق ودراسة السوق والإدارة والموارد البشرية وأدوات الموظف، وبعضها يجهّز لك برومت للذكاء الاصطناعي.","#0ea5e9",[("كل الأدوات","/business/"),("محاسبة","/business/finance/"),("تسويق","/business/marketing/"),("موارد بشرية","/business/hr/")]),
+ ("📄","السيرة الذاتية","200 قالب سيرة، فحص ATS، تحسين الإنجازات، خطاب تقديم وتحضير مقابلات.","#14b8a6",[("المركز","/cv/"),("ابنِ سيرتك","/cv/builder/"),("فحص ATS","/cv/ats-checker/")]),
+ ("📖","كتب الذكاء الاصطناعي","8 كتب عربية مجانية عن الذكاء الاصطناعي وتطبيقاته للقراءة أو الطباعة.","#8b5cf6",[("المكتبة","/library/")]),
  ("📺","تطبيق DIAMOND TV","مشغّل IPTV عربي مجاني: تحميل وتفعيل وشرح كامل.","#7c3aed",[("التطبيق","/app/"),("تحميل","/download/")]),
 ]
 body = '<header class="phero"><div class="wrap center"><span class="pill">💎 منصة عربية مجانية للتعلّم والأدوات</span>' \
@@ -28,7 +30,7 @@ body = '<header class="phero"><div class="wrap center"><span class="pill">💎 �
  '<p class="lead">كورسات الذكاء الاصطناعي، أدوات التجار، مكتبة الأطفال، تعلّم الإنجليزية، وتطبيق المشاهدة — مجانًا وبالعربية.</p>' \
  '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px"><a class="btn btn-g" href="/claude/course/">🚀 ابدأ كورس Claude</a><a class="btn btn-o" href="/ecommerce/">🛒 أدوات التجار</a></div>' \
  '<div class="path"><a href="/claude/prompt-builder/">✍️ أنشئ برومت احترافيًا</a><a href="/ecommerce/tools/margin-calculator/">🧮 احسب سعر البيع</a><a href="/mugharrid/">🗣️ تدرّب على الإنجليزية</a><a href="/search/">🔍 ابحث في الموقع</a></div>' \
- '<div class="stats"><div class="stat"><b>7</b><span>أقسام</span></div><div class="stat"><b>+90</b><span>مقالًا ودليلًا</span></div><div class="stat"><b>+50</b><span>أداة مجانية</span></div><div class="stat"><b>0</b><span>رسوم أو تسجيل</span></div></div></div></header><main>'
+ '<div class="stats"><div class="stat"><b>9</b><span>أقسام</span></div><div class="stat"><b>+210</b><span>مقالًا ودليلًا</span></div><div class="stat"><b>+150</b><span>أداة مجانية</span></div><div class="stat"><b>0</b><span>رسوم أو تسجيل</span></div></div></div></header><main>'
 body += '<section class="s" id="sections"><div class="wrap"><div class="center"><span class="eyebrow">الأقسام</span><h2 class="h2">اختر ما يناسبك</h2></div><br><div class="grid g3">' + ''.join(
   f'<div class="card sec-card" style="--c:{c}"><div class="ic">{ic}</div><h3>{t}</h3><p>{d}</p><div class="links">' + ''.join(f'<a href="{u}">{n}</a>' for n, u in ls) + '</div></div>' for ic, t, d, c, ls in SECS) + '</div></div></section>'
 body += '<section class="s alt"><div class="wrap"><div data-spark="all"></div></div></section>'
