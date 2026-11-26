@@ -16,3 +16,5 @@ input:not([type=checkbox]),select,textarea{border:1.5px solid #cfc7e6;border-rad
 input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:3px solid #d9c9ff;outline-offset:2px}
 footer{background:#1f1747}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+.lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}.lib .card{display:flex;flex-direction:column;gap:8px}.lib .pt{font-size:14px;line-height:1.7;margin:0;flex:1}.lib button{align-self:flex-start}
+#faq details{border:1px solid rgba(128,128,128,.3);border-radius:12px;padding:10px 14px;margin:8px 0}#faq summary{cursor:pointer;font-weight:800}#tips ol{line-height:2}
