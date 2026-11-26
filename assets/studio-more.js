@@ -105,7 +105,7 @@ function ifx(kind,v){var E=selOf('image');if(!E)return;E.forEach(function(e){bak
  });});api().toast('طُبّق على الصورة ✓')}
 
 var AIV='1.5.5',aiMod=null;
-function aiBG(btn){var E=selOf('image');if(!E)return;var a=api(),msg=q('#fx-aim'),t0=btn.textContent;btn.disabled=true;
+function aiBG(btn){var E=selOf('image');if(!E)return;var a=api(),msg=document.getElementById('fx-aim'),t0=btn.textContent;btn.disabled=true;
  function say(t){if(msg)msg.textContent=t}
  say('⏳ تحميل نموذج الذكاء الاصطناعي (أول مرة فقط، قد يستغرق دقيقة)...');
  (aiMod||(aiMod=import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@'+AIV+'/+esm'))).then(function(m){
