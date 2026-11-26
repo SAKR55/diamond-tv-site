@@ -104,17 +104,56 @@ function ifx(kind,v){var E=selOf('image');if(!E)return;E.forEach(function(e){bak
  else if(kind==='border'){x.putImageData(I,0,0);x.lineWidth=Math.max(6,w*.025)*2;x.strokeStyle=v;x.strokeRect(0,0,w,h);bake.skip=true;return}
  });});api().toast('طُبّق على الصورة ✓')}
 
-function smartBG(d,w,h,tol){var N=w*h,cnt={};function key(i){return(d[i]>>5)+','+(d[i+1]>>5)+','+(d[i+2]>>5)}
- function edge(f){for(var x=0;x<w;x++){f((x)*4);f(((h-1)*w+x)*4)}for(var y=0;y<h;y++){f((y*w)*4);f((y*w+w-1)*4)}}
- var acc={};edge(function(i){var k=key(i),a=acc[k]||(acc[k]=[0,0,0,0]);a[0]+=d[i];a[1]+=d[i+1];a[2]+=d[i+2];a[3]++});
- var cl=Object.keys(acc).map(function(k){var a=acc[k];return{n:a[3],c:[a[0]/a[3],a[1]/a[3],a[2]/a[3]]}}).sort(function(a,b){return b.n-a.n}).slice(0,4);
- function bgd(i){var m=1e9;for(var k=0;k<cl.length;k++){var c=cl[k].c,e=Math.sqrt((d[i]-c[0])*(d[i]-c[0])+(d[i+1]-c[1])*(d[i+1]-c[1])+(d[i+2]-c[2])*(d[i+2]-c[2]));if(e<m)m=e}return m}
- var bg=new Uint8Array(N),q=new Int32Array(N),qh=0,qt=0;
- edge(function(i){var p=i/4;if(!bg[p]&&bgd(i)<tol){bg[p]=1;q[qt++]=p}});
- var nb=[1,-1,w,-w];while(qh<qt){var p=q[qh++],x=p%w,i=p*4;for(var k=0;k<4;k++){var n=p+nb[k];if(n<0||n>=N)continue;if(k===0&&x===w-1)continue;if(k===1&&x===0)continue;if(bg[n])continue;var j=n*4;var st=Math.abs(d[j]-d[i])+Math.abs(d[j+1]-d[i+1])+Math.abs(d[j+2]-d[i+2]);if(bgd(j)<tol&&st<tol*.9){bg[n]=1;q[qt++]=n}}}
- // نعومة الحواف: متوسط 5×5 للقناع
- var al=new Float32Array(N);for(var y=0;y<h;y++)for(var x=0;x<w;x++){var s=0,c=0;for(var dy=-2;dy<=2;dy++){var yy=y+dy;if(yy<0||yy>=h)continue;for(var dx=-2;dx<=2;dx++){var xx=x+dx;if(xx<0||xx>=w)continue;s+=bg[yy*w+xx];c++}}al[y*w+x]=1-s/c}
- for(var p=0;p<N;p++){d[p*4+3]=bg[p]?Math.min(d[p*4+3],Math.round(255*Math.max(0,al[p]-.15)/.85)):Math.round(d[p*4+3]*Math.min(1,al[p]*1.2))}}
+function smartBG(d,w,h,tol){
+ // نسخة مصغّرة للعمل السريع
+ var S=Math.min(1,420/Math.max(w,h)),sw=Math.max(8,Math.round(w*S)),sh=Math.max(8,Math.round(h*S)),N=sw*sh;
+ var cv=document.createElement('canvas');cv.width=w;cv.height=h;var cx=cv.getContext('2d');var id=cx.createImageData(w,h);id.data.set(d);cx.putImageData(id,0,0);
+ var sc=document.createElement('canvas');sc.width=sw;sc.height=sh;var sx=sc.getContext('2d');sx.imageSmoothingQuality='high';sx.drawImage(cv,0,0,sw,sh);var sd=sx.getImageData(0,0,sw,sh).data;
+ var bin=new Uint16Array(N);for(var p=0;p<N;p++)bin[p]=((sd[p*4]>>4)<<8)|((sd[p*4+1]>>4)<<4)|(sd[p*4+2]>>4);
+ var bw=Math.max(2,Math.round(Math.min(sw,sh)*.03)),border=new Uint8Array(N);
+ for(var y=0;y<sh;y++)for(var x=0;x<sw;x++)if(x<bw||y<bw||x>=sw-bw||y>=sh-bw)border[y*sw+x]=1;
+ // لوحة ألوان الإطار (أكثر 6 ألوان تكرارًا)
+ var hb={};for(var p=0;p<N;p++)if(border[p]){var k=bin[p];hb[k]=(hb[k]||0)+1}
+ var pal=Object.keys(hb).map(function(k){return[+k,hb[k]]}).sort(function(a,b){return b[1]-a[1]}).slice(0,8).map(function(a){var k=a[0];return[((k>>8)&15)*17,((k>>4)&15)*17,(k&15)*17]});
+ // تقدير خلفية متدرّجة من الحواف الأربعة (يعالج الخلفيات المموّهة/المتدرجة)
+ function bandAvg(f){var s=[0,0,0],c=0;for(var y=0;y<sh;y++)for(var x=0;x<sw;x++)if(f(x,y)){var i=(y*sw+x)*4;s[0]+=sd[i];s[1]+=sd[i+1];s[2]+=sd[i+2];c++}return c?[s[0]/c,s[1]/c,s[2]/c]:[128,128,128]}
+ var Lr=[],Rr=[],Tc=[],Bc=[];
+ for(var y=0;y<sh;y++){var l=[0,0,0],r=[0,0,0];for(var x=0;x<bw;x++){var i=(y*sw+x)*4,j=(y*sw+sw-1-x)*4;for(var k=0;k<3;k++){l[k]+=sd[i+k]/bw;r[k]+=sd[j+k]/bw}}Lr.push(l);Rr.push(r)}
+ for(var x=0;x<sw;x++){var t=[0,0,0],b=[0,0,0];for(var y=0;y<bw;y++){var i=(y*sw+x)*4,j=((sh-1-y)*sw+x)*4;for(var k=0;k<3;k++){t[k]+=sd[i+k]/bw;b[k]+=sd[j+k]/bw}}Tc.push(t);Bc.push(b)}
+ var cTL=Tc[0],cTR=Tc[sw-1],cBL=Bc[0],cBR=Bc[sw-1];
+ function coons(x,y,k){var tx=x/(sw-1),ty=y/(sh-1);var v=(1-tx)*Lr[y][k]+tx*Rr[y][k]+(1-ty)*Tc[x][k]+ty*Bc[x][k]-((1-tx)*(1-ty)*cTL[k]+tx*(1-ty)*cTR[k]+(1-tx)*ty*cBL[k]+tx*ty*cBR[k]);return v}
+ var thr=tol*.9+10,L=new Uint8Array(N);
+ for(var p=0;p<N;p++){var m=1e9;var px0=p%sw,py0=(p/sw)|0;var ce=Math.abs(sd[p*4]-coons(px0,py0,0))+Math.abs(sd[p*4+1]-coons(px0,py0,1))+Math.abs(sd[p*4+2]-coons(px0,py0,2));m=ce*1.1;for(var j=0;j<pal.length;j++){var c=pal[j],e=Math.abs(sd[p*4]-c[0])+Math.abs(sd[p*4+1]-c[1])+Math.abs(sd[p*4+2]-c[2]);if(e<m)m=e}L[p]=(border[p]||m<thr*.8)?0:1}
+ // تباين الجيران لوزن القطع
+ var beta=0,cntb=0;for(var p=0;p<N-1;p++){if((p+1)%sw===0)continue;var dd=Math.abs(sd[p*4]-sd[p*4+4])+Math.abs(sd[p*4+1]-sd[p*4+5])+Math.abs(sd[p*4+2]-sd[p*4+6]);beta+=dd*dd;cntb++}beta=cntb?beta/cntb:1;if(beta<1)beta=1;
+ var wR=new Float32Array(N),wD=new Float32Array(N);
+ for(var p=0;p<N;p++){var x=p%sw;if(x<sw-1){var dd=Math.abs(sd[p*4]-sd[p*4+4])+Math.abs(sd[p*4+1]-sd[p*4+5])+Math.abs(sd[p*4+2]-sd[p*4+6]);wR[p]=Math.exp(-dd*dd/(2*beta))}if(p+sw<N){var q2=p+sw,dd2=Math.abs(sd[p*4]-sd[q2*4])+Math.abs(sd[p*4+1]-sd[q2*4+1])+Math.abs(sd[p*4+2]-sd[q2*4+2]);wD[p]=Math.exp(-dd2*dd2/(2*beta))}}
+ var lam=26,cost0=new Float32Array(N),cost1=new Float32Array(N);
+ for(var it=0;it<5;it++){
+  var hF=new Float32Array(4096),hB=new Float32Array(4096),nF=0,nB=0;
+  for(var p=0;p<N;p++){if(L[p]){hF[bin[p]]++;nF++}else{hB[bin[p]]++;nB++}}
+  function sm(hh){var o=new Float32Array(4096);for(var r=0;r<16;r++)for(var g=0;g<16;g++)for(var b=0;b<16;b++){var s=0,c=0;for(var dr=-1;dr<=1;dr++)for(var dg=-1;dg<=1;dg++)for(var db=-1;db<=1;db++){var R=r+dr,G=g+dg,B=b+db;if(R<0||G<0||B<0||R>15||G>15||B>15)continue;s+=hh[(R<<8)|(G<<4)|B]*(dr||dg||db?1:3);c++}o[(r<<8)|(g<<4)|b]=s}return o}
+  hF=sm(hF);hB=sm(hB);var tF=0,tB=0;for(var i=0;i<4096;i++){tF+=hF[i];tB+=hB[i]}tF=tF||1;tB=tB||1;
+  for(var p=0;p<N;p++){var b=bin[p];cost1[p]=-Math.log((hF[b]/tF)+1e-5);cost0[p]=-Math.log((hB[b]/tB)+1e-5)}
+  // ICM مع تنعيم مكاني حسب التباين
+  for(var sweep=0;sweep<4;sweep++){for(var p=0;p<N;p++){if(border[p]){L[p]=0;continue}var x=p%sw,e0=cost0[p],e1=cost1[p];
+    function nbr(q,wt){if(L[q])e0+=lam*wt;else e1+=lam*wt}
+    if(x>0)nbr(p-1,wR[p-1]+.08);if(x<sw-1)nbr(p+1,wR[p]+.08);if(p>=sw)nbr(p-sw,wD[p-sw]+.08);if(p+sw<N)nbr(p+sw,wD[p]+.08);
+    L[p]=e1<e0?1:0}}
+ }
+ // أكبر مكوّنات الأمام + ملء الثقوب الصغيرة
+ var lab=new Int32Array(N),sizes=[0],nl=0,st=new Int32Array(N);
+ for(var p=0;p<N;p++){if(!L[p]||lab[p])continue;nl++;var sp=0,n=0;st[sp++]=p;lab[p]=nl;while(sp){var q=st[--sp];n++;var x=q%sw;var nb=[x>0?q-1:-1,x<sw-1?q+1:-1,q-sw,q+sw];for(var k=0;k<4;k++){var z=nb[k];if(z<0||z>=N||!L[z]||lab[z])continue;lab[z]=nl;st[sp++]=z}}sizes.push(n)}
+ var big=Math.max.apply(null,sizes.concat([1]));var keep=new Uint8Array(N);for(var p=0;p<N;p++)if(lab[p]&&sizes[lab[p]]>=big*.18)keep[p]=1;
+ var lab2=new Int32Array(N),holes=[0],nh=0;for(var p=0;p<N;p++){if(keep[p]||lab2[p])continue;nh++;var sp=0,n=0,tb=false;st[sp++]=p;lab2[p]=nh;while(sp){var q=st[--sp];n++;if(border[q])tb=true;var x=q%sw;var nb=[x>0?q-1:-1,x<sw-1?q+1:-1,q-sw,q+sw];for(var k=0;k<4;k++){var z=nb[k];if(z<0||z>=N||keep[z]||lab2[z])continue;lab2[z]=nh;st[sp++]=z}}holes.push(tb?-1:n)}
+ for(var p=0;p<N;p++)if(lab2[p]&&holes[lab2[p]]>=0&&holes[lab2[p]]<N*.02)keep[p]=1;
+ // تنعيم القناع (3×3 مرتين) ثم تكبير ثنائي الخطية
+ var m=new Float32Array(N);for(var p=0;p<N;p++)m[p]=keep[p];
+ for(var r=0;r<2;r++){var o=new Float32Array(N);for(var y=0;y<sh;y++)for(var x=0;x<sw;x++){var s=0,c=0;for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){var yy=y+dy,xx=x+dx;if(yy<0||xx<0||yy>=sh||xx>=sw)continue;s+=m[yy*sw+xx];c++}o[y*sw+x]=s/c}m=o}
+ for(var y=0;y<h;y++){var fy=(y+.5)*sh/h-.5,y0=Math.max(0,Math.min(sh-1,Math.floor(fy))),y1=Math.min(sh-1,y0+1),ty=Math.max(0,fy-y0);
+  for(var x=0;x<w;x++){var fx=(x+.5)*sw/w-.5,x0=Math.max(0,Math.min(sw-1,Math.floor(fx))),x1=Math.min(sw-1,x0+1),tx=Math.max(0,fx-x0);
+   var a=(m[y0*sw+x0]*(1-tx)+m[y0*sw+x1]*tx)*(1-ty)+(m[y1*sw+x0]*(1-tx)+m[y1*sw+x1]*tx)*ty;
+   a=a<.5?Math.max(0,(a-.2)/.6):Math.min(1,.5+(a-.5)/.6);var al=a*a*(3-2*a);var i=(y*w+x)*4+3;d[i]=Math.round(d[i]*al)}}}
 function qrCanvas(text,o){var M=QR.make(text,o.ecc),n=M.length,m=4,u=Math.max(8,Math.floor(900/(n+2*m))),S=(n+2*m)*u,c=document.createElement('canvas');c.width=c.height=S;var x=c.getContext('2d');if(o.bg!=='transparent'){x.fillStyle=o.bg;x.fillRect(0,0,S,S)}x.fillStyle=o.fg;
  function fin(i,j){return(i<7&&j<7)||(i<7&&j>=n-7)||(i>=n-7&&j<7)}
  for(var i=0;i<n;i++)for(var j=0;j<n;j++){if(!M[i][j])continue;var px=(j+m)*u,py=(i+m)*u;
@@ -157,7 +196,7 @@ SD.tabFn.fx=function(p){var a=api();
  '<h4>✂ قص الصورة</h4><div class="pb fl" id="cr-r">'+[['1:1',1,1],['4:5',4,5],['16:9',16,9],['9:16',9,16],['3:2',3,2],['2:3',2,3]].map(function(x){return'<button data-w="'+x[1]+'" data-h="'+x[2]+'">'+x[0]+'</button>'}).join('')+'</div><div class="st-row"><label>يمين % <input type="number" id="cr-1" value="0" min="0" max="90" style="width:46px"></label><label>يسار % <input type="number" id="cr-2" value="0" min="0" max="90" style="width:46px"></label><label>أعلى % <input type="number" id="cr-3" value="0" min="0" max="90" style="width:46px"></label><label>أسفل % <input type="number" id="cr-4" value="0" min="0" max="90" style="width:46px"></label></div><button class="st-big" id="cr-go" style="background:#0f766e">قص حسب النسب</button>'+
  '<h4>🎚 تعديل الألوان والإضاءة</h4><div class="st-row"><label>حرارة اللون <input type="range" id="ad-t" min="-100" max="100" value="0"></label><label>صبغة <input type="range" id="ad-ti" min="-100" max="100" value="0"></label></div><div class="st-row"><label>الظلال <input type="range" id="ad-s" min="-100" max="100" value="0"></label><label>الإضاءات العالية <input type="range" id="ad-h" min="-100" max="100" value="0"></label></div><div class="st-row"><label>حيوية <input type="range" id="ad-v" min="-100" max="100" value="0"></label></div><div class="pb"><button id="ad-go">طبّق التعديل</button><button id="ad-auto">✨ تحسين تلقائي</button><button id="rot-l">↺ 90°</button></div>'+
  '<h4>🔳 مولّد QR</h4><select class="st-search" id="qr-t"><option value="url">رابط / نص</option><option value="wa">واتساب (رقم دولي)</option><option value="tel">اتصال</option><option value="mail">بريد</option><option value="wifi">واي فاي (الاسم|كلمة السر)</option></select><input class="st-search" id="qr-v" placeholder="https://diamond-tv.shop"><div class="st-row"><label>الأمام <input type="color" id="qr-f" value="#111827"></label><label>الخلفية <input type="color" id="qr-b" value="#ffffff"></label><label><input type="checkbox" id="qr-tr"> شفاف</label></div><div class="st-row"><select class="st-search" id="qr-s"><option value="sq">مربعات</option><option value="dots">نقاط</option><option value="round">مربعات مدوّرة</option></select><select class="st-search" id="qr-e"><option value="M">تصحيح M</option><option value="L">L (أقل)</option><option value="Q">Q</option><option value="H">H (أعلى)</option></select></div><button class="st-big" id="qr-go" style="background:#7c3aed">إضافة QR للتصميم</button>'+
- '<h4>🪄 إزالة الخلفية الذكية</h4><p class="st-hint">تكتشف لون الخلفية من حواف الصورة وتزيله مع تنعيم الحواف. الأفضل مع خلفيات متجانسة.</p><div class="st-row"><input type="range" id="fx-st" min="20" max="120" value="55"><button class="st-big" id="fx-sb" style="background:#0f766e">🪄 أزل الخلفية</button></div>'+
+ '<h4>🪄 إزالة الخلفية الذكية</h4><p class="st-hint">تتعلم ألوان الخلفية من حواف الصورة (حتى المتدرّجة والمموّهة) وتفصل الموضوع الرئيسي مع حواف ناعمة وحفظ الثقوب. زد الحساسية إن بقيت بقايا خلفية، وأنقصها إن اختفى جزء من الموضوع.</p><div class="st-row"><input type="range" id="fx-st" min="20" max="120" value="55"><button class="st-big" id="fx-sb" style="background:#0f766e">🪄 أزل الخلفية</button></div>'+
  '<h4>🎨 قطّارة الألوان</h4><button class="st-big" id="fx-eye" style="background:#334155">اختر لونًا من الشاشة وطبّقه على العنصر</button>'+
  '<h4>🔁 تكرار</h4><div class="st-row"><label>صفوف <input type="number" id="fx-r" value="3" min="1" max="12" style="width:50px"></label><label>أعمدة <input type="number" id="fx-cl" value="3" min="1" max="12" style="width:50px"></label><label>مسافة <input type="number" id="fx-g" value="20" style="width:50px"></label></div><div class="pb"><button id="fx-grid">تكرار شبكي</button><button id="fx-rad">تكرار دائري</button></div>'+
  '<h4>📐 مرشدات</h4><div class="pb fl" id="fx-gd">'+[['c','المنتصف'],['t','الأثلاث'],['g','النسبة الذهبية'],['d','أقطار'],['m','هوامش']].map(function(x){return'<button data-k="'+x[0]+'" class="'+(GD[x[0]]?'on':'')+'">'+x[1]+'</button>'}).join('')+'</div>'+
