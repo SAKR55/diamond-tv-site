@@ -10,7 +10,7 @@ for pat in ("claude/course/*/index.html","articles/*/index.html","ecommerce/**/i
         h=open(f,encoding="utf-8",errors="ignore").read()
         if "noindex" in h[:3000]: continue
         cands.append(u)
-cands+=["/ecommerce/","/business/","/search/","/app/","/cv/","/library/","/accounting/","/studio/","/studio/design/","/studio/video/","/studio/photos/"]
+cands+=["/ecommerce/","/business/","/search/","/app/","/cv/","/library/","/accounting/","/studio/","/map/","/studio/design/","/studio/video/","/studio/photos/"]
 add=[u for u in sorted(set(cands)) if u not in have]
 ent="".join('  <url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n'%(B,u,D) for u in add)
 sm=sm.replace("</urlset>",ent+"</urlset>")

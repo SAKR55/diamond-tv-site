@@ -40,19 +40,32 @@ def faq_ld(pairs):
                "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in pairs]})
 
 
+NAV_GROUPS = [
+ ("🎓", "التعلّم", [("/claude/", "أكاديمية Claude"), ("/prompt-studio/", "مختبر ChatGPT"), ("/library/", "كتب الذكاء الاصطناعي"), ("/mugharrid/", "تعلّم الإنجليزية"), ("/store/", "مكتبة الأطفال"), ("/articles/", "المقالات")]),
+ ("🧰", "الأعمال", [("/business/", "أدوات الأعمال (220+)"), ("/ecommerce/", "التجارة الإلكترونية"), ("/accounting/", "مرجع المحاسب"), ("/cv/", "السيرة الذاتية")]),
+ ("🎨", "الإبداع", [("/studio/design/", "محرر التصميم"), ("/studio/video/", "صانع الفيديو"), ("/studio/photos/", "أدوات الصور"), ("/studio/", "كل الاستوديو")]),
+ ("📺", "التطبيق", [("/app/", "تطبيق DIAMOND TV"), ("/download/", "تحميل التطبيق")]),
+]
 def nav(active=""):
-    links = "".join('<a href="%s"%s>%s</a>' % (u, ' class="on"' if u == active else "", t) for u, t in NAV_ITEMS)
+    def on(u): return u == active or (u != "/" and active and u.startswith(active) and active != "/") or (active and active.startswith(u) and u != "/" and len(u) > 1)
+    parts = ['<a href="/"%s>🏠 الرئيسية</a>' % (' class="on"' if active == "/" else "")]
+    for ic, t, items in NAV_GROUPS:
+        cur = any(on(u) for u, _ in items)
+        lis = "".join('<a href="%s"%s>%s</a>' % (u, ' class="on"' if on(u) else "", n) for u, n in items)
+        parts.append('<div class="dd%s"><button type="button" class="ddb" aria-haspopup="true" aria-expanded="false">%s %s <span class="car">▾</span></button><div class="ddm">%s</div></div>' % (" cur" if cur else "", ic, t, lis))
+    links = "".join(parts)
     return ('<nav class="pnav" aria-label="التنقل الرئيسي"><div class="wrap"><a class="logo" href="/"><svg class="gem" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><path d="M20 3 36 15 20 37 4 15Z" fill="url(#gg)"/><path d="M4 15h32M20 3l-6 12 6 22 6-22z" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/></svg><span class="lt"><b dir="ltr">DIAMOND <i class="tv">HUB</i></b><small>دايموند هب · الأدوات والتعلّم</small></span></a>'
-            '<div class="links">%s<a class="keep" href="/search/">🔍 بحث</a></div></div></nav>' % links)
+            '<button type="button" class="burger" aria-label="القائمة" aria-expanded="false">☰</button>'
+            '<div class="links">%s<a class="keep" href="/map/">🗺 خريطة الموقع</a><a class="keep" href="/search/">🔍 بحث</a></div></div></nav>'
+            '<script>(function(){var n=document.querySelector(".pnav");if(!n)return;var b=n.querySelector(".burger"),L=n.querySelector(".links");b.onclick=function(){var o=L.classList.toggle("open");b.setAttribute("aria-expanded",o)};n.querySelectorAll(".ddb").forEach(function(x){x.onclick=function(e){e.stopPropagation();var d=x.parentNode,o=!d.classList.contains("open");n.querySelectorAll(".dd.open").forEach(function(y){y.classList.remove("open");y.firstChild.setAttribute("aria-expanded","false")});if(o){d.classList.add("open");x.setAttribute("aria-expanded","true")}}});document.addEventListener("click",function(){n.querySelectorAll(".dd.open").forEach(function(y){y.classList.remove("open")})})})()</script>' % links)
 
 
 def footer():
-    return ('<footer class="pf"><div class="wrap"><div class="cols">'
-            '<div><h4>DIAMOND HUB</h4><p>منصة عربية للتعلّم والأدوات والتجارة الإلكترونية.</p></div>'
-            '<div><h4>تعلّم</h4><ul><li><a href="/claude/">أكاديمية Claude</a></li><li><a href="/prompt-studio/">مختبر ChatGPT</a></li><li><a href="/mugharrid/">تعلّم الإنجليزية</a></li><li><a href="/store/">مكتبة الأطفال</a></li></ul></div>'
-            '<div><h4>التجارة الإلكترونية</h4><ul><li><a href="/ecommerce/">المركز</a></li><li><a href="/ecommerce/tools/">الأدوات</a></li><li><a href="/business/">أدوات الأعمال</a></li><li><a href="/ecommerce/faq/">أسئلة شائعة</a></li><li><a href="/ecommerce/glossary/">القاموس</a></li><li><a href="/ecommerce/templates/">القوالب</a></li></ul></div>'
-            '<div><h4>المزيد</h4><ul><li><a href="/app/">تطبيق DIAMOND TV</a></li><li><a href="/articles/">المقالات</a></li><li><a href="/#contact">تواصل معنا</a></li><li><a href="/sitemap.xml">خريطة الموقع</a></li></ul></div>'
-            '</div><div class="copy">© 2026 DIAMOND HUB — المحتوى للتعريف والتعلّم ولا يغني عن استشارة مختص.</div></div></footer>')
+    def col(t, items): return '<div><h4>%s</h4><ul>%s</ul></div>' % (t, ''.join('<li><a href="%s">%s</a></li>' % (u, n) for u, n in items))
+    cols = ''.join(col(ic + " " + t, items) for ic, t, items in NAV_GROUPS)
+    return ('<footer class="pf"><div class="wrap"><div class="cols pfc">'
+            '<div><h4>DIAMOND HUB</h4><p>منصة عربية مجانية للتعلّم والأدوات والتجارة الإلكترونية والتصميم.</p><p><a href="/map/">🗺 خريطة الموقع</a> · <a href="/search/">🔍 بحث</a> · <a href="/#contact">تواصل معنا</a></p></div>'
+            + cols + '</div><div class="copy">© 2026 DIAMOND HUB — المحتوى للتعريف والتعلّم ولا يغني عن استشارة مختص. · <a href="/privacy/">الخصوصية</a> · <a href="/sitemap.xml">sitemap.xml</a></div></div></footer>')
 
 
 def page(path, title, desc, body, extra_ld="", active="", og_type="website", css_extra=""):

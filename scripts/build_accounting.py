@@ -3,6 +3,21 @@ import sys, json, re, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from portal_common import *
 from acc_standards import STD
+import importlib, glob as _g
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lib'))
+DEEPA = {}
+for _f in sorted(_g.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)),'lib','accdeep*.py'))):
+    DEEPA.update(importlib.import_module(os.path.basename(_f)[:-3]).DEEPA)
+def deep_a(code):
+    o = ''
+    for h, ps in DEEPA.get(code, []):
+        o += f'<h2>{e(h)}</h2>'; ul = []
+        for q in ps:
+            if q.startswith('• '): ul.append(q[2:]); continue
+            if ul: o += '<ul>' + ''.join(f'<li>{e(x)}</li>' for x in ul) + '</ul>'; ul = []
+            o += f'<p class="je">{e(q)}</p>' if q.startswith('قيد:') else f'<p>{e(q)}</p>'
+        if ul: o += '<ul>' + ''.join(f'<li>{e(x)}</li>' for x in ul) + '</ul>'
+    return o
 CR = '<a href="/">الرئيسية</a> › <a href="/accounting/">مرجع المحاسب</a>'
 URLS = []
 def sl(c): return c.lower().replace(' ', '-')
@@ -40,6 +55,7 @@ for code, name, summ, pts, ent, tips, tool in STD:
     b += '<main><section class="s"><div class="wrap narrow"><article class="prose">'
     b += f'<h2>ملخص المعيار</h2><p>{e(summ)}</p><h2>أهم النقاط</h2><ul>' + ''.join(f'<li>{e(p)}</li>' for p in pts) + '</ul>'
     b += f'<h2>المعالجة المحاسبية / القيد</h2><p>{e(ent)}</p><h2>نصائح وتوصيات للمحاسب</h2><ul>' + ''.join(f'<li>{e(t)}</li>' for t in tips) + '</ul>'
+    b += deep_a(code)
     b += '<div class="note">مرجع تعليمي مختصر. اعتمد دائمًا نص المعيار الأصلي وسياسات منشأتك واستشر مراجعًا معتمدًا في الحالات المعقدة.</div>'
     b += '<p>' + tool_link(tool) + ' <a class="btn btn-o" href="/accounting/">← كل المعايير</a></p></article></div></section></main>'
     art = ld({"@context": "https://schema.org", "@type": "Article", "headline": f"{code} {name}", "description": summ, "inLanguage": "ar", "mainEntityOfPage": BASE + u, "author": {"@type": "Organization", "name": "DIAMOND HUB"}, "publisher": {"@type": "Organization", "name": "DIAMOND HUB"}})

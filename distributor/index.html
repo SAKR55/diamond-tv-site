@@ -314,5 +314,5 @@ if(U&&P){ rpc("reseller_login",{p_user:U,p_pass:P}).then(async r=>{
   if(r.status===200){const d=await r.json(); if(d&&d.ok!==false){ME=d;$("#login").hidden=true;$("#app").hidden=false;$("#who").textContent=(ME.name||U)+" — موزّع";load();}}
 }).catch(()=>{}); }
 </script>
-</body>
+<script src="/assets/sitebar.js" defer></script></body>
 </html>
