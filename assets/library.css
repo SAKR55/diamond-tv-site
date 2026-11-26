@@ -14,3 +14,4 @@ body.dark-read{background:#111827;color:#e5e7eb}body.dark-read .prose p,body.dar
 @media(max-width:600px){.book{grid-template-columns:100px 1fr}.cover .ct{font-size:10.5px}}
 @media print{.rtools,#rp,.pn,.pnav,footer.pf,.btn{display:none!important}.prose p{font-size:12pt}}
 .ex{border-inline-start:4px solid #7c3aed;background:#faf5ff;border-radius:12px;padding:6px 18px 12px;margin:18px 0}.ex h3{margin:12px 0 4px;font-size:16px;color:#5b21b6}.ex p,.ex li{font-size:calc(var(--fs,17.5px) - 1px);line-height:1.9}
+.prose table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92em;display:block;overflow-x:auto}.prose th,.prose td{border:1px solid var(--line,#e5e7eb);padding:8px 10px;text-align:right;vertical-align:top}.prose th{background:#f3f0ff;font-weight:800}.prose h3{margin:22px 0 8px}.prose ul,.prose ol{line-height:2;padding-inline-start:22px}.prose code{background:#f3f4f6;padding:1px 6px;border-radius:5px}
