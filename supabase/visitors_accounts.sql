@@ -78,24 +78,33 @@ begin
     'new_visitors', (select count(distinct vid) from dh_page_views where created_at >= since and is_new),
     'online_now', (select count(distinct sid) from dh_page_views where created_at >= now() - interval '5 minutes'),
     'logged_in_views', (select count(*) from dh_page_views where created_at >= since and uid is not null),
-    'daily', coalesce((select jsonb_agg(x order by x->>'day') from (
-        select jsonb_build_object('day', to_char(date_trunc('day', created_at),'YYYY-MM-DD'), 'views', count(*), 'visitors', count(distinct vid)) x
-        from dh_page_views where created_at >= since group by date_trunc('day', created_at)) t), '[]'::jsonb),
-    'top_pages', coalesce((select jsonb_agg(x) from (
-        select jsonb_build_object('path', path, 'views', count(*), 'visitors', count(distinct vid)) x
-        from dh_page_views where created_at >= since group by path order by count(*) desc limit 25) t), '[]'::jsonb),
-    'referrers', coalesce((select jsonb_agg(x) from (
-        select jsonb_build_object('ref', coalesce(nullif(ref,''),'مباشر'), 'views', count(*)) x
-        from dh_page_views where created_at >= since group by 1 order by count(*) desc limit 15) t), '[]'::jsonb),
-    'devices', coalesce((select jsonb_agg(x) from (
-        select jsonb_build_object('device', coalesce(device,'?'), 'views', count(*)) x
-        from dh_page_views where created_at >= since group by 1 order by count(*) desc) t), '[]'::jsonb),
-    'languages', coalesce((select jsonb_agg(x) from (
-        select jsonb_build_object('lang', coalesce(lang,'?'), 'views', count(*)) x
-        from dh_page_views where created_at >= since group by 1 order by count(*) desc limit 8) t), '[]'::jsonb),
-    'hours', coalesce((select jsonb_agg(x order by (x->>'h')::int) from (
-        select jsonb_build_object('h', extract(hour from created_at at time zone 'Asia/Riyadh')::int, 'views', count(*)) x
+    'pages_per_session', (select round(count(*)::numeric / nullif(count(distinct sid),0), 2) from dh_page_views where created_at >= since),
+    'bounce_pct', (select round(100.0 * count(*) filter (where c = 1) / nullif(count(*),0))::int from (select sid, count(*) c from dh_page_views where created_at >= since group by sid) s),
+    'daily', coalesce((select jsonb_agg(jsonb_build_object('day', day, 'views', v, 'visitors', u) order by day) from (
+        select to_char(date_trunc('day', created_at),'YYYY-MM-DD') day, count(*) v, count(distinct vid) u
         from dh_page_views where created_at >= since group by 1) t), '[]'::jsonb),
+    'top_pages', coalesce((select jsonb_agg(jsonb_build_object('path', path, 'views', v, 'visitors', u) order by v desc) from (
+        select path, count(*) v, count(distinct vid) u from dh_page_views where created_at >= since group by path order by 2 desc limit 25) t), '[]'::jsonb),
+    'entry_pages', coalesce((select jsonb_agg(jsonb_build_object('path', path, 'sessions', n) order by n desc) from (
+        select path, count(*) n from (select distinct on (sid) sid, path from dh_page_views where created_at >= since order by sid, created_at) e group by path order by 2 desc limit 15) t), '[]'::jsonb),
+    'referrers', coalesce((select jsonb_agg(jsonb_build_object('ref', k, 'views', n) order by n desc) from (
+        select coalesce(nullif(ref,''),'مباشر') k, count(*) n from dh_page_views where created_at >= since group by 1 order by 2 desc limit 15) t), '[]'::jsonb),
+    'devices', coalesce((select jsonb_agg(jsonb_build_object('device', k, 'views', n) order by n desc) from (
+        select coalesce(device,'?') k, count(*) n from dh_page_views where created_at >= since group by 1 order by 2 desc limit 10) t), '[]'::jsonb),
+    'languages', coalesce((select jsonb_agg(jsonb_build_object('lang', k, 'views', n) order by n desc) from (
+        select coalesce(lang,'?') k, count(*) n from dh_page_views where created_at >= since group by 1 order by 2 desc limit 8) t), '[]'::jsonb),
+    'countries', coalesce((select jsonb_agg(jsonb_build_object('country', k, 'views', n) order by n desc) from (
+        select country k, count(*) n from dh_page_views where created_at >= since and country is not null group by 1 order by 2 desc limit 20) t), '[]'::jsonb),
+    'cities', coalesce((select jsonb_agg(jsonb_build_object('city', k, 'views', n) order by n desc) from (
+        select city k, count(*) n from dh_page_views where created_at >= since and city is not null group by 1 order by 2 desc limit 20) t), '[]'::jsonb),
+    'browsers', coalesce((select jsonb_agg(jsonb_build_object('browser', k, 'views', n) order by n desc) from (
+        select coalesce(browser,'?') k, count(*) n from dh_page_views where created_at >= since group by 1 order by 2 desc limit 10) t), '[]'::jsonb),
+    'oses', coalesce((select jsonb_agg(jsonb_build_object('os', k, 'views', n) order by n desc) from (
+        select coalesce(os,'?') k, count(*) n from dh_page_views where created_at >= since group by 1 order by 2 desc limit 10) t), '[]'::jsonb),
+    'campaigns', coalesce((select jsonb_agg(jsonb_build_object('utm', k, 'views', n) order by n desc) from (
+        select utm k, count(*) n from dh_page_views where created_at >= since and utm is not null group by 1 order by 2 desc limit 15) t), '[]'::jsonb),
+    'hours', coalesce((select jsonb_agg(jsonb_build_object('h', h, 'views', n) order by h) from (
+        select extract(hour from created_at at time zone 'Asia/Riyadh')::int h, count(*) n from dh_page_views where created_at >= since group by 1) t), '[]'::jsonb),
     'users_total', (select count(*) from auth.users),
     'users_recent', coalesce((select jsonb_agg(x) from (
         select jsonb_build_object('email', u.email, 'name', p.name, 'created_at', u.created_at, 'last_sign_in_at', u.last_sign_in_at, 'confirmed', u.email_confirmed_at is not null) x
