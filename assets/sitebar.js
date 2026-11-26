@@ -7,3 +7,5 @@ var h='<div class="in"><a class="lg" href="/" dir="ltr">💎 DIAMOND HUB</a><but
 var d=document.createElement('div');d.id='dh-sb';d.innerHTML=h;
 function mount(){document.body.insertBefore(d,document.body.firstChild);d.querySelector('.bg').onclick=function(){d.querySelector('.ls').classList.toggle('o')};[].forEach.call(d.querySelectorAll('.bt'),function(b){b.onclick=function(e){e.stopPropagation();var p=b.parentNode,o=p.classList.contains('o');[].forEach.call(d.querySelectorAll('.d.o'),function(x){x.classList.remove('o')});if(!o)p.classList.add('o')}});document.addEventListener('click',function(){[].forEach.call(d.querySelectorAll('.d.o'),function(x){x.classList.remove('o')})})}
 if(document.body)mount();else document.addEventListener('DOMContentLoaded',mount)})();
+
+(function(){if(document.querySelector('script[src*="track.js"]'))return;var t=document.createElement('script');t.src='/assets/track.js';t.defer=true;document.head.appendChild(t)})();
