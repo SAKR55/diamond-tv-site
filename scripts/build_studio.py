@@ -5,7 +5,7 @@ from portal_common import *
 CSS='<link rel="stylesheet" href="/assets/studio.css">'
 CR='<a href="/">الرئيسية</a> › <a href="/studio/">استوديو التصميم</a>'
 FEATS=[("🎨","محرر تصميم احترافي","اسحب وغيّر الحجم وأدر العناصر، طبقات، محاذاة، وخطوط إرشاد ذكية مثل كانفا."),
-("🧩","56 قالبًا جاهزًا","منشورات وستوري وصور مصغرة ليوتيوب وبطاقات أعمال وعروض تخفيضات، تتكيف مع أي مقاس."),
+("🧩","1000+ قالب جاهز","منشورات وستوري وصور مصغرة ليوتيوب وبطاقات أعمال وعروض تخفيضات، تتكيف مع أي مقاس."),
 ("🔤","38 خطًا عربيًا ولاتينيًا","كايرو وتجوّل والمراعي والأميري ولالزار وغيرها، مع نص بإطار ونيون وخلفية."),
 ("◼","26 شكلًا و60+ أيقونة","أشكال متجهية وأيقونات تتلوّن، مع 250+ إيموجي ورمز."),
 ("🌈","خلفيات وتدرجات وأنماط","24 تدرجًا و14 نمطًا مولَّدًا بالألوان التي تختارها أو صورة خلفية."),
@@ -26,7 +26,7 @@ def hub():
 def design():
     body=f'<div id="studio" aria-label="محرر التصميم"></div><noscript>يتطلب المحرر تفعيل JavaScript.</noscript>'
     body+='<main class="wrap narrow"><section class="sec"><h1 style="font-size:1.4rem">محرر التصميم المجاني</h1><p>صمّم منشورات إنستغرام وستوري وصور يوتيوب المصغرة وبطاقات الأعمال والشعارات بقوالب جاهزة وخطوط عربية، ثم نزّلها PNG أو JPG أو PDF. كل شيء يعمل في متصفحك وملفاتك لا تُرفع لأي خادم.</p>'+faq_html(FAQ[:4])+'</section></main>'
-    write('studio/design/index.html',page('/studio/design/','محرر تصميم مجاني أونلاين بالعربي — قوالب وخطوط وأيقونات | DIAMOND HUB','صمّم بوستات وستوري وشعارات وصور مصغرة بمحرر عربي مجاني: 56 قالبًا، 38 خطًا، أشكال وأيقونات وفلاتر، وتصدير PNG وPDF.',body,extra_ld=breadcrumb([("الرئيسية","/"),("استوديو التصميم","/studio/"),("المحرر","/studio/design/")]),active='/studio/',css_extra=CSS+'<script src="/assets/studio-data.js"></script><script src="/assets/studio-tpl.js"></script><script src="/assets/studio.js" defer></script>'))
+    write('studio/design/index.html',page('/studio/design/','محرر تصميم مجاني أونلاين بالعربي — قوالب وخطوط وأيقونات | DIAMOND HUB','صمّم بوستات وستوري وشعارات وصور مصغرة بمحرر عربي مجاني: 1000+ قالب، 38 خطًا، أشكال وأيقونات وفلاتر، وتصدير PNG وPDF.',body,extra_ld=breadcrumb([("الرئيسية","/"),("استوديو التصميم","/studio/"),("المحرر","/studio/design/")]),active='/studio/',css_extra=CSS+'<script src="/assets/studio-data.js"></script><script src="/assets/studio-tpl.js"></script><script src="/assets/studio.js" defer></script>'))
 def video():
     body='<div id="vstudio" aria-label="استوديو الفيديو"></div>'
     body+='<main class="wrap narrow"><section class="sec"><h1 style="font-size:1.4rem">استوديو الفيديو المجاني</h1><p>اجمع صورك وتصاميمك في فيديو بانتقالات وحركة كاميرا ونصوص متحركة وموسيقى، ونزّله بصيغة WebM أو MP4 (حسب متصفحك) دون رفع أي ملف لخادم.</p>'+faq_html(FAQ[4:])+'</section></main>'
