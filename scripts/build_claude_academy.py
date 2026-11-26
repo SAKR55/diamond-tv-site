@@ -4,6 +4,7 @@ import html, json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 import glob as _g, importlib as _il, os as _os
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'lib'))
+from lessonfigs import FIGS
 LD = {}
 for _f in sorted(_g.glob(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'lib', 'lessondeep*.py'))):
     LD.update(_il.import_module(_os.path.basename(_f)[:-3]).LD)
@@ -11,10 +12,11 @@ from claude_lessons import LESSONS as BASE_LESSONS
 from claude_lessons_extra import EXTRA, MODULES as _M0
 from claude_lessons_more import MORE, MODULES_MORE
 from claude_lessons_pro import PRO, MODULES_PRO
-MODULES = list(_M0) + list(MODULES_MORE) + list(MODULES_PRO)
+from claude_lessons_apps import APPS, MODULES_APPS
+MODULES = list(_M0) + list(MODULES_MORE) + list(MODULES_PRO) + list(MODULES_APPS)
 from claude_articles import ARTICLES
 
-_all = {l['slug']: l for l in BASE_LESSONS + EXTRA + MORE + PRO}
+_all = {l['slug']: l for l in BASE_LESSONS + EXTRA + MORE + PRO + APPS}
 LESSONS = [_all[sl] for m in MODULES for sl in m[2]]
 N = len(LESSONS)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -98,6 +100,7 @@ for i, l in enumerate(LESSONS):
     next_l = LESSONS[i + 1] if i + 1 < len(LESSONS) else None
     opts = "".join(f'<button data-answer="{k}">{e(o)}</button>' for k, o in enumerate(l["quiz_options"]))
     intro = "".join(f"<p>{e(p)}</p>" for p in l["intro"])
+    if l["slug"] in FIGS: intro += f'<figure style="margin:18px 0">{FIGS[l["slug"]]}<figcaption><small>رسم توضيحي: {e(l["title"])}</small></figcaption></figure>'
     deep = ""
     for _h, _ps in LD.get(l["slug"], []):
         deep += f"<section class=\"box\"><h2>{e(_h)}</h2>"
