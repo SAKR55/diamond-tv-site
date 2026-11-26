@@ -8,7 +8,7 @@
 - [حاسبة تكلفة الاستيراد](https://diamond-tv.shop/import/calc.html)
 
 ## أدوات الأعمال (محاسبة، تسويق، إدارة، موارد بشرية)
-- [المركز](https://diamond-tv.shop/business/): 41 أداة مجانية بالعربية ومجهّزات برومت
+- [المركز](https://diamond-tv.shop/business/): 249 أداة مجانية بالعربية ومجهّزات برومت
 - [المحاسبة والمالية](https://diamond-tv.shop/business/finance/) · [التسويق](https://diamond-tv.shop/business/marketing/) · [ابتكارات التجارة](https://diamond-tv.shop/business/ecom/) · [الإدارة](https://diamond-tv.shop/business/management/) · [الموارد البشرية](https://diamond-tv.shop/business/hr/)
 
 ## تطبيق المشاهدة
@@ -16,7 +16,7 @@
 
 ## أكاديمية Claude
 - [الصفحة الرئيسية للأكاديمية](https://diamond-tv.shop/claude/): نظرة عامة وتحدي البرومت اليومي
-- [كورس Claude الاحترافي](https://diamond-tv.shop/claude/course/): 46 درسًا في 8 مستويات
+- [كورس Claude الاحترافي](https://diamond-tv.shop/claude/course/): 58 درسًا في 9 مستويات
 - [موسوعة Claude](https://diamond-tv.shop/claude/reference/): 40 مصطلحًا وورقة غش
 - [أداة المتطلبات والبرومت والخطة](https://diamond-tv.shop/claude/prompt-builder/): أداة مجانية تعمل في المتصفح
 
