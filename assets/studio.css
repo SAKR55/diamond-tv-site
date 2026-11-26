@@ -124,3 +124,18 @@ body:has(#studio),body:has(#vstudio){overflow:hidden}
 .st-empty b{color:#fff;font-size:15px}.st-empty span{color:#94a3b8;font-size:12px}.st-empty div{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px}
 .st-empty button{background:#1b2540;border:1px solid #2c3a5c;color:#e2e8f0;border-radius:10px;padding:7px 12px;cursor:pointer;font-family:inherit}.st-empty button:hover{background:#7c3aed;border-color:#a78bfa}
 #studio .st-stage{position:relative}
+.ad-card{background:#131c33;border:1px solid #26345a;border-radius:12px;margin:8px 0;overflow:hidden}
+.ad-card summary{cursor:pointer;padding:11px 14px;font-weight:700;color:#e2e8f0;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.ad-card summary::-webkit-details-marker{display:none}.ad-card summary::after{content:'▾';color:#a78bfa;transition:.2s}
+.ad-card[open] summary{background:#1b2850;color:#fff}.ad-card[open] summary::after{transform:rotate(180deg)}
+.ad-body{padding:4px 12px 12px}.ad-body h4{margin:10px 0 6px}
+/* final polish */
+#studio #st-tabs .st-tgg{grid-template-columns:repeat(4,1fr)!important;gap:6px!important}
+#studio #st-tabs button{padding:7px 2px!important;min-height:0!important;border-radius:10px!important}
+#studio #st-tabs button i{font-size:17px!important;display:block}
+#studio #st-tabs button span{font-size:10.5px!important;line-height:1.2;display:block}
+#studio #st-tabs button.on{box-shadow:0 0 0 2px #a78bfa,0 6px 18px rgba(124,58,237,.35)}
+#st-pane{scrollbar-width:thin;scrollbar-color:#3b4a73 transparent}
+#st-pane h4{font-size:13px;color:#c4b5fd;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid #22304f}
+.st-empty{bottom:14px}
+.st-aboutb{inset-inline-end:auto!important;inset-inline-start:14px!important;bottom:14px!important;opacity:.6;transform:scale(.85)}.st-aboutb:hover{opacity:1}

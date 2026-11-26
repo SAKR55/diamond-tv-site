@@ -73,3 +73,13 @@ function boot(){root=document.getElementById('studio');if(!root||!$('.st-top',ro
  setInterval(emptyCard,500);var obs=new MutationObserver(function(){polish()});var t=$('#st-tabs');if(t)obs.observe(t,{childList:true});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0)});else setTimeout(boot,0);
 })();
+
+/* hub: all add-ons as expandable cards */
+(function(){var E0=SD.tabFn.ext,H0=SD.tabFn.help;if(!E0||!H0)return;
+SD.tabFn.ext=function(p){var t=document.createElement('div');E0(t);var tmp=[].slice.call(t.childNodes);p.innerHTML='<p class="st-hint ad-top">كل الإضافات هنا — اضغط على أي إضافة لعرض مكوّناتها.</p>';
+ var cards=[],cur=null;tmp.forEach(function(n){if(n.nodeName==='H4'){cur={t:n.textContent,n:[]};cards.push(cur)}else if(cur)cur.n.push(n)});
+ var HP=document.createElement('div');H0(HP);cards.push({t:'🛠 مساعد التصميم (ألوان، ترتيب، مقاسات، ملصقات)',n:[HP]});
+ cards.forEach(function(c,i){var d=document.createElement('details');d.className='ad-card';var sm=document.createElement('summary');sm.textContent=c.t;d.appendChild(sm);var b=document.createElement('div');b.className='ad-body';c.n.forEach(function(x){b.appendChild(x)});d.appendChild(b);
+  d.addEventListener('toggle',function(){if(d.open)[].forEach.call(p.querySelectorAll('details.ad-card'),function(o){if(o!==d)o.open=false})});p.appendChild(d)});
+ /* ext internals look up by p.querySelector: keep them working */
+};})();
