@@ -19,7 +19,7 @@ function mime(t){return'image/'+t}
 function kb(n){return n>1048576?(n/1048576).toFixed(2)+' MB':Math.round(n/1024)+' KB'}
 var TABS=[['conv','🗜 ضغط وتحويل وتغيير حجم'],['wm','💧 علامة مائية'],['pdf','📄 صور إلى PDF'],['col','🧱 كولاج'],['ico','📱 أيقونات وفافيكون'],['crop','⭕ قص دائري/مربع'],['pal','🎨 ألوان الصورة']];
 var tab='conv';
-root.innerHTML='<div class="ps-top"><label class="ps-drop" id="ps-drop"><input type="file" id="ps-in" accept="image/*,.heic,.heif,.tif,.tiff,.avif,.svg,.bmp,.ico,.jfif,.webp,.gif" multiple hidden><b>⬆️ اسحب الصور هنا أو اضغط للاختيار</b><span id="ps-cnt">لم تُختر صور بعد</span></label><div class="ps-tabs" id="ps-tabs">'+TABS.map(function(t){return'<button data-t="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div></div><div class="ps-body"><div class="ps-ctl" id="ps-ctl"></div><div class="ps-out" id="ps-out"><div class="ps-prev" id="ps-prev"></div></div></div>';
+root.innerHTML='<div class="ps-top"><label class="ps-drop" id="ps-drop"><input type="file" id="ps-in" accept="image/*,.tif,.tiff,.avif,.svg,.bmp,.ico,.jfif,.webp,.gif" multiple hidden><b>⬆️ اسحب الصور هنا أو اضغط للاختيار</b><span id="ps-cnt">لم تُختر صور بعد</span></label><div class="ps-tabs" id="ps-tabs">'+TABS.map(function(t){return'<button data-t="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div></div><div class="ps-body"><div class="ps-ctl" id="ps-ctl"></div><div class="ps-out" id="ps-out"><div class="ps-prev" id="ps-prev"></div></div></div>';
 var ctl=$('#ps-ctl'),out=$('#ps-out'),prev=$('#ps-prev');
 function setFiles(l){FILES=[].slice.call(l).filter(function(f){return/^image\//.test(f.type)});$('#ps-cnt').textContent=FILES.length?FILES.length+' صورة جاهزة':'لم تُختر صور بعد';thumbs();run()}
 $('#ps-in').onchange=function(e){setFiles(e.target.files)};
