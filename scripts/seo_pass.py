@@ -35,6 +35,7 @@ for f in files:
             t = t.replace('| DIAMOND TV', '| DIAMOND HUB'); n['b'] += 1
         if rel == 'articles/index.html': t = t.replace('DIAMOND TV', 'DIAMOND HUB'); n['b'] += 1
         nt = short_title(t)
+        if rel.startswith('articles/guide-') and 'دليل' not in nt: nt = short_title('دليل: ' + nt)
         if nt != html.unescape(m.group(1)).strip():
             n['t'] += 1
             h = h.replace(m.group(0), '<title>%s</title>' % esc(nt), 1)
