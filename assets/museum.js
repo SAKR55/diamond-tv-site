@@ -237,10 +237,14 @@ function future(n){var s=(H(n)^Math.imul(SEED,2654435761))>>>0,r=R(s),hue=s%360,
 
 var PH=null;
 
-var AIC=null,AIST=0,MODEL='https://huggingface.co/akhaliq/AnimeGANv2-ONNX/resolve/main/face_paint_512_v2_0.onnx',ORT='https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js',SESS=null;
+var AIC=null,AIST=0,LOC='/assets/ai/',MODEL=LOC+'face_paint_512_v2_0.onnx',MODEL_X='https://huggingface.co/akhaliq/AnimeGANv2-ONNX/resolve/main/face_paint_512_v2_0.onnx',ORT=LOC+'ort.min.js',ORT_X='https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js',SESS=null,AIX=0;
 function ldS(u){return new Promise(function(res,rej){if(window.ort)return res();var e=document.createElement('script');e.src=u;e.onload=res;e.onerror=rej;document.head.appendChild(e)})}
+async function aiLoad(){
+ try{await ldS(ORT);ort.env.wasm.wasmPaths=LOC;ort.env.wasm.numThreads=1;if(!SESS)SESS=await ort.InferenceSession.create(MODEL,{executionProviders:['wasm']});return}catch(e){}
+ SESS=null;window.ort=null;var old=document.querySelector('script[src="'+ORT+'"]');if(old)old.remove();
+ await ldS(ORT_X);ort.env.wasm.numThreads=1;SESS=await ort.InferenceSession.create(MODEL_X,{executionProviders:['wasm']})}
 function aiMsg(t){var e=$('#pc-st');if(e)e.textContent=t}
-async function aiAnime(img){await ldS(ORT);ort.env.wasm.numThreads=1;if(!SESS)SESS=await ort.InferenceSession.create(MODEL,{executionProviders:['wasm']});
+async function aiAnime(img){if(!SESS)await aiLoad();
  var S0=512,c=document.createElement('canvas');c.width=c.height=S0;var x=c.getContext('2d'),m=Math.min(img.width,img.height),sx=(img.width-m)/2,sy=(img.height-m)*.12;x.drawImage(img,sx,sy,m,m,0,0,S0,S0);var d=x.getImageData(0,0,S0,S0).data,N=S0*S0,nchw=new Float32Array(3*N),nhwc=new Float32Array(3*N),i;
  for(i=0;i<N;i++){for(var ch=0;ch<3;ch++){var v=d[i*4+ch]/127.5-1;nchw[ch*N+i]=v;nhwc[i*3+ch]=v}}
  var out,name=SESS.inputNames[0],layout='nchw';
