@@ -70,6 +70,8 @@
     }
     var tiles = document.getElementById("store-category-tiles");
     if (!tiles) return;
+    var showcase = tiles.closest(".store-category-showcase");
+    if (showcase) showcase.hidden = categories.length < 2;
     tiles.innerHTML = categories.map(function (item, index) {
       var image = safeUrl(item.image) || "/assets/store-category-" + ["subscriptions", "devices", "accessories", "offers"][index % 4] + ".svg";
       var color = /^#[0-9a-f]{6}$/i.test(item.color || "") ? item.color : primaryColor;
