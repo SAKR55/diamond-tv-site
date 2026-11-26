@@ -101,5 +101,34 @@ drawS();
 const st=document.createElement('style');st.textContent='.dhc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px;margin:6px 0}.dhr{display:flex;align-items:center;gap:8px;font-size:12px;margin:3px 0}.dhr span{width:30%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.dhr i{display:block;height:12px;border-radius:6px}.dhr em{font-style:normal;font-weight:700}.dhb,.dhs button{background:#ede9fe;color:#5b21b6;border:0;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:12px;margin:4px 0}.dhs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0;font-size:13px}.dhs input,.dhs select{border:1px solid #cbd5e1;border-radius:8px;padding:4px 8px;font-family:inherit}@media print{.dhb,.dhs{display:none}}';document.head.appendChild(st)})();
 
 try{const gb=document.createElement('button');gb.type='button';gb.id='gocalc';gb.className='btn btn-g';gb.style.cssText='margin:10px 0;font-size:1.05em;padding:10px 22px';gb.textContent=/عمولات/.test(document.title)?'🧮 احسب العمولة':'🧮 احسب';gb.onclick=()=>{run();$('out').scrollIntoView({behavior:'smooth',block:'start'})};$('out').parentNode.insertBefore(gb,$('out'))}catch(e){}
+
+// ---- ماذا لو؟ + مقارنة سيناريوهات ----
+(function(){try{
+const nf=FIELDS.filter(fl=>fl.t==='n');if(!nf.length)return;
+const w=document.createElement('div');w.className='dhc';w.id='wif';
+w.innerHTML='<b>🎚 ماذا لو؟</b> <small>حرّك المنزلق لترى أثر تغيير مُدخل واحد على النتائج مباشرة</small><div class="dhr"><select id="wif-f">'+nf.map(fl=>'<option value="'+fl.id+'">'+esc(fl.l)+'</option>').join('')+'</select><input type="range" id="wif-s" min="-50" max="100" step="5" value="0" style="flex:1"><em id="wif-v">0%</em><button type="button" class="dhb" id="wif-r">↺</button></div><div id="wif-d" class="note" style="display:none"></div>';
+const out=$('out');out.parentNode.insertBefore(w,out);
+const kv=()=>[...out.querySelectorAll('.kpi')].map(k=>[k.querySelector('span')?k.querySelector('span').innerText:'',k.querySelector('b')?k.querySelector('b').innerText:'']);
+let base=null,bv=null,bid=null;
+const pn=t=>parseFloat(norm(t).replace(/[^0-9.\-]/g,''));
+function start(){bid=$('wif-f').value;bv=$(bid).value;$('wif-s').value=0;$('wif-v').textContent='0%';run();base=kv();$('wif-d').style.display='none'}
+function upd(){const p=+$('wif-s').value,id=$('wif-f').value;if(id!==bid){$(bid).value=bv;start()}
+ $('wif-v').textContent=(p>0?'+':'')+p+'%';const b0=num(bv);$(id).value=String(Math.round(b0*(1+p/100)*100)/100);
+ const d=$('wif-d');const sv=localStorage.getItem(KEY);run();try{localStorage.setItem(KEY,sv)}catch(e){}
+ const cur=kv(),rows=[];cur.forEach((c,i)=>{const b=base&&base[i];if(!b||b[1]===c[1])return;const x=pn(b[1]),y=pn(c[1]);let dd='';if(isFinite(x)&&isFinite(y)&&x!==0)dd=' ('+(y>x?'▲ +':'▼ ')+Math.abs((y-x)/Math.abs(x)*100).toFixed(1)+'%)';rows.push(esc(c[0])+': '+esc(b[1])+' ← '+esc(c[1])+dd)});
+ d.style.display='block';d.innerHTML=p===0?'القيمة الأصلية — لا تغيير.':(rows.length?rows.join('<br>'):'لا أثر على المؤشرات الظاهرة.')}
+$('wif-s').oninput=upd;$('wif-f').onchange=()=>{$(bid).value=bv;start()};
+$('wif-r').onclick=()=>{$(bid).value=bv;start()};
+start();
+// مقارنة سيناريوهات
+const cb=document.createElement('div');cb.className='dhc';cb.id='cmp';cb.style.display='none';out.parentNode.insertBefore(cb,out.nextSibling);
+function runWith(d){const o={};FIELDS.forEach(fl=>{if($(fl.id))o[fl.id]=$(fl.id).value});Object.keys(d).forEach(k=>{if($(k))$(k).value=d[k]});const sv=localStorage.getItem(KEY);run();const r=kv();Object.keys(o).forEach(k=>{if($(k))$(k).value=o[k]});run();try{if(sv!=null)localStorage.setItem(KEY,sv)}catch(e){}return r}
+const SKK='dt-sc-'+SLUG;const gSC=()=>{try{return JSON.parse(localStorage.getItem(SKK)||'{}')}catch(e){return{}}};
+function drawC(){const SC=gSC(),ks=Object.keys(SC);if(ks.length<2){cb.style.display='none';return}cb.style.display='block';
+ cb.innerHTML='<b>⚖️ قارن سيناريوهين</b> <select id="cm-a">'+ks.map(k=>'<option>'+esc(k)+'</option>').join('')+'</select> ↔ <select id="cm-b">'+ks.map((k,i)=>'<option'+(i===1?' selected':'')+'>'+esc(k)+'</option>').join('')+'</select> <button type="button" class="dhb" id="cm-go">قارن</button><div id="cm-o"></div>';
+ $('cm-go').onclick=()=>{const SC=gSC();const A=$('cm-a').value,B=$('cm-b').value,ra=runWith(SC[A]),rb=runWith(SC[B]);if(!ra.length){$('cm-o').innerHTML='<div class="note">هذه الأداة لا تعرض مؤشرات رقمية للمقارنة.</div>';return}
+  $('cm-o').innerHTML=tbl(['المؤشر',esc(A),esc(B),'الفرق'],ra.map((r,i)=>{const y=rb[i]?rb[i][1]:'—',x=pn(r[1]),z=pn(y);const df=isFinite(x)&&isFinite(z)&&x!==z?((z>x?'▲ +':'▼ ')+(Math.abs(z-x)<1e-9?0:Math.abs(z-x).toLocaleString('en-US',{maximumFractionDigits:2}))):'—';return[esc(r[0]),esc(r[1]),esc(y),df]}))}}
+drawC();document.addEventListener('click',e=>{if(e.target&&(e.target.id==='scs'||e.target.id==='scd'))setTimeout(drawC,80)});
+}catch(e){}})();
 run();
 '''
