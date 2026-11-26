@@ -1,9 +1,19 @@
 # DIAMOND TV
-> موقع عربي يضم أكاديمية Claude (كورس وأداة برومت)، مختبر ChatGPT، مكتبة أطفال، تعلّم الإنجليزية، دليل الاستيراد، وتطبيق DIAMOND TV.
+> موقع عربي يضم أكاديمية Claude (كورس وأداة برومت)، مختبر ChatGPT، مكتبة أطفال، تعلّم الإنجليزية، قسم التجارة الإلكترونية (أدوات ومقالات)، وتطبيق DIAMOND TV.
+
+## التجارة الإلكترونية
+- [المركز](https://diamond-tv.shop/ecommerce/): أدوات وقوالب ومقالات وأسئلة شائعة
+- [الأدوات](https://diamond-tv.shop/ecommerce/tools/): حاسبة الهامش، ROAS، رسالة المورد، مقارنة الموردين، مقيّم المنتج، قائمة الإطلاق، وصف المنتج
+- [أسئلة شائعة](https://diamond-tv.shop/ecommerce/faq/) · [قاموس](https://diamond-tv.shop/ecommerce/glossary/) · [قوالب](https://diamond-tv.shop/ecommerce/templates/)
+- [حاسبة تكلفة الاستيراد](https://diamond-tv.shop/import/calc.html)
+
+## تطبيق المشاهدة
+- [تطبيق DIAMOND TV](https://diamond-tv.shop/app/): تحميل وتفعيل وشرح وأسئلة
 
 ## أكاديمية Claude
 - [الصفحة الرئيسية للأكاديمية](https://diamond-tv.shop/claude/): نظرة عامة وتحدي البرومت اليومي
-- [كورس Claude الاحترافي](https://diamond-tv.shop/claude/course/): 19 درسًا في 4 مستويات
+- [كورس Claude الاحترافي](https://diamond-tv.shop/claude/course/): 33 درسًا في 6 مستويات
+- [موسوعة Claude](https://diamond-tv.shop/claude/reference/): 40 مصطلحًا وورقة غش
 - [أداة المتطلبات والبرومت والخطة](https://diamond-tv.shop/claude/prompt-builder/): أداة مجانية تعمل في المتصفح
 
 ## مقالات الذكاء الاصطناعي والسيو

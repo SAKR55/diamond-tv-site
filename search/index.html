@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>بحث في موقع DIAMOND TV</title><meta name="description" content="ابحث في دروس Claude وأدوات التجارة الإلكترونية والمقالات والأسئلة الشائعة.">
+<link rel="canonical" href="https://diamond-tv.shop/search/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND TV">
+<meta property="og:title" content="بحث في موقع DIAMOND TV"><meta property="og:description" content="ابحث في دروس Claude وأدوات التجارة الإلكترونية والمقالات والأسئلة الشائعة."><meta property="og:url" content="https://diamond-tv.shop/search/"><meta property="og:image" content="https://diamond-tv.shop/assets/og.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="بحث في موقع DIAMOND TV"><meta name="twitter:description" content="ابحث في دروس Claude وأدوات التجارة الإلكترونية والمقالات والأسئلة الشائعة.">
+<meta name="theme-color" content="#7c3aed"><link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/portal.css">
+</head><body>
+<nav class="pnav" aria-label="التنقل الرئيسي"><div class="wrap"><a class="logo" href="/">💎 DIAMOND <span class="tv">TV</span></a><div class="links"><a href="/" class="on">الرئيسية</a><a href="/claude/">Claude</a><a href="/prompt-studio/">ChatGPT</a><a href="/ecommerce/">التجارة الإلكترونية</a><a href="/mugharrid/">الإنجليزية</a><a href="/store/">المكتبة</a><a href="/app/">التطبيق</a><a href="/articles/">المقالات</a><a class="keep" href="/search/">🔍 بحث</a></div></div></nav>
+<header class="phero"><div class="wrap narrow center"><div class="crumbs"><a href="/">الرئيسية</a> › بحث</div><h1>🔍 ابحث في DIAMOND TV</h1><p class="lead">ابحث في 153 صفحة: دروس، أدوات، مقالات، أسئلة.</p></div></header><main><section class="s"><div class="wrap narrow"><label class="field">اكتب كلمة البحث<input id="q" type="search" autofocus placeholder="مثال: هامش الربح، برومت، إنجليزية"></label><p class="muted" id="cnt"></p><div id="res" class="grid"></div></div></section></main>
+<script>let D=[];const $=i=>document.getElementById(i);const norm=s=>s.toLowerCase().replace(/[\u064b-\u065f]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');
+fetch('/search-index.json').then(r=>r.json()).then(d=>{D=d;const q=new URLSearchParams(location.search).get('q');if(q)$('q').value=q;go()});
+function go(){const q=norm($('q').value.trim()),r=$('res');r.replaceChildren();if(!q){$('cnt').textContent='';return}const ws=q.split(/\s+/);
+const hits=D.map(x=>{const t=norm(x.t),d=norm(x.d);let s=0;for(const w of ws){if(t.includes(w))s+=3;else if(d.includes(w))s+=1;else return null}return[s,x]}).filter(Boolean).sort((a,b)=>b[0]-a[0]).slice(0,30);
+$('cnt').textContent=hits.length+' نتيجة';hits.forEach(([s,x])=>{const a=document.createElement('a');a.className='card';a.href=x.u;const h=document.createElement('h3');h.textContent=x.t;const p=document.createElement('p');p.textContent=x.d.slice(0,140);a.append(h,p);r.append(a)})}
+$('q').oninput=go;</script>
+<footer class="pf"><div class="wrap"><div class="cols"><div><h4>DIAMOND TV</h4><p>منصة عربية للتعلّم والأدوات والتجارة الإلكترونية.</p></div><div><h4>تعلّم</h4><ul><li><a href="/claude/">أكاديمية Claude</a></li><li><a href="/prompt-studio/">مختبر ChatGPT</a></li><li><a href="/mugharrid/">تعلّم الإنجليزية</a></li><li><a href="/store/">مكتبة الأطفال</a></li></ul></div><div><h4>التجارة الإلكترونية</h4><ul><li><a href="/ecommerce/">المركز</a></li><li><a href="/ecommerce/tools/">الأدوات</a></li><li><a href="/ecommerce/faq/">أسئلة شائعة</a></li><li><a href="/ecommerce/glossary/">القاموس</a></li><li><a href="/ecommerce/templates/">القوالب</a></li></ul></div><div><h4>المزيد</h4><ul><li><a href="/app/">تطبيق DIAMOND TV</a></li><li><a href="/articles/">المقالات</a></li><li><a href="/#contact">تواصل معنا</a></li><li><a href="/sitemap.xml">خريطة الموقع</a></li></ul></div></div><div class="copy">© 2026 DIAMOND TV — المحتوى للتعريف والتعلّم ولا يغني عن استشارة مختص.</div></div></footer>
+<script src="/assets/spark.js" defer></script><script src="/assets/share.js" defer></script><script src="/assets/pwa.js" defer></script>
+</body></html>

@@ -3,10 +3,12 @@
 import html, json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from claude_lessons import LESSONS as BASE_LESSONS
-from claude_lessons_extra import EXTRA, MODULES
+from claude_lessons_extra import EXTRA, MODULES as _M0
+from claude_lessons_more import MORE, MODULES_MORE
+MODULES = list(_M0) + list(MODULES_MORE)
 from claude_articles import ARTICLES
 
-_all = {l['slug']: l for l in BASE_LESSONS + EXTRA}
+_all = {l['slug']: l for l in BASE_LESSONS + EXTRA + MORE}
 LESSONS = [_all[sl] for m in MODULES for sl in m[2]]
 N = len(LESSONS)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,7 +37,7 @@ def breadcrumb(items):
 
 NAV = ('<header><nav aria-label="التنقل الرئيسي"><a href="/">DIAMOND TV</a><a href="/claude/">أكاديمية Claude</a>'
        '<a href="/claude/course/">الكورس</a><a href="/claude/prompt-builder/">أداة البرومت</a>'
-       '<a href="/articles/#ai">مقالات الذكاء الاصطناعي</a></nav></header>')
+       '<a href="/claude/reference/">الموسوعة</a><a href="/ecommerce/">التجارة الإلكترونية</a><a href="/articles/#ai">المقالات</a></nav></header>')
 FOOT = ('<footer><div><a href="/#sections">كل أقسام DIAMOND TV</a> · <a href="/claude/">أكاديمية Claude</a> · '
         '<a href="/prompt-studio/">مختبر ChatGPT</a> · <a href="/articles/">المقالات</a> · <a href="/sitemap.xml">خريطة الموقع</a>'
         '<p><small>محتوى تعليمي مستقل، وليس تابعًا لشركة Anthropic. Claude علامة تجارية لشركتها. تتغير ميزات الأدوات بمرور الوقت، فراجع الصفحات الرسمية للتفاصيل المحدثة.</small></p></div></footer>')
@@ -43,7 +45,7 @@ FOOT = ('<footer><div><a href="/#sections">كل أقسام DIAMOND TV</a> · <a 
 
 def page(title, desc, url, body, schema="", og_type="website", extra_head=""):
     full_url = BASE + url
-    return f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(title)} | DIAMOND TV</title><meta name="description" content="{e(desc)}"><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="{full_url}"><meta name="theme-color" content="#7c3aed"><meta property="og:type" content="{og_type}"><meta property="og:site_name" content="DIAMOND TV"><meta property="og:locale" content="ar_AR"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}"><meta property="og:url" content="{full_url}"><meta property="og:image" content="{BASE}/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{e(title)}"><meta name="twitter:description" content="{e(desc)}"><meta name="twitter:image" content="{BASE}/og.png"><link rel="stylesheet" href="/prompt-studio/academy.css"><link rel="stylesheet" href="/claude/claude.css">{extra_head}{schema}</head><body>{NAV}<main>{body}</main>{FOOT}</body></html>'''
+    return f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(title)} | DIAMOND TV</title><meta name="description" content="{e(desc)}"><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="{full_url}"><meta name="theme-color" content="#7c3aed"><meta property="og:type" content="{og_type}"><meta property="og:site_name" content="DIAMOND TV"><meta property="og:locale" content="ar_AR"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}"><meta property="og:url" content="{full_url}"><meta property="og:image" content="{BASE}/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{e(title)}"><meta name="twitter:description" content="{e(desc)}"><meta name="twitter:image" content="{BASE}/og.png"><link rel="stylesheet" href="/prompt-studio/academy.css"><link rel="stylesheet" href="/claude/claude.css">{extra_head}{schema}</head><body>{NAV}<main>{body}</main>{FOOT}<script src="/assets/share.js" defer></script><script src="/assets/pwa.js" defer></script></body></html>'''
 
 
 # ---------- CSS ----------
@@ -69,7 +71,7 @@ def module_html():
 
 
 course_body = f'''<small><a href="/claude/">أكاديمية Claude</a> / الكورس</small><h1>كورس Claude الاحترافي: من المبتدئ إلى بناء خطة عمل</h1>
-<p>{N} درسًا قصيرًا بالعربية موزعة على أربعة مستويات، في كل درس مثال محلول وتطبيق واختبار فهم. ينتهي المسار بمشروع تسلّمه، وتبني خلاله طلباتك الخاصة بأداة صياغة البرومت.</p>
+<p>{N} درسًا قصيرًا بالعربية موزعة على ستة مستويات، في كل درس مثال محلول وتطبيق واختبار فهم. ينتهي المسار بمشروع تسلّمه، وتبني خلاله طلباتك الخاصة بأداة صياغة البرومت.</p>
 <div class="actions"><a class="action" id="resume" href="{lesson_url(LESSONS[0])}">ابدأ الدرس الأول</a><a class="action" href="/claude/prompt-builder/">افتح أداة البرومت</a><span id="count"></span></div>
 <div class="meter" aria-hidden="true"><i id="bar"></i></div>
 {module_html()}
@@ -77,7 +79,7 @@ course_body = f'''<small><a href="/claude/">أكاديمية Claude</a> / الك
 <script>try{{const v=JSON.parse(localStorage.getItem('diamond-claude-course-v1')||'[]');const links=document.querySelectorAll('section .grid .card');let first,n=0;links.forEach((l,i)=>{{if(v.includes(String(i))){{l.querySelector('small').append(' · مكتمل');n++}}else if(!first)first=l}});if(first&&n){{resume.href=first.href;resume.textContent='تابع من '+first.querySelector('small').textContent}}count.textContent=n+' / {len(LESSONS)} دروس مكتملة';bar.style.width=(n*100/{len(LESSONS)})+'%'}}catch{{}}</script>'''
 course_schema = ld({
     "@context": "https://schema.org", "@type": "Course", "name": "كورس Claude الاحترافي",
-    "description": f"{N} درسًا عمليًا بالعربية في أربعة مستويات: كتابة الطلبات، التقنيات المتقدمة، الأمان والاختبار، والمتطلبات وClaude Code.",
+    "description": f"{N} درسًا عمليًا بالعربية في ستة مستويات: كتابة الطلبات، التقنيات المتقدمة، الأمان والاختبار، والمتطلبات وClaude Code.",
     "provider": {"@type": "Organization", "name": "DIAMOND TV", "sameAs": BASE},
     "url": BASE + "/claude/course/", "inLanguage": "ar", "isAccessibleForFree": True,
     "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT5H"},
@@ -152,9 +154,10 @@ faq = [
     ("هل يصلح ما أتعلمه لأدوات أخرى؟", "نعم، مبادئ الوضوح والسياق والأمثلة والتحقق تنفع مع أي مساعد ذكي."),
 ]
 land_body = f'''<section class="hero"><span class="badge">أكاديمية Claude · بالعربية</span><h1>أتقن Claude واكتب البرومت الصحيح من أول مرة</h1><p>كورس احترافي موسّع، وأداة تصوغ لك الطلب وتضع خطة التنفيذ المناسبة، ومقالات عملية عن الذكاء الاصطناعي.</p><div class="actions"><a class="action" href="/claude/course/">ابدأ الكورس مجانًا</a><a class="action alt" href="/claude/prompt-builder/">جرّب أداة البرومت</a></div></section>
-<section><h2>ثلاثة أشياء في مكان واحد</h2><div class="grid"><a class="card" href="/claude/course/"><h3>📚 الكورس</h3><p>{N} درسًا في أربعة مستويات من الأساسيات إلى الاحتراف، مع تمارين واختبارات ومشروع نهائي.</p></a><a class="card" href="/claude/prompt-builder/"><h3>🛠️ أداة البرومت والخطة</h3><p>املأ الخانات واحصل على برومت منظم، وبرومت للتخطيط، وخطة خطوات، وتقييم لاكتمال طلبك.</p></a><a class="card" href="/articles/#ai"><h3>📰 مقالات الذكاء الاصطناعي</h3><p>قوالب جاهزة، مقارنات، سيو، وتقليل الأخطاء.</p></a></div></section>
+<section><h2>ثلاثة أشياء في مكان واحد</h2><div class="grid"><a class="card" href="/claude/course/"><h3>📚 الكورس</h3><p>{N} درسًا في ستة مستويات من الأساسيات إلى الاحتراف، مع تمارين واختبارات ومشروع نهائي.</p></a><a class="card" href="/claude/prompt-builder/"><h3>🛠️ أداة البرومت والخطة</h3><p>املأ الخانات واحصل على برومت منظم، وبرومت للتخطيط، وخطة خطوات، وتقييم لاكتمال طلبك.</p></a><a class="card" href="/articles/#ai"><h3>📰 مقالات الذكاء الاصطناعي</h3><p>قوالب جاهزة، مقارنات، سيو، وتقليل الأخطاء.</p></a></div></section>
 <section class="box spark"><h2>✨ تحدّي البرومت اليوم</h2><blockquote id="challenge">…</blockquote><p><a class="action" id="tryit" href="/claude/prompt-builder/">جرّبه في الأداة</a><button id="another" type="button">تحدٍّ آخر</button></p></section>
 <section><h2>ماذا ستتعلم؟</h2><div class="cols"><div class="box"><span class="num">1</span> كتابة طلب واضح ومباشر</div><div class="box"><span class="num">2</span> إعطاء السياق والجمهور والغرض</div><div class="box"><span class="num">3</span> التنظيم بالوسوم والأمثلة</div><div class="box"><span class="num">4</span> التخطيط قبل التنفيذ</div><div class="box"><span class="num">5</span> العمل مع المستندات والمشاريع</div><div class="box"><span class="num">6</span> التحقق وتقليل الأخطاء</div></div></section>
+<section><h2>مصادر إضافية</h2><div class="grid"><a class="card" href="/claude/reference/"><h3>📖 موسوعة Claude</h3><p>40 مصطلحًا وورقة غش سريعة.</p></a><a class="card" href="/claude/certificate/"><h3>🎓 الشهادة</h3><p>اطبع شهادة إتمام الكورس.</p></a><a class="card" href="/ecommerce/"><h3>🛒 Claude لمتجرك</h3><p>أدوات ومقالات للتجار.</p></a></div></section>
 <section class="faq"><h2>أسئلة شائعة</h2>{"".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in faq)}</section>
 <script>const C={json.dumps(CHALLENGES, ensure_ascii=False)};let k=Math.floor(Date.now()/864e5)%C.length;const show=()=>{{challenge.textContent=C[k];tryit.href='/claude/prompt-builder/?idea='+encodeURIComponent(C[k])}};another.onclick=()=>{{k=(k+1)%C.length;show()}};show();</script>'''
 land_schema = ld({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}) \

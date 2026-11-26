@@ -1,0 +1,24 @@
+{
+ "name": "DIAMOND TV",
+ "short_name": "DIAMOND",
+ "lang": "ar",
+ "dir": "rtl",
+ "start_url": "/?source=pwa",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#7c3aed",
+ "icons": [
+  {
+   "src": "/assets/icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  },
+  {
+   "src": "/assets/og.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}
