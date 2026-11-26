@@ -57,7 +57,7 @@ function ui(){
  $('#st-exp').onchange=function(){var v=this.value;this.value='';if(v)exportAs(v)};
  $('#st-video').onclick=toVideo;
  $('#st-file').onchange=function(){var fs=[].slice.call(this.files);this.value='';fs.forEach(readImg)};
- var tabs=[['tpl','🎨 قوالب'],['text','🔤 نص'],['shape','◼ أشكال'],['icon','⭐ أيقونات'],['elm','🧩 عناصر'],['img','🖼️ صور'],['bg','🌈 خلفية'],['brand','🏷 الهوية'],['lay','🗂 طبقات']];
+ var tabs=[['tpl','🎨 قوالب'],['text','🔤 نص'],['shape','◼ أشكال'],['icon','⭐ أيقونات'],['logo','🔰 شعارات'],['elm','🧩 عناصر'],['img','🖼️ صور'],['bg','🌈 خلفية'],['brand','🏷 الهوية'],['lay','🗂 طبقات']];
  $('#st-tabs').innerHTML=tabs.map(function(t){return'<button data-t="'+t[0]+'">'+t[1]+'</button>'}).join('');
  $$('#st-tabs button').forEach(function(b){b.onclick=function(){tab=b.dataset.t;ptabs()}});
  ov.addEventListener('pointerdown',pdown);window.addEventListener('pointermove',pmove);window.addEventListener('pointerup',pup);ov.addEventListener('dblclick',function(){var t=$('#p-text');if(t){t.focus();t.select()}});
