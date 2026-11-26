@@ -2,6 +2,7 @@
 """يولّد /business/: أدوات المحاسبة والتسويق والتجارة والإدارة والموارد + مقالاتها."""
 import os, sys, json
 sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lib'))
 from portal_common import *
 from biz_tools import T, CATS
 import biz_tools2  # يضيف أدوات وفئات
@@ -27,6 +28,12 @@ URLS = []
 NOTE = "الأدوات تقديرية للتخطيط والتعلّم، وتعمل في متصفحك دون إرسال بياناتك. للقرارات المالية والنظامية راجع مختصًا مرخصًا."
 from tool_guides import guide
 BIZ = BIZ + [guide(t, CATS) for t in T]
+import glob as _g, importlib as _il, os as _os
+_AD = {}
+for _f in sorted(_g.glob(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'lib', 'artdeep*.py'))):
+    _AD.update(_il.import_module(_os.path.basename(_f)[:-3]).ART)
+for _a in BIZ:
+    if _a['slug'] in _AD: _a['sections'] = list(_a['sections']) + list(_AD[_a['slug']])
 
 def presets(t):
     """قوالب جاهزة تُولَّد من حقول الأداة: أحجام ونسب وخيارات."""
