@@ -8,6 +8,13 @@ from ecom_articles2 import ARTICLES2
 from ecom_tools import TOOLS, COMMON
 
 ALL = ARTICLES + ARTICLES2
+import glob as _g, importlib as _il
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lib'))
+_AD = {}
+for _f in sorted(_g.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lib', 'artdeep*.py'))):
+    _AD.update(_il.import_module(os.path.basename(_f)[:-3]).ART)
+for _a in ALL:
+    if _a['slug'] in _AD: _a['sections'] = list(_a['sections']) + list(_AD[_a['slug']])
 URLS = []  # (path, priority)
 CRUMB = '<a href="/">الرئيسية</a> › <a href="/ecommerce/">التجارة الإلكترونية</a>'
 
