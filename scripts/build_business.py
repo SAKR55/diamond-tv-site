@@ -52,6 +52,8 @@ from tool_guides import ecom_guide
 from ecom_tools import TOOLS as ET
 BIZ = BIZ + [ecom_guide(x[0],x[2],x[3]) for x in ET]
 CR = '<a href="/">الرئيسية</a> › <a href="/business/">أدوات الأعمال</a>'
+def itemlist(items):
+    return ld({"@context": "https://schema.org", "@type": "ItemList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "url": BASE + u} for i, (n, u) in enumerate(items)]})
 byslug = {t['slug']: t for t in T}
 bycat = {c: [t for t in T if t['cat'] == c] for c in CATS}
 arts_for = {}
@@ -86,19 +88,20 @@ for c, (ic, nm, ds) in CATS.items():
     b = hero(f"{ic} {nm}", ds, CR + f' › {nm}') + '<main><section class="s"><div class="wrap">' + catbar(c) + '<div class="grid g3">' + ''.join(tcard(t) for t in bycat[c]) + '</div>'
     if arts: b += '<br><h2 class="h2 center">مقالات</h2><br><div class="grid g3">' + ''.join(acard(a) for a in arts) + '</div>'
     b += '<div class="note" style="margin-top:20px">' + e(NOTE) + '</div></div></section></main>'
-    write(f"business/{c}/index.html", page(f"/business/{c}/", f"{nm}: أدوات ومقالات مجانية | DIAMOND HUB", ds + f" {len(bycat[c])} أداة.", b, breadcrumb([("الرئيسية", "/"), ("أدوات الأعمال", "/business/"), (nm, f"/business/{c}/")]), "/business/"))
+    write(f"business/{c}/index.html", page(f"/business/{c}/", f"{nm}: أدوات ومقالات مجانية | DIAMOND HUB", ds + f" {len(bycat[c])} أداة.", b, itemlist([(x['title'], f"/business/tools/{x['slug']}/") for x in bycat[c]]) + breadcrumb([("الرئيسية", "/"), ("أدوات الأعمال", "/business/"), (nm, f"/business/{c}/")]), "/business/"))
     URLS.append((f"/business/{c}/", "0.8"))
 
+def_ok=1
 # tools
 body = hero("كل أدوات الأعمال", f"{len(T)} أداة مصنّفة.", CR + ' › الأدوات') + '<main><section class="s"><div class="wrap"><div class="grid g3">' + ''.join(tcard(t) for t in T) + '</div></div></section></main>'
 write("business/tools/index.html", page("/business/tools/", "كل أدوات الأعمال المجانية | DIAMOND HUB", f"قائمة {len(T)} أداة: محاسبة، تسويق، تجارة إلكترونية، إدارة، موارد بشرية.", body, breadcrumb([("الرئيسية", "/"), ("أدوات الأعمال", "/business/"), ("الأدوات", "/business/tools/")]), "/business/"))
 URLS.append(("/business/tools/", "0.7"))
 for t in T:
     ic, nm, _ = CATS[t['cat']]
-    same = [x for x in bycat[t['cat']] if x['slug'] != t['slug']][:3]
+    same = [x for x in bycat[t['cat']] if x['slug'] != t['slug']][:6]
     rel = arts_for.get(t['slug'], [])
     b = hero(f"{t['icon']} {e(t['title'])}", e(t['desc']), CR + f' › <a href="/business/{t["cat"]}/">{nm}</a>')
-    b += '<main><section class="s"><div class="wrap"><div class="tool-layout"><div class="tool"><h3>المدخلات</h3><div class="tpls" id="tpls" aria-label="قوالب جاهزة"></div><div class="row2" id="form"></div></div><div class="out-col"><div class="tool"><h3>النتيجة</h3><div id="phead" class="phead"></div><div id="out" class="result" aria-live="polite"></div><div id="pin" class="pin"></div><div id="pfoot" class="pfoot"></div><div class="toolbar"><button class="btn btn-s" id="cpy" type="button">📋 نسخ النتيجة</button><button class="btn btn-s" id="prt" type="button">🖨️ طباعة</button><button class="btn btn-s" id="dl" type="button">⬇️ تنزيل</button><button class="btn btn-s" id="lnk" type="button">🔗 رابط بالمدخلات</button><button class="btn btn-s" id="wa" type="button">💬 واتساب</button><button class="btn btn-s" id="xl" type="button">📊 نسخ كجدول</button><button class="btn btn-s" id="rst" type="button">↺ إعادة الضبط</button></div></div></div></div>'
+    b += '<main><section class="s"><div class="wrap"><div class="tool-layout"><div class="tool"><h3>المدخلات</h3><div class="tpls" id="tpls" aria-label="قوالب جاهزة"></div><div class="row2" id="form"></div></div><div class="out-col"><div class="tool"><h3>النتيجة</h3><div id="phead" class="phead"></div><div id="out" class="result" aria-live="polite"></div><div id="pin" class="pin"></div><div id="pfoot" class="pfoot"></div><div class="toolbar"><button class="btn btn-s" id="cpy" type="button">📋 نسخ النتيجة</button><button class="btn btn-s" id="prt" type="button">🖨️ طباعة</button><button class="btn btn-s" id="dl" type="button">⬇️ تنزيل</button><button class="btn btn-s" id="lnk" type="button">🔗 رابط بالمدخلات</button><button class="btn btn-s" id="wa" type="button">💬 واتساب</button><button class="btn btn-s" id="xl" type="button">📊 نسخ كجدول</button><button class="btn btn-s" id="pdf" type="button">📄 حفظ PDF</button><button class="btn btn-s" id="xlsx" type="button">📗 تنزيل Excel</button><button class="btn btn-s" id="rst" type="button">↺ إعادة الضبط</button></div></div></div></div>'
     b += '<div class="note" style="margin-top:18px">' + e(NOTE) + '</div>'
     ga = next((x for x in BIZ if x['slug'] == 'guide-' + t['slug']), None)
     seo_ld = ''
