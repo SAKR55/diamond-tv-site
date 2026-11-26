@@ -107,7 +107,7 @@ revoke all on function public.dh_report(int) from public, anon;
 grant execute on function public.dh_report(int) to authenticated;
 
 -- 5) اجعل نفسك مشرفًا: غيّر البريد ثم شغّل هذا السطر بعد إنشاء حسابك
--- insert into public.dh_admins(user_id) select id from auth.users where email = 'ضع-بريدك@هنا' on conflict do nothing;
+insert into public.dh_admins(user_id) select id from auth.users where email = 'moayedsakr@gmail.com' on conflict do nothing;
 
 -- (اختياري) حذف سجلات الزيارات الأقدم من 12 شهرًا
 -- delete from public.dh_page_views where created_at < now() - interval '12 months';
