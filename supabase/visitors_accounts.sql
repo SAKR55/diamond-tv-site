@@ -80,8 +80,8 @@ begin
     'logged_in_views', (select count(*) from dh_page_views where created_at >= since and uid is not null),
     'pages_per_session', (select round(count(*)::numeric / nullif(count(distinct sid),0), 2) from dh_page_views where created_at >= since),
     'bounce_pct', (select round(100.0 * count(*) filter (where c = 1) / nullif(count(*),0))::int from (select sid, count(*) c from dh_page_views where created_at >= since group by sid) s),
-    'daily', coalesce((select jsonb_agg(jsonb_build_object('day', day, 'views', v, 'visitors', u) order by day) from (
-        select to_char(date_trunc('day', created_at),'YYYY-MM-DD') day, count(*) v, count(distinct vid) u
+    'daily', coalesce((select jsonb_agg(jsonb_build_object('day', dy, 'views', v, 'visitors', u) order by dy) from (
+        select to_char(date_trunc('day', created_at),'YYYY-MM-DD') as dy, count(*) as v, count(distinct vid) as u
         from dh_page_views where created_at >= since group by 1) t), '[]'::jsonb),
     'top_pages', coalesce((select jsonb_agg(jsonb_build_object('path', path, 'views', v, 'visitors', u) order by v desc) from (
         select path, count(*) v, count(distinct vid) u from dh_page_views where created_at >= since group by path order by 2 desc limit 25) t), '[]'::jsonb),
