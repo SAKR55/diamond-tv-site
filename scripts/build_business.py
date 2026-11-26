@@ -5,6 +5,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 from portal_common import *
 from biz_tools import T, CATS
 import biz_tools2  # يضيف أدوات وفئات
+import biz_tools3
+import biz_tools4
 from biz_articles import BIZ
 from prompt_articles import PROMPT
 BIZ = BIZ + PROMPT
@@ -93,13 +95,18 @@ for t in T:
     same = [x for x in bycat[t['cat']] if x['slug'] != t['slug']][:3]
     rel = arts_for.get(t['slug'], [])
     b = hero(f"{t['icon']} {e(t['title'])}", e(t['desc']), CR + f' › <a href="/business/{t["cat"]}/">{nm}</a>')
-    b += '<main><section class="s"><div class="wrap"><div class="tool-layout"><div class="tool"><h3>المدخلات</h3><div class="tpls" id="tpls" aria-label="قوالب جاهزة"></div><div class="row2" id="form"></div></div><div class="out-col"><div class="tool"><h3>النتيجة</h3><div id="out" class="result" aria-live="polite"></div><div class="toolbar"><button class="btn btn-s" id="cpy" type="button">📋 نسخ النتيجة</button><button class="btn btn-s" id="prt" type="button">🖨️ طباعة</button><button class="btn btn-s" id="dl" type="button">⬇️ تنزيل</button><button class="btn btn-s" id="rst" type="button">↺ إعادة الضبط</button></div></div></div></div>'
+    b += '<main><section class="s"><div class="wrap"><div class="tool-layout"><div class="tool"><h3>المدخلات</h3><div class="tpls" id="tpls" aria-label="قوالب جاهزة"></div><div class="row2" id="form"></div></div><div class="out-col"><div class="tool"><h3>النتيجة</h3><div id="phead" class="phead"></div><div id="out" class="result" aria-live="polite"></div><div id="pin" class="pin"></div><div id="pfoot" class="pfoot"></div><div class="toolbar"><button class="btn btn-s" id="cpy" type="button">📋 نسخ النتيجة</button><button class="btn btn-s" id="prt" type="button">🖨️ طباعة</button><button class="btn btn-s" id="dl" type="button">⬇️ تنزيل</button><button class="btn btn-s" id="lnk" type="button">🔗 رابط بالمدخلات</button><button class="btn btn-s" id="wa" type="button">💬 واتساب</button><button class="btn btn-s" id="xl" type="button">📊 نسخ كجدول</button><button class="btn btn-s" id="rst" type="button">↺ إعادة الضبط</button></div></div></div></div>'
     b += '<div class="note" style="margin-top:18px">' + e(NOTE) + '</div>'
+    ga = next((x for x in BIZ if x['slug'] == 'guide-' + t['slug']), None)
+    seo_ld = ''
+    if ga:
+        b += '<section class="seo-box"><h2 class="h2">دليل استخدام ' + e(t['title']) + '</h2>' + ''.join(f'<h3>{e(h)}</h3>' + ''.join(f'<p>{e(p)}</p>' for p in ps) for h, ps in ga['sections'][:5]) + '<h3>أسئلة شائعة</h3>' + faq_html(ga['faq']) + f'<p><a class="btn btn-o" href="/articles/{ga["slug"]}/">اقرأ الدليل الكامل ←</a></p></section>'
+        seo_ld = faq_ld(ga['faq']) + ld({"@context": "https://schema.org", "@type": "HowTo", "name": "كيف تستخدم " + t['title'], "inLanguage": "ar", "step": [{"@type": "HowToStep", "position": i + 1, "name": x} for i, x in enumerate(["افتح الأداة", "أدخل بياناتك في الحقول أو اختر قالبًا جاهزًا", "راجع النتيجة التي تظهر فورًا", "انسخ النتيجة أو اطبعها أو نزّلها"])]})
     if rel: b += '<h2 class="h2 center" style="margin-top:30px">اقرأ أيضًا</h2><br><div class="grid g3">' + ''.join(acard(a) for a in rel) + '</div>'
     b += '<h2 class="h2 center" style="margin-top:30px">أدوات أخرى في ' + nm + '</h2><br><div class="grid g3">' + ''.join(tcard(x) for x in same) + '</div></div></section></main>'
     b += '<script>const PRESETS=' + json.dumps(presets(t), ensure_ascii=False) + ';const SLUG=' + json.dumps(t['slug']) + ';const FIELDS=' + json.dumps(t['fields'], ensure_ascii=False) + ';' + t['js'] + RT + '</script>'
-    ldx = breadcrumb([("الرئيسية", "/"), ("أدوات الأعمال", "/business/"), (t['title'], f"/business/tools/{t['slug']}/")]) + ld({"@context": "https://schema.org", "@type": "WebApplication", "name": t['title'], "url": BASE + f"/business/tools/{t['slug']}/", "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "inLanguage": "ar", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "SAR"}, "description": t['desc']})
-    write(f"business/tools/{t['slug']}/index.html", page(f"/business/tools/{t['slug']}/", f"{t['title']} — أداة مجانية | DIAMOND HUB", t['desc'] + " مجانًا وبالعربية وتعمل في متصفحك.", b, ldx, "/business/"))
+    ldx = seo_ld + breadcrumb([("الرئيسية", "/"), ("أدوات الأعمال", "/business/"), (t['title'], f"/business/tools/{t['slug']}/")]) + ld({"@context": "https://schema.org", "@type": "WebApplication", "name": t['title'], "url": BASE + f"/business/tools/{t['slug']}/", "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "inLanguage": "ar", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "SAR"}, "description": t['desc']})
+    write(f"business/tools/{t['slug']}/index.html", page(f"/business/tools/{t['slug']}/", f"{t['title']} مجانًا — {t['desc'][:60]} | DIAMOND HUB", t['desc'] + " أداة مجانية بالعربية تعمل في متصفحك مع قوالب جاهزة وتنزيل وطباعة.", b, ldx, "/business/"))
     URLS.append((f"/business/tools/{t['slug']}/", "0.7"))
 
 # articles

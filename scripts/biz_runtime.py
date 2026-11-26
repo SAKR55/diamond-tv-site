@@ -10,6 +10,7 @@ const kpi=(l,v,c='')=>'<div class="kpi '+c+'"><b>'+v+'</b><span>'+l+'</span></di
 const kpis=a=>'<div class="kpis">'+a.join('')+'</div>';
 const tbl=(h,rows)=>'<table class="t"><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</table>';
 const lines=s=>String(s).split('\n').map(x=>x.trim()).filter(Boolean).map(x=>x.split('|').map(y=>y.trim()));
+const rec=a=>'<div class="chk ok"><b>💡 توصيات</b><ul class="sug">'+a.filter(Boolean).map(x=>'<li>'+x+'</li>').join('')+'</ul></div>';
 const note=t=>'<p class="muted" style="margin-top:10px">'+t+'</p>';
 const AIOPT={ask:0,steps:0,table:0,review:0,short:0,en:0};try{Object.assign(AIOPT,JSON.parse(localStorage.getItem('dt-ai-opt')||'{}'))}catch(e){}
 const AIX={ask:'قبل أن تبدأ اسألني حتى 5 أسئلة توضيحية إن نقصت معلومة مهمة.',steps:'فكّر خطوة بخطوة واعرض الخطوات قبل النتيجة النهائية.',table:'اعرض النتيجة النهائية في جدول منظم عند الإمكان.',review:'بعد الإجابة راجع عملك بنفسك وصحّح أي خطأ أو افتراض غير مؤكد، واذكر مستوى ثقتك.',short:'اجعل الرد مركّزًا ومختصرًا دون حشو.',en:'Reply in English.'};
@@ -21,14 +22,16 @@ const aiOut=t0=>{let t=t0;Object.keys(AIOPT).forEach(k=>{if(AIOPT[k])t+='\n'+AIX
  return meter+opts+'<pre class="tpl" id="pr">'+esc(t)+'</pre><div class="aibar"><a class="btn btn-g" target="_blank" rel="noopener" href="https://claude.ai/new?q='+encodeURIComponent(t)+'">افتح في Claude ↗</a><a class="btn btn-o" target="_blank" rel="noopener" href="https://chatgpt.com/?q='+encodeURIComponent(t)+'">افتح في ChatGPT ↗</a><a class="btn btn-o" target="_blank" rel="noopener" href="https://gemini.google.com/app">Gemini ↗</a></div>'+note('الأداة تجهّز لك البرومت فقط؛ المعالجة تتم في حسابك. اطلب دائمًا مراجعة المخرجات قبل الاعتماد عليها، ولا تلصق بيانات حساسة.')};
 const box=$('form');
 box.innerHTML=FIELDS.map(fl=>{let c;
- if(fl.t==='select')c='<select id="'+fl.id+'">'+fl.o.map(o=>'<option value="'+esc(o[0])+'"'+(String(o[0])===String(fl.v)?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>';
+ if(fl.t==='logo')c='<input id="'+fl.id+'" type="file" accept="image/*"><small id="'+fl.id+'s">'+(localStorage.getItem('dt-logo')?'✅ شعار محفوظ':'اختر صورة الشعار (PNG/JPG)')+'</small> <button type="button" class="chip" id="'+fl.id+'x">إزالة</button>';
+ else if(fl.t==='select')c='<select id="'+fl.id+'">'+fl.o.map(o=>'<option value="'+esc(o[0])+'"'+(String(o[0])===String(fl.v)?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>';
  else if(fl.t==='textarea')c='<textarea id="'+fl.id+'" rows="'+(fl.r||4)+'">'+esc(fl.v||'')+'</textarea>';
  else c='<input id="'+fl.id+'" type="'+(fl.t==='date'?'date':'text')+'"'+(fl.t==='n'?' inputmode="decimal"':'')+' value="'+esc(fl.v==null?'':fl.v)+'">';
  return '<label class="field'+((fl.t==='textarea'||fl.w)?' wide':'')+'">'+esc(fl.l)+(fl.h?' <small>'+esc(fl.h)+'</small>':'')+c+'</label>'}).join('');
 const KEY='dt-biz-'+SLUG;
-try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)FIELDS.forEach(fl=>{if(s[fl.id]!=null&&$(fl.id))$(fl.id).value=s[fl.id]})}catch(e){}
-function vals(){const v={};FIELDS.forEach(fl=>{const x=$(fl.id).value;v[fl.id]=fl.t==='n'?num(x):x});return v}
-function save(){try{const s={};FIELDS.forEach(fl=>s[fl.id]=$(fl.id).value);localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)FIELDS.forEach(fl=>{if(fl.t!=='logo'&&s[fl.id]!=null&&$(fl.id))$(fl.id).value=s[fl.id]})}catch(e){}
+function vals(){const v={};FIELDS.forEach(fl=>{if(fl.t==='logo'){let l='';try{l=localStorage.getItem('dt-logo')||''}catch(e){}v[fl.id]=/^data:image\//.test(l)?l:'';return}const x=$(fl.id).value;v[fl.id]=fl.t==='n'?num(x):x});return v}
+FIELDS.forEach(fl=>{if(fl.t!=='logo')return;$(fl.id).onchange=e=>{const f0=e.target.files[0];if(!f0)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,320/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=im.width*k;cv.height=im.height*k;cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);try{localStorage.setItem('dt-logo',cv.toDataURL('image/png'))}catch(x){}$(fl.id+'s').textContent='✅ تم حفظ الشعار على جهازك';run()};im.src=rd.result};rd.readAsDataURL(f0)};$(fl.id+'x').onclick=()=>{try{localStorage.removeItem('dt-logo')}catch(e){}$(fl.id+'s').textContent='أُزيل الشعار';run()}});
+function save(){try{const s={};FIELDS.forEach(fl=>{if(fl.t!=='logo')s[fl.id]=$(fl.id).value});localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
 function run(){try{$('out').innerHTML=compute(vals())}catch(e){$('out').textContent='تحقق من المدخلات'}save()}
 box.addEventListener('input',run);box.addEventListener('change',run);
 $('cpy').onclick=()=>{const t=($('pr')||$('out')).innerText;navigator.clipboard.writeText(t).then(()=>{$('cpy').textContent='✅ تم النسخ'},()=>{});setTimeout(()=>$('cpy').textContent='📋 نسخ النتيجة',1800)};
@@ -43,5 +46,17 @@ function draw(){T.innerHTML='<span class="tpl-h">قوالب جاهزة:</span>';
  const s=document.createElement('button');s.type='button';s.className='chip add';s.textContent='＋ احفظ قالبي';
  s.onclick=()=>{const n=prompt('اسم القالب؟');if(!n)return;const d={};FIELDS.forEach(fl=>d[fl.id]=$(fl.id).value);MY.push({n:'⭐ '+n,d:d});try{localStorage.setItem(MK,JSON.stringify(MY))}catch(e){}draw()};T.appendChild(s)}
 draw()})();
+// ---- طباعة احترافية + مشاركة + جدول ----
+function pinfo(){const d=new Date().toLocaleDateString('ar-SA-u-nu-latn');$('phead').innerHTML='<div class="ph"><b>💎 DIAMOND HUB</b><span>'+esc(document.querySelector('h1').innerText)+'</span><em>'+d+'</em></div>';
+ let rows=[];FIELDS.forEach(fl=>{if(fl.t==='logo')return;const el=$(fl.id);if(!el)return;let x=el.value;if(fl.t==='select')x=el.options[el.selectedIndex].text;if(String(x).length>140)x=String(x).slice(0,140)+'…';rows.push('<tr><th>'+esc(fl.l)+'</th><td>'+esc(x)+'</td></tr>')});
+ $('pin').innerHTML=SLUG==='invoice-generator'?'':'<h4>المدخلات المستخدمة</h4><table class="t">'+rows.join('')+'</table>';
+ $('pfoot').innerHTML='<p>تم الإنشاء بواسطة DIAMOND HUB — '+esc(location.origin+location.pathname)+'<br>النتائج تقديرية للتوضيح ولا تغني عن استشارة مختص.</p>'}
+const _prt=$('prt').onclick;$('prt').onclick=()=>{pinfo();setTimeout(()=>print(),50)};
+function shareURL(){const d={};FIELDS.forEach(fl=>{if(fl.t!=='logo')d[fl.id]=$(fl.id).value});return location.origin+location.pathname+'#d='+btoa(unescape(encodeURIComponent(JSON.stringify(d))))}
+if($('lnk'))$('lnk').onclick=()=>{navigator.clipboard.writeText(shareURL()).then(()=>{$('lnk').textContent='✅ نُسخ الرابط'});setTimeout(()=>$('lnk').textContent='🔗 رابط بالمدخلات',1800)};
+if($('wa'))$('wa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(document.querySelector('h1').innerText+'\n'+shareURL()),'_blank');
+if($('xl'))$('xl').onclick=()=>{const t=$('out').querySelector('table');if(!t){alert('لا يوجد جدول في هذه النتيجة');return}const tsv=[...t.rows].map(r=>[...r.cells].map(c=>c.innerText.replace(/\t|\n/g,' ')).join('\t')).join('\n');navigator.clipboard.writeText(tsv).then(()=>{$('xl').textContent='✅ انسخ إلى Excel'});setTimeout(()=>$('xl').textContent='📊 نسخ كجدول',1800)};
+try{const h=location.hash.match(/#d=(.+)$/);if(h){const d=JSON.parse(decodeURIComponent(escape(atob(h[1]))));FIELDS.forEach(fl=>{if(fl.t!=='logo'&&d[fl.id]!=null&&$(fl.id))$(fl.id).value=d[fl.id]});run()}}catch(e){}
+
 run();
 '''
