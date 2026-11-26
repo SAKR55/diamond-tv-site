@@ -109,9 +109,9 @@ add('supplier-statement-reconciliation','finance','📨','مطابقة كشف ح
  [F('s','كشف المورد (مرجع | مبلغ)','textarea','INV-101 | 5000\nINV-102 | 3000\nINV-103 | 2000\nPAY-9 | -4000',r=5),F('b','دفاترك (مرجع | مبلغ)','textarea','INV-101 | 5000\nINV-103 | 2000\nPAY-9 | -3500',r=5)],
  r'''function compute(v){const S=lines(v.s).map(r=>({k:r[0],a:num(r[1])})),B=lines(v.b).map(r=>({k:r[0],a:num(r[1])}));const rows=[];S.forEach(x=>{const y=B.find(b=>b.k===x.k);if(!y)rows.push([x.k,f(x.a),'—','لم تُسجَّل عندك']);else if(Math.abs(y.a-x.a)>0.005)rows.push([x.k,f(x.a),f(y.a),'فرق مبلغ '+f(x.a-y.a)])});B.forEach(y=>{if(!S.find(x=>x.k===y.k))rows.push([y.k,'—',f(y.a),'غير موجودة عند المورد'])});const ss=S.reduce((a,x)=>a+x.a,0),sb=B.reduce((a,x)=>a+x.a,0);return kpis([kpi('رصيد المورد',f(ss)),kpi('رصيدك',f(sb)),kpi('الفرق',f(ss-sb),Math.abs(ss-sb)<0.01?'good':'bad')])+tbl(['المرجع','عند المورد','عندك','الملاحظة'],rows)+rec(['اطلب من المورد المستند الداعم للفروق.','سجّل الفواتير الناقصة بتاريخها الصحيح.'])}''')
 
-add('sales-commission-calculator','sales','💰','حاسبة عمولات المبيعات (حسب الموديل والفرع والبائع)','ارفق قائمة الموديلات ومبلغ عمولة كل موديل، وارفع تقرير المبيعات (Excel/CSV) لتحصل على عمولة كل بائع وكل فرع وكل موديل وتقارير أخرى جاهزة.',
- [F('r','عمولة كل موديل (موديل | مبلغ العمولة للوحدة | نسبة % من البيع — اختياري)','textarea','موديل A | 50\nموديل B | 30\nموديل C | 120 | 1',r=5),
-  F('s','تقرير المبيعات (فرع | بائع | موديل | كمية | مبلغ البيع | تاريخ)','textarea','الرياض | أحمد | موديل A | 4 | 12000 | 2026-11-02\nالرياض | أحمد | موديل B | 8 | 8000 | 2026-11-05\nالرياض | سارة | موديل A | 7 | 20000 | 2026-11-07\nجدة | خالد | موديل C | 5 | 15000 | 2026-11-10\nجدة | خالد | موديل B | 6 | 6000 | 2026-11-12\nجدة | منى | موديل A | 3 | 9000 | 2026-11-15\nالدمام | يوسف | موديل B | 10 | 9500 | 2026-11-18\nالرياض | أحمد | موديل C | -1 | -2000 | 2026-11-20',r=9),
+add('sales-commission-calculator','sales','💰','حاسبة عمولات المبيعات (حسب الموديل والفرع والبائع)','اكتب (أو ارفع) المنتجات وموديلاتها ومبلغ عمولة الوحدة المباعة، ثم ارفع تقرير المبيعات (Excel/CSV): تتعرّف الأداة على الموديل داخل وصف الصنف وتحسب عمولة كل فرع وكل بائع وكل منتج وكل موديل.',
+ [F('r','عمولة الموديلات (منتج | موديل | عمولة الوحدة المباعة | نسبة % اختياري) — اكتب * مكان الموديل لعمولة كل موديل آخر من المنتج','textarea','ثلاجات | RF-300 | 50\nثلاجات | RF-500 | 80\nغسالات | WM-7 | 30\nغسالات | * | 20\nمكيفات | AC-18 | 120',r=6),
+  F('s','تقرير المبيعات (فرع | بائع | الصنف أو الموديل (يكفي أن يحتوي اسم الموديل) | كمية | مبلغ البيع | تاريخ)','textarea','الرياض | أحمد | ثلاجة سامسونج RF-300 | 4 | 12000 | 2026-11-02\nالرياض | أحمد | غسالة LG WM-7 اوتوماتيك | 8 | 8000 | 2026-11-05\nالرياض | سارة | ثلاجة RF500 | 7 | 20000 | 2026-11-07\nجدة | خالد | مكيف AC-18 سبليت | 5 | 15000 | 2026-11-10\nجدة | خالد | غسالة WM-9 | 6 | 6000 | 2026-11-12\nجدة | منى | ثلاجة RF-300 | 3 | 9000 | 2026-11-15\nالدمام | يوسف | غسالة WM-7 | 10 | 9500 | 2026-11-18\nالرياض | أحمد | مكيف AC-18 | -1 | -2000 | 2026-11-20',r=9),
   F('d','عمولة وحدة افتراضية لموديل غير مدرج (ريال)','n',0),
   F('dp','نسبة افتراضية % لموديل غير مدرج','n',0),
   F('tr','شرائح مكافأة على إجمالي مبيعات البائع — اختياري (حد المبيعات | نسبة إضافية %)','textarea','',r=3),
@@ -120,12 +120,15 @@ add('sales-commission-calculator','sales','💰','حاسبة عمولات الم
   F('cp','سقف عمولة البائع (0 = بلا سقف)','n',0),
   S('rt','المرتجعات (كمية/مبلغ سالب)',[('d','تخصم من العمولة'),('i','تُتجاهل')])],
  r'''function compute(v){
-const R={};lines(v.r).forEach(x=>{const k=String(x[0]).trim();if(k)R[k]={u:num(x[1]||0),p:num(String(x[2]||0).replace('%',''))}});
+const nz=t=>String(t).toLowerCase().replace(/[ً-ْـ]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\s\-_\/.]+/g,'');const stem=t=>nz(t).replace(/ات$/,'').replace(/ه$/,'');
+const isN=t=>/^[\d.,٠-٩٫٬\s%\-]+$/.test(String(t==null?'':t).trim())&&/[\d٠-٩]/.test(String(t));
+const R={},RL=[];lines(v.r).forEach(x=>{let pr='',m,u,pc;if(x.length>=3&&!isN(x[1])){pr=String(x[0]).trim();m=String(x[1]).trim();u=x[2];pc=x[3]}else{m=String(x[0]).trim();u=x[1];pc=x[2]}if(!m)return;const star=m==='*'||m==='كل';const o={u:num(u||0),p:num(String(pc||0).replace('%','')),k:nz(m),ps:stem(pr),name:star?(pr+' (باقي الموديلات)'):m,prod:pr,star:star};R[o.name]=o;RL.push(o)});
+RL.sort((a,b)=>b.k.length-a.k.length);
 const tiers=lines(v.tr).map(x=>({t:num(x[0]),p:num(String(x[1]).replace('%',''))})).sort((a,b)=>a.t-b.t);
 let S=lines(v.s).map(x=>({br:String(x[0]).trim(),sl:String(x[1]).trim(),m:String(x[2]).trim(),q:num(x[3]),a:num(x[4]),d:x[5]||''})).filter(x=>x.sl&&!isNaN(x.a)&&!isNaN(x.q));
 if(v.rt==='i')S=S.filter(x=>x.q>=0&&x.a>=0);
-const unk={};const rate=m=>{if(R[m])return R[m];unk[m]=1;return{u:v.d||0,p:v.dp||0}};
-S.forEach(x=>{const r=rate(x.m);x.u=r.u;x.p=r.p;x.c=x.q*r.u+x.a*r.p/100});
+const unk={};const rate=m=>{const n=nz(m);let h=RL.find(r=>!r.star&&r.k&&n===r.k)||RL.find(r=>!r.star&&r.k&&n.includes(r.k))||RL.find(r=>r.star&&r.ps&&n.includes(r.ps));if(h)return h;unk[m]=1;return{u:v.d||0,p:v.dp||0,name:m,prod:''}};
+S.forEach(x=>{const r=rate(x.m);x.u=r.u;x.p=r.p;x.mk=r.name||x.m;x.pr=r.prod||'';x.c=x.q*r.u+x.a*r.p/100});
 const grp=key=>{const o={};S.forEach(x=>{const k=key(x)||'—';const g=o[k]=o[k]||{q:0,a:0,c:0,n:0};g.q+=x.q;g.a+=x.a;g.c+=x.c;g.n++});return o};
 const sel=grp(x=>x.sl),SL={};Object.keys(sel).forEach(k=>{const g=sel[k];let bonus=0,tier='—';if(tiers.length){if(v.tm==='b'){const hit=tiers.filter(t=>g.a>=t.t).pop();if(hit){bonus=g.a*hit.p/100;tier='≥ '+f(hit.t,0)+' (+'+hit.p+'%)'}}else tiers.forEach((t,i)=>{if(g.a>t.t){const up=Math.min(g.a,i+1<tiers.length?tiers[i+1].t:Infinity);bonus+=(up-t.t)*t.p/100;tier='≥ '+f(t.t,0)}})}
 let tot=g.c+bonus,note='';if(g.a<v.mn){tot=0;note='لم يبلغ الحد الأدنى';bonus=0}if(v.cp>0&&tot>v.cp){tot=v.cp;note='طُبّق السقف'}SL[k]={tot:tot,bonus:bonus,tier:tier,note:note}});
@@ -133,21 +136,23 @@ const brOf={};S.forEach(x=>{brOf[x.sl]=brOf[x.sl]||{};brOf[x.sl][x.br]=(brOf[x.s
 const tS=S.reduce((s,x)=>s+x.a,0),tQ=S.reduce((s,x)=>s+x.q,0),tL=Object.values(SL).reduce((s,x)=>s+x.tot,0);
 const slRows=Object.keys(sel).sort((a,b)=>SL[b].tot-SL[a].tot).map(k=>{const g=sel[k],r=SL[k];const br=Object.keys(brOf[k]).sort((a,b)=>brOf[k][b]-brOf[k][a])[0];return[k,br,g.q,f(g.a),f(g.c),r.tier,f(r.bonus),'<b>'+f(r.tot)+'</b>',r.note]});
 const bg=grp(x=>x.br),brRows=Object.keys(bg).sort((a,b)=>bg[b].c-bg[a].c).map(k=>{const g=bg[k];const bonus=Object.keys(SL).reduce((s,sl)=>{const tot=Object.values(brOf[sl]).reduce((a,b)=>a+b,0)||1;return s+(brOf[sl][k]?SL[sl].bonus*brOf[sl][k]/tot:0)},0);const sellers=new Set(S.filter(x=>x.br===k).map(x=>x.sl)).size;return[k,sellers,g.q,f(g.a),f(g.c),f(bonus),'<b>'+f(g.c+bonus)+'</b>',f(g.a?(g.c+bonus)/g.a*100:0,2)+'%']});
-const mg=grp(x=>x.m),mrows=Object.keys(mg).sort((a,b)=>mg[b].c-mg[a].c).map(k=>{const g=mg[k],r=R[k];return[k,g.q,f(g.a),r?f(r.u):'<span style="color:#c33">غير مدرج</span>',r?(r.p?r.p+'%':'—'):'—',f(g.c),f(tS?g.a/tS*100:0,1)+'%']});
+const mg=grp(x=>x.mk||x.m),mrows=Object.keys(mg).sort((a,b)=>mg[b].c-mg[a].c).map(k=>{const g=mg[k],r=R[k];return[k,g.q,f(g.a),r?f(r.u):'<span style="color:#c33">غير مدرج</span>',r?(r.p?r.p+'%':'—'):'—',f(g.c),f(tS?g.a/tS*100:0,1)+'%']});
 const bs=grp(x=>x.br+'|'+x.sl),bsRows=Object.keys(bs).sort().map(k=>{const a=k.split('|');return[a[0],a[1],bs[k].q,f(bs[k].a),f(bs[k].c)]});
 const brs=Object.keys(bg),sls=Object.keys(sel),mat=sls.map(sl=>[sl].concat(brs.map(b=>{const x=S.filter(y=>y.sl===sl&&y.br===b).reduce((s,y)=>s+y.c,0);return x?f(x):'—'}),[f(sel[sl].c)]));
-const bm=Object.keys(mg).map(m=>[m].concat(brs.map(b=>{const x=S.filter(y=>y.m===m&&y.br===b);const q=x.reduce((s,y)=>s+y.q,0);return q?q+' = '+f(x.reduce((s,y)=>s+y.c,0)):'—'})));
+const bm=Object.keys(mg).map(m=>[m].concat(brs.map(b=>{const x=S.filter(y=>(y.mk||y.m)===m&&y.br===b);const q=x.reduce((s,y)=>s+y.q,0);return q?q+' = '+f(x.reduce((s,y)=>s+y.c,0)):'—'})));
 const mons=grp(x=>String(x.d).slice(0,7)),monRows=Object.keys(mons).sort().map(k=>[k,mons[k].q,f(mons[k].a),f(mons[k].c)]);
-const unkList=Object.keys(unk);const topS=slRows[0],topB=brRows[0];
+const pgp=grp(x=>x.pr||'غير مصنّف'),pRows=Object.keys(pgp).sort((a,b)=>pgp[b].c-pgp[a].c).map(k=>[k,new Set(S.filter(x=>(x.pr||'غير مصنّف')===k).map(x=>x.mk||x.m)).size,pgp[k].q,f(pgp[k].a),f(pgp[k].c),f(tS?pgp[k].a/tS*100:0,1)+'%']);const pks=Object.keys(pgp),spm=sls.map(sl=>[sl].concat(pks.map(pk=>{const x=S.filter(y=>y.sl===sl&&(y.pr||'غير مصنّف')===pk);const q=x.reduce((a,y)=>a+y.q,0);return q?q+' = '+f(x.reduce((a,y)=>a+y.c,0)):'—'})));const unkList=Object.keys(unk);const topS=slRows[0],topB=brRows[0];
 return kpis([kpi('إجمالي المبيعات',f(tS)),kpi('إجمالي الكمية',f(tQ,0)),kpi('إجمالي العمولات',f(tL),'good'),kpi('بائعون',sls.length),kpi('فروع',brs.length),kpi('أعلى بائع',topS?topS[0]:'—'),kpi('أعلى فرع',topB?topB[0]:'—')])
-+(unkList.length?note('⚠️ موديلات في التقرير لم تُدرج في قائمة العمولات: '+unkList.join('، ')+'. أضفها في خانة عمولة كل موديل.'):'')
++(unkList.length?note('⚠️ أصناف في التقرير لم تتطابق مع أي موديل في قائمة العمولات (تأكد أن اسم الموديل مكتوب كما يظهر في الصنف): '+unkList.join('، ')+'. أضفها في خانة عمولة كل موديل.'):'')
 +'<h4>عمولة كل بائع</h4>'+tbl(['البائع','الفرع الرئيسي','الكمية','المبيعات','عمولة الموديلات','الشريحة','مكافأة','إجمالي المستحق','ملاحظة'],slRows)
 +'<h4>عمولة كل فرع</h4>'+tbl(['الفرع','عدد البائعين','الكمية','المبيعات','عمولة الموديلات','مكافآت','إجمالي العمولة','% من المبيعات'],brRows)
++'<h4>عمولة كل منتج</h4>'+tbl(['المنتج','عدد الموديلات المباعة','الكمية','المبيعات','إجمالي العمولة','حصة من المبيعات'],pRows)
++'<h4>البائع × المنتج (كمية = عمولة)</h4>'+tbl(['البائع'].concat(pks),spm)
 +'<h4>عمولة كل موديل</h4>'+tbl(['الموديل','الكمية','المبيعات','عمولة الوحدة','النسبة','إجمالي العمولة','حصة من المبيعات'],mrows)
 +'<h4>الفرع × البائع</h4>'+tbl(['الفرع','البائع','الكمية','المبيعات','العمولة'],bsRows)
 +'<h4>مصفوفة عمولة البائع × الفرع</h4>'+tbl(['البائع'].concat(brs,['الإجمالي']),mat)
 +'<h4>الموديل × الفرع (كمية = عمولة)</h4>'+tbl(['الموديل'].concat(brs),bm)
 +(monRows.length>1?'<h4>العمولة شهريًا</h4>'+tbl(['الشهر','الكمية','المبيعات','العمولة'],monRows):'')
-+'<h4>تفاصيل كل عملية</h4>'+tbl(['الفرع','البائع','الموديل','الكمية','المبلغ','عمولة الوحدة','النسبة','العمولة','التاريخ'],S.map(x=>[x.br,x.sl,x.m,x.q,f(x.a),f(x.u),x.p?x.p+'%':'—',f(x.c),x.d]))
++'<h4>تفاصيل كل عملية</h4>'+tbl(['الفرع','البائع','الصنف في التقرير','الموديل المطابق','الكمية','المبلغ','عمولة الوحدة','النسبة','العمولة','التاريخ'],S.map(x=>[x.br,x.sl,x.m,(unk[x.m]?'<span style="color:#c33">غير مطابق</span>':x.mk),x.q,f(x.a),f(x.u),x.p?x.p+'%':'—',f(x.c),x.d]))
 +rec([unkList.length?'أضف الموديلات الناقصة في قائمة العمولات لتكتمل الحسبة.':'كل الموديلات لها عمولة معرّفة.','العمولة = الكمية × عمولة الموديل (+ نسبة من قيمة البيع إن حدّدتها).','اربط صرف العمولة بالتحصيل الفعلي لتقليل الديون المعدومة.','اعتمد التقرير من المدير قبل الصرف، وصدّره Excel/PDF من الأزرار أعلاه.'])
 +aiOut('راجع خطة عمولات المبيعات واقترح تحسينًا للعدالة والتحفيز: '+JSON.stringify({sellers:slRows.map(r=>[r[0],r[2],r[7]]),branches:brRows.map(r=>[r[0],r[6]]),models:mrows.map(r=>[r[0],r[3]])}))}''')
