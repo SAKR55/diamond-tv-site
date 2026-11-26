@@ -70,7 +70,7 @@ footer.pf{background:#1f1747;color:#d9d2f2;padding:34px 0 26px;margin-top:20px}f
 .tool .result{animation:pop .25s ease}@keyframes pop{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
 .kpi{transition:.2s}.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
 .card .ic{box-shadow:0 8px 20px rgba(124,58,237,.25)}
-.phero:before{content:"";position:absolute;inset:auto auto -60px -60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(#fb923c33,transparent 70%);pointer-events:none}
+
 .badge-ai{background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:800;margin-inline-start:6px}
 .catbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:18px 0}.catbar a{background:#fff;border:2px solid var(--line);border-radius:999px;padding:7px 18px;font-weight:800;color:var(--ink)}.catbar a:hover,.catbar a.on{border-color:var(--violet);color:var(--violet2);text-decoration:none}
 .search-box{max-width:520px;margin:18px auto 0}.search-box input{width:100%;padding:12px 18px;border:2px solid var(--line);border-radius:999px;font:inherit}
@@ -144,3 +144,9 @@ body:after{content:"DIAMOND HUB — diamond-tv.shop";display:block;text-align:ce
 /* خريطة الموقع */
 .smap{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}.smap .blk{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.smap h3{margin:0 0 4px}.smap .blk>p{margin:0 0 10px;color:var(--muted);font-size:14px}.smap ul{list-style:none;padding:0;margin:0;display:grid;gap:4px}.smap li a{display:block;padding:6px 10px;border-radius:8px;background:var(--bg2);font-size:14px;font-weight:600}.smap li a:hover{background:#ede9fe;text-decoration:none}.smap .gh{grid-column:1/-1;margin:14px 0 0;font-size:1.3rem}
 .grp-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:34px 0 14px;font-size:1.25rem;border-inline-start:5px solid var(--violet2,#7c3aed);padding-inline-start:12px}.grp-h small{font-weight:500;color:var(--muted);font-size:.85rem}
+
+.gx{grid-template-columns:repeat(6,1fr)}.gx>*{grid-column:span 2}.gx.o1>*{grid-column:span 6}.gx.m2>*:nth-last-child(-n+2){grid-column:span 3}.gx.m1>*:nth-last-child(-n+4){grid-column:span 3}
+@media(max-width:900px){.gx>*,.gx.m2>*:nth-last-child(-n+2),.gx.m1>*:nth-last-child(-n+4){grid-column:span 3}.gx.o1>*{grid-column:span 6}}
+@media(max-width:600px){.gx>*,.gx.m2>*:nth-last-child(-n+2),.gx.m1>*:nth-last-child(-n+4){grid-column:span 6}}
+.sec-card{display:flex;flex-direction:column}.sec-card .links{margin-top:auto;padding-top:12px}
+.card{transition:transform .18s,box-shadow .18s}.card:hover{transform:translateY(-3px);box-shadow:0 14px 34px -14px rgba(76,29,149,.35)}
