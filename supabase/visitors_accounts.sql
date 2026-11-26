@@ -13,8 +13,25 @@ create table if not exists public.dh_page_views(
   device text check (device in ('mobile','tablet','desktop')),
   lang text check (char_length(lang) <= 12),
   uid uuid,
-  is_new boolean default false
+  is_new boolean default false,
+  country text, city text, region text,
+  browser text, os text, utm text
 );
+alter table public.dh_page_views add column if not exists country text, add column if not exists city text, add column if not exists region text, add column if not exists browser text, add column if not exists os text, add column if not exists utm text;
+
+-- الموقع الجغرافي: من ترويسات الطلب التي يضيفها Supabase (لا نخزّن عنوان IP)
+create or replace function public.dh_pv_geo() returns trigger language plpgsql security definer set search_path = public as $$
+declare h jsonb;
+begin
+  begin h := coalesce(nullif(current_setting('request.headers', true),'')::jsonb, '{}'::jsonb); exception when others then h := '{}'::jsonb; end;
+  new.country := upper(left(coalesce(h->>'cf-ipcountry', new.country),2));
+  new.city := left(coalesce(nullif(h->>'cf-ipcity',''), new.city),80);
+  new.region := left(coalesce(nullif(h->>'cf-region',''), new.region),80);
+  new.browser := left(new.browser,30); new.os := left(new.os,30); new.utm := left(new.utm,60);
+  return new;
+end $$;
+drop trigger if exists dh_pv_geo_t on public.dh_page_views;
+create trigger dh_pv_geo_t before insert on public.dh_page_views for each row execute function public.dh_pv_geo();
 create index if not exists dh_pv_created on public.dh_page_views(created_at desc);
 create index if not exists dh_pv_path on public.dh_page_views(path);
 alter table public.dh_page_views enable row level security;
