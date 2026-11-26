@@ -83,3 +83,12 @@ try:
     if '/tools/' not in s: s = s.replace('## أدوات الأعمال', '## كل الأدوات\n- [مركز الأدوات](https://diamond-tv.shop/tools/): دليل منظّم لكل الأدوات المجانية بالبحث والفئات والمفضلة\n\n## أدوات الأعمال', 1)
     open(p, 'w', encoding='utf-8').write(s)
 except Exception as ex: print('llms skip', ex)
+# ---- AdSense: كود المحرّر في <head> كل الصفحات ----
+ADS = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1133894458639371" crossorigin="anonymous"></script>'
+nads = 0
+for f in glob.glob(R + '/**/*.html', recursive=True):
+    if '/.git/' in f or '/node_modules/' in f: continue
+    s = open(f, encoding='utf-8', errors='ignore').read()
+    if 'pub-1133894458639371' in s or '</head>' not in s or '<head' not in s: continue
+    open(f, 'w', encoding='utf-8').write(s.replace('</head>', ADS + '</head>', 1)); nads += 1
+print('adsense injected:', nads)
