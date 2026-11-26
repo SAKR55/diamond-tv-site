@@ -251,7 +251,11 @@ async function aiAnime(img){if(!SESS)await aiLoad();
  try{out=await SESS.run({[name]:new ort.Tensor('float32',nchw,[1,3,S0,S0])})}catch(e){layout='nhwc';out=await SESS.run({[name]:new ort.Tensor('float32',nhwc,[1,S0,S0,3])})}
  var t=out[SESS.outputNames[0]],dm=t.dims,o=t.data,isC=dm[1]===3,oc=document.createElement('canvas');oc.width=oc.height=S0;var ox=oc.getContext('2d'),im=ox.createImageData(S0,S0);
  for(i=0;i<N;i++){for(var k=0;k<3;k++){var val=isC?o[k*N+i]:o[i*3+k];im.data[i*4+k]=Math.max(0,Math.min(255,(val+1)*127.5))}im.data[i*4+3]=255}
- ox.putImageData(im,0,0);return oc}
+ ox.putImageData(im,0,0);
+ var fc=document.createElement('canvas');fc.width=fc.height=1024;var fx=fc.getContext('2d');fx.imageSmoothingEnabled=true;fx.imageSmoothingQuality='high';fx.filter='saturate(1.3) contrast(1.1) brightness(1.03)';fx.drawImage(oc,0,0,1024,1024);fx.filter='none';
+ var id2=fx.getImageData(0,0,1024,1024),D=id2.data,cp=new Uint8ClampedArray(D),W=1024,a=.55,j,q;
+ for(j=1;j<W-1;j++)for(q=1;q<W-1;q++){var p0=(j*W+q)*4;for(var c3=0;c3<3;c3++){var nb=cp[p0-4+c3]+cp[p0+4+c3]+cp[p0-W*4+c3]+cp[p0+W*4+c3];D[p0+c3]=Math.max(0,Math.min(255,cp[p0+c3]+a*(4*cp[p0+c3]-nb)/4*1.0))}}
+ fx.putImageData(id2,0,0);return fc}
 function startAI(){if(AIC||AIST||!PH)return;AIST=1;aiMsg(AR?'⏳ جارٍ تحويل صورتك إلى أنمي بالذكاء الاصطناعي (أول مرة يحمّل النموذج ~9MB)…':'⏳ Converting your photo to anime with AI (first run downloads ~9MB)…');
  aiAnime(PH).then(function(c){AIC=c;AIST=2;aiMsg(AR?'✅ تم التحويل بالذكاء الاصطناعي':'✅ AI anime conversion done');if(mode==='pc')draw()}).catch(function(e){AIST=3;aiMsg(AR?'تعذّر تشغيل نموذج الأنمي، استُخدم التأثير الكرتوني البديل':'Anime AI model unavailable, used the cartoon effect instead')})}
 function toon(img,hu){var W2=600,H2=370,c=document.createElement('canvas');c.width=W2;c.height=H2;var x=c.getContext('2d'),sc=Math.max(W2/img.width,H2/img.height),sw=img.width*sc,sh=img.height*sc;try{x.filter='saturate(1.25) contrast(1.08) brightness(1.06)'}catch(e){}x.drawImage(img,(W2-sw)/2,Math.min(0,(H2-sh)*.2),sw,sh);try{x.filter='none'}catch(e){}
