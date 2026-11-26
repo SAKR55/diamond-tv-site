@@ -43,6 +43,9 @@ def presets(t):
         k = json.dumps(d, sort_keys=True)
         if d and k not in seen: seen.add(k); res.append([n, d])
     return res[:12]
+from tool_guides import ecom_guide
+from ecom_tools import TOOLS as ET
+BIZ = BIZ + [ecom_guide(x[0],x[2],x[3]) for x in ET]
 CR = '<a href="/">الرئيسية</a> › <a href="/business/">أدوات الأعمال</a>'
 byslug = {t['slug']: t for t in T}
 bycat = {c: [t for t in T if t['cat'] == c] for c in CATS}
