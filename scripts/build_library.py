@@ -5,7 +5,8 @@ from portal_common import *
 from books1 import B1, B2
 from books2 import B3, B4, B5
 from books3 import B6, B7, B8
-BOOKS = [B1, B2, B3, B4, B5, B6, B7, B8]
+from books4 import B9, B10
+BOOKS = [B1, B2, B3, B4, B5, B6, B7, B8, B9, B10]
 from ext1 import EXT
 from ext2 import EXT2
 from ext3 import EXT3
