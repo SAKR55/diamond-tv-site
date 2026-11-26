@@ -100,5 +100,6 @@ if(ks.length){$('sco').onclick=()=>{const d=SC[$('scl').value];if(!d)return;Obje
 drawS();
 const st=document.createElement('style');st.textContent='.dhc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px;margin:6px 0}.dhr{display:flex;align-items:center;gap:8px;font-size:12px;margin:3px 0}.dhr span{width:30%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.dhr i{display:block;height:12px;border-radius:6px}.dhr em{font-style:normal;font-weight:700}.dhb,.dhs button{background:#ede9fe;color:#5b21b6;border:0;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:12px;margin:4px 0}.dhs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0;font-size:13px}.dhs input,.dhs select{border:1px solid #cbd5e1;border-radius:8px;padding:4px 8px;font-family:inherit}@media print{.dhb,.dhs{display:none}}';document.head.appendChild(st)})();
 
+try{const gb=document.createElement('button');gb.type='button';gb.id='gocalc';gb.className='btn btn-g';gb.style.cssText='margin:10px 0;font-size:1.05em;padding:10px 22px';gb.textContent=/عمولات/.test(document.title)?'🧮 احسب العمولة':'🧮 احسب';gb.onclick=()=>{run();$('out').scrollIntoView({behavior:'smooth',block:'start'})};$('out').parentNode.insertBefore(gb,$('out'))}catch(e){}
 run();
 '''
