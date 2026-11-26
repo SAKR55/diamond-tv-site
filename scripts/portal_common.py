@@ -49,6 +49,7 @@ NAV_GROUPS = [
 def nav(active=""):
     def on(u): return u == active or (u != "/" and active and u.startswith(active) and active != "/") or (active and active.startswith(u) and u != "/" and len(u) > 1)
     parts = ['<a href="/"%s>🏠 الرئيسية</a>' % (' class="on"' if active == "/" else "")]
+    parts.append('<a href="/tools/"%s>🛠️ الأدوات</a>' % (' class="on"' if active.startswith("/tools") else ""))
     for ic, t, items in NAV_GROUPS:
         cur = any(on(u) for u, _ in items)
         lis = "".join('<a href="%s"%s>%s</a>' % (u, ' class="on"' if on(u) else "", n) for u, n in items)
@@ -64,8 +65,9 @@ def footer():
     def col(t, items): return '<div><h4>%s</h4><ul>%s</ul></div>' % (t, ''.join('<li><a href="%s">%s</a></li>' % (u, n) for u, n in items))
     cols = ''.join(col(ic + " " + t, items) for ic, t, items in NAV_GROUPS)
     return ('<footer class="pf"><div class="wrap"><div class="cols pfc">'
-            '<div><h4>DIAMOND HUB</h4><p>منصة عربية مجانية للتعلّم والأدوات والتجارة الإلكترونية والتصميم.</p><p><a href="/map/">🗺 خريطة الموقع</a> · <a href="/search/">🔍 بحث</a> · <a href="/#contact">تواصل معنا</a></p></div>'
-            + cols + '</div><div class="copy">© 2026 DIAMOND HUB — المحتوى للتعريف والتعلّم ولا يغني عن استشارة مختص. · <a href="/privacy/">الخصوصية</a> · <a href="/sitemap.xml">sitemap.xml</a></div></div></footer>')
+            '<div><h4>DIAMOND HUB</h4><p>منصة عربية مجانية للتعلّم والأدوات والتجارة الإلكترونية والتصميم.</p><p><a href="/tools/">🛠️ كل الأدوات</a> · <a href="/map/">🗺 خريطة الموقع</a> · <a href="/search/">🔍 بحث</a> · <a href="/#contact">تواصل معنا</a></p></div>'
+            + cols + '</div><div class="copy">© 2026 DIAMOND HUB — المحتوى للتعريف والتعلّم ولا يغني عن استشارة مختص. · <a href="/privacy/">الخصوصية</a> · <a href="/sitemap.xml">sitemap.xml</a></div></div></footer>'
+            '<button type="button" class="dh-top" aria-label="للأعلى" onclick="scrollTo({top:0})">↑</button><script>(function(){var b=document.querySelector(".dh-top");if(!b)return;addEventListener("scroll",function(){b.classList.toggle("show",scrollY>700)},{passive:true})})()</script>')
 
 
 def page(path, title, desc, body, extra_ld="", active="", og_type="website", css_extra=""):

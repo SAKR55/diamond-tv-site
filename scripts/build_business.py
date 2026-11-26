@@ -88,7 +88,7 @@ catbar = lambda on='': '<div class="catbar">' + ''.join(f'<a href="/business/{c}
 body = hero("أدوات <span class='g-text'>الأعمال</span>: محاسبة وتسويق وإدارة وموارد بشرية",
   f"{len(T)} أداة تعمل في متصفحك، وبعضها يجهّز لك برومت للذكاء الاصطناعي، و{len(BIZ)} مقالًا تطبيقيًا.", CR, "🧰 مجانًا وبالعربية",
   extra='<div class="search-box"><input id="sq" type="search" placeholder="ابحث في الأدوات: ضريبة، قسط، مقابلة…" aria-label="بحث"></div>' + catbar() +
-        f'<div class="stats"><div class="stat"><b>{len(T)}</b><span>أداة</span></div><div class="stat"><b>{len(BIZ)}</b><span>مقالًا</span></div><div class="stat"><b>{len(CATS)}</b><span>مجالات</span></div><div class="stat"><b>0</b><span>رسوم</span></div></div>')
+        f'<div class="stats"><div class="stat"><b>{len(T)}</b><span>أداة</span></div><div class="stat"><b>{len(BIZ)}</b><span>مقالًا</span></div><div class="stat"><b>{len(CATS)}</b><span>مجالات</span></div><div class="stat"><b>100%</b><span>مجاني</span></div></div>')
 body += '<main>'
 for c, (ic, nm, ds) in CATS.items():
     body += f'<section class="s{" alt" if list(CATS).index(c) % 2 else ""}" id="{c}"><div class="wrap"><div class="center"><h2 class="h2">{ic} {nm}</h2><p class="lead">{ds}</p></div><br><div class="grid g3" data-grid>' + ''.join(tcard(t) for t in bycat[c]) + f'</div><p class="center" style="margin-top:14px"><a class="btn btn-o" href="/business/{c}/">كل أدوات ومقالات {nm}</a></p></div></section>'
