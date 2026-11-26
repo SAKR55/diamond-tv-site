@@ -7,7 +7,7 @@ BASE = "https://diamond-tv.shop"
 DATE = "2026-11-26"
 
 NAV_ITEMS = [("/", "الرئيسية"), ("/claude/", "Claude"), ("/prompt-studio/", "ChatGPT"),
-             ("/ecommerce/", "التجارة الإلكترونية"), ("/mugharrid/", "الإنجليزية"),
+             ("/ecommerce/", "التجارة الإلكترونية"), ("/business/", "أدوات الأعمال"), ("/mugharrid/", "الإنجليزية"),
              ("/store/", "المكتبة"), ("/app/", "التطبيق"), ("/articles/", "المقالات")]
 
 
@@ -42,7 +42,7 @@ def footer():
     return ('<footer class="pf"><div class="wrap"><div class="cols">'
             '<div><h4>DIAMOND TV</h4><p>منصة عربية للتعلّم والأدوات والتجارة الإلكترونية.</p></div>'
             '<div><h4>تعلّم</h4><ul><li><a href="/claude/">أكاديمية Claude</a></li><li><a href="/prompt-studio/">مختبر ChatGPT</a></li><li><a href="/mugharrid/">تعلّم الإنجليزية</a></li><li><a href="/store/">مكتبة الأطفال</a></li></ul></div>'
-            '<div><h4>التجارة الإلكترونية</h4><ul><li><a href="/ecommerce/">المركز</a></li><li><a href="/ecommerce/tools/">الأدوات</a></li><li><a href="/ecommerce/faq/">أسئلة شائعة</a></li><li><a href="/ecommerce/glossary/">القاموس</a></li><li><a href="/ecommerce/templates/">القوالب</a></li></ul></div>'
+            '<div><h4>التجارة الإلكترونية</h4><ul><li><a href="/ecommerce/">المركز</a></li><li><a href="/ecommerce/tools/">الأدوات</a></li><li><a href="/business/">أدوات الأعمال</a></li><li><a href="/ecommerce/faq/">أسئلة شائعة</a></li><li><a href="/ecommerce/glossary/">القاموس</a></li><li><a href="/ecommerce/templates/">القوالب</a></li></ul></div>'
             '<div><h4>المزيد</h4><ul><li><a href="/app/">تطبيق DIAMOND TV</a></li><li><a href="/articles/">المقالات</a></li><li><a href="/#contact">تواصل معنا</a></li><li><a href="/sitemap.xml">خريطة الموقع</a></li></ul></div>'
             '</div><div class="copy">© 2026 DIAMOND TV — المحتوى للتعريف والتعلّم ولا يغني عن استشارة مختص.</div></div></footer>')
 

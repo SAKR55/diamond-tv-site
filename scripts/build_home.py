@@ -20,6 +20,7 @@ SECS = [
  ("📚","مكتبة الأطفال","كتب وقصص وأنشطة للأطفال مع نصائح للقراءة.","#ec4899",[("المكتبة","/store/")]),
  ("🗣️","تعلّم الإنجليزية","خطة تعلّم وعبارات يومية وممارسة للمحادثة.","#2563eb",[("ابدأ","/mugharrid/")]),
  ("🛒","التجارة الإلكترونية","أدوات وقوالب ومقالات للاستيراد والبيع أونلاين وإدارة المتجر وحل المشكلات.","#fb923c",[("المركز","/ecommerce/"),("الأدوات","/ecommerce/tools/"),("حاسبة الاستيراد","/import/calc.html")]),
+ ("🧰","أدوات الأعمال","أكثر من 40 أداة للمحاسبة والتسويق والإدارة والموارد البشرية، وبعضها يجهّز لك برومت للذكاء الاصطناعي.","#0ea5e9",[("كل الأدوات","/business/"),("محاسبة","/business/finance/"),("تسويق","/business/marketing/"),("موارد بشرية","/business/hr/")]),
  ("📺","تطبيق DIAMOND TV","مشغّل IPTV عربي مجاني: تحميل وتفعيل وشرح كامل.","#7c3aed",[("التطبيق","/app/"),("تحميل","/download/")]),
 ]
 body = '<header class="phero"><div class="wrap center"><span class="pill">💎 منصة عربية مجانية للتعلّم والأدوات</span>' \
@@ -27,11 +28,11 @@ body = '<header class="phero"><div class="wrap center"><span class="pill">💎 �
  '<p class="lead">كورسات الذكاء الاصطناعي، أدوات التجار، مكتبة الأطفال، تعلّم الإنجليزية، وتطبيق المشاهدة — مجانًا وبالعربية.</p>' \
  '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px"><a class="btn btn-g" href="/claude/course/">🚀 ابدأ كورس Claude</a><a class="btn btn-o" href="/ecommerce/">🛒 أدوات التجار</a></div>' \
  '<div class="path"><a href="/claude/prompt-builder/">✍️ أنشئ برومت احترافيًا</a><a href="/ecommerce/tools/margin-calculator/">🧮 احسب سعر البيع</a><a href="/mugharrid/">🗣️ تدرّب على الإنجليزية</a><a href="/search/">🔍 ابحث في الموقع</a></div>' \
- '<div class="stats"><div class="stat"><b>6</b><span>أقسام</span></div><div class="stat"><b>+60</b><span>مقالًا ودليلًا</span></div><div class="stat"><b>+15</b><span>أداة مجانية</span></div><div class="stat"><b>0</b><span>رسوم أو تسجيل</span></div></div></div></header><main>'
+ '<div class="stats"><div class="stat"><b>7</b><span>أقسام</span></div><div class="stat"><b>+90</b><span>مقالًا ودليلًا</span></div><div class="stat"><b>+50</b><span>أداة مجانية</span></div><div class="stat"><b>0</b><span>رسوم أو تسجيل</span></div></div></div></header><main>'
 body += '<section class="s" id="sections"><div class="wrap"><div class="center"><span class="eyebrow">الأقسام</span><h2 class="h2">اختر ما يناسبك</h2></div><br><div class="grid g3">' + ''.join(
   f'<div class="card sec-card" style="--c:{c}"><div class="ic">{ic}</div><h3>{t}</h3><p>{d}</p><div class="links">' + ''.join(f'<a href="{u}">{n}</a>' for n, u in ls) + '</div></div>' for ic, t, d, c, ls in SECS) + '</div></div></section>'
 body += '<section class="s alt"><div class="wrap"><div data-spark="all"></div></div></section>'
-feat = [("🧮","حاسبة الهامش وسعر البيع","/ecommerce/tools/margin-calculator/"),("✍️","أداة كتابة البرومت والخطة","/claude/prompt-builder/"),("📈","حاسبة ROAS ونقطة التعادل","/ecommerce/tools/roas-breakeven/"),("🎯","مقيّم فكرة المنتج","/ecommerce/tools/product-idea-score/")]
+feat = [("🎯","مخطط الأرباح العكسي","/business/tools/reverse-profit-planner/"),("🧮","حاسبة الهامش وسعر البيع","/ecommerce/tools/margin-calculator/"),("🤖","مجهّز برومت المحاسب","/business/tools/finance-ai-prompts/"),("✍️","أداة كتابة البرومت والخطة","/claude/prompt-builder/"),("🧳","حاسبة نهاية الخدمة","/business/tools/end-of-service/")]
 body += '<section class="s"><div class="wrap"><div class="center"><span class="eyebrow">الأكثر استخدامًا</span><h2 class="h2">أدوات تعمل فورًا</h2></div><br><div class="grid g4">' + ''.join(f'<a class="card" href="{u}"><div class="ic">{i}</div><h3>{t}</h3><span class="more">افتحها ←</span></a>' for i, t, u in feat) + '</div></div></section>'
 arts = [("/articles/claude-prompt-writing-guide/","الذكاء الاصطناعي","كيف تكتب برومت ناجحًا لـClaude","قواعد عملية وقالب جاهز."),
         ("/articles/solve-low-sales-new-store/","حلول مشكلات","متجري لا يبيع: تشخيص من 7 خطوات","اعرف أين تضيع مبيعاتك."),
