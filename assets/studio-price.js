@@ -45,7 +45,7 @@ SD.tabFn.ext=function(p){orig(p);var a=window.Studio.api;
  loadCat().then(function(){var h=q('#ct-host');if(h)window.CatalogMaker.mount(h,true)}).catch(function(){var h=q('#ct-host');if(h)h.textContent='تعذّر تحميل صانع المجلة'});
 };
 /* ---- استيراد كطبقات ---- */
-function applyDesign(d,ask){var a=window.Studio.api,D0=a.D();if(ask&&D0&&D0.els&&D0.els.length&&!confirm('سيُستبدل التصميم الحالي بصفحات المجلة. هل تريد المتابعة؟ (يمكنك التراجع بـ Ctrl+Z)'))return;
+function applyDesign(d,ask){var a=window.Studio.api,D0=a.D();if(ask&&D0&&D0.els&&D0.els.length&&!confirm('سيُستبدل التصميم الحالي. هل تريد المتابعة؟ (يمكنك التراجع بـ Ctrl+Z)'))return;
  var st=document.querySelector('.st-start');if(st)st.remove();
  var pages=(d.pages||[{bg:d.bg,els:d.els}]).map(function(pg){return{bg:pg.bg,els:a.norm(pg.els)}});
  var D={w:d.w,h:d.h,bg:pages[0].bg,els:pages[0].els,assets:d.assets||{},pages:pages,pi:0};
@@ -56,8 +56,8 @@ function importBridge(manual){var a=window.Studio&&window.Studio.api;if(!a||!a.D
  idbGet(function(d){if(!d){if(manual)a.toast('لا يوجد شيء مُرسل بعد');return}applyDesign(d,manual)})}
 if(/[?&]import=1/.test(location.search)){setTimeout(function(){importBridge(false)},900)}
 /* ---- فتح لوحة الأداة مباشرة من الصفحة الرئيسية: ?tool=price | magazine ---- */
-var TM=/[?&]tool=(price|magazine|sheet)/.exec(location.search);
+var TM=/[?&]tool=(price|magazine|sheet|split)/.exec(location.search);
 if(TM){(function open(n){var a=window.Studio&&window.Studio.api,tab=document.querySelector('#st-tabs [data-t=ext]');if(!a||!a.D()||!tab){if(n<60)setTimeout(function(){open(n+1)},300);return}
  var st=document.querySelector('.st-start');if(st)st.remove();tab.click();
- (function pick(m){var key=TM[1]==='price'?'بطاقة سعر':TM[1]==='sheet'?'ورقة بطاقات':'مجلة',b=[].slice.call(document.querySelectorAll('.tl-btn')).filter(function(x){return x.textContent.indexOf(key)>=0})[0];if(b){b.click();var s2=document.querySelector('.st-start');if(s2)s2.remove()}else if(m<20)setTimeout(function(){pick(m+1)},250)})(0)})(0)}
+ (function pick(m){var key=TM[1]==='price'?'بطاقة سعر':TM[1]==='sheet'?'ورقة بطاقات':TM[1]==='split'?'تفكيك':'مجلة',b=[].slice.call(document.querySelectorAll('.tl-btn')).filter(function(x){return x.textContent.indexOf(key)>=0})[0];if(b){b.click();var s2=document.querySelector('.st-start');if(s2)s2.remove()}else if(m<20)setTimeout(function(){pick(m+1)},250)})(0)})(0)}
 })();
