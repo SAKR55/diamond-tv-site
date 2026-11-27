@@ -1,19 +1,21 @@
 {
   "manifest_version": 3,
   "name": "DIAMOND Voice Capture — التقاط الصوت المرجعي",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "التقط صوت أي تبويب أو الميكروفون كصوت مرجعي وأرسله إلى مولّد الأصوات في DIAMOND HUB أو إلى التطبيق المحلي.",
   "permissions": [
     "tabCapture",
     "offscreen",
     "activeTab",
     "tabs",
-    "contextMenus"
+    "contextMenus",
+    "storage"
   ],
   "host_permissions": [
     "https://diamond-tv.shop/*",
     "https://www.diamond-tv.shop/*",
-    "http://127.0.0.1:7861/*"
+    "http://127.0.0.1:7861/*",
+    "https://*.trycloudflare.com/*"
   ],
   "background": {
     "service_worker": "background.js"

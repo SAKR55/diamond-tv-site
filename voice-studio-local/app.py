@@ -111,6 +111,9 @@ class _Recv(BaseHTTPRequestHandler):
     """واجهة محلية لإضافة المتصفح على 127.0.0.1:7861 فقط. ترفض أي طلب لا يحمل ترويسة الإضافة X-DH-Ext."""
 
     def _ok(self):
+        tok = os.environ.get("DH_TOKEN", "")
+        if tok and self.headers.get("X-DH-Token") != tok:
+            return False
         return self.headers.get("X-DH-Ext") == "1"
 
     def _send(self, code, body=b"", ctype="text/plain; charset=utf-8"):
@@ -169,7 +172,7 @@ class _Recv(BaseHTTPRequestHandler):
 
 def start_receiver():
     try:
-        srv = HTTPServer(("127.0.0.1", 7861), _Recv)
+        srv = HTTPServer((os.environ.get("DH_HOST", "127.0.0.1"), 7861), _Recv)
         threading.Thread(target=srv.serve_forever, daemon=True).start()
         print("جاهز لاستقبال الصوت من إضافة المتصفح على المنفذ 7861")
     except OSError as e:

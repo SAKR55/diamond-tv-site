@@ -27,3 +27,5 @@
 
 ## استقبال الإضافة (المنفذ 7861)
 نقاط: GET /ping، POST /ref (WAV مرجعي)، POST /tts (JSON: text, lang, tries) → WAV، POST /vc (WAV) → WAV. تتطلب الترويسة X-DH-Ext: 1.
+
+متغيران اختياريان للخادم البعيد: DH_TOKEN (رمز إلزامي في ترويسة X-DH-Token) و DH_HOST.

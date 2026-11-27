@@ -1,7 +1,13 @@
 importScripts('common.js');
 const SITE = 'https://diamond-tv.shop/studio/voice/#ext';
 const LOCAL = 'http://127.0.0.1:7861/ref';
-const BASE = 'http://127.0.0.1:7861';
+const LOCAL_BASE = 'http://127.0.0.1:7861';
+let BASE = LOCAL_BASE, TOKEN = '';
+async function loadConn() {
+  const { conn } = await chrome.storage.local.get('conn');
+  BASE = (conn && conn.url) ? conn.url.replace(/\/+$/, '') : LOCAL_BASE; TOKEN = (conn && conn.token) || '';
+}
+function hdr(extra) { const h = Object.assign({ 'X-DH-Ext': '1' }, extra || {}); if (TOKEN) h['X-DH-Token'] = TOKEN; return h; }
 let job = { busy: false, err: '', has: false, t0: 0 };
 const BAD = /^(chrome|edge|about|chrome-extension|devtools|view-source):|^https:\/\/(chrome|chromewebstore)\.google\.com\/webstore|^https:\/\/microsoftedge\.microsoft\.com\/addons/;
 async function ensureOffscreen() {
@@ -59,17 +65,21 @@ chrome.runtime.onMessage.addListener((m, _s, reply) => {
         const r = await getRef(); if (!r) return reply({ ok: false, err: 'لا يوجد تسجيل' });
         const res = await fetch(LOCAL, { method: 'POST', headers: { 'X-DH-Ext': '1', 'Content-Type': 'audio/wav' }, body: r });
         reply({ ok: res.ok, err: res.ok ? '' : 'رفض التطبيق المحلي: ' + res.status });
+      } else if (m.type === 'setConn') {
+        await chrome.storage.local.set({ conn: m.conn || {} }); await loadConn(); reply({ ok: true });
       } else if (m.type === 'ping') {
-        try { const r = await fetch(BASE + '/ping', { headers: { 'X-DH-Ext': '1' } }); const j = await r.json(); reply({ ok: true, device: j.device, hasRef: j.hasRef }); }
+        await loadConn();
+        try { const r = await fetch(BASE + '/ping', { headers: hdr() }); if (!r.ok) throw new Error('HTTP ' + r.status); const j = await r.json(); reply({ ok: true, device: j.device, hasRef: j.hasRef, remote: BASE !== LOCAL_BASE }); }
         catch (e) { reply({ ok: false }); }
       } else if (m.type === 'cloneTts') {
         if (job.busy) return reply({ ok: false, err: 'مهمة قيد التنفيذ' });
+        await loadConn();
         job = { busy: true, err: '', has: false, t0: Date.now() };
         reply({ ok: true });
         try {
           const r = await getRef();
-          if (r) await fetch(BASE + '/ref', { method: 'POST', headers: { 'X-DH-Ext': '1' }, body: r });
-          const res = await fetch(BASE + '/tts', { method: 'POST', headers: { 'X-DH-Ext': '1', 'Content-Type': 'application/json' }, body: JSON.stringify({ text: m.text, lang: m.lang || 'ar', tries: m.tries || 3 }) });
+          if (r) await fetch(BASE + '/ref', { method: 'POST', headers: hdr(), body: r });
+          const res = await fetch(BASE + '/tts', { method: 'POST', headers: hdr({ 'Content-Type': 'application/json' }), body: JSON.stringify({ text: m.text, lang: m.lang || 'ar', tries: m.tries || 3 }) });
           if (!res.ok) throw new Error(await res.text() || ('HTTP ' + res.status));
           await putKey('out', await res.arrayBuffer());
           job.has = true; chrome.action.setBadgeBackgroundColor({ color: '#16a34a' }); chrome.action.setBadgeText({ text: '✓' });
