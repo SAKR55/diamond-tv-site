@@ -16,6 +16,87 @@ import torchaudio as ta
 DEVICE = "cuda" if torch.cuda.is_available() else ("mps" if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available() else "cpu")
 print(f"الجهاز المستخدم: {DEVICE}")
 
+import re
+
+
+def split_text(text, maxlen=180):
+    """يقسّم النص الطويل على علامات الترقيم العربية واللاتينية إلى مقاطع قصيرة (الجودة أعلى مع الجمل القصيرة)."""
+    text = re.sub(r"\s+", " ", text.strip())
+    parts = re.split(r"(?<=[\.\!\?\؟\؛\:\n])\s+|(?<=،)\s+", text)
+    out, cur = [], ""
+    for p in parts:
+        if not p:
+            continue
+        if len(cur) + len(p) + 1 <= maxlen:
+            cur = (cur + " " + p).strip()
+        else:
+            if cur:
+                out.append(cur)
+            while len(p) > maxlen:
+                cut = p.rfind(" ", 0, maxlen)
+                cut = cut if cut > 40 else maxlen
+                out.append(p[:cut].strip())
+                p = p[cut:].strip()
+            cur = p
+    if cur:
+        out.append(cur)
+    return out
+
+
+def prep_reference(path, max_sec=20.0, target_sr=24000):
+    """يجهّز الصوت المرجعي: أحادي، قص الصمت، اختيار أعلى مقطع نظيف بطول max_sec، تطبيع المستوى. يعيد (مسار، مدة، ملاحظة)."""
+    wav, sr = ta.load(path)
+    wav = wav.mean(0, keepdim=True)
+    if sr != target_sr:
+        wav = ta.functional.resample(wav, sr, target_sr)
+        sr = target_sr
+    x = wav[0].numpy().astype("float32")
+    frame = int(0.03 * sr)
+    n = len(x) // frame
+    if n < 10:
+        raise gr.Error("الصوت المرجعي قصير جدًا.")
+    e = np.sqrt((x[: n * frame].reshape(n, frame) ** 2).mean(1) + 1e-12)
+    thr = max(np.percentile(e, 20) * 1.5, e.max() * 0.03)
+    voiced = np.where(e > thr)[0]
+    if len(voiced) == 0:
+        raise gr.Error("لم أجد كلامًا واضحًا في المرجع.")
+    a, b = voiced[0] * frame, (voiced[-1] + 1) * frame
+    x = x[a:b]
+    win = int(max_sec * sr)
+    if len(x) > win:
+        step = int(sr)
+        best, bi = -1.0, 0
+        for i in range(0, len(x) - win + 1, step):
+            seg = x[i:i + win]
+            ee = np.sqrt((seg[: (len(seg) // frame) * frame].reshape(-1, frame) ** 2).mean(1))
+            score = float((ee > thr).mean()) * 2 + float(np.median(ee[ee > thr]) if (ee > thr).any() else 0)
+            if score > best:
+                best, bi = score, i
+        x = x[bi:bi + win]
+    pk = float(np.abs(x).max()) or 1.0
+    x = x / pk * 0.9
+    dur = len(x) / sr
+    note = ""
+    if dur < 6:
+        note = "المرجع أقصر من 6 ثوانٍ؛ سجّل 10–20 ثانية لنتيجة أدق."
+    outp = os.path.join(tempfile.gettempdir(), f"dh_ref_{os.getpid()}.wav")
+    ta.save(outp, torch.from_numpy(x).unsqueeze(0), sr)
+    return outp, dur, note
+
+
+def speaker_embed(model, wav_t, sr):
+    """بصمة المتكلم من مشفّر النموذج إن توفّر (للمفاضلة بين المحاولات)، وإلا None."""
+    try:
+        w = wav_t.squeeze().cpu().numpy()
+        if sr != 16000:
+            w = ta.functional.resample(torch.from_numpy(w).unsqueeze(0), sr, 16000).squeeze().numpy()
+        e = model.ve.embeds_from_wavs([w], sample_rate=16000)
+        e = np.asarray(e).mean(0)
+        return e / (np.linalg.norm(e) + 1e-9)
+    except Exception:
+        return None
+
+
 _tts = None
 _vc = None
 
@@ -55,17 +136,46 @@ def _call(fn, **kw):
     return fn(**{k: v for k, v in kw.items() if k in ok and v is not None})
 
 
-def say(text, ref_audio, lang, exaggeration, cfg, temperature, seed):
+def say(text, ref_audio, lang, exaggeration, cfg, temperature, seed, tries):
     if not text or not text.strip():
         raise gr.Error("اكتب النص أولًا.")
     if ref_audio is None:
         raise gr.Error("ارفع أو سجّل صوتًا مرجعيًا (10–20 ثانية من كلام واضح).")
     m = get_tts()
-    if seed and int(seed) > 0:
-        torch.manual_seed(int(seed))
-    wav = _call(m.generate, text=text.strip(), language_id=lang, audio_prompt_path=ref_audio,
-                exaggeration=float(exaggeration), cfg_weight=float(cfg), temperature=float(temperature))
-    return _save(wav, m.sr)
+    ref_path, dur, note = prep_reference(ref_audio)
+    print(f"المرجع بعد التجهيز: {dur:.1f} ث. {note}")
+    ref_emb = None
+    try:
+        rw, rsr = ta.load(ref_path)
+        ref_emb = speaker_embed(m, rw, rsr)
+    except Exception:
+        pass
+    chunks = split_text(text)
+    tries = max(1, int(tries))
+    base_seed = int(seed) if seed and int(seed) > 0 else int(np.random.randint(1, 10**6))
+    pieces = []
+    for ci, chunk in enumerate(chunks):
+        best, best_s = None, -2.0
+        for t in range(tries):
+            torch.manual_seed(base_seed + ci * 101 + t)
+            wav = _call(m.generate, text=chunk, language_id=lang, audio_prompt_path=ref_path,
+                        exaggeration=float(exaggeration), cfg_weight=float(cfg), temperature=float(temperature))
+            if wav.dim() == 1:
+                wav = wav.unsqueeze(0)
+            score = 0.0
+            if ref_emb is not None and tries > 1:
+                e = speaker_embed(m, wav, m.sr)
+                score = float(np.dot(e, ref_emb)) if e is not None else 0.0
+            if best is None or score > best_s:
+                best, best_s = wav, score
+        pieces.append(best.cpu())
+    gap = torch.zeros(1, int(0.18 * m.sr))
+    full = pieces[0]
+    for p in pieces[1:]:
+        full = torch.cat([full, gap, p], dim=1)
+    pk = float(full.abs().max()) or 1.0
+    full = full / pk * 0.92
+    return _save(full, m.sr)
 
 
 def convert(src_audio, ref_audio):
@@ -90,6 +200,7 @@ with gr.Blocks(title="DIAMOND Voice Studio", css=CSS) as demo:
             cfg = gr.Slider(0.0, 1.0, 0.5, step=0.05, label="التمسّك بالمرجع (CFG)")
             temp = gr.Slider(0.3, 1.2, 0.8, step=0.05, label="التنويع")
             seed = gr.Number(0, label="بذرة (0 = عشوائي)", precision=0)
+            tries = gr.Slider(1, 5, 3, step=1, label="عدد المحاولات (يختار الأقرب للمرجع)")
         go = gr.Button("🎙 ولّد الصوت", variant="primary")
         out = gr.Audio(label="النتيجة", type="filepath")
 
@@ -97,7 +208,7 @@ with gr.Blocks(title="DIAMOND Voice Studio", css=CSS) as demo:
             if not ok_:
                 raise gr.Error("أكّد أولًا أن الصوت المرجعي صوتك أو لديك إذن صاحبه.")
             return say(*a)
-        go.click(guarded_say, [ok, text, ref, lang, ex, cfg, temp, seed], out)
+        go.click(guarded_say, [ok, text, ref, lang, ex, cfg, temp, seed, tries], out)
     with gr.Tab("تحويل تسجيل إلى صوت المرجع"):
         gr.Markdown("سجّل كلامك أو ارفع ملفًا، فيتحوّل إلى نبرة الصوت المرجعي مع بقاء كلامك وإيقاعك.")
         src = gr.Audio(label="كلامك (الأصل)", sources=["upload", "microphone"], type="filepath")
