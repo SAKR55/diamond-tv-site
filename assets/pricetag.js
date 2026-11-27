@@ -241,5 +241,5 @@
   function sendToStudio(design, cb) {
     var rq = indexedDB.open('dh_bridge', 1); rq.onupgradeneeded = function () { rq.result.createObjectStore('kv') }; rq.onsuccess = function () { var tx2 = rq.result.transaction('kv', 'readwrite'); tx2.objectStore('kv').put(design, 'studio-import'); tx2.oncomplete = function () { cb ? cb() : window.open('/studio/design/?import=1', '_blank') } }; rq.onerror = function () { alert(t('تعذّر الإرسال للاستوديو', 'Could not send to studio')) } }
   function fonts(ff) { lf(ff); return document.fonts && document.fonts.load ? Promise.all([document.fonts.load('700 24px "' + ff + '"'), document.fonts.load('900 24px "' + ff + '"'), document.fonts.load('400 24px "' + ff + '"')]).catch(function () { }) : Promise.resolve() }
-  window.PriceTag = { layers: layers, toEls: toEls, sendToStudio: sendToStudio, PAL: PAL, TPL: TPL, FONTS: FONTS, PATS: PATS, ORNS: ORNS, fonts: fonts, makeSync: mk, make: function (row, o, w, h) { return fonts(o.ff || 'Cairo').then(function () { return mk(row, o, w, h) }) } };
+  window.PriceTag = { design: design, layers: layers, toEls: toEls, sendToStudio: sendToStudio, PAL: PAL, TPL: TPL, FONTS: FONTS, PATS: PATS, ORNS: ORNS, fonts: fonts, makeSync: mk, make: function (row, o, w, h) { return fonts(o.ff || 'Cairo').then(function () { return mk(row, o, w, h) }) } };
 })();

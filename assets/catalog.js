@@ -1,6 +1,6 @@
 /* Offers magazine / catalog maker: canvas based, runs fully in the browser. Needs pricetag.js (PriceTag API) and qr.js */
 (function () {
-  var root = document.getElementById('ct-app'); if (!root || !window.PriceTag) return;
+  var root = null, STUDIO = false; if (!window.PriceTag) return;
   var AR = document.documentElement.lang === 'ar', PT = window.PriceTag;
   function t(a, e) { return AR ? a : e }
   function $(s) { return root.querySelector(s) }
@@ -21,13 +21,15 @@
   function dl(b, n) { var a = document.createElement('a'); a.download = n; a.href = URL.createObjectURL(b); a.click() }
 
   function build() {
-    root.innerHTML = '<div class="pt-wrap"><div class="pt-side">' +
+    var HT = '<div class="pt-wrap"><div class="pt-side">' +
       '<details open class="pt-d"><summary>📰 ' + t('بيانات المجلة', 'Magazine info') + '</summary>' + ip('title', t('العنوان الرئيسي', 'Main title'), C.title) + ip('sub', t('عنوان فرعي', 'Subtitle'), C.sub) + ip('dates', t('مدة العروض', 'Offer dates'), C.dates, 'text', t('من 1 إلى 7 ديسمبر', 'Dec 1 – 7')) + ip('store', t('اسم المتجر', 'Store name'), C.store) + '</details>' +
       '<details open class="pt-d"><summary>📦 ' + t('المنتجات', 'Products') + ' (<span id="cnt"></span>)</summary><div id="rows"></div><div class="pt-btns"><button type="button" class="pt-b" id="add">➕ ' + t('منتج', 'Add') + '</button><button type="button" class="pt-b pt-g" id="bulk">📥 ' + t('لصق من Excel', 'Paste from Excel') + '</button><label class="pt-b pt-g" style="cursor:pointer">🖼 ' + t('رفع صور دفعة واحدة', 'Bulk images') + '<input type="file" id="bimg" accept="image/*" multiple hidden></label><button type="button" class="pt-b pt-g" id="clr">🗑</button></div><p class="pt-h">' + t('الأعمدة: الاسم، السعر، السعر القديم، ملاحظة، القسم. الصور المرفوعة دفعة واحدة تُوزَّع بالترتيب على المنتجات.', 'Columns: name, price, old price, note, category. Bulk images are assigned in order.') + '</p></details>' +
       '<details open class="pt-d"><summary>🎨 ' + t('التصميم', 'Design') + '</summary>' + sel('mode', t('نمط المجلة', 'Magazine style'), [['flyer', t('نشرة سوبرماركت (كثيفة)', 'Supermarket flyer (dense)')], ['cards', t('بطاقات أسعار', 'Price cards')]], C.mode) + sel('size', t('مقاس الصفحة', 'Page size'), SIZES.map(function (z) { return [z[0], z[3]] }), C.size) + '<div class="pt-pal">' + THEMES.map(function (i) { var p = PT.PAL[i]; return '<button type="button" class="pt-sw" data-th="' + i + '" title="' + p[4] + '" style="background:linear-gradient(135deg,' + p[0] + ' 50%,' + p[1] + ' 50%)' + (i === C.theme ? ';outline:3px solid #111' : '') + '"></button>' }).join('') + '</div>' + sel('cstyle', t('تصميم الغلاف', 'Cover style'), COVERS, C.cstyle) + sel('tpl', t('تصميم بطاقة السعر', 'Price card style'), PT.TPL, C.tpl) + sel('pat', t('نمط الخلفية', 'Background pattern'), PT.PATS, C.pat) + sel('ff', t('الخط', 'Font'), PT.FONTS.map(function (f) { return [f, f] }), C.ff) + sel('cpp', t('منتجات في الصفحة', 'Products per page'), CPP.map(function (c) { return [c[0], c[0]] }), C.cpp) + '<div class="pt-2">' + ip('cur', t('العملة', 'Currency'), C.cur) + sel('dig', t('الأرقام', 'Digits'), [['latin', '0123'], ['ar', '٠١٢٣']], C.dig) + '</div>' + ip('badge', t('نص شارة الخصم', 'Discount badge'), C.badge) + ck('cover', t('صفحة غلاف', 'Cover page'), C.cover) + ck('back', t('صفحة خلفية (تواصل)', 'Back page (contact)'), C.back) + ck('cats', t('عناوين الأقسام فوق المنتجات', 'Category headings'), C.cats) + '</details>' +
       '<details class="pt-d"><summary>🏷 ' + t('الشعار وصورة الغلاف', 'Logo & cover image') + '</summary><label class="pt-l">' + t('الشعار', 'Logo') + '<input type="file" id="logo" accept="image/*" class="pt-i"></label><label class="pt-l">' + t('صورة الغلاف (اختياري)', 'Cover image (optional)') + '<input type="file" id="cimg" accept="image/*" class="pt-i"></label></details>' +
       '<details class="pt-d"><summary>📞 ' + t('صفحة التواصل', 'Contact page') + '</summary>' + ip('phone', t('هاتف', 'Phone'), C.phone) + ip('wa', t('واتساب', 'WhatsApp'), C.wa) + ip('addr', t('العنوان / الفروع', 'Address / branches'), C.addr) + ip('web', t('الموقع أو الحساب', 'Website / handle'), C.web) + ip('qrt', t('رابط QR (اختياري)', 'QR link (optional)'), C.qrt, 'text', 'https://') + ip('terms', t('الشروط', 'Terms'), C.terms) + '</details></div>' +
       '<div class="pt-main"><div class="pt-bar"><button type="button" class="pt-b" id="prev">◀</button><b id="pg"></b><button type="button" class="pt-b" id="next">▶</button><span style="flex:1"></span><button type="button" class="pt-b pt-p" id="png">⬇ PNG</button><button type="button" class="pt-b" id="stu" style="background:#0ea5e9">🎨 ' + t('افتح في الاستوديو للتعديل', 'Edit in Studio') + '</button><button type="button" class="pt-b pt-p" id="pdf">⬇ PDF</button><button type="button" class="pt-b pt-p" id="prt">🖨 ' + t('طباعة', 'Print') + '</button></div><canvas id="cv" class="pt-cv"></canvas><div class="pt-bar" id="strip"></div><div class="pt-bar"><button type="button" class="pt-b pt-g" id="sv">💾 ' + t('حفظ المشروع', 'Save project') + '</button><label class="pt-b pt-g" style="cursor:pointer">📂 ' + t('فتح مشروع', 'Open project') + '<input type="file" id="ld" accept=".json" hidden></label><button type="button" class="pt-b pt-g" id="allpng">⬇ ' + t('كل الصفحات PNG', 'All pages PNG') + '</button></div></div></div>';
+    if (STUDIO) HT = HT.replace(/<div class="pt-main">[\s\S]*$/, '') + '<div class="pt-btns" style="margin-top:8px"><button type="button" class="pt-b pt-p" id="stg">📰 ' + t('أنشئ / حدّث صفحات المجلة في المحرر', 'Build / refresh magazine pages in editor') + '</button></div></div>';
+    root.innerHTML = HT;
     rowsUI()
   }
   function rowsUI() {
@@ -54,6 +56,7 @@
       if (b.dataset.pg != null) { PAGE = +b.dataset.pg; render() }
       if (b.id === 'png') exportPage(PAGE, 1, function (cv) { cv.toBlob(function (bl) { dl(bl, 'catalog-page-' + (PAGE + 1) + '.png') }, 'image/png') });
       if (b.id === 'allpng') { var n2 = pageList().length, i2 = 0; (function nx() { if (i2 >= n2) return; exportPage(i2, 1, function (cv) { cv.toBlob(function (bl) { dl(bl, 'catalog-page-' + (i2 + 1) + '.png'); i2++; setTimeout(nx, 350) }, 'image/png') }) })() }
+      if (b.id === 'stg') { b.disabled = true; var tt0 = b.textContent; b.textContent = '⏳'; studioDesign().then(function (d) { document.dispatchEvent(new CustomEvent('dh-studio-import', { detail: d })); b.disabled = false; b.textContent = tt0 }).catch(function (e) { b.disabled = false; b.textContent = tt0; alert(e && e.message) }); return }
       if (b.id === 'stu') { b.disabled = true; b.textContent = '⏳'; studioDesign().then(function (d) { PT.sendToStudio(d, function () { b.disabled = false; b.textContent = '🎨 ' + t('افتح في الاستوديو للتعديل', 'Edit in Studio'); window.open('/studio/design/?import=1', '_blank') }) }).catch(function (e) { b.disabled = false; alert(e && e.message) }) }
       if (b.id === 'pdf') exportPDF(false);
       if (b.id === 'prt') exportPDF(true);
@@ -190,5 +193,7 @@
       var total = 3 + N * 3, xo = off; add('xref\n0 ' + total + '\n0000000000 65535 f \n'); for (var q = 1; q < total; q++)add(('0000000000' + xr[q]).slice(-10) + ' 00000 n \n'); add('trailer\n<< /Size ' + total + ' /Root 1 0 R >>\nstartxref\n' + xo + '\n%%EOF');
       dl(new Blob(parts, { type: 'application/pdf' }), 'catalog.pdf') }
   }
-  build(); bind(); render();
+  function mount(el, st) { root = el; STUDIO = !!st; build(); bind(); render() }
+  window.CatalogMaker = { mount: mount };
+  var el0 = document.getElementById('ct-app'); if (el0) mount(el0, false);
 })();
