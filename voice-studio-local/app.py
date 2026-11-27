@@ -97,6 +97,47 @@ def speaker_embed(model, wav_t, sr):
         return None
 
 
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+INBOX = os.path.join(tempfile.gettempdir(), "dh_voice_inbox.wav")
+
+
+class _Recv(BaseHTTPRequestHandler):
+    """يستقبل الصوت المرجعي من إضافة المتصفح على 127.0.0.1:7861 فقط. يرفض الطلبات التي لا تحمل ترويسة الإضافة."""
+
+    def do_POST(self):
+        if self.path != "/ref" or self.headers.get("X-DH-Ext") != "1":
+            self.send_response(403); self.end_headers(); return
+        n = int(self.headers.get("Content-Length", 0))
+        if n <= 0 or n > 60 * 1024 * 1024:
+            self.send_response(413); self.end_headers(); return
+        with open(INBOX, "wb") as f:
+            f.write(self.rfile.read(n))
+        self.send_response(200); self.end_headers(); self.wfile.write(b"ok")
+
+    def do_OPTIONS(self):
+        self.send_response(403); self.end_headers()
+
+    def log_message(self, *a):
+        pass
+
+
+def start_receiver():
+    try:
+        srv = HTTPServer(("127.0.0.1", 7861), _Recv)
+        threading.Thread(target=srv.serve_forever, daemon=True).start()
+        print("جاهز لاستقبال الصوت من إضافة المتصفح على المنفذ 7861")
+    except OSError as e:
+        print("تعذّر فتح المنفذ 7861:", e)
+
+
+def take_inbox():
+    if not os.path.exists(INBOX):
+        raise gr.Error("لا يوجد صوت قادم من الإضافة بعد. أرسله من نافذة الإضافة أولًا.")
+    return INBOX, INBOX
+
+
 _tts = None
 _vc = None
 
@@ -190,6 +231,7 @@ CSS = "body,.gradio-container{direction:rtl;font-family:'Segoe UI',Tahoma,sans-s
 
 with gr.Blocks(title="DIAMOND Voice Studio", css=CSS) as demo:
     gr.Markdown("## 🎙 DIAMOND Voice Studio (محلي)\nاستنساخ الصوت والنطق بالعربية على جهازك. **استخدم صوتك أنت أو صوتًا لديك إذن صريح من صاحبه، ولا تستخدم النتيجة للانتحال أو الخداع.**")
+    inbox = gr.Button("📥 استخدم المرجع القادم من الإضافة")
     ok = gr.Checkbox(label="أؤكد أن الصوت المرجعي صوتي أنا أو لدي إذن صاحبه", value=False)
     with gr.Tab("نص ← كلام بصوت المرجع"):
         text = gr.Textbox(label="النص", lines=5, rtl=True, placeholder="اكتب النص بالعربية (التشكيل الخفيف يحسّن النطق أحيانًا)")
@@ -221,7 +263,9 @@ with gr.Blocks(title="DIAMOND Voice Studio", css=CSS) as demo:
                 raise gr.Error("أكّد أولًا أن الصوت المرجعي صوتك أو لديك إذن صاحبه.")
             return convert(a, b)
         go2.click(guarded_conv, [ok, src, ref2], out2)
+    inbox.click(take_inbox, None, [ref, ref2])
     gr.Markdown("ملاحظة: الملفات الناتجة تحمل علامة مائية غير مسموعة (Perth) من النموذج لتمييز الصوت المولّد. أول تشغيل ينزّل النموذج (عدة جيجابايت).")
 
 if __name__ == "__main__":
+    start_receiver()
     demo.queue().launch(inbrowser=True, server_name="127.0.0.1")
