@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "DIAMOND Voice Capture — التقاط الصوت المرجعي",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "التقط صوت أي تبويب أو الميكروفون كصوت مرجعي وأرسله إلى مولّد الأصوات في DIAMOND HUB أو إلى التطبيق المحلي.",
   "permissions": [
     "tabCapture",
