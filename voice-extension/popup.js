@@ -21,3 +21,37 @@ $('#site').onclick = async () => { st('جارٍ الإرسال…'); const r = a
 $('#local').onclick = async () => { st('جارٍ الإرسال…'); const r = await chrome.runtime.sendMessage({ type: 'sendLocal' }); st(r.ok ? '✅ أُرسل. في التطبيق اضغط «استخدم المرجع القادم من الإضافة».' : '⚠ ' + (r.err || 'تأكد أن التطبيق المحلي يعمل')); };
 chrome.runtime.onMessage.addListener(m => { if (m.type === 'recorded') { st('✅ تم التسجيل: ' + m.dur.toFixed(1) + ' ث'); poll(); } if (m.type === 'error') st('⚠ ' + m.err); });
 poll();
+
+// ---- الاستنساخ عبر التطبيق المحلي ----
+let outUrl = null;
+async function engine() {
+  const r = await chrome.runtime.sendMessage({ type: 'ping' });
+  $('#eng').textContent = r && r.ok ? ('✅ التطبيق المحلي متصل (' + r.device + ')') : '⚠ التطبيق المحلي غير متصل — شغّله (run_windows.bat) ثم أعد فتح النافذة.';
+  return r && r.ok;
+}
+async function showOut() {
+  const r = await chrome.runtime.sendMessage({ type: 'getOut' });
+  if (!r || !r.ok) return;
+  const bin = atob(r.b64), u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  if (outUrl) URL.revokeObjectURL(outUrl);
+  outUrl = URL.createObjectURL(new Blob([u], { type: 'audio/wav' }));
+  $('#aud').src = outUrl; $('#aud').hidden = false; $('#dlout').hidden = false;
+}
+$('#dlout').onclick = () => { const a = document.createElement('a'); a.href = outUrl; a.download = 'cloned-voice.wav'; a.click(); };
+let jt = null;
+async function jobPoll() {
+  const j = await chrome.runtime.sendMessage({ type: 'jobStatus' });
+  if (j.busy) { st('⏳ يولّد الصوت… ' + j.elapsed.toFixed(0) + ' ث (قد يطول على المعالج)'); $('#clone').disabled = true; return; }
+  clearInterval(jt); jt = null; $('#clone').disabled = false;
+  if (j.err) st('⚠ ' + j.err); else if (j.has) { st('✅ تم التوليد'); showOut(); }
+}
+$('#clone').onclick = async () => {
+  if (!$('#ok').checked) return st('⚠ أكّد أولًا أن الصوت صوتك أو لديك إذنه.');
+  const text = $('#txt').value.trim(); if (!text) return st('⚠ اكتب النص أولًا.');
+  const h = await chrome.runtime.sendMessage({ type: 'hasRef' }); if (!h.has) return st('⚠ سجّل صوتًا مرجعيًا أولًا.');
+  if (!(await engine())) return st('⚠ شغّل التطبيق المحلي أولًا.');
+  await chrome.runtime.sendMessage({ type: 'cloneTts', text, lang: $('#lang').value, tries: 3 });
+  st('⏳ بدأ التوليد…'); jt = setInterval(jobPoll, 1000); jobPoll();
+};
+engine(); chrome.runtime.sendMessage({ type: 'jobStatus' }).then(j => { if (j.busy) { jt = setInterval(jobPoll, 1000); } else if (j.has) showOut(); });

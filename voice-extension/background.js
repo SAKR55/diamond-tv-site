@@ -1,6 +1,8 @@
 importScripts('common.js');
 const SITE = 'https://diamond-tv.shop/studio/voice/#ext';
 const LOCAL = 'http://127.0.0.1:7861/ref';
+const BASE = 'http://127.0.0.1:7861';
+let job = { busy: false, err: '', has: false, t0: 0 };
 const BAD = /^(chrome|edge|about|chrome-extension|devtools|view-source):|^https:\/\/(chrome|chromewebstore)\.google\.com\/webstore|^https:\/\/microsoftedge\.microsoft\.com\/addons/;
 async function ensureOffscreen() {
   if (await chrome.offscreen.hasDocument()) return;
@@ -57,6 +59,26 @@ chrome.runtime.onMessage.addListener((m, _s, reply) => {
         const r = await getRef(); if (!r) return reply({ ok: false, err: 'لا يوجد تسجيل' });
         const res = await fetch(LOCAL, { method: 'POST', headers: { 'X-DH-Ext': '1', 'Content-Type': 'audio/wav' }, body: r });
         reply({ ok: res.ok, err: res.ok ? '' : 'رفض التطبيق المحلي: ' + res.status });
+      } else if (m.type === 'ping') {
+        try { const r = await fetch(BASE + '/ping', { headers: { 'X-DH-Ext': '1' } }); const j = await r.json(); reply({ ok: true, device: j.device, hasRef: j.hasRef }); }
+        catch (e) { reply({ ok: false }); }
+      } else if (m.type === 'cloneTts') {
+        if (job.busy) return reply({ ok: false, err: 'مهمة قيد التنفيذ' });
+        job = { busy: true, err: '', has: false, t0: Date.now() };
+        reply({ ok: true });
+        try {
+          const r = await getRef();
+          if (r) await fetch(BASE + '/ref', { method: 'POST', headers: { 'X-DH-Ext': '1' }, body: r });
+          const res = await fetch(BASE + '/tts', { method: 'POST', headers: { 'X-DH-Ext': '1', 'Content-Type': 'application/json' }, body: JSON.stringify({ text: m.text, lang: m.lang || 'ar', tries: m.tries || 3 }) });
+          if (!res.ok) throw new Error(await res.text() || ('HTTP ' + res.status));
+          await putKey('out', await res.arrayBuffer());
+          job.has = true; chrome.action.setBadgeBackgroundColor({ color: '#16a34a' }); chrome.action.setBadgeText({ text: '✓' });
+        } catch (e) { job.err = String(e.message || e); chrome.action.setBadgeBackgroundColor({ color: '#d97706' }); chrome.action.setBadgeText({ text: '!' }); }
+        job.busy = false;
+      } else if (m.type === 'jobStatus') {
+        reply({ busy: job.busy, err: job.err, has: job.has || !!(await getKey('out')), elapsed: job.busy ? (Date.now() - job.t0) / 1000 : 0 });
+      } else if (m.type === 'getOut') {
+        const o = await getKey('out'); reply({ ok: !!o, b64: o ? b64(o) : '' });
       } else if (m.type === 'sendSite') {
         const r = await getRef(); if (!r) return reply({ ok: false, err: 'لا يوجد تسجيل' });
         const tab = await chrome.tabs.create({ url: SITE });

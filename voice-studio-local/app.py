@@ -97,27 +97,71 @@ def speaker_embed(model, wav_t, sr):
         return None
 
 
+import json
 import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer as HTTPServer
 
 INBOX = os.path.join(tempfile.gettempdir(), "dh_voice_inbox.wav")
 
 
+_LOCK = threading.Lock()
+
+
 class _Recv(BaseHTTPRequestHandler):
-    """يستقبل الصوت المرجعي من إضافة المتصفح على 127.0.0.1:7861 فقط. يرفض الطلبات التي لا تحمل ترويسة الإضافة."""
+    """واجهة محلية لإضافة المتصفح على 127.0.0.1:7861 فقط. ترفض أي طلب لا يحمل ترويسة الإضافة X-DH-Ext."""
+
+    def _ok(self):
+        return self.headers.get("X-DH-Ext") == "1"
+
+    def _send(self, code, body=b"", ctype="text/plain; charset=utf-8"):
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        if not self._ok() or self.path != "/ping":
+            return self._send(403)
+        self._send(200, json.dumps({"ok": True, "device": DEVICE, "hasRef": os.path.exists(INBOX)}).encode())
 
     def do_POST(self):
-        if self.path != "/ref" or self.headers.get("X-DH-Ext") != "1":
-            self.send_response(403); self.end_headers(); return
+        if not self._ok():
+            return self._send(403)
         n = int(self.headers.get("Content-Length", 0))
         if n <= 0 or n > 60 * 1024 * 1024:
-            self.send_response(413); self.end_headers(); return
-        with open(INBOX, "wb") as f:
-            f.write(self.rfile.read(n))
-        self.send_response(200); self.end_headers(); self.wfile.write(b"ok")
+            return self._send(413)
+        data = self.rfile.read(n)
+        try:
+            if self.path == "/ref":
+                with open(INBOX, "wb") as f:
+                    f.write(data)
+                return self._send(200, b"ok")
+            if not os.path.exists(INBOX):
+                return self._send(409, "لا يوجد صوت مرجعي: أرسله من الإضافة أولًا.".encode())
+            if self.path == "/tts":
+                q = json.loads(data.decode("utf-8"))
+                with _LOCK:
+                    out = say(q.get("text", ""), INBOX, q.get("lang", "ar"), q.get("exaggeration", 0.5),
+                              q.get("cfg", 0.5), q.get("temperature", 0.8), q.get("seed", 0), q.get("tries", 3))
+                with open(out, "rb") as f:
+                    return self._send(200, f.read(), "audio/wav")
+            if self.path == "/vc":
+                tmp = os.path.join(tempfile.gettempdir(), "dh_vc_src.wav")
+                with open(tmp, "wb") as f:
+                    f.write(data)
+                with _LOCK:
+                    out = convert(tmp, INBOX)
+                with open(out, "rb") as f:
+                    return self._send(200, f.read(), "audio/wav")
+            self._send(404)
+        except Exception as e:  # noqa
+            msg = getattr(e, "message", None) or str(e)
+            print("خطأ:", msg)
+            self._send(500, msg.encode("utf-8", "replace"))
 
     def do_OPTIONS(self):
-        self.send_response(403); self.end_headers()
+        self._send(403)
 
     def log_message(self, *a):
         pass

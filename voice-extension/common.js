@@ -7,6 +7,14 @@ function idb() {
     r.onerror = () => no(r.error);
   });
 }
+async function putKey(k, buf) {
+  const d = await idb();
+  return new Promise((ok, no) => { const t = d.transaction('k', 'readwrite'); t.objectStore('k').put(buf, k); t.oncomplete = ok; t.onerror = () => no(t.error); });
+}
+async function getKey(k) {
+  const d = await idb();
+  return new Promise((ok, no) => { const q = d.transaction('k').objectStore('k').get(k); q.onsuccess = () => ok(q.result || null); q.onerror = () => no(q.error); });
+}
 async function putRef(buf) {
   const d = await idb();
   return new Promise((ok, no) => { const t = d.transaction('k', 'readwrite'); t.objectStore('k').put(buf, 'ref'); t.oncomplete = ok; t.onerror = () => no(t.error); });

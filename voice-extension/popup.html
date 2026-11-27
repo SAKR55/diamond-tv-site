@@ -1,5 +1,5 @@
 <!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=340">
-<style>*{box-sizing:border-box}html,body{overflow-x:hidden}body{width:340px;margin:0;padding:14px;background:#1e1b2e;color:#f1f5f9;font:13px/1.7 'Segoe UI',Tahoma,sans-serif}h1{font-size:15px;margin:0 0 6px;color:#c4b5fd}button{width:100%;margin:4px 0;padding:9px;border-radius:8px;border:1px solid #4c4580;background:#2a2542;color:#f1f5f9;font:inherit;cursor:pointer}button.pri{background:#7c3aed;border-color:#7c3aed;font-weight:700}button:disabled{opacity:.45;cursor:default}.h{font-size:11.5px;color:#94a3b8}#st{margin:8px 0;min-height:20px;color:#a78bfa}label{display:flex;gap:8px;align-items:flex-start;font-size:11.5px;margin:8px 0;width:100%}label input{flex:0 0 auto;margin-top:4px}label span{flex:1;min-width:0;overflow-wrap:anywhere}.h{overflow-wrap:anywhere}</style>
+<style>*{box-sizing:border-box}html,body{overflow-x:hidden}body{width:340px;margin:0;padding:14px;background:#1e1b2e;color:#f1f5f9;font:13px/1.7 'Segoe UI',Tahoma,sans-serif}h1{font-size:15px;margin:0 0 6px;color:#c4b5fd}button{width:100%;margin:4px 0;padding:9px;border-radius:8px;border:1px solid #4c4580;background:#2a2542;color:#f1f5f9;font:inherit;cursor:pointer}button.pri{background:#7c3aed;border-color:#7c3aed;font-weight:700}button:disabled{opacity:.45;cursor:default}.h{font-size:11.5px;color:#94a3b8}#st{margin:8px 0;min-height:20px;color:#a78bfa}textarea,select{width:100%;margin:5px 0;padding:8px;border-radius:8px;border:1px solid #4c4580;background:#2a2542;color:#f1f5f9;font:inherit}label{display:flex;gap:8px;align-items:flex-start;font-size:11.5px;margin:8px 0;width:100%}label input{flex:0 0 auto;margin-top:4px}label span{flex:1;min-width:0;overflow-wrap:anywhere}.h{overflow-wrap:anywhere}</style>
 <h1>🎙 DIAMOND Voice Capture</h1>
 <div class="h">التقط صوتًا مرجعيًا من التبويب الحالي (فيديو، اجتماع…) أو من الميكروفون، ثم أرسله للمولّد.</div>
 <label><input type="checkbox" id="ok"><span>أؤكد أن هذا الصوت صوتي أنا، أو لدي إذن صريح من صاحبه، ولن أستخدمه للانتحال أو الخداع.</span></label>
@@ -11,4 +11,13 @@
 <button id="site" disabled>🌐 أرسل إلى مولّد الموقع</button>
 <button id="local" disabled>💻 أرسل إلى التطبيق المحلي</button>
 <div class="h">الأفضل: 15–20 ثانية لمتكلم واحد بلا موسيقى. يعمل على أي موقع عادي، ويمكن البدء والإيقاف بالاختصار Alt+Shift+V أو بالنقر اليمين على الصفحة.</div>
+<hr style="border:0;border-top:1px solid #3b3558;margin:12px 0">
+<div class="h" style="color:#c4b5fd;font-weight:700">🧬 استنساخ حقيقي (نبرة + مخارج حروف)</div>
+<div class="h" id="eng">التطبيق المحلي: جارٍ الفحص…</div>
+<textarea id="txt" rows="3" placeholder="اكتب النص ليُقرأ بنبرة الصوت المسجَّل…"></textarea>
+<select id="lang"><option value="ar">العربية</option><option value="en">English</option></select>
+<button class="pri" id="clone" style="background:#16a34a;border-color:#16a34a">🎯 استنسخ وانطق النص</button>
+<audio id="aud" controls style="width:100%;margin-top:6px" hidden></audio>
+<button id="dlout" hidden>⬇ تنزيل النتيجة WAV</button>
+<div class="h" style="margin-top:6px">يعمل بمحرك Chatterbox متعدد اللغات على جهازك (التطبيق المحلي). الأفضل مرجع 15–20 ثانية نظيفة.</div>
 <script src="popup.js"></script></html>
