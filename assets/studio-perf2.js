@@ -24,6 +24,37 @@
     '<div class="gr"><label><input type="checkbox" id="q-fl"> اقلب الشخص أفقيًا</label><button id="q-pv">▶ معاينة</button><button id="q-ps">⏹</button><label>الصيغة <select id="q-fm"><option value="webm">WebM</option><option value="mp4">MP4 (إن دعمه المتصفح)</option></select></label><button class="pri" id="q-ex">🚀 صدّر الفيديو</button></div><div class="msg" id="q-m"></div>';
   root.appendChild(sec);
 
+  /* ---- تسجيل تبويب/شاشة كمرجع ---- */
+  var RC = { rec: null, st: null, t0: 0, tm: 0, btn: null, target: null, msg: null };
+  function recStop() { if (RC.rec && RC.rec.state !== 'inactive') RC.rec.stop(); }
+  async function recStart(btn, inputSel, msgEl) {
+    if (RC.rec && RC.rec.state !== 'inactive') return recStop();
+    if (!root.querySelector('#p-okrec').checked) { msgEl.textContent = 'أكّد أولًا أن الفيديو لك أو لديك إذن استخدامه (المربع أعلاه).'; return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia || !window.MediaRecorder) { msgEl.textContent = 'متصفحك لا يدعم تسجيل الشاشة. استخدم Chrome أو Edge على الكمبيوتر.'; return; }
+    try {
+      var st = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: true }); RC.st = st; var chunks = [], mime = pickMime('webm');
+      if (!st.getAudioTracks().length) msgEl.textContent = 'لم يُلتقط صوت: عند الاختيار فعّل «مشاركة صوت التبويب».';
+      var rec = new MediaRecorder(st, mime ? { mimeType: mime, videoBitsPerSecond: 8e6 } : { videoBitsPerSecond: 8e6 }); RC.rec = rec;
+      rec.ondataavailable = function (e) { if (e.data.size) chunks.push(e.data); };
+      rec.onstop = function () {
+        clearInterval(RC.tm); st.getTracks().forEach(function (t) { t.stop(); }); btn.textContent = btn.dataset.t;
+        var blob = new Blob(chunks, { type: rec.mimeType || 'video/webm' }); if (!blob.size) { msgEl.textContent = 'لم يُسجَّل شيء.'; return; }
+        var f = new File([blob], 'screen-recording.webm', { type: blob.type }), dt = new DataTransfer(); dt.items.add(f); var inp = root.querySelector(inputSel); inp.files = dt.files; inp.dispatchEvent(new Event('change'));
+        msgEl.textContent = 'تم التسجيل (' + ((Date.now() - RC.t0) / 1000).toFixed(0) + ' ث) وتحميله في الأداة ✅';
+      };
+      st.getVideoTracks()[0].addEventListener('ended', recStop);
+      RC.t0 = Date.now(); rec.start(500); btn.textContent = '⏹ إيقاف التسجيل (0 ث)'; RC.tm = setInterval(function () { btn.textContent = '⏹ إيقاف التسجيل (' + Math.round((Date.now() - RC.t0) / 1000) + ' ث)'; }, 500);
+      msgEl.textContent = 'يسجّل الآن: شغّل الفيديو في التبويب المختار، ثم اضغط إيقاف.';
+    } catch (e) { msgEl.textContent = 'أُلغي التسجيل أو رُفض الإذن.'; }
+  }
+  function addRec(afterInputSel, msgSel) {
+    var inp = root.querySelector(afterInputSel), lab = inp.parentNode, b = document.createElement('button'); b.textContent = b.dataset.t = '🔴 سجّل تبويبًا/شاشة'; b.title = 'مثلًا فيديو يوتيوب مفتوح في تبويب';
+    b.onclick = function () { recStart(b, afterInputSel, root.querySelector(msgSel)); }; lab.parentNode.insertBefore(b, lab.nextSibling);
+  }
+  var okl = document.createElement('label'); okl.className = 'ck'; okl.style.cssText = 'display:block;margin:6px 0'; okl.innerHTML = '<input type="checkbox" id="p-okrec"> أؤكد أن الفيديو الذي سأسجّله لي أو لدي إذن باستخدامه (لا تسجّل محتوى لا تملك حقه).';
+  var first = root.querySelector('.vc'); first.insertBefore(okl, first.querySelector('.gr'));
+  addRec('#p-rf', '#p-m1'); addRec('#q-pf', '#q-m');
+
   var pv = document.createElement('video'), bv = document.createElement('video'); pv.playsInline = bv.playsInline = true; pv.preload = bv.preload = 'auto'; pv.crossOrigin = bv.crossOrigin = 'anonymous'; bv.loop = true;
   var bimg = null, pf = false, bf = false, busy = false, seg = null, segTried = false, segMask = null, segW = 0, segH = 0, running = false;
   var cv = $('#q-cv'), cx = cv.getContext('2d'), pc = $('#q-pc'), pcx = pc.getContext('2d');
@@ -71,7 +102,7 @@
 
   $('#q-pf').onchange = function () {
     var f = this.files[0]; if (!f) return; pf = false; pv.src = URL.createObjectURL(f);
-    pv.onloadeddata = function () { pf = true; seek(pv, Math.min(0.1, pv.duration / 2)).then(function () { $('#q-i').textContent = 'الشخص: ' + pv.videoWidth + '×' + pv.videoHeight + ' — ' + pv.duration.toFixed(1) + ' ث'; cut(); paint(); }); };
+    pv.onloadeddata = async function () { if (window.PerfFixDur) await window.PerfFixDur(pv); pf = true; seek(pv, Math.min(0.1, pv.duration / 2)).then(function () { $('#q-i').textContent = 'الشخص: ' + pv.videoWidth + '×' + pv.videoHeight + ' — ' + pv.duration.toFixed(1) + ' ث'; cut(); paint(); }); };
   };
   $('#q-bf').onchange = function () {
     var f = this.files[0]; if (!f) return; bf = false; bimg = null;

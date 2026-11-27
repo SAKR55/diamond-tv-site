@@ -37,6 +37,10 @@
     for (var i = 0; i < list.length; i++) if (window.MediaRecorder && MediaRecorder.isTypeSupported(list[i])) return list[i];
     return '';
   }
+  function fixDur(v) { /* تسجيلات MediaRecorder بلا مدة معروفة: نفرض حسابها */
+    return new Promise(function (ok) { if (isFinite(v.duration) && v.duration > 0) return ok(); var done = false; function fin() { if (done) return; done = true; v.ontimeupdate = null; v.currentTime = 0; setTimeout(ok, 50); } v.ontimeupdate = function () { if (isFinite(v.duration)) fin(); }; v.currentTime = 1e101; setTimeout(fin, 4000); });
+  }
+  window.PerfFixDur = fixDur;
   function decode(ab) { return new Promise(function (ok, no) { var ac = new AC(); ac.decodeAudioData(ab, function (b) { ac.close(); ok(b); }, function () { ac.close(); no(new Error('decode')); }); }); }
   function envelope(buf, rate) { /* غلاف طاقة بمعدل rate لكل ثانية */
     var n = buf.length, ch = buf.numberOfChannels, sr = buf.sampleRate, hop = Math.floor(sr / rate), m = Math.floor(n / hop), out = new Float32Array(m);
@@ -116,8 +120,8 @@
   /* ---------- ① المرجع ---------- */
   $('#p-rf').onchange = function () {
     var f = this.files[0]; if (!f) return; S.r = f; rv.src = URL.createObjectURL(f); S.rb = null;
-    rv.onloadedmetadata = function () {
-      var d = rv.duration || 10; ['p-in', 'p-out'].forEach(function (i) { $('#' + i).max = d; });
+    rv.onloadedmetadata = async function () {
+      await fixDur(rv); var d = rv.duration || 10; ['p-in', 'p-out'].forEach(function (i) { $('#' + i).max = d; });
       $('#p-in').value = 0; $('#p-out').value = Math.min(d, +$('#p-lim').value); $('#p-inv').textContent = '0.0 ث'; $('#p-outv').textContent = (+$('#p-out').value).toFixed(1) + ' ث';
       $('#p-ri').textContent = rv.videoWidth + '×' + rv.videoHeight + ' — ' + fmt(d);
       seek(rv, 0).then(function () { paintRef(); check(); });
@@ -196,7 +200,7 @@
   /* ---------- ④ التركيب ---------- */
   $('#p-xf').onchange = async function () {
     var f = this.files[0]; if (!f) return; S.x = f; xv.src = URL.createObjectURL(f); S.xb = null;
-    xv.onloadedmetadata = function () { $('#p-xi').textContent = 'الفيديو ' + xv.videoWidth + '×' + xv.videoHeight + ' — ' + fmt(xv.duration); };
+    xv.onloadedmetadata = async function () { await fixDur(xv); $('#p-xi').textContent = 'الفيديو ' + xv.videoWidth + '×' + xv.videoHeight + ' — ' + fmt(xv.duration); };
     try { S.xb = await decode(await f.arrayBuffer()); } catch (e) { S.xb = null; }
   };
   $('#p-vf').onchange = async function () {
