@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re,os,json
 R=os.path.dirname(os.path.dirname(os.path.abspath(__file__)));B="https://diamond-tv.shop"
-for u in ["/business/","/business/tools/","/cv/","/studio/","/studio/design/","/studio/video/","/studio/voice/","/studio/perf/","/studio/photos/","/library/","/articles/","/ecommerce/","/claude/","/store/"]:
+for u in ["/business/","/business/tools/","/cv/","/studio/","/studio/design/","/studio/video/","/studio/voice/","/studio/photos/","/library/","/articles/","/ecommerce/","/claude/","/store/"]:
     f=R+u+"index.html"
     if not os.path.exists(f):continue
     h=open(f,encoding="utf-8").read()
