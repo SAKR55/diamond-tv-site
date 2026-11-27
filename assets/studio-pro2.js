@@ -124,7 +124,6 @@ function exportPane(p){var h='<h4>📤 تصدير احترافي</h4><p class="s
    c.toBlob(function(b){if(!b){a().toast('فشل التصدير — خفّض الدقة');return}if(f==='png'){b.arrayBuffer().then(function(ab){a().dl(new Blob([pngDPI(ab,dpi)],{type:'image/png'}),'design-'+c.width+'x'+c.height+'.png')})}else a().dl(b,'design-'+c.width+'x'+c.height+'.'+f);a().toast('تم التصدير ✅')},mime,qq)},40)}}
 
 /* ---------- أصوات ---------- */
-function voicePane(p){var w=document.createElement('div');w.innerHTML='<h4>🎙 مولّد نبرات الصوت</h4><p class="st-hint">حوّل نصًا إلى صوت بنبرات مختلفة (إعلان، هادئ، خبري، طفل، ضخم…) أو غيّر نبرة تسجيلك وحمّله لتضعه على الفيديو.</p><a class="st-big" style="display:block;text-align:center;text-decoration:none" href="/studio/voice/" target="_blank">🎙 افتح مولّد الأصوات</a>';while(w.firstChild)p.appendChild(w.firstChild)}
 
-SD.tabFn.ext=function(p){orig(p);adjPane(p);brushPane(p);exportPane(p);voicePane(p)};
+SD.tabFn.ext=function(p){orig(p);adjPane(p);brushPane(p);exportPane(p)};
 })();

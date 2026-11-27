@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "DIAMOND Voice Capture — التقاط الصوت المرجعي",
-  "version": "1.3.0",
-  "description": "التقط صوت أي تبويب أو الميكروفون كصوت مرجعي وأرسله إلى مولّد الأصوات في DIAMOND HUB أو إلى التطبيق المحلي.",
+  "version": "1.3.1",
+  "description": "التقط صوت أي تبويب أو الميكروفون كصوت مرجعي وأرسله إلى التطبيق المحلي أو خادم Colab.",
   "permissions": [
     "tabCapture",
     "offscreen",
@@ -12,8 +12,6 @@
     "storage"
   ],
   "host_permissions": [
-    "https://diamond-tv.shop/*",
-    "https://www.diamond-tv.shop/*",
     "http://127.0.0.1:7861/*",
     "https://*.trycloudflare.com/*"
   ],
@@ -33,18 +31,6 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://diamond-tv.shop/studio/voice/*",
-        "https://www.diamond-tv.shop/studio/voice/*"
-      ],
-      "js": [
-        "content.js"
-      ],
-      "run_at": "document_idle"
-    }
-  ],
   "commands": {
     "toggle-capture": {
       "suggested_key": {
