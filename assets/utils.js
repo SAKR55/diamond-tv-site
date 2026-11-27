@@ -159,5 +159,65 @@
       var all = ''; if (k !== 'tmp') { all = Object.keys(U[k]).map(function (u) { return '<div class="u-r"><span>' + u + '</span><b>' + fmt(v * U[k][f] / U[k][u], 6) + '</b></div>' }).join('') } out('<div class="u-big">' + fmt(r, 6) + ' ' + o + '</div>' + all) }
     on(['v', 'f', 'o'], calc)
   };
+  /* ===== batch 2 ===== */
+  T.zakat = function () {
+    mount(inp('gp', t('سعر جرام الذهب عيار 24 (بعملتك)', 'Gold price per gram, 24k (your currency)'), '300', 'number', '') + '<div class="u-2">' + inp('cash', t('النقد والمدخرات', 'Cash & savings'), '0', 'number', '') + inp('gold', t('ذهب (جرام عيار 24)', 'Gold (grams, 24k)'), '0', 'number', '') + '</div><div class="u-2">' + inp('trade', t('عروض التجارة (قيمتها)', 'Trade goods (value)'), '0', 'number', '') + inp('recv', t('ديون مستحقة لك مرجوّة السداد', 'Debts owed to you (collectible)'), '0', 'number', '') + '</div>' + inp('liab', t('ديون عليك حالّة (تُخصم)', 'Debts you owe now (deducted)'), '0', 'number', ''));
+    on(['gp', 'cash', 'gold', 'trade', 'recv', 'liab'], function () {
+      var gp = num($('#gp').value); if (isNaN(gp) || gp <= 0) return out('');
+      var v = function (i) { var n = num($('#' + i).value); return isNaN(n) ? 0 : n };
+      var goldV = v('gold') * gp, tot = v('cash') + goldV + v('trade') + v('recv') - v('liab'), nis = 85 * gp, due = tot >= nis;
+      out('<div class="u-big">' + fmt(due ? tot * .025 : 0) + '</div>' + row(t('إجمالي الأموال الزكوية الصافي', 'Net zakatable wealth'), fmt(tot)) + row(t('النصاب (85 جرام ذهب)', 'Nisab (85 g gold)'), fmt(nis)) + row(t('الحالة', 'Status'), due ? t('بلغ النصاب: الزكاة 2.5%', 'Nisab reached: 2.5% due') : t('لم يبلغ النصاب', 'Below nisab')) + '<p class="u-n">' + t('يشترط مرور الحول الهجري على المال. حاسبة تقريبية، ويُرجع في الحالات الخاصة إلى أهل العلم.', 'Requires one lunar year of ownership. This is an estimate; consult a scholar for special cases.') + '</p>')
+    })
+  };
+  T.loan = function () {
+    mount(inp('a', t('مبلغ التمويل', 'Loan amount'), '100000', 'number', '') + '<div class="u-2">' + inp('r', t('النسبة السنوية %', 'Annual rate %'), '5', 'number', '5') + inp('y', t('المدة بالسنوات', 'Term (years)'), '5', 'number', '5') + '</div>' + sel('m', t('طريقة الحساب', 'Method'), [['flat', t('نسبة ثابتة (مرابحة)', 'Flat rate (murabaha)')], ['red', t('متناقصة (أقساط متساوية)', 'Reducing balance (EMI)')]], 'flat') + '<label class="u-k"><input type="checkbox" id="tb"> ' + t('عرض جدول السداد', 'Show schedule') + '</label>');
+    on(['a', 'r', 'y', 'm', 'tb'], function () {
+      var a = num($('#a').value), r = num($('#r').value), y = num($('#y').value); if (isNaN(a) || isNaN(r) || isNaN(y) || a <= 0 || y <= 0) return out('');
+      var n = Math.round(y * 12), mp, tot, rows = '';
+      if ($('#m').value === 'flat') { tot = a * (1 + r / 100 * y); mp = tot / n; if ($('#tb').checked) for (var i = 1; i <= n && i <= 360; i++)rows += '<tr><td>' + i + '</td><td>' + fmt(a / n) + '</td><td>' + fmt(a * r / 100 * y / n) + '</td><td>' + fmt(mp) + '</td><td>' + fmt(tot - mp * i) + '</td></tr>' }
+      else { var i2 = r / 1200; mp = i2 ? a * i2 / (1 - Math.pow(1 + i2, -n)) : a / n; tot = mp * n; var bal = a; if ($('#tb').checked) for (var k = 1; k <= n && k <= 360; k++) { var it = bal * i2, pr = mp - it; bal -= pr; rows += '<tr><td>' + k + '</td><td>' + fmt(pr) + '</td><td>' + fmt(it) + '</td><td>' + fmt(mp) + '</td><td>' + fmt(Math.max(0, bal)) + '</td></tr>' } }
+      out('<div class="u-big">' + fmt(mp) + ' / ' + t('شهر', 'month') + '</div>' + row(t('عدد الأقساط', 'Installments'), n) + row(t('إجمالي السداد', 'Total payment'), fmt(tot)) + row(t('إجمالي الربح / الفائدة', 'Total profit / interest'), fmt(tot - a)) + (rows ? '<div style="overflow:auto;max-height:340px"><table class="u-t"><tr><th>#</th><th>' + t('أصل', 'Principal') + '</th><th>' + t('ربح', 'Profit') + '</th><th>' + t('القسط', 'Payment') + '</th><th>' + t('المتبقي', 'Balance') + '</th></tr>' + rows + '</table></div>' : ''))
+    })
+  };
+  T.eos = function () {
+    mount(inp('s', t('آخر أجر شهري (أساسي + بدلات ثابتة)', 'Last monthly wage (basic + fixed allowances)'), '8000', 'number', '') + '<div class="u-3">' + inp('y', t('سنوات', 'Years'), '0', 'number', '3') + inp('mo', t('أشهر', 'Months'), '0', 'number', '0') + inp('d', t('أيام', 'Days'), '0', 'number', '0') + '</div>' + sel('w', t('سبب إنهاء العقد', 'Reason'), [['t', t('انتهاء العقد أو فصل من صاحب العمل', 'Contract end / termination by employer')], ['r', t('استقالة العامل', 'Employee resignation')]], 't') + '<p class="u-n">' + t('وفق نظام العمل السعودي (المادتان 84 و85). للاسترشاد فقط.', 'Based on Saudi Labor Law (Articles 84–85). For guidance only.') + '</p>');
+    on(['s', 'y', 'mo', 'd', 'w'], function () {
+      var s = num($('#s').value), y = num($('#y').value) || 0, m = num($('#mo').value) || 0, d = num($('#d').value) || 0; if (isNaN(s) || s <= 0) return out('');
+      var yrs = y + m / 12 + d / 365, full = yrs <= 5 ? yrs * s / 2 : 5 * s / 2 + (yrs - 5) * s, f = 1, note = '';
+      if ($('#w').value === 'r') { f = yrs < 2 ? 0 : yrs < 5 ? 1 / 3 : yrs < 10 ? 2 / 3 : 1; note = row(t('نسبة الاستحقاق عند الاستقالة', 'Resignation entitlement'), (f * 100).toFixed(0) + '%') }
+      out('<div class="u-big">' + fmt(full * f) + '</div>' + row(t('مدة الخدمة', 'Service'), fmt(yrs, 2) + ' ' + t('سنة', 'yrs')) + row(t('المكافأة كاملة', 'Full gratuity'), fmt(full)) + note)
+    })
+  };
+  T.qr = function () {
+    mount(sel('k', t('النوع', 'Type'), [['u', t('نص أو رابط', 'Text or URL')], ['w', t('واي فاي', 'Wi-Fi')], ['a', t('واتساب', 'WhatsApp')], ['m', t('بريد إلكتروني', 'Email')]], 'u') + '<div id="qf"></div><div class="u-2"><label class="u-l">' + t('لون الرمز', 'Foreground') + '<input type="color" id="fg" value="#000000" class="u-i"></label><label class="u-l">' + t('الخلفية', 'Background') + '<input type="color" id="bg" value="#ffffff" class="u-i"></label></div>' + inp('sz', t('الحجم بالبكسل', 'Size (px)'), '512', 'number', '512'));
+    var F = { u: [['t', t('النص أو الرابط', 'Text or URL'), 'https://']], w: [['n', t('اسم الشبكة', 'Network name'), ''], ['p', t('كلمة المرور', 'Password'), '']], a: [['t', t('رقم الهاتف بالصيغة الدولية', 'Phone (international)'), '9665XXXXXXXX'], ['x', t('رسالة (اختياري)', 'Message (optional)'), '']], m: [['t', t('البريد', 'Email'), ''], ['x', t('الموضوع', 'Subject'), '']] };
+    function fields() { var k = $('#k').value; $('#qf').innerHTML = F[k].map(function (f) { return inp('f_' + f[0], f[1], f[2], 'text', '') }).join(''); F[k].forEach(function (f) { $('#f_' + f[0]).addEventListener('input', draw) }); draw() }
+    function val() { var k = $('#k').value, g = function (i) { return ($('#f_' + i) || { value: '' }).value }; if (k === 'u') return g('t'); if (k === 'w') return g('n') ? 'WIFI:T:WPA;S:' + g('n') + ';P:' + g('p') + ';;' : ''; if (k === 'a') return g('t') ? 'https://wa.me/' + g('t').replace(/\D/g, '') + (g('x') ? '?text=' + encodeURIComponent(g('x')) : '') : ''; return g('t') ? 'mailto:' + g('t') + (g('x') ? '?subject=' + encodeURIComponent(g('x')) : '') : '' }
+    function draw() { var v = val(); if (!v) return out(''); var sz = Math.max(128, Math.min(2048, num($('#sz').value) || 512)), m; try { m = QR.make(v, 'M') } catch (e) { return out('<p class="u-n">' + t('النص طويل جدًا', 'Text too long') + '</p>') } var c = document.createElement('canvas'), n = m.length, q = 3, u = sz / (n + q * 2); c.width = c.height = sz; var x = c.getContext('2d'); x.fillStyle = $('#bg').value; x.fillRect(0, 0, sz, sz); x.fillStyle = $('#fg').value; for (var r = 0; r < n; r++)for (var k = 0; k < n; k++)if (m[r][k]) x.fillRect(Math.floor((k + q) * u), Math.floor((r + q) * u), Math.ceil(u), Math.ceil(u)); out('<div style="text-align:center"><img id="qi" alt="QR" src="' + c.toDataURL('image/png') + '" style="max-width:100%;width:280px;border:1px solid #ddd;border-radius:12px"><br><a class="u-b" download="qr-code.png" href="' + c.toDataURL('image/png') + '" style="display:inline-block;text-decoration:none;margin-top:10px">⬇ PNG</a></div>') }
+    ['k', 'fg', 'bg', 'sz'].forEach(function (i) { $('#' + i).addEventListener('input', i === 'k' ? fields : draw) }); fields()
+  };
+  T.random = function () {
+    mount(sel('m', t('الوضع', 'Mode'), [['p', t('اختيار فائز من قائمة', 'Pick winner(s) from a list')], ['s', t('خلط القائمة', 'Shuffle list')], ['g', t('تقسيم لفرق', 'Split into teams')], ['n', t('رقم عشوائي', 'Random number')], ['c', t('عملة ونرد', 'Coin & dice')]], 'p') + '<div id="rf"></div><button type="button" class="u-b" id="go">🎲 ' + t('نفّذ', 'Go') + '</button>');
+    function fields() { var m = $('#m').value; $('#rf').innerHTML = (m === 'p' || m === 's' || m === 'g') ? '<label class="u-l">' + t('القائمة (اسم في كل سطر)', 'List (one per line)') + '<textarea id="l" class="u-i u-ta" style="min-height:120px"></textarea></label>' + (m === 'p' ? inp('c', t('عدد الفائزين', 'Winners'), '1', 'number', '1') : m === 'g' ? inp('c', t('عدد الفرق', 'Teams'), '2', 'number', '2') : '') : m === 'n' ? '<div class="u-2">' + inp('lo', t('من', 'From'), '1', 'number', '1') + inp('hi', t('إلى', 'To'), '100', 'number', '100') + '</div>' : ''; out('') }
+    function R(n) { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n }
+    function shuf(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = R(i + 1), x = a[i]; a[i] = a[j]; a[j] = x } return a }
+    $('#m').addEventListener('change', fields); fields();
+    $('#go').addEventListener('click', function () { var m = $('#m').value, L = ($('#l') || { value: '' }).value.split('\n').map(function (s) { return s.trim() }).filter(Boolean), h = '';
+      if (m === 'p') { if (!L.length) return out(''); var c = Math.max(1, Math.min(L.length, num($('#c').value) || 1)); h = shuf(L).slice(0, c).map(function (x) { return '<div class="u-big">🏆 ' + x + '</div>' }).join('') }
+      if (m === 's') { if (!L.length) return out(''); h = '<ol>' + shuf(L).map(function (x) { return '<li>' + x + '</li>' }).join('') + '</ol>' }
+      if (m === 'g') { if (!L.length) return out(''); var k = Math.max(2, Math.min(20, num($('#c').value) || 2)), tm = []; for (var i = 0; i < k; i++)tm.push([]); shuf(L).forEach(function (x, i) { tm[i % k].push(x) }); h = tm.map(function (g, i) { return '<div class="u-r"><span>' + t('الفريق ', 'Team ') + (i + 1) + '</span><b>' + g.join('، ') + '</b></div>' }).join('') }
+      if (m === 'n') { var lo = Math.ceil(num($('#lo').value)), hi = Math.floor(num($('#hi').value)); if (isNaN(lo) || isNaN(hi) || hi < lo) return out(''); h = '<div class="u-big">' + (lo + R(hi - lo + 1)) + '</div>' }
+      if (m === 'c') h = '<div class="u-big">' + (R(2) ? t('🪙 صورة', '🪙 Heads') : t('🪙 كتابة', '🪙 Tails')) + '</div><div class="u-big">🎲 ' + (1 + R(6)) + '</div>';
+      out(h) })
+  };
+  T.timer = function () {
+    mount('<div class="u-big" id="tt" style="font-size:56px;text-align:center">25:00</div><div class="u-3">' + inp('fm', t('تركيز (دقيقة)', 'Focus (min)'), '25', 'number', '25') + inp('bm', t('راحة (دقيقة)', 'Break (min)'), '5', 'number', '5') + inp('lm', t('راحة طويلة', 'Long break'), '15', 'number', '15') + '</div><div class="u-2"><button type="button" class="u-b" id="st">▶ ' + t('ابدأ', 'Start') + '</button><button type="button" class="u-b u-s" id="rs">↺ ' + t('إعادة', 'Reset') + '</button></div><p class="u-n" id="ts"></p>');
+    var left = 1500, run = 0, ph = 'f', cnt = 0, iv = null;
+    function show() { var m = Math.floor(left / 60), s = left % 60; $('#tt').textContent = ('0' + m).slice(-2) + ':' + ('0' + s).slice(-2); document.title = $('#tt').textContent + ' · ' + t('مؤقت', 'Timer'); $('#ts').textContent = (ph === 'f' ? t('وقت التركيز', 'Focus') : t('وقت الراحة', 'Break')) + ' · ' + t('جلسات مكتملة: ', 'Done: ') + cnt }
+    function beep() { try { var c = new (window.AudioContext || window.webkitAudioContext)(), o = c.createOscillator(); o.connect(c.destination); o.frequency.value = 880; o.start(); setTimeout(function () { o.stop() }, 600) } catch (e) { } }
+    function setP(p) { ph = p; left = 60 * (p === 'f' ? (num($('#fm').value) || 25) : p === 'b' ? (num($('#bm').value) || 5) : (num($('#lm').value) || 15)); show() }
+    $('#st').addEventListener('click', function () { if (run) { run = 0; clearInterval(iv); this.textContent = '▶ ' + t('ابدأ', 'Start'); return } run = 1; this.textContent = '⏸ ' + t('إيقاف', 'Pause'); var end = Date.now() + left * 1000; iv = setInterval(function () { left = Math.max(0, Math.round((end - Date.now()) / 1000)); show(); if (left <= 0) { beep(); if (ph === 'f') { cnt++; setP(cnt % 4 === 0 ? 'l' : 'b') } else setP('f'); end = Date.now() + left * 1000 } }, 250) });
+    $('#rs').addEventListener('click', function () { run = 0; clearInterval(iv); $('#st').textContent = '▶ ' + t('ابدأ', 'Start'); cnt = 0; setP('f') }); ['fm', 'bm', 'lm'].forEach(function (i) { $('#' + i).addEventListener('change', function () { if (!run) setP(ph) }) }); setP('f')
+  };
   if (T[tool]) T[tool]();
 })();
