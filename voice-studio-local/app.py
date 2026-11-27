@@ -227,6 +227,9 @@ def _call(fn, **kw):
 def say(text, ref_audio, lang, exaggeration, cfg, temperature, seed, tries):
     if not text or not text.strip():
         raise gr.Error("اكتب النص أولًا.")
+    if ref_audio is None and os.path.exists(INBOX):
+        ref_audio = INBOX  # الصوت القادم من الإضافة، دون الحاجة لضغط زر
+        print("استخدام المرجع القادم من الإضافة")
     if ref_audio is None:
         raise gr.Error("ارفع أو سجّل صوتًا مرجعيًا (10–20 ثانية من كلام واضح).")
     m = get_tts()
