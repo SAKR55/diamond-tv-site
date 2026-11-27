@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14213d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>إثبات التسليم: إيصال تسليم بصور مختومة وتوقيع وبصمة تحقق | DIAMOND HUB</title><meta name="description" content="أنشئ إيصال تسليم رقميًا في دقيقة: صور مختومة بالوقت والموقع، توقيع المستلم، بصمة تحقق SHA-256، ترويسة وشعار قابلان للتعديل وطباعة A4 أو حراري. يعمل في متصفحك دون رفع بياناتك."><link rel="canonical" href="https://diamond-tv.shop/tools/delivery-proof/"><meta name="robots" content="index,follow"><meta property="og:title" content="إثبات التسليم — إيصال تسليم رقمي بصور وتوقيع وبصمة تحقق"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#ffffff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--navy:#14213d;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;
+--f-disp:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--f-body:'IBM Plex Sans Arabic',system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--navy:#0a0f1d;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7}
+.wrap{max-width:720px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) 14px 90px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 12px}
+h1{font-family:var(--f-disp);font-size:1.9rem;margin:0;line-height:1.1}
+h1 small{display:block;font-family:var(--f-body);font-size:.8rem;font-weight:400;color:var(--mut);margin-top:3px}
+h2{font-family:var(--f-disp);font-size:1.2rem;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+h2 i{font-style:normal;background:var(--acc);color:var(--acc-ink);width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--f-body);font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+textarea{min-height:80px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+.full{grid-column:1/-1}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--field);border-radius:999px;padding:7px 15px;cursor:pointer;font-size:.9rem}
+.chip[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chip.ok[aria-pressed=true]{background:var(--ok);border-color:var(--ok)}
+.chip.bad[aria-pressed=true]{background:var(--bad);border-color:var(--bad)}
+button.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:12px 18px;cursor:pointer;font-weight:600}
+button.btn.alt{background:var(--soft);color:var(--ink)}
+button.btn.big{width:100%;padding:15px;font-size:1.05rem}
+button.btn:disabled{opacity:.55}
+.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:10px}
+.shot{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.shot button{position:absolute;top:4px;inset-inline-start:4px;border:0;background:rgba(0,0,0,.65);color:#fff;border-radius:50%;width:26px;height:26px;cursor:pointer}
+#sig{width:100%;height:190px;background:#fff;border:2px dashed var(--line);border-radius:12px;touch-action:none;display:block}
+.sigbar{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px;flex-wrap:wrap}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}
+.chk input{width:18px;height:18px;accent-color:var(--acc)}
+.err{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad);border-radius:10px;padding:9px 12px;margin-top:10px;font-size:.9rem;display:none}
+#out img{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.lib{padding:0;margin:0;list-style:none}
+.lib li{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.lib small{display:block;color:var(--mut)}
+.lib button{border:0;background:none;color:var(--acc);cursor:pointer;font-weight:600;padding:4px 8px}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:1px;direction:ltr;unicode-bidi:plaintext}
+.res{margin-top:10px;padding:10px 12px;border-radius:10px;font-weight:600;display:none}
+.res.ok{display:block;background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.res.no{display:block;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}
+input[type=color]{width:100%;height:42px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.lg{display:flex;align-items:center;gap:10px}.lg img{width:56px;height:56px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#fff}
+@media print{html,body{background:#fff!important}.wrap>*:not(#printzone){display:none!important}.toast{display:none}.wrap{padding:0;max-width:none}#printzone{display:block!important}#printzone>*:not(#out){display:none!important}#out .acts,#out .hint{display:none}#out{margin:0!important}#out img{border:0;border-radius:0;width:100%}.card{border:0;padding:0;margin:0}}
+</style>
+</head>
+<body>
+<style id="pgst"></style>
+<div class="wrap">
+<p style="margin:0 0 6px;font-size:.85rem"><a href="/tools/" style="color:var(--mut)">← كل الأدوات</a></p>
+<header>
+  <h1>إثبات التسليم<small>إيصال تسليم بصور مختومة وتوقيع وبصمة تحقق، في دقيقة</small></h1>
+  <div class="chips"><button class="chip" id="bHist" type="button">السجل</button><button class="chip" id="bVer" type="button">تحقق</button></div>
+</header>
+
+<section class="card" id="hist" hidden><h2>السجل</h2><ul class="lib" id="histList"></ul><p class="hint" id="histEmpty">لا توجد إيصالات محفوظة على هذا الجهاز.</p></section>
+
+<section class="card" id="ver" hidden>
+  <h2>التحقق من إيصال</h2>
+  <label>الصق «حزمة الإثبات» التي نسخها صاحب الإيصال<textarea id="vtxt" style="min-height:110px" dir="ltr" placeholder='{"data":{...},"photos":[...],"sig":"..."}'></textarea></label>
+  <div class="acts"><button class="btn" id="vgo" type="button">تحقق</button></div>
+  <div class="res" id="vres"></div>
+  <p class="hint">يعيد الأداة حساب البصمة من الصور والبيانات ويقارنها بالمكتوبة. أي تغيير ولو في بكسل واحد يُظهر عدم التطابق.</p>
+</section>
+
+<section class="card">
+  <h2><i>1</i> بيانات التسليم</h2>
+  <div class="row">
+    <label class="full">اسمك أو اسم النشاط (المسلِّم)<input type="text" id="from" maxlength="60" autocomplete="organization"></label>
+    <label>اسم المستلم<input type="text" id="to" maxlength="60"></label>
+    <label>رقم الطلب أو الفاتورة<input type="text" id="ref" maxlength="40" inputmode="text"></label>
+    <label class="full">ماذا سُلِّم؟<input type="text" id="item" maxlength="120" placeholder="مثال: ثلاجة 18 قدم + تركيب"></label>
+  </div>
+  <p class="hint" style="margin-bottom:6px;margin-top:12px">حالة التسليم</p>
+  <div class="chips" id="cond"></div>
+  <label style="margin-top:10px">ملاحظات (اختياري، اكتب أي عيب أو اعتراض)<textarea id="notes" maxlength="400"></textarea></label>
+</section>
+
+<section class="card">
+  <h2><i>2</i> الصور</h2>
+  <div class="acts" style="margin-top:0">
+    <label class="btn" style="cursor:pointer;flex-direction:row;color:var(--acc-ink);font-size:1rem;gap:6px">📷 التقط صورة<input type="file" id="cam" accept="image/*" capture="environment" hidden></label>
+    <label class="btn alt" style="cursor:pointer;flex-direction:row;color:var(--ink);font-size:1rem">🖼 من المعرض<input type="file" id="gal" accept="image/*" multiple hidden></label>
+    <button class="btn alt" id="gps" type="button">📍 تفعيل الموقع</button>
+  </div>
+  <div class="shots" id="shots"></div>
+  <p class="hint" id="gpsInfo">كل صورة تُختم بالوقت والموقع (إن فعّلته) ورقم الإيصال. حتى 6 صور.</p>
+</section>
+
+<section class="card">
+  <h2><i>3</i> توقيع المستلم</h2>
+  <canvas id="sig" width="900" height="300" aria-label="مساحة التوقيع"></canvas>
+  <div class="sigbar"><button class="btn alt" id="sigClear" type="button">مسح التوقيع</button>
+    <label class="chk"><input type="checkbox" id="refuse"> امتنع المستلم عن التوقيع</label></div>
+</section>
+
+<section class="card" id="printzone">
+  <h2><i>4</i> الإصدار</h2>
+  <button class="btn big" id="make" type="button">أصدر الإيصال</button>
+  <div class="err" id="err" role="alert"></div>
+  <div id="out" style="margin-top:12px" hidden>
+    <img id="outImg" alt="إيصال التسليم">
+    <div class="acts"><button class="btn" id="share" type="button">مشاركة الإيصال</button><button class="btn alt" id="bundle" type="button">نسخ حزمة الإثبات</button><button class="btn alt" id="txtc" type="button">نسخ نص الإيصال</button><button class="btn alt" id="print" type="button">🖨 طباعة</button><button class="btn alt" id="newr" type="button">إيصال جديد</button></div>
+    <p class="hint">لحفظ الصورة اضغط عليها مطولًا ثم «حفظ الصورة». احتفظ بـ«حزمة الإثبات» لأي نزاع، فهي ما يُتحقق به من سلامة الصور والبيانات.</p>
+  </div>
+</section>
+
+<details class="card" id="setd"><summary>⚙ إعدادات الترويسة والشعار والطباعة</summary>
+<div class="row" style="margin-top:12px">
+ <label class="full">اسم النشاط في الترويسة<input type="text" id="pName" maxlength="60" placeholder="يُستخدم «اسمك» أعلاه إن تُرك فارغًا"></label>
+ <label class="full">عبارة تحت الاسم<input type="text" id="pTag" maxlength="80" placeholder="إيصال تسليم رقمي"></label>
+ <label>الهاتف<input type="text" id="pPhone" maxlength="30" inputmode="tel" dir="ltr"></label>
+ <label>السجل التجاري / الرقم الضريبي<input type="text" id="pReg" maxlength="40" dir="ltr"></label>
+ <label class="full">العنوان<input type="text" id="pAddr" maxlength="100"></label>
+ <label class="full">نص أسفل الإيصال (شروط، شكر، سياسة الإرجاع…)<textarea id="pFoot" maxlength="300" style="min-height:64px"></textarea></label>
+ <label>لون الترويسة<input type="color" id="pColor" value="#14213d"></label>
+ <label>لون التمييز<input type="color" id="pAcc" value="#e8590c"></label>
+ <label>مقاس الطباعة<select id="pPaper"><option value="a4">A4</option><option value="t">حراري 80 مم</option></select></label>
+ <label>عدد الصور في الصف<select id="pCols"><option value="2">2</option><option value="3">3</option><option value="1">1 (كبيرة)</option></select></label>
+ <div class="full lg"><img id="pLogoImg" alt="" hidden><label class="btn alt" style="cursor:pointer;flex-direction:row;color:var(--ink);font-size:.95rem">🖼 رفع الشعار<input type="file" id="pLogo" accept="image/*" hidden></label><button class="btn alt" id="pLogoDel" type="button" hidden>إزالة الشعار</button></div>
+ <label class="chk"><input type="checkbox" id="pLoc" checked> إظهار الموقع في الإيصال</label>
+ <label class="chk"><input type="checkbox" id="pStampTxt" checked> ختم الوقت على الصور</label>
+</div><p class="hint">تُحفظ تلقائيًا على هذا الجهاز وتُطبَّق على الإيصالات الجديدة. الترويسة لا تدخل في البصمة، فتعديلها لا يُبطل التحقق.</p></details>
+
+<details class="card"><summary>حدود هذا الإثبات (اقرأها)</summary>
+<p class="hint">الوقت والموقع يؤخذان من جهاز المسلِّم، وقد يغيّر مستخدم متمرّس ساعة جهازه. البصمة تثبت أن الصور والبيانات لم تُعدَّل بعد الإصدار، لكنها لا تثبت وقت الإصدار لطرف ثالث. هذا إيصال مساعد وليس حكمًا قانونيًا؛ قيمته أمام جهة رسمية تختلف من بلد إلى آخر.</p></details>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2200)}
+function showErr(m){var e=$('#err');e.textContent=m;e.style.display=m?'block':'none'}
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){window._m=window._m||{};if(v===undefined)return window._m[k]||null;window._m[k]=v}}
+/* ---------- الإعدادات ---------- */
+var PF={name:'',tag:'',phone:'',reg:'',addr:'',foot:'',color:'#14213d',acc:'#e8590c',paper:'a4',cols:'2',loc:true,stampTxt:true,logo:''};
+try{var _p=JSON.parse(ls('pd_prof')||'{}');for(var k in _p)PF[k]=_p[k]}catch(e){}
+var PMAP={pName:'name',pTag:'tag',pPhone:'phone',pReg:'reg',pAddr:'addr',pFoot:'foot',pColor:'color',pAcc:'acc',pPaper:'paper',pCols:'cols'};
+function saveP(){ls('pd_prof',JSON.stringify(PF))}
+function logoUI(){var i=$('#pLogoImg');i.hidden=!PF.logo;if(PF.logo)i.src=PF.logo;$('#pLogoDel').hidden=!PF.logo}
+Object.keys(PMAP).forEach(function(id){var e=$('#'+id);e.value=PF[PMAP[id]];e.addEventListener('input',function(){PF[PMAP[id]]=e.value;saveP()})});
+$('#pLoc').checked=PF.loc!==false;$('#pLoc').onchange=function(){PF.loc=this.checked;saveP()};
+$('#pStampTxt').checked=PF.stampTxt!==false;$('#pStampTxt').onchange=function(){PF.stampTxt=this.checked;saveP()};
+$('#pLogo').onchange=function(e){var f=e.target.files[0];e.target.value='';if(!f)return;var im=new Image();im.onload=function(){var m=Math.min(1,320/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*m);c.height=Math.round(im.height*m);c.getContext('2d').drawImage(im,0,0,c.width,c.height);PF.logo=c.toDataURL('image/png');saveP();logoUI();toast('تم رفع الشعار')};im.onerror=function(){toast('تعذّرت قراءة الشعار')};im.src=URL.createObjectURL(f)};
+$('#pLogoDel').onclick=function(){PF.logo='';saveP();logoUI()};logoUI();
+$('#print').onclick=function(){$('#pgst').textContent='@page{size:'+(PF.paper==='t'?'80mm auto':'A4')+';margin:'+(PF.paper==='t'?'2mm':'8mm')+'}';setTimeout(function(){window.print()},50)};
+/* ---------- حالة ---------- */
+var COND='ok',PHOTOS=[],LOC=null,RID=newId(),LASTB=null,drawn=false;
+function newId(){var a=new Uint8Array(6);(window.crypto||{}).getRandomValues?crypto.getRandomValues(a):a.forEach(function(_,i){a[i]=Math.floor(Math.random()*256)});return Array.prototype.map.call(a,function(b){return ('0'+b.toString(16)).slice(-2)}).join('').toUpperCase().replace(/(.{4})(.{4})(.{4})/,'$1-$2-$3')}
+$('#from').value=ls('pd_from')||'';
+function condUI(){$('#cond').innerHTML=[['ok','سليم ومكتمل','ok'],['bad','مع ملاحظات','bad']].map(function(c){return '<button type="button" class="chip '+c[2]+'" data-c="'+c[0]+'" aria-pressed="'+(c[0]===COND)+'">'+c[1]+'</button>'}).join('');[].forEach.call(document.querySelectorAll('#cond .chip'),function(b){b.onclick=function(){COND=b.dataset.c;condUI()}})}
+condUI();
+/* ---------- SHA-256 ---------- */
+function sha(str){var u=new TextEncoder().encode(str);return crypto.subtle.digest('SHA-256',u).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2)}).join('')})}
+function fmtCode(h){return h.slice(0,16).toUpperCase().replace(/(.{4})(?=.)/g,'$1-')}
+/* ---------- الموقع ---------- */
+function getLoc(){return new Promise(function(res){if(!navigator.geolocation){res(null);return}navigator.geolocation.getCurrentPosition(function(p){res({lat:+p.coords.latitude.toFixed(5),lon:+p.coords.longitude.toFixed(5),acc:Math.round(p.coords.accuracy)})},function(){res(null)},{enableHighAccuracy:true,timeout:9000,maximumAge:30000})})}
+$('#gps').onclick=function(){$('#gpsInfo').textContent='جارٍ تحديد الموقع…';getLoc().then(function(l){LOC=l;$('#gpsInfo').textContent=l?'تم تحديد الموقع (دقة ±'+l.acc+' م). سيُختم على الصور.':'تعذّر تحديد الموقع، تأكد من السماح للمتصفح. يمكنك المتابعة بدونه.'})};
+/* ---------- الصور ---------- */
+function pad(n){return ('0'+n).slice(-2)}
+function stamp(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
+function loadFile(f){return new Promise(function(res,rej){var im=new Image();im.onload=function(){res(im)};im.onerror=function(){rej()};im.src=URL.createObjectURL(f)})}
+function stampPhoto(im){var m=Math.min(1,1280/Math.max(im.width,im.height)),w=Math.round(im.width*m),h=Math.round(im.height*m),c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d');x.drawImage(im,0,0,w,h);
+  if(PF.stampTxt===false)return c.toDataURL('image/jpeg',.82);var fs=Math.max(14,Math.round(w/46)),bh=fs*(LOC?2.9:1.9);x.fillStyle='rgba(8,12,24,.72)';x.fillRect(0,h-bh,w,bh);x.fillStyle='#fff';x.font='600 '+fs+'px monospace';x.textBaseline='middle';x.direction='ltr';x.textAlign='left';
+  x.fillText(stamp(new Date())+'   #'+RID,fs*.6,h-bh+fs*.95);if(LOC)x.fillText(LOC.lat+', '+LOC.lon+'  ±'+LOC.acc+'m',fs*.6,h-bh+fs*2.0);
+  return c.toDataURL('image/jpeg',.82)}
+function addFiles(files){var a=[].slice.call(files);if(!a.length)return;var chain=Promise.resolve();a.forEach(function(f){chain=chain.then(function(){if(PHOTOS.length>=6){toast('الحد 6 صور');return}return loadFile(f).then(function(im){PHOTOS.push(stampPhoto(im));shots()}).catch(function(){toast('تعذّرت قراءة صورة')})})})}
+$('#cam').onchange=function(e){addFiles(e.target.files);e.target.value=''};
+$('#gal').onchange=function(e){addFiles(e.target.files);e.target.value=''};
+function shots(){$('#shots').innerHTML=PHOTOS.map(function(p,i){return '<div class="shot"><img src="'+p+'" alt="صورة '+(i+1)+'"><button type="button" data-i="'+i+'" aria-label="حذف">×</button></div>'}).join('');[].forEach.call(document.querySelectorAll('.shot button'),function(b){b.onclick=function(){PHOTOS.splice(+b.dataset.i,1);shots()}})}
+/* ---------- التوقيع ---------- */
+(function(){var cv=$('#sig'),x=cv.getContext('2d'),dn=false,lx=0,ly=0;x.lineWidth=5;x.lineCap='round';x.lineJoin='round';x.strokeStyle='#14213d';
+  function pt(e){var r=cv.getBoundingClientRect();return [(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]}
+  cv.addEventListener('pointerdown',function(e){dn=true;drawn=true;var p=pt(e);lx=p[0];ly=p[1];x.beginPath();x.arc(lx,ly,2.5,0,7);x.fillStyle='#14213d';x.fill();cv.setPointerCapture(e.pointerId);e.preventDefault()});
+  cv.addEventListener('pointermove',function(e){if(!dn)return;var p=pt(e);x.beginPath();x.moveTo(lx,ly);x.lineTo(p[0],p[1]);x.stroke();lx=p[0];ly=p[1];e.preventDefault()});
+  ['pointerup','pointercancel','pointerleave'].forEach(function(n){cv.addEventListener(n,function(){dn=false})});
+  $('#sigClear').onclick=function(){x.clearRect(0,0,cv.width,cv.height);drawn=false}})();
+/* ---------- رسم الإيصال ---------- */
+function wrap(x,t,maxW,lh,px,y,dry){var words=String(t).split(/\s+/),line='',n=0;words.forEach(function(w){var test=line?line+' '+w:w;if(x.measureText(test).width>maxW&&line){if(!dry)x.fillText(line,px,y+n*lh);n++;line=w}else line=test});if(line){if(!dry)x.fillText(line,px,y+n*lh);n++}return n}
+function imgFrom(src){return new Promise(function(res){var im=new Image();im.onload=function(){res(im)};im.onerror=function(){res(null)};im.src=src})}
+function render(B){
+  var d=B.data;var pfx=B.prof||PF;return Promise.all(B.photos.map(imgFrom).concat([B.sig?imgFrom(B.sig):Promise.resolve(null),pfx.logo?imgFrom(pfx.logo):Promise.resolve(null)])).then(function(imgs){
+    var lg=imgs.pop(),sigImg=imgs.pop();imgs.logo=lg;var W=1080,P=60,c=document.createElement('canvas');c.width=W;c.height=5200;var x=c.getContext('2d');x.direction='rtl';x.textBaseline='alphabetic';
+    x.fillStyle='#fbfaf6';x.fillRect(0,0,W,5200);
+    var pf=B.prof||PF,HC=pf.color||'#14213d',AC=pf.acc||'#e8590c';var logoI=pf.logo?imgs.logo:null;
+    x.fillStyle=HC;x.fillRect(0,0,W,210);x.fillStyle=AC;x.fillRect(0,210,W,10);
+    var rightX=W-P;if(logoI){var ls2=140,ly2=35;x.fillStyle='#fff';x.beginPath();x.roundRect?x.roundRect(W-P-ls2,ly2,ls2,ls2,20):x.rect(W-P-ls2,ly2,ls2,ls2);x.fill();var sc=Math.min((ls2-16)/logoI.width,(ls2-16)/logoI.height);x.drawImage(logoI,W-P-ls2+(ls2-logoI.width*sc)/2,ly2+(ls2-logoI.height*sc)/2,logoI.width*sc,logoI.height*sc);rightX=W-P-ls2-24}
+    x.textAlign='right';x.fillStyle='#fff';var nm=pf.name||d.from||'المسلِّم';var fs=62;x.font='700 '+fs+'px "Reem Kufi",sans-serif';while(x.measureText(nm).width>rightX-P-260&&fs>28){fs-=2;x.font='700 '+fs+'px "Reem Kufi",sans-serif'}x.fillText(nm,rightX,110);
+    x.fillStyle='#ffb48a';x.font='500 30px "IBM Plex Sans Arabic",sans-serif';x.fillText(pf.tag||'إيصال تسليم رقمي',rightX,165);
+    x.textAlign='left';x.direction='ltr';x.fillStyle='#fff';x.font='600 30px monospace';x.fillText('#'+d.id,P,115);x.direction='rtl';
+    var y=250;var ci=[pf.phone,pf.reg,pf.addr].filter(Boolean).join('  ·  ');if(ci){x.textAlign='center';x.fillStyle='#667085';x.font='500 25px "IBM Plex Sans Arabic",sans-serif';var nci=wrap(x,ci,W-2*P,36,W/2,y+20,false);y+=nci*36+30}else y=290;
+    function row(l,v,bold){x.textAlign='right';x.fillStyle='#667085';x.font='500 27px "IBM Plex Sans Arabic",sans-serif';x.fillText(l,W-P,y);y+=44;x.fillStyle='#14213d';x.font=(bold?'600 ':'500 ')+'36px "IBM Plex Sans Arabic",sans-serif';var n=wrap(x,v||'—',W-2*P,50,W-P,y,false);y+=n*50+22}
+    row('المستلم',d.to);row('الرقم المرجعي',d.ref);row('ما سُلِّم',d.item,true);
+    row('التاريخ والوقت',stamp(new Date(d.ts)));
+    if(d.loc&&pf.loc!==false)row('الموقع','‎'+d.loc.lat+' ، '+d.loc.lon+'  (دقة ±'+d.loc.acc+' م)');
+    /* الحالة */
+    var ok=d.cond==='ok';x.textAlign='right';x.fillStyle='#667085';x.font='500 27px "IBM Plex Sans Arabic",sans-serif';x.fillText('حالة التسليم',W-P,y);y+=20;
+    var txt=ok?'سليم ومكتمل':'مع ملاحظات';x.font='600 34px "IBM Plex Sans Arabic",sans-serif';var pw=x.measureText(txt).width+60;x.fillStyle=ok?'#1b8a4b':'#c0392b';var rx=W-P-pw;x.beginPath();x.roundRect?x.roundRect(rx,y,pw,64,32):x.rect(rx,y,pw,64);x.fill();x.fillStyle='#fff';x.textAlign='center';x.fillText(txt,rx+pw/2,y+43);y+=64+34;
+    if(d.notes){x.textAlign='right';x.fillStyle='#667085';x.font='500 27px "IBM Plex Sans Arabic",sans-serif';x.fillText('الملاحظات',W-P,y);y+=44;x.fillStyle='#14213d';x.font='500 32px "IBM Plex Sans Arabic",sans-serif';var n2=wrap(x,d.notes,W-2*P,46,W-P,y,false);y+=n2*46+26}
+    /* الصور */
+    if(imgs.length){x.textAlign='right';x.fillStyle='#667085';x.font='500 27px "IBM Plex Sans Arabic",sans-serif';x.fillText('الصور المختومة ('+imgs.length+')',W-P,y);y+=24;var NC=+(pf.cols||2),gw=(W-2*P-20*(NC-1))/NC,gh=gw*.75;imgs.forEach(function(im,i){if(!im)return;var col=i%NC,r=Math.floor(i/NC),gx=W-P-gw-col*(gw+20),gy=y+r*(gh+20);x.save();x.beginPath();x.roundRect?x.roundRect(gx,gy,gw,gh,14):x.rect(gx,gy,gw,gh);x.clip();var s=Math.max(gw/im.width,gh/im.height),dw=im.width*s,dh=im.height*s;x.drawImage(im,gx+(gw-dw)/2,gy+(gh-dh)/2,dw,dh);x.restore()});y+=Math.ceil(imgs.length/NC)*(gh+20)+16}
+    /* التوقيع */
+    x.textAlign='right';x.fillStyle='#667085';x.font='500 27px "IBM Plex Sans Arabic",sans-serif';x.fillText('توقيع المستلم',W-P,y);y+=20;
+    x.fillStyle='#fff';x.strokeStyle='#d8dce5';x.lineWidth=2;x.beginPath();x.roundRect?x.roundRect(P,y,W-2*P,230,16):x.rect(P,y,W-2*P,230);x.fill();x.stroke();
+    if(sigImg){var s2=Math.min((W-2*P-40)/sigImg.width,190/sigImg.height);x.drawImage(sigImg,W/2-sigImg.width*s2/2,y+20,sigImg.width*s2,sigImg.height*s2)}else{x.fillStyle='#c0392b';x.textAlign='center';x.font='600 34px "IBM Plex Sans Arabic",sans-serif';x.fillText('امتنع المستلم عن التوقيع',W/2,y+125)}
+    y+=230+40;
+    /* البصمة */
+    x.fillStyle='#14213d';x.beginPath();x.roundRect?x.roundRect(P,y,W-2*P,230,20):x.rect(P,y,W-2*P,230);x.fill();
+    x.textAlign='right';x.fillStyle='#ffb48a';x.font='500 27px "IBM Plex Sans Arabic",sans-serif';x.fillText('بصمة التحقق',W-P-34,y+56);
+    x.textAlign='center';x.direction='ltr';x.fillStyle='#fff';x.font='700 56px monospace';x.fillText(d.code,W/2,y+135);x.direction='rtl';
+    x.fillStyle='#9aa5bd';x.font='400 24px "IBM Plex Sans Arabic",sans-serif';x.fillText('أي تعديل في الصور أو البيانات يغيّر هذه البصمة',W/2,y+192);
+    y+=230+36;
+    x.fillStyle='#667085';x.textAlign='center';x.font='400 23px "IBM Plex Sans Arabic",sans-serif';if(pf.foot){x.fillStyle='#14213d';x.font='500 28px "IBM Plex Sans Arabic",sans-serif';var n4=wrap(x,pf.foot,W-2*P,42,W/2,y,false);y+=n4*42+26}
+    x.fillStyle='#667085';x.font='400 23px "IBM Plex Sans Arabic",sans-serif';var n3=wrap(x,'الوقت والموقع من جهاز المسلِّم. هذا الإيصال دليل مساعد وليس حكمًا قانونيًا.',W-2*P,34,W/2,y,false);y+=n3*34+40;
+    var o=document.createElement('canvas');o.width=W;o.height=Math.ceil(y);o.getContext('2d').drawImage(c,0,0);return o})}
+/* ---------- تخزين ---------- */
+var MEM=[];function idb(){return new Promise(function(res,rej){try{var r=indexedDB.open('proof_v1',1);r.onupgradeneeded=function(){r.result.createObjectStore('r',{keyPath:'id'})};r.onsuccess=function(){res(r.result)};r.onerror=function(){rej()}}catch(e){rej()}})}
+function dbPut(b){return idb().then(function(d){return new Promise(function(res){var t=d.transaction('r','readwrite');t.objectStore('r').put({id:b.data.id,ts:b.data.ts,b:b});t.oncomplete=function(){res()};t.onerror=function(){res()}})}).catch(function(){MEM.push({id:b.data.id,ts:b.data.ts,b:b})})}
+function dbAll(){return idb().then(function(d){return new Promise(function(res){var q=d.transaction('r').objectStore('r').getAll();q.onsuccess=function(){res(q.result||[])};q.onerror=function(){res(MEM)}})}).catch(function(){return MEM})}
+function dbDel(id){return idb().then(function(d){return new Promise(function(res){var t=d.transaction('r','readwrite');t.objectStore('r').delete(id);t.oncomplete=function(){res()}})}).catch(function(){MEM=MEM.filter(function(m){return m.id!==id})})}
+/* ---------- الإصدار ---------- */
+function canonical(d){return JSON.stringify({v:d.v,id:d.id,ts:d.ts,from:d.from,to:d.to,ref:d.ref,item:d.item,cond:d.cond,notes:d.notes,loc:d.loc||null,photoHashes:d.photoHashes,sigHash:d.sigHash})}
+function hashBundle(d,photos,sig){return Promise.all(photos.map(sha)).then(function(ph){d.photoHashes=ph;return sig?sha(sig):Promise.resolve('')}).then(function(sh){d.sigHash=sh;return sha(canonical(d))}).then(function(h){d.hash=h;d.code=fmtCode(h);return d})}
+$('#make').onclick=function(){
+  showErr('');var from=$('#from').value.trim(),to=$('#to').value.trim(),item=$('#item').value.trim();
+  if(!from){showErr('اكتب اسمك أو اسم النشاط');return}if(!to){showErr('اكتب اسم المستلم');return}if(!item){showErr('اكتب ما سُلِّم');return}
+  if(!PHOTOS.length){showErr('أضف صورة واحدة على الأقل');return}
+  if(!drawn&&!$('#refuse').checked){showErr('يحتاج الإيصال توقيع المستلم، أو علّم «امتنع المستلم عن التوقيع»');return}
+  if(COND==='bad'&&!$('#notes').value.trim()){showErr('حالة «مع ملاحظات» تحتاج كتابة الملاحظة');return}
+  ls('pd_from',from);$('#make').disabled=true;
+  var sig=drawn?$('#sig').toDataURL('image/png'):'';
+  var d={v:1,id:RID,ts:Date.now(),from:from,to:to,ref:$('#ref').value.trim(),item:item,cond:COND,notes:$('#notes').value.trim(),loc:LOC};
+  hashBundle(d,PHOTOS.slice(),sig).then(function(d2){var B={data:d2,photos:PHOTOS.slice(),sig:sig,prof:JSON.parse(JSON.stringify(PF))};LASTB=B;return dbPut(B).then(function(){return render(B)})}).then(function(cv){$('#outImg').src=cv.toDataURL('image/jpeg',.9);$('#out').hidden=false;$('#outImg').scrollIntoView({behavior:'smooth',block:'start'})})
+  .catch(function(){showErr('تعذّر إصدار الإيصال، أعد المحاولة')}).then(function(){$('#make').disabled=false})};
+$('#share').onclick=function(){fetch($('#outImg').src).then(function(r){return r.blob()}).then(function(b){var f=new File([b],'receipt-'+LASTB.data.id+'.jpg',{type:'image/jpeg'});if(navigator.canShare&&navigator.canShare({files:[f]}))return navigator.share({files:[f],title:'إيصال تسليم '+LASTB.data.id});toast('اضغط مطولًا على الصورة لحفظها ثم شاركها')}).catch(function(){toast('اضغط مطولًا على الصورة لحفظها ثم شاركها')})};
+$('#bundle').onclick=function(){try{navigator.clipboard.writeText(JSON.stringify(LASTB)).then(function(){toast('نُسخت حزمة الإثبات، احفظها في مكان آمن')},function(){toast('تعذّر النسخ')})}catch(e){toast('تعذّر النسخ')}};
+$('#txtc').onclick=function(){var d=LASTB.data,t='إيصال تسليم #'+d.id+'\nمن: '+d.from+'\nإلى: '+d.to+(d.ref?'\nالمرجع: '+d.ref:'')+'\nالتسليم: '+d.item+'\nالحالة: '+(d.cond==='ok'?'سليم ومكتمل':'مع ملاحظات: '+d.notes)+'\nالوقت: '+stamp(new Date(d.ts))+'\nبصمة التحقق: '+d.code;try{navigator.clipboard.writeText(t).then(function(){toast('تم النسخ')},function(){toast('تعذّر النسخ')})}catch(e){toast('تعذّر النسخ')}};
+$('#newr').onclick=function(){PHOTOS=[];shots();RID=newId();$('#to').value='';$('#ref').value='';$('#item').value='';$('#notes').value='';COND='ok';condUI();$('#sigClear').click();$('#refuse').checked=false;$('#out').hidden=true;window.scrollTo({top:0,behavior:'smooth'})};
+/* ---------- السجل ---------- */
+function histUI(){dbAll().then(function(a){a.sort(function(p,q){return q.ts-p.ts});$('#histEmpty').hidden=a.length>0;$('#histList').innerHTML=a.map(function(r){var d=r.b.data;return '<li><span>'+esc(d.to)+' — '+esc(d.item)+'<small class="code">'+esc(d.id)+' · '+stamp(new Date(d.ts))+'</small></span><span><button data-o="'+esc(d.id)+'">فتح</button><button data-d="'+esc(d.id)+'">حذف</button></span></li>'}).join('');
+  [].forEach.call(document.querySelectorAll('[data-o]'),function(b){b.onclick=function(){var r=a.filter(function(x){return x.id===b.dataset.o})[0];if(!r)return;LASTB=r.b;render(r.b).then(function(cv){$('#outImg').src=cv.toDataURL('image/jpeg',.9);$('#out').hidden=false;$('#hist').hidden=true;$('#outImg').scrollIntoView({behavior:'smooth'})})}});
+  [].forEach.call(document.querySelectorAll('[data-d]'),function(b){b.onclick=function(){dbDel(b.dataset.d).then(histUI)}})})}
+$('#bHist').onclick=function(){$('#hist').hidden=!$('#hist').hidden;$('#ver').hidden=true;if(!$('#hist').hidden)histUI()};
+$('#bVer').onclick=function(){$('#ver').hidden=!$('#ver').hidden;$('#hist').hidden=true};
+/* ---------- التحقق ---------- */
+$('#vgo').onclick=function(){var r=$('#vres');r.className='res';r.textContent='';var B;try{B=JSON.parse($('#vtxt').value.trim())}catch(e){r.className='res no';r.textContent='النص ليس حزمة إثبات صحيحة';return}
+  if(!B||!B.data||!B.photos){r.className='res no';r.textContent='الحزمة ناقصة';return}
+  var d=JSON.parse(JSON.stringify(B.data)),stored=d.hash;hashBundle(d,B.photos,B.sig||'').then(function(n){if(n.hash===stored){r.className='res ok';r.textContent='مطابق ✓ الصور والبيانات كما أُصدرت. البصمة '+n.code+' · الوقت المسجَّل '+stamp(new Date(n.ts))}else{r.className='res no';r.textContent='غير مطابق ✗ تم تغيير الصور أو البيانات بعد الإصدار'}}).catch(function(){r.className='res no';r.textContent='تعذّر التحقق'})};
+</script>
+</body>
+</html>
