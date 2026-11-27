@@ -1,16 +1,54 @@
 {
   "manifest_version": 3,
   "name": "DIAMOND Voice Capture — التقاط الصوت المرجعي",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "التقط صوت أي تبويب أو الميكروفون كصوت مرجعي وأرسله إلى مولّد الأصوات في DIAMOND HUB أو إلى التطبيق المحلي.",
-  "permissions": ["tabCapture", "offscreen", "activeTab", "tabs"],
-  "host_permissions": ["https://diamond-tv.shop/*", "https://www.diamond-tv.shop/*", "http://127.0.0.1:7861/*"],
-  "background": { "service_worker": "background.js" },
-  "action": { "default_popup": "popup.html", "default_icon": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" } },
-  "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
-  "content_scripts": [{
-    "matches": ["https://diamond-tv.shop/studio/voice/*", "https://www.diamond-tv.shop/studio/voice/*"],
-    "js": ["content.js"],
-    "run_at": "document_idle"
-  }]
+  "permissions": [
+    "tabCapture",
+    "offscreen",
+    "activeTab",
+    "tabs",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://diamond-tv.shop/*",
+    "https://www.diamond-tv.shop/*",
+    "http://127.0.0.1:7861/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://diamond-tv.shop/studio/voice/*",
+        "https://www.diamond-tv.shop/studio/voice/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "toggle-capture": {
+      "suggested_key": {
+        "default": "Alt+Shift+V"
+      },
+      "description": "بدء/إيقاف التقاط صوت التبويب الحالي كمرجع"
+    }
+  }
 }

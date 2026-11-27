@@ -1,23 +1,56 @@
 importScripts('common.js');
 const SITE = 'https://diamond-tv.shop/studio/voice/#ext';
 const LOCAL = 'http://127.0.0.1:7861/ref';
+const BAD = /^(chrome|edge|about|chrome-extension|devtools|view-source):|^https:\/\/(chrome|chromewebstore)\.google\.com\/webstore|^https:\/\/microsoftedge\.microsoft\.com\/addons/;
 async function ensureOffscreen() {
   if (await chrome.offscreen.hasDocument()) return;
   await chrome.offscreen.createDocument({ url: 'offscreen.html', reasons: ['USER_MEDIA'], justification: 'تسجيل صوت التبويب كصوت مرجعي' });
 }
+async function status() {
+  if (!(await chrome.offscreen.hasDocument())) return { recording: false, elapsed: 0, speech: 0 };
+  try { return await chrome.runtime.sendMessage({ target: 'offscreen', type: 'status' }); } catch (e) { return { recording: false, elapsed: 0, speech: 0 }; }
+}
+async function beginCapture(tab, smart) {
+  if (!tab || !tab.id) return { ok: false, err: 'لا يوجد تبويب نشط.' };
+  if (!tab.url || BAD.test(tab.url)) return { ok: false, err: 'Chrome يمنع التقاط الصوت من هذه الصفحة (صفحات المتصفح الداخلية والمتجر). افتح موقعًا عاديًا.' };
+  try {
+    const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
+    await ensureOffscreen();
+    const r = await chrome.runtime.sendMessage({ target: 'offscreen', type: 'start', streamId, maxSec: 60, smart });
+    if (r && r.ok) { chrome.action.setBadgeBackgroundColor({ color: '#dc2626' }); chrome.action.setBadgeText({ text: 'REC' }); }
+    return r || { ok: false, err: 'لم تستجب نافذة التسجيل' };
+  } catch (e) {
+    const t = String(e && e.message || e);
+    return { ok: false, err: /Cannot capture|activeTab|invoked/i.test(t) ? 'تعذّر الالتقاط: اضغط أيقونة الإضافة أو الاختصار على هذا التبويب مباشرة. (المواقع المحمية بحقوق النشر قد تمنع التقاط صوتها).' : t };
+  }
+}
+async function toggle(tab) {
+  const s = await status();
+  if (s.recording) { await chrome.runtime.sendMessage({ target: 'offscreen', type: 'stop' }); return { ok: true, stopped: true }; }
+  return beginCapture(tab, true);
+}
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({ id: 'dh-capture', title: 'DIAMOND: التقط صوت هذه الصفحة كمرجع (ابدأ/أوقف)', contexts: ['page', 'video', 'audio', 'frame', 'selection'] });
+});
+chrome.contextMenus.onClicked.addListener((info, tab) => { if (info.menuItemId === 'dh-capture') toggle(tab); });
+chrome.commands.onCommand.addListener(async (cmd, tab) => {
+  if (cmd !== 'toggle-capture') return;
+  if (!tab) [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  toggle(tab);
+});
 chrome.runtime.onMessage.addListener((m, _s, reply) => {
   if (m.target === 'offscreen') return;
+  if (m.type === 'recorded') { chrome.action.setBadgeBackgroundColor({ color: '#16a34a' }); chrome.action.setBadgeText({ text: '✓' }); return; }
+  if (m.type === 'error') { chrome.action.setBadgeBackgroundColor({ color: '#d97706' }); chrome.action.setBadgeText({ text: '!' }); return; }
   (async () => {
     try {
       if (m.type === 'startTab') {
-        await ensureOffscreen();
-        const r = await chrome.runtime.sendMessage({ target: 'offscreen', type: 'start', streamId: m.streamId, maxSec: m.maxSec });
-        reply(r);
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        reply(await beginCapture(tab, m.smart !== false));
       } else if (m.type === 'stopTab') {
         await chrome.runtime.sendMessage({ target: 'offscreen', type: 'stop' }); reply({ ok: true });
       } else if (m.type === 'statusTab') {
-        if (!(await chrome.offscreen.hasDocument())) return reply({ recording: false, elapsed: 0 });
-        reply(await chrome.runtime.sendMessage({ target: 'offscreen', type: 'status' }));
+        reply(await status());
       } else if (m.type === 'hasRef') {
         const r = await getRef(); reply({ has: !!r, bytes: r ? r.byteLength : 0 });
       } else if (m.type === 'sendLocal') {
