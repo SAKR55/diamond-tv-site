@@ -34,6 +34,10 @@ EXTRA = [
   ('/prompt-studio/', '✍️', 'مختبر ChatGPT', 'تجهيز الطلبات والدورة التطبيقية.'),
   ('/tools/ai-skill-quiz/', '🎯', 'اختبار مستواك في الذكاء الاصطناعي', '10 أسئلة وبطاقة نتيجة تشاركها.'),
   ('/tools/data-card/', '📇', 'بطاقة البيانات', 'حوّل صورتك لأنمي واجمع بيانات تواصلك في بطاقة لامعة بباركود واحد.'),
+  ('/tools/receipt-payment-voucher/', '🧾', 'سندات قبض وصرف', 'قوالب احترافية بترويسة وشعار شركتك وتفقيط تلقائي وطباعة A4/A5/حراري.'),
+  ('/tools/zatca-invoice-qr/', '🔳', 'باركود الفاتورة الضريبية', 'رمز QR (TLV) للفاتورة المبسطة وفق متطلبات هيئة الزكاة.'),
+  ('/tools/financial-ratios-analyzer/', '📈', 'محلل النسب المالية', 'سيولة وربحية ونشاط ورافعة وDuPont مع تقييم وتوصيات.'),
+  ('/tools/receivables-aging-report/', '⏳', 'تقرير أعمار الذمم', 'شرائح الأيام ومخصص الخسائر الائتمانية والقيد المقترح.'),
   ('/tools/quotation-maker/', '🧾', 'صانع عرض السعر', 'عرض سعر بشعارك وضريبة 15% وطباعة PDF.'),
   ('/tools/shipping-label-maker/', '📦', 'صانع ملصق الشحن', 'ملصق شحنة بباركود والدفع عند الاستلام.'),
   ('/tools/saudi-iban-checker/', '🏦', 'فاحص الآيبان السعودي', 'تحقق من صحة الآيبان السعودي واعرف البنك.'),
@@ -90,7 +94,7 @@ CSS = '''<style>
 .thub-hero{padding:28px 0 8px;text-align:center}.thub-hero h1{font-size:clamp(1.6rem,4vw,2.3rem);margin:6px 0}.thub-hero p{color:#6b6490;margin:0 auto;max-width:640px}
 .tbar{position:sticky;top:var(--nh,66px);z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #ece8fb;padding:12px 0;margin-top:14px}
 .tbar input{width:100%;padding:13px 18px;border:2px solid #e4def9;border-radius:14px;font:inherit;font-size:1rem}.tbar input:focus{outline:none;border-color:#7c3aed;box-shadow:0 0 0 4px #7c3aed22}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 2px;scrollbar-width:thin}.chip{flex:none;border:1.5px solid #e4def9;background:#fff;border-radius:999px;padding:7px 14px;font:inherit;font-size:.88rem;font-weight:700;color:#3b2d73;cursor:pointer;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 2px 2px;max-height:52px;overflow:hidden;transition:max-height .25s}.chips.open{max-height:600px}.tmeta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px;font-size:.85rem;color:#6b6490}.tmeta button{border:0;background:#f1edff;color:#5b21b6;border-radius:999px;padding:5px 14px;font:inherit;font-weight:700;cursor:pointer}.tbar{position:sticky}@media(max-width:700px){.chips{max-height:48px}}.chip{flex:none;border:1.5px solid #e4def9;background:#fff;border-radius:999px;padding:7px 14px;font:inherit;font-size:.88rem;font-weight:700;color:#3b2d73;cursor:pointer;white-space:nowrap}
 .chip i{font-style:normal;background:#f1edff;border-radius:999px;padding:1px 8px;margin-inline-start:4px;font-size:.78rem;color:#5b21b6}.chip.on{background:linear-gradient(135deg,#7c3aed,#db2777);border-color:transparent;color:#fff}.chip.on i{background:#ffffff33;color:#fff}
 .tsec{padding:26px 0 6px}.thead h2{margin:0;font-size:1.35rem}.thead p{margin:4px 0 14px;color:#6b6490}
 .tc{position:relative}.tc .card{height:100%}.fav{position:absolute;top:10px;inset-inline-end:10px;z-index:2;border:0;background:#f5f3ff;border-radius:50%;width:32px;height:32px;font-size:17px;cursor:pointer;color:#a78bfa}.fav.on{color:#f59e0b;background:#fef3c7}
@@ -102,15 +106,18 @@ JS = '''<script>(function(){var K='dh-favs',F=[];try{F=JSON.parse(localStorage.g
 var q=document.getElementById('tq'),cards=[].slice.call(document.querySelectorAll('.tc')),secs=[].slice.call(document.querySelectorAll('.tsec[data-g]')),cur='all',em=document.getElementById('tempty');
 function sv(){try{localStorage.setItem(K,JSON.stringify(F))}catch(e){}document.getElementById('favn').textContent=F.length}
 cards.forEach(function(c){var b=c.querySelector('.fav'),k=c.dataset.k;if(F.indexOf(k)>=0){b.classList.add('on');b.textContent='★'}b.onclick=function(ev){ev.preventDefault();var i=F.indexOf(k);if(i>=0){F.splice(i,1);b.classList.remove('on');b.textContent='☆'}else{F.push(k);b.classList.add('on');b.textContent='★'}sv();apply()}});
-function apply(){var w=q.value.trim().toLowerCase(),n=0;cards.forEach(function(c){var g=c.closest('.tsec').dataset.g,ok=(!w||c.dataset.t.toLowerCase().indexOf(w)>=0)&&(cur==='all'||(cur==='fav'?F.indexOf(c.dataset.k)>=0:cur==='new'?c.hasAttribute('data-new'):g===cur));c.style.display=ok?'':'none';if(ok)n++});
- secs.forEach(function(s){s.style.display=[].some.call(s.querySelectorAll('.tc'),function(c){return c.style.display!=='none'})?'':'none'});em.style.display=n?'none':'block'}
+function nz(x){return String(x||'').replace(/[\u064B-\u0652\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').toLowerCase()}
+cards.forEach(function(c){c._n=nz(c.dataset.t)});
+function apply(){var ws=nz(q.value.trim()).split(/\s+/).filter(Boolean),n=0;cards.forEach(function(c){var g=c.closest('.tsec').dataset.g,ok=ws.every(function(w){return c._n.indexOf(w)>=0})&&(cur==='all'||(cur==='fav'?F.indexOf(c.dataset.k)>=0:cur==='new'?c.hasAttribute('data-new'):g===cur));c.style.display=ok?'':'none';if(ok)n++});
+ secs.forEach(function(s){s.style.display=[].some.call(s.querySelectorAll('.tc'),function(c){return c.style.display!=='none'})?'':'none'});em.style.display=n?'none':'block';document.getElementById('tcount').textContent=n+' أداة'+(q.value?' مطابقة':'');document.getElementById('tclr').style.display=q.value?'':'none'}
+document.getElementById('tclr').onclick=function(){q.value='';apply();q.focus()};var ch=document.getElementById('chs'),tm=document.getElementById('tmore');tm.onclick=function(){var o=ch.classList.toggle('open');tm.textContent=o?'طيّ الفئات ▴':'كل الفئات ▾'};var u0=new URLSearchParams(location.search).get('q');if(u0)q.value=u0;
 q.oninput=apply;[].forEach.call(document.querySelectorAll('.chip'),function(b){b.onclick=function(){cur=b.dataset.f;[].forEach.call(document.querySelectorAll('.chip'),function(x){x.classList.toggle('on',x===b)});apply();if(window.scrollY>260)document.querySelector('.tbar').scrollIntoView({behavior:'smooth'})}});
 (function(){var R=[];try{R=JSON.parse(localStorage.getItem('dh-recent')||'[]')}catch(e){}if(!R.length)return;var g=document.getElementById('recentg');R.slice(0,6).forEach(function(r){var a=document.createElement('a');a.className='card';a.href='/business/tools/'+r.s+'/';a.innerHTML='<div class="ic"></div><h3></h3><span class="more">افتح ←</span>';a.querySelector('.ic').textContent=r.i;a.querySelector('h3').textContent=r.t;g.appendChild(a)});document.getElementById('recent').style.display=''})();
-sv();var h=location.hash.slice(1);if(h&&document.querySelector('.chip[data-f="'+h+'"]'))document.querySelector('.chip[data-f="'+h+'"]').click();
+apply();sv();var h=location.hash.slice(1);if(h&&document.querySelector('.chip[data-f="'+h+'"]'))document.querySelector('.chip[data-f="'+h+'"]').click();
 document.addEventListener('keydown',function(ev){if(ev.key==='/'&&document.activeElement!==q){ev.preventDefault();q.focus()}})})();</script>'''
 body = (f'<header class="thub-hero"><div class="wrap narrow"><div class="crumbs"><a href="/">الرئيسية</a> › الأدوات</div><h1>🛠️ كل <span class="g-text">الأدوات</span> في مكان واحد</h1>'
         f'<p>{total} أداة مجانية تعمل في متصفحك، مرتّبة بالفئات. ابحث، رشّح، وأضف المفضلة لتعود إليها بسرعة. اضغط «/» للبحث.</p></div></header>'
-        f'<div class="tbar"><div class="wrap"><input id="tq" type="search" placeholder="ابحث في {total} أداة: ضريبة، سيرة، تصميم، شحن…" aria-label="بحث في الأدوات"><div class="chips">{chips}</div></div></div>'
+        f'<div class="tbar"><div class="wrap"><input id="tq" type="search" placeholder="ابحث في {total} أداة: ضريبة، سيرة، تصميم، شحن…" aria-label="بحث في الأدوات"><div class="chips" id="chs">{chips}</div><div class="tmeta"><span id="tcount"></span><span><button type="button" id="tclr" style="display:none">مسح البحث ✕</button> <button type="button" id="tmore">كل الفئات ▾</button></span></div></div></div>'
         f'<main class="wrap"><section class="tsec" id="recent" style="display:none"><div class="thead"><h2>🕘 آخر ما استخدمت</h2><p>أدوات فتحتها مؤخرًا على هذا الجهاز.</p></div><div class="grid g3" id="recentg"></div></section>{sections}<div class="tempty" id="tempty">لا توجد أدوات مطابقة. جرّب كلمة أخرى أو اختر «الكل».</div></main>' + JS)
 t = f'كل الأدوات المجانية ({total}) — أعمال وتصميم وسيرة ذاتية وذكاء اصطناعي | DIAMOND HUB'
 d = f'دليل منظّم لـ {total} أداة مجانية بالعربية: حاسبات مالية وتسويق وتجارة إلكترونية واستيراد وموارد بشرية، محرر تصميم وفيديو، سيرة ذاتية، وأدوات الذكاء الاصطناعي.'

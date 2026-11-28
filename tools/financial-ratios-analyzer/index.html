@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>محلل النسب المالية الذكي: سيولة وربحية ونشاط ورافعة | DIAMOND HUB</title>
+<meta name="description" content="أدخل أرقام القوائم المالية فتحصل على النسب المالية الرئيسية (السيولة، الربحية، النشاط، المديونية، DuPont) مع تقييم مبسط وتفسير لكل نسبة وتوصيات."><link rel="canonical" href="https://diamond-tv.shop/tools/financial-ratios-analyzer/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="محلل النسب المالية الذكي: سيولة وربحية ونشاط ورافعة"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+.rt{width:100%;border-collapse:collapse;font-size:.92rem}.rt th,.rt td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right}.rt td.n{direction:ltr;text-align:left;font-weight:700;white-space:nowrap}.bd{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.78rem;font-weight:700}.bd.g{background:#dcfce7;color:#166534}.bd.y{background:#fef9c3;color:#854d0e}.bd.r{background:#fee2e2;color:#991b1b}.rec li{margin:6px 0}
+</style><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/tool-theme.css"></head><body><div class="dh-top"><a class="lg" href="/">💎 DIAMOND HUB</a><a href="/tools/">الأدوات</a><a href="/accounting/">المحاسبة</a><a href="/articles/">المقالات</a></div><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>محلل النسب المالية<small>أدخل أرقام قوائمك فتظهر النسب والتقييم والتوصيات</small></h1>
+<div class="card"><h2>أرقام القوائم المالية</h2><div class="row" id="inp"></div><p class="hint">تُحفظ على جهازك فقط. اترك غير المتوفر صفرًا.</p></div><div class="card" id="out"></div>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+var F=[['ca','أصول متداولة',500000],['inv','المخزون',150000],['cash','النقد وما يعادله',120000],['ar','ذمم مدينة',180000],['ta','إجمالي الأصول',1200000],['cl','التزامات متداولة',300000],['tl','إجمالي الالتزامات',700000],['eq','حقوق الملكية',500000],['rev','الإيرادات',2000000],['cogs','تكلفة المبيعات',1300000],['ebit','الربح التشغيلي',250000],['ni','صافي الربح',180000],['int','مصروف الفوائد',30000],['ap','ذمم دائنة',140000]];
+var V={};try{V=JSON.parse(ls('fr_v')||'{}')}catch(e){}
+$('#inp').innerHTML=F.map(function(f){return '<label>'+f[1]+'<input type="number" step="any" data-k="'+f[0]+'" value="'+(V[f[0]]!=null?V[f[0]]:f[2])+'"></label>'}).join('');
+function d(a,b){return b?a/b:0}
+function rate(v,g,y,hi){if(hi)return v>=g?'g':v>=y?'y':'r';return v<=g?'g':v<=y?'y':'r'}
+var BN={g:'جيد',y:'متوسط',r:'يحتاج انتباه'};
+function calc(){var v={};[].forEach.call(document.querySelectorAll('#inp input'),function(i){v[i.dataset.k]=+i.value||0});ls('fr_v',JSON.stringify(v));
+ var R=[['السيولة','نسبة التداول',d(v.ca,v.cl),'x',rate(d(v.ca,v.cl),1.5,1,1),'أصول متداولة ÷ التزامات متداولة. فوق 1.5 مريح عادةً؛ أقل من 1 ضغط سيولة.'],
+ ['السيولة','النسبة السريعة',d(v.ca-v.inv,v.cl),'x',rate(d(v.ca-v.inv,v.cl),1,.7,1),'تستبعد المخزون: قدرتك على السداد دون بيعه.'],
+ ['السيولة','نسبة النقد',d(v.cash,v.cl),'x',rate(d(v.cash,v.cl),.5,.2,1),'النقد مقابل الالتزامات القصيرة.'],
+ ['الربحية','هامش مجمل الربح',d(v.rev-v.cogs,v.rev)*100,'%',rate(d(v.rev-v.cogs,v.rev)*100,30,15,1),'يتفاوت بين القطاعات؛ قارن بمنافسيك.'],
+ ['الربحية','هامش الربح التشغيلي',d(v.ebit,v.rev)*100,'%',rate(d(v.ebit,v.rev)*100,12,5,1),'كفاءة التشغيل قبل الفوائد والضريبة.'],
+ ['الربحية','هامش صافي الربح',d(v.ni,v.rev)*100,'%',rate(d(v.ni,v.rev)*100,8,3,1),'ما يتبقى من كل ريال إيراد.'],
+ ['الربحية','العائد على الأصول ROA',d(v.ni,v.ta)*100,'%',rate(d(v.ni,v.ta)*100,8,3,1),'كفاءة استخدام الأصول.'],
+ ['الربحية','العائد على حقوق الملكية ROE',d(v.ni,v.eq)*100,'%',rate(d(v.ni,v.eq)*100,15,8,1),'عائد المالكين؛ يتأثر بالرافعة.'],
+ ['النشاط','دوران المخزون',d(v.cogs,v.inv),'مرة',rate(d(v.cogs,v.inv),6,3,1),'تكلفة المبيعات ÷ المخزون.'],
+ ['النشاط','أيام المخزون',d(v.inv,v.cogs)*365,'يوم',rate(d(v.inv,v.cogs)*365,60,120,0),'متوسط مدة بقاء المخزون.'],
+ ['النشاط','أيام التحصيل DSO',d(v.ar,v.rev)*365,'يوم',rate(d(v.ar,v.rev)*365,45,75,0),'المدة اللازمة لتحصيل المبيعات الآجلة.'],
+ ['النشاط','أيام السداد DPO',d(v.ap,v.cogs)*365,'يوم',rate(d(v.ap,v.cogs)*365,45,20,1),'المدة التي تستغرقها لسداد الموردين.'],
+ ['النشاط','دورة التحويل النقدي',d(v.inv,v.cogs)*365+d(v.ar,v.rev)*365-d(v.ap,v.cogs)*365,'يوم',rate(d(v.inv,v.cogs)*365+d(v.ar,v.rev)*365-d(v.ap,v.cogs)*365,60,120,0),'الأيام بين دفع النقد للمورد وتحصيله من العميل.'],
+ ['الرافعة','نسبة المديونية (التزامات ÷ أصول)',d(v.tl,v.ta)*100,'%',rate(d(v.tl,v.ta)*100,50,70,0),'حصة الأصول الممولة بالالتزامات.'],
+ ['الرافعة','الالتزامات ÷ حقوق الملكية',d(v.tl,v.eq),'x',rate(d(v.tl,v.eq),1,2,0),'فوق 2 رافعة مرتفعة.'],
+ ['الرافعة','تغطية الفوائد',d(v.ebit,v.int),'x',rate(d(v.ebit,v.int),4,2,1),'الربح التشغيلي ÷ الفوائد؛ أقل من 2 خطر.']];
+ var h='<h2>النتائج</h2><div style="overflow-x:auto"><table class="rt"><thead><tr><th>الفئة</th><th>النسبة</th><th>القيمة</th><th>التقييم</th><th>التفسير</th></tr></thead><tbody>'+R.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td class="n">'+nf(r[2])+' '+r[3]+'</td><td><span class="bd '+r[4]+'">'+BN[r[4]]+'</span></td><td>'+r[5]+'</td></tr>'}).join('')+'</tbody></table></div>';
+ var m=d(v.ni,v.rev),at=d(v.rev,v.ta),lv=d(v.ta,v.eq);h+='<h2 style="margin-top:16px">تحليل DuPont للعائد على حقوق الملكية</h2><p>ROE = هامش الربح ('+nf(m*100)+'%) × دوران الأصول ('+nf(at)+') × الرافعة ('+nf(lv)+') = <b>'+nf(m*at*lv*100)+'%</b></p>';
+ var rec=[];if(R[0][4]==='r')rec.push('السيولة ضعيفة: سرّع التحصيل، فاوض على آجال الموردين، وقلّل المخزون الراكد.');if(R[10][4]==='r')rec.push('أيام التحصيل طويلة: شدّد سياسة الائتمان وأرسل تذكيرات مبكرة وفكّر في خصم السداد المبكر.');if(R[9][4]==='r')rec.push('المخزون يبقى طويلًا: راجع الأصناف الراكدة وخطط الشراء.');if(R[5][4]==='r')rec.push('هامش الربح منخفض: راجع التسعير وتكاليف التشغيل وتركيبة المنتجات.');if(R[14][4]==='r'||R[15][4]==='r')rec.push('المديونية مرتفعة: ركّز على تخفيضها أو إعادة هيكلة التمويل قبل التوسع.');if(R[15][4]==='r')rec.push('تغطية الفوائد ضعيفة: الأرباح بالكاد تغطي الفوائد.');if(!rec.length)rec.push('المؤشرات العامة مقبولة. قارنها بمتوسط قطاعك وبفترات سابقة لرصد الاتجاه.');
+ h+='<h2 style="margin-top:16px">توصيات</h2><ul class="rec">'+rec.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul><p class="hint">المعايير المستخدمة قواعد عامة تقريبية وتختلف بحسب القطاع؛ هذا تحليل تعليمي وليس استشارة مالية.</p><div class="acts"><button class="btn alt" id="pr" type="button">طباعة</button></div>';
+ $('#out').innerHTML=h;$('#pr').onclick=function(){window.print()}}
+[].forEach.call(document.querySelectorAll('#inp input'),function(i){i.oninput=calc});calc();
+</script></body></html>

@@ -1,0 +1,15 @@
+/* مظهر موحّد لكل الأدوات المستقلة: نفس خط الموقع (Cairo) وألوانه */
+:root,:root[data-x]{--fb:"Cairo",system-ui,"Segoe UI",Tahoma,sans-serif!important;--fd:"Cairo",system-ui,sans-serif!important;
+--bg:#f8fbff;--card:#fff;--ink:#1e1b4b;--mut:#64748b;--line:#e4ddfb;--acc:#7c3aed;--acc-ink:#fff;--soft:#f1ecff;--field:#faf8ff;--ok:#047857;--bad:#b91c1c;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#f8fbff;--card:#fff;--ink:#1e1b4b;--mut:#64748b;--line:#e4ddfb;--acc:#7c3aed;--acc-ink:#fff;--soft:#f1ecff;--field:#faf8ff;--ok:#047857;--bad:#b91c1c;color-scheme:light}}
+html,body{font-family:"Cairo",system-ui,sans-serif!important;background:#f8fbff!important;background-image:linear-gradient(180deg,#f5f3ff 0,#f8fbff 320px)!important;background-repeat:no-repeat;color:#1e1b4b}
+input,select,textarea,button{font-family:inherit}
+h1,h2,h3{font-family:"Cairo",sans-serif!important;color:#1e1b4b}
+.card{border-radius:18px!important;box-shadow:0 6px 24px rgba(124,58,237,.07);border-color:#e9e5f5!important}
+.btn{background:linear-gradient(135deg,#7c3aed,#a855f7)!important;color:#fff!important;border-radius:999px!important;font-weight:700;box-shadow:0 4px 14px rgba(124,58,237,.25)}
+.btn.alt{background:#f1ecff!important;color:#5b21b6!important;box-shadow:none}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid #c4b5fd!important;outline-offset:1px}
+.back{color:#6d28d9!important;font-weight:600}
+.dh-top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid #e9e5f5;display:flex;align-items:center;gap:14px;padding:9px 16px;font-family:"Cairo",sans-serif}
+.dh-top a{color:#4c1d95;text-decoration:none;font-weight:700;font-size:.92rem}.dh-top a.lg{font-weight:900;color:#7c3aed;margin-inline-end:auto}
+@media print{.dh-top{display:none!important}}

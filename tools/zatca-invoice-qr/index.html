@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>باركود الفاتورة الضريبية المبسطة (ZATCA QR) | DIAMOND HUB</title>
+<meta name="description" content="أنشئ رمز QR للفاتورة الضريبية المبسطة بصيغة TLV المعتمدة في السعودية: اسم البائع والرقم الضريبي والتاريخ والإجمالي والضريبة، وحمّله PNG أو اطبعه."><link rel="canonical" href="https://diamond-tv.shop/tools/zatca-invoice-qr/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="باركود الفاتورة الضريبية المبسطة (ZATCA QR)"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+.qrb{display:flex;gap:18px;flex-wrap:wrap;align-items:center}.qrb canvas{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;max-width:100%}.b64{font:600 .78rem monospace;direction:ltr;word-break:break-all;background:var(--field);border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:10px}
+</style><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/tool-theme.css"></head><body><div class="dh-top"><a class="lg" href="/">💎 DIAMOND HUB</a><a href="/tools/">الأدوات</a><a href="/accounting/">المحاسبة</a><a href="/articles/">المقالات</a></div><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>باركود الفاتورة الضريبية المبسطة<small>صيغة TLV/Base64 للمرحلة الأولى — مع فحص مباشر للحقول</small></h1>
+<div class="card"><h2>بيانات الفاتورة</h2><div class="row"><label>اسم البائع<input type="text" id="n"></label><label>الرقم الضريبي (15 رقمًا يبدأ وينتهي بـ 3)<input type="text" id="v" dir="ltr" inputmode="numeric" maxlength="15"></label>
+<label>تاريخ ووقت الفاتورة<input type="text" id="t" dir="ltr"></label><label>إجمالي الفاتورة شامل الضريبة<input type="number" id="tot" step="any" value="115"></label>
+<label>مبلغ الضريبة<input type="number" id="vat" step="any" value="15"></label><label class="chk"><input type="checkbox" id="auto" checked> احسب الضريبة من الإجمالي (15%)</label></div><div id="msg" class="hint"></div></div>
+<div class="card"><h2>الرمز</h2><div class="qrb"><canvas id="cv" width="260" height="260"></canvas><div style="flex:1;min-width:220px"><div class="acts"><button class="btn" id="dl" type="button">تحميل PNG</button><button class="btn alt" id="cp" type="button">نسخ النص (Base64)</button></div><div class="b64" id="b64"></div></div></div>
+<p class="hint">الرمز بحسب المرحلة الأولى (الإصدار الأول من متطلبات الفوترة الإلكترونية). فواتير المرحلة الثانية (الربط والتكامل) تُنشأ عبر نظام معتمد لدى الهيئة ويتضمن ختمًا تشفيريًا؛ هذه الأداة لا تغني عنها. تحقق من متطلبات الهيئة الحالية.</p></div>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script src="/assets/qr.js"></script><script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+var d=new Date();$('#t').value=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)+'T'+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':00Z';
+['n','v'].forEach(function(i){var x=ls('zq_'+i);if(x)$('#'+i).value=x});
+function tlv(tag,s){var b=unescape(encodeURIComponent(s));return String.fromCharCode(tag,b.length)+b}
+function draw(){var n=$('#n').value.trim(),v=$('#v').value.trim(),t=$('#t').value.trim(),tot=+$('#tot').value||0,vat=$('#vat').value;ls('zq_n',n);ls('zq_v',v);
+ if($('#auto').checked){vat=(tot-tot/1.15);$('#vat').value=vat.toFixed(2)}vat=+vat||0;
+ var m=[];if(!n)m.push('أدخل اسم البائع');if(!/^3\d{13}3$/.test(v))m.push('الرقم الضريبي يجب أن يكون 15 رقمًا يبدأ بـ 3 وينتهي بـ 3');if(!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d/.test(t))m.push('صيغة التاريخ: 2026-11-28T14:30:00Z');
+ $('#msg').textContent=m.join(' • ');$('#msg').style.color=m.length?'var(--bad)':'var(--ok)';if(!m.length)$('#msg').textContent='الحقول صحيحة ✓';
+ var raw=tlv(1,n)+tlv(2,v)+tlv(3,t)+tlv(4,tot.toFixed(2))+tlv(5,vat.toFixed(2)),b=btoa(raw);$('#b64').textContent=b;
+ var M=QR.make(b,'M'),sz=M.length,c=$('#cv'),x=c.getContext('2d'),s=Math.floor(240/sz),o=Math.floor((260-s*sz)/2);x.fillStyle='#fff';x.fillRect(0,0,260,260);x.fillStyle='#000';for(var y=0;y<sz;y++)for(var k=0;k<sz;k++)if(M[y][k])x.fillRect(o+k*s,o+y*s,s,s)}
+['n','v','t','tot','vat','auto'].forEach(function(i){$('#'+i).oninput=$('#'+i).onchange=draw});
+$('#dl').onclick=function(){var a=document.createElement('a');a.href=$('#cv').toDataURL('image/png');a.download='zatca-qr.png';a.click()};
+$('#cp').onclick=function(){try{navigator.clipboard.writeText($('#b64').textContent).then(function(){toast('تم النسخ')})}catch(e){toast('تعذّر النسخ')}};draw();
+</script></body></html>

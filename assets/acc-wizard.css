@@ -1,0 +1,23 @@
+/* ===== معالج العمليات المحاسبية ===== */
+.accwiz{background:#fff;border:1px solid #e9e5f5;border-radius:18px;padding:18px;box-shadow:0 6px 24px rgba(124,58,237,.07);margin:14px 0}
+.aw-embed{margin:30px 0}.aw-embed>h2{margin-top:0}
+.accwiz label{display:block;font-weight:600;font-size:.9rem;color:#334155}
+.accwiz input,.accwiz select{width:100%;margin-top:5px;padding:10px 12px;border:1px solid #d9d4ec;border-radius:10px;font:inherit;background:#fff}
+.accwiz input:focus,.accwiz select:focus{outline:2px solid #c4b5fd;border-color:#7c3aed}
+.aw-row{display:flex;gap:8px;margin-top:5px}.aw-row input{margin:0}.aw-ask{margin-bottom:14px;padding-bottom:14px;border-bottom:1px dashed #e0daf3}
+.aw-msg{font-size:.88rem;color:#6d28d9;margin-top:6px}
+.aw-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}
+.aw-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 14px}
+.aw-kpis div{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:12px;padding:10px 12px}.aw-kpis span{display:block;font-size:.78rem;color:#64748b}.aw-kpis b{font-size:1.05rem;color:#5b21b6}
+.accwiz h4{margin:18px 0 8px;color:#4c1d95;font-size:1rem}.accwiz h4 small{font-weight:400;color:#94a3b8}
+.aw-steps{padding-inline-start:22px}.aw-steps li,.accwiz ul li{margin:5px 0;line-height:1.8}
+.aw-je{border:1px solid #e9e5f5;border-radius:12px;overflow:hidden;margin:10px 0}
+.aw-jt{background:#f5f3ff;padding:8px 12px;font-weight:700;color:#5b21b6}
+.aw-je table,.aw-tw table{width:100%;border-collapse:collapse;font-size:.92rem}
+.aw-je th,.aw-je td,.aw-tw th,.aw-tw td{padding:7px 12px;border-top:1px solid #f0edf9;text-align:start}
+.aw-je td:nth-child(n+2),.aw-je th:nth-child(n+2){text-align:end;font-variant-numeric:tabular-nums;white-space:nowrap}
+.aw-cr{padding-inline-start:34px!important}.aw-je tfoot td{font-weight:700;background:#faf9ff}
+.aw-ok{color:#047857;font-size:.85rem;padding:6px 12px}.aw-bad{color:#b91c1c;font-size:.85rem;padding:6px 12px}
+.aw-tw{overflow-x:auto}.aw-err li::marker{color:#dc2626}.aw-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.aw-n{font-size:.8rem;color:#94a3b8}
+@media print{nav,footer,.aw-act,.aw-ask,.aw-sel{display:none!important}}
+.aw-go{white-space:nowrap;flex:none}

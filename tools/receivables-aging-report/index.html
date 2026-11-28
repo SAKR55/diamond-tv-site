@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>تقرير أعمار الذمم المدينة مع مخصص الخسائر الائتمانية | DIAMOND HUB</title>
+<meta name="description" content="ألصق قائمة فواتير العملاء (العميل، المبلغ، تاريخ الاستحقاق) فيُنتج تقرير أعمار الذمم بشرائح الأيام وإجمالي كل عميل ومخصص الخسائر الائتمانية المتوقعة وقيد المخصص."><link rel="canonical" href="https://diamond-tv.shop/tools/receivables-aging-report/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="تقرير أعمار الذمم المدينة مع مخصص الخسائر الائتمانية"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+.rt{width:100%;border-collapse:collapse;font-size:.9rem}.rt th,.rt td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:right}.rt td.n{direction:ltr;text-align:left;white-space:nowrap}.rt tfoot td{font-weight:800;background:var(--field)}
+</style><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/tool-theme.css"></head><body><div class="dh-top"><a class="lg" href="/">💎 DIAMOND HUB</a><a href="/tools/">الأدوات</a><a href="/accounting/">المحاسبة</a><a href="/articles/">المقالات</a></div><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>تقرير أعمار الذمم<small>ألصق الفواتير فيظهر التقرير والمخصص والقيد</small></h1>
+<div class="card"><h2>الفواتير</h2><label>سطر لكل فاتورة: العميل , المبلغ , تاريخ الاستحقاق (YYYY-MM-DD)<textarea id="in" style="min-height:170px;font-family:monospace;direction:ltr"></textarea></label>
+<div class="row" style="margin-top:10px"><label>تاريخ التقرير<input type="text" id="asof" dir="ltr"></label><label>نسب الخسارة % (جارية, 1-30, 31-60, 61-90, +90)<input type="text" id="rt" dir="ltr" value="1,3,8,20,50"></label><label>رصيد المخصص الحالي<input type="number" id="cur" value="0"></label></div>
+<div class="acts"><button class="btn alt" id="ex" type="button">مثال</button></div></div><div class="card" id="out"></div>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+var d0=new Date();$('#asof').value=d0.toISOString().slice(0,10);
+$('#ex').onclick=function(){var b=function(n){var x=new Date();x.setDate(x.getDate()-n);return x.toISOString().slice(0,10)};$('#in').value='شركة النور,25000,'+b(-10)+'\nشركة النور,12000,'+b(20)+'\nمؤسسة الأمل,40000,'+b(45)+'\nمؤسسة الأمل,8000,'+b(75)+'\nمتجر الريان,15000,'+b(120)+'\nمتجر الريان,5000,'+b(5);calc()};
+var BK=['جارية','1-30','31-60','61-90','+90'];
+function calc(){var rows=$('#in').value.split(/\n/).map(function(l){return l.split(/[,\t،;]/).map(function(x){return x.trim()})}).filter(function(r){return r.length>=3&&+r[1]});var asof=new Date($('#asof').value),rt=$('#rt').value.split(/[,،]/).map(function(x){return(+x||0)/100});
+ var C={},T=[0,0,0,0,0];rows.forEach(function(r){var due=new Date(r[2]),days=Math.floor((asof-due)/864e5),b=days<=0?0:days<=30?1:days<=60?2:days<=90?3:4;if(!C[r[0]])C[r[0]]=[0,0,0,0,0];C[r[0]][b]+=+r[1];T[b]+=+r[1]});
+ var tot=T.reduce(function(a,b){return a+b},0),ecl=T.reduce(function(a,b,i){return a+b*(rt[i]||0)},0),diff=ecl-(+$('#cur').value||0);
+ if(!rows.length){$('#out').innerHTML='<p class="hint">ألصق الفواتير أو اضغط «مثال».</p>';return}
+ var h='<h2>التقرير حتى '+$('#asof').value+'</h2><div style="overflow-x:auto"><table class="rt"><thead><tr><th>العميل</th>'+BK.map(function(b){return '<th>'+b+'</th>'}).join('')+'<th>الإجمالي</th></tr></thead><tbody>'+Object.keys(C).map(function(k){var s=C[k].reduce(function(a,b){return a+b},0);return '<tr><td>'+esc(k)+'</td>'+C[k].map(function(x){return '<td class="n">'+(x?nf(x):'')+'</td>'}).join('')+'<td class="n"><b>'+nf(s)+'</b></td></tr>'}).join('')+'</tbody><tfoot><tr><td>الإجمالي</td>'+T.map(function(x){return '<td class="n">'+nf(x)+'</td>'}).join('')+'<td class="n">'+nf(tot)+'</td></tr><tr><td>النسبة</td>'+T.map(function(x){return '<td class="n">'+nf(tot?x/tot*100:0)+'%</td>'}).join('')+'<td></td></tr></tfoot></table></div>';
+ h+='<h2 style="margin-top:16px">مخصص الخسائر الائتمانية المتوقعة (IFRS 9 — النهج المبسط)</h2><p>المخصص المطلوب: <b>'+nf(ecl)+'</b> — الفرق عن الرصيد الحالي: <b>'+nf(diff)+'</b></p>';
+ h+='<div style="background:var(--field);border:1px solid var(--line);border-radius:12px;padding:10px 14px"><b>القيد المقترح</b><br>'+(diff>=0?'من ح/ مصروف خسائر ائتمانية '+nf(diff)+'<br>&nbsp;&nbsp;&nbsp;إلى ح/ مخصص خسائر ائتمانية '+nf(diff):'من ح/ مخصص خسائر ائتمانية '+nf(-diff)+'<br>&nbsp;&nbsp;&nbsp;إلى ح/ عكس خسائر ائتمانية '+nf(-diff))+'</div>';
+ var late=T[3]+T[4];h+='<p class="hint">المتأخر أكثر من 60 يومًا: '+nf(late)+' ('+nf(tot?late/tot*100:0)+'% من الذمم) — ابدأ بمتابعتها وفق سياسة التحصيل. النسب افتراضية فعدّلها بحسب تجربة منشأتك.</p><div class="acts"><button class="btn alt" id="pr" type="button">طباعة</button></div>';
+ $('#out').innerHTML=h;$('#pr').onclick=function(){window.print()}}
+['in','asof','rt','cur'].forEach(function(i){$('#'+i).oninput=calc});calc();
+</script></body></html>
