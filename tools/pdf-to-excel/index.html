@@ -28,31 +28,33 @@ details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(
 .opts label{display:flex;flex-direction:column;gap:4px;font-size:.85rem}.opts label.ck{flex-direction:row;align-items:center;gap:6px}
 .pv{margin-top:12px;overflow:auto;max-height:340px;border:1px solid var(--line);border-radius:10px}.pv table{border-collapse:collapse;width:100%;font-size:.8rem}.pv td,.pv th{border:1px solid var(--line);padding:4px 8px;white-space:nowrap}.pv th{background:#1f4e79;color:#fff}
 .prog{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:8px}.prog i{display:block;height:100%;width:0;background:var(--acc);transition:width .15s}
-/* مظهر احترافي */
-:root{--pn:#1e3a5f;--pn2:#2b5287;--pb:#d5dce8}
-body{background:#eef1f6}
-.card{background:#fff;border:1px solid var(--pb);border-radius:12px;box-shadow:0 1px 2px rgba(16,32,64,.05),0 6px 18px rgba(16,32,64,.04);padding:18px 20px;position:relative}
-.card>h2:first-child{font-size:1.05rem;margin:0 0 12px;padding-right:12px;border-right:4px solid var(--pn);line-height:1.3}
-.drop{background:#f7f9fc;border:1.5px dashed #9fb0c9;border-radius:12px;transition:.15s}.drop:hover{border-color:var(--pn);background:#f0f4fa}
-.btn{background:var(--pn);color:#fff;border:1px solid var(--pn);border-radius:9px;padding:9px 16px;font-weight:600;box-shadow:0 1px 2px rgba(16,32,64,.15);transition:.12s}.btn:hover{background:var(--pn2);border-color:var(--pn2)}.btn:disabled{opacity:.55}
-.btn.alt{background:#fff;color:var(--pn);border:1px solid var(--pb);box-shadow:none}.btn.alt:hover{background:#f0f4fa;border-color:#9fb0c9}
+/* مظهر فاتح احترافي */
+:root{--pn:#0369a1;--pb:#d9e6f5}
+body{background:linear-gradient(180deg,#f3f8ff,#f8fbff 40%,#fff)}
+.card{background:#fff;border:1px solid var(--pb);border-radius:16px;box-shadow:0 1px 2px rgba(3,105,161,.06),0 8px 24px rgba(3,105,161,.06);padding:18px 20px}
+.card>h2:first-child{font-size:1.05rem;margin:0 0 12px;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,#e8f3ff,#f3f9ff);color:#0c4a6e;border-right:4px solid #38bdf8}
+.drop{background:linear-gradient(135deg,#f0f8ff,#f7fbff);border:1.5px dashed #93c5fd;border-radius:16px;color:#0c4a6e;transition:.15s}.drop:hover{border-color:#38bdf8;background:#eaf5ff}.drop b{color:#0369a1}.drop .ic{color:#38bdf8}
+.btn{background:#e0f2fe;color:#075985;border:1px solid #bae6fd;border-radius:10px;padding:9px 15px;font-weight:600;box-shadow:none;transition:.12s}.btn:hover{background:#bae6fd;border-color:#7dd3fc}.btn:disabled{opacity:.55}
+.btn.alt{background:#fff;color:#334e68;border:1px solid var(--pb)}.btn.alt:hover{background:#f1f7ff;border-color:#93c5fd}
+#go,#xx,#quick{background:#d1fae5;color:#065f46;border-color:#a7f3d0}#go:hover,#xx:hover{background:#a7f3d0}
+#rdel,#rmatch,#idel,#eun{background:#fff1f2;color:#9f1239;border-color:#fecdd3}#rdel:hover,#rmatch:hover,#idel:hover{background:#ffe4e6}
 .acts{gap:8px}
-.pc{border:1.5px solid var(--pb);border-radius:10px;background:#fff;transition:.12s}.pc:hover{box-shadow:0 4px 12px rgba(16,32,64,.1)}.pc.cur{border-color:var(--pn);box-shadow:0 0 0 3px rgba(30,58,95,.15)}
-.pc canvas{border:1px solid #e3e8f0}.pc .b button{background:#f0f4fa;color:var(--pn);border:1px solid #e0e6f0;border-radius:6px}.pc .b button:hover{background:#e2e9f5}
-#stage{background:#fff;border:1px solid #c5cfdf;border-radius:4px;box-shadow:0 8px 28px rgba(16,32,64,.18);margin:14px auto}
-.tools{background:#f7f9fc;border:1px solid #e3e8f0;border-radius:10px;padding:10px 12px;margin-bottom:8px}
-input[type=text],input[type=number],input[type=date],select,textarea{background:#fff;border:1px solid #c9d3e3;border-radius:8px}
-input:focus,select:focus,textarea:focus{border-color:var(--pn2);outline:3px solid rgba(43,82,135,.18);outline-offset:0}
-#epan{background:#fff;border:1px solid var(--pn);border-radius:12px;box-shadow:0 6px 20px rgba(16,32,64,.12)}
-details>summary{color:var(--pn);padding:4px 0}
-#segl .seg{background:rgba(30,58,95,.06);border-radius:3px}.seg:hover{border-color:var(--pn2);background:rgba(43,82,135,.18)}
-#sigpad{background:#fff;border:1.5px dashed #9fb0c9;border-radius:10px}
-.chk{background:#f7f9fc;border:1px solid #e3e8f0;border-radius:8px;padding:6px 10px}
-.hint{color:#5d6b82}.note{background:#f7f9fc;border:1px solid #e3e8f0}
-.tabs button{background:#fff;color:var(--pn);border:1px solid var(--pb);border-radius:9px;font-weight:600;padding:8px 14px}.tabs button:hover{background:#f0f4fa}.tabs button.on{background:var(--pn);color:#fff;border-color:var(--pn)}
-.imgs div{background:#fff;border:1px solid var(--pb);border-radius:10px}.prog{background:#dfe6f1}.prog i{background:var(--pn2)}.res{background:#f7f9fc;border:1px solid #e3e8f0;border-radius:8px;padding:8px 12px}.res:empty{display:none}
-.pv th{background:var(--pn)!important}
-@media(prefers-color-scheme:dark){body{background:var(--bg)}.card,.pc,.drop,.tools,.chk,.imgs div,.res,.note,#epan{background:var(--card);border-color:var(--line)}.btn.alt,.tabs button,.pc .b button{background:var(--soft);color:var(--ink);border-color:var(--line)}.btn{background:#3b6fb6;border-color:#3b6fb6}.tabs button.on{background:#3b6fb6}input[type=text],input[type=number],input[type=date],select,textarea{background:var(--field);border-color:var(--line)}.card>h2:first-child{border-color:#3b6fb6}}
+.pc{border:1.5px solid var(--pb);border-radius:12px;background:#fff;transition:.12s}.pc:hover{box-shadow:0 6px 16px rgba(3,105,161,.12);transform:translateY(-1px)}.pc.cur{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.2)}
+.pc canvas{border:1px solid #e6eef9;border-radius:6px}.pc .b button{background:#eff6ff;color:#0369a1;border:1px solid #dbeafe;border-radius:7px}.pc .b button:hover{background:#dbeafe}
+#stage{background:#fff;border:1px solid #cfe0f3;border-radius:4px;box-shadow:0 10px 30px rgba(3,105,161,.15);margin:14px auto}
+.tools{background:#f5f9ff;border:1px solid #e0ebf8;border-radius:12px;padding:10px 12px;margin-bottom:8px}
+input[type=text],input[type=number],input[type=date],select,textarea{background:#fff;border:1px solid #cfe0f3;border-radius:9px}
+input:focus,select:focus,textarea:focus{border-color:#38bdf8;outline:3px solid rgba(56,189,248,.25);outline-offset:0}
+#epan{background:#fff;border:1px solid #7dd3fc;border-radius:14px;box-shadow:0 8px 24px rgba(3,105,161,.12)}
+details>summary{color:#0369a1;padding:4px 0}
+#segl .seg{background:rgba(56,189,248,.07);border-radius:3px}.seg:hover{border-color:#0ea5e9;background:rgba(56,189,248,.22)}
+#sigpad{background:#fff;border:1.5px dashed #93c5fd;border-radius:12px}
+.chk{background:#f5f9ff;border:1px solid #e0ebf8;border-radius:9px;padding:6px 10px}
+.hint{color:#5b7088}.note{background:#f5f9ff;border:1px solid #e0ebf8}
+.tabs button{background:#fff;color:#334e68;border:1px solid var(--pb);border-radius:10px;font-weight:600;padding:8px 14px}.tabs button:hover{background:#f1f7ff}.tabs button.on{background:#e0f2fe;color:#075985;border-color:#7dd3fc;box-shadow:0 2px 8px rgba(56,189,248,.25)}
+.imgs div{background:#fff;border:1px solid var(--pb);border-radius:12px}.prog{background:#e0eefb}.prog i{background:linear-gradient(90deg,#38bdf8,#34d399)}.res{background:#f5f9ff;border:1px solid #e0ebf8;border-radius:9px;padding:8px 12px}.res:empty{display:none}
+.pv th,table.t th{background:#e8f3ff!important;color:#0c4a6e!important}
+@media(prefers-color-scheme:dark){body{background:var(--bg)}.card,.pc,.drop,.tools,.chk,.imgs div,.res,.note,#epan{background:var(--card);border-color:var(--line)}.btn,.btn.alt,.tabs button,.pc .b button{background:var(--soft);color:var(--ink);border-color:var(--line)}.card>h2:first-child{background:var(--soft);color:var(--ink)}input[type=text],input[type=number],input[type=date],select,textarea{background:var(--field);border-color:var(--line)}}
 
 </style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>PDF to Excel<small>جداول وبيانات PDF في ملف Excel منسّق وجاهز للحساب</small></h1>
 <div class="card"><h2>حوّل أي ملف PDF إلى Excel</h2>
@@ -66,11 +68,25 @@ details>summary{color:var(--pn);padding:4px 0}
 <label>تجاهل أعلى/أسفل الصفحة<select id="mg"><option value="0">لا تتجاهل</option><option value="0.05">5%</option><option value="0.1">10%</option></select></label>
 <label>المخرجات<select id="out"><option value="xlsx">ملف Excel واحد</option><option value="zip">ملف Excel لكل صفحة (ZIP)</option></select></label>
 <label class="ck"><input type="checkbox" id="ns"> فصل الرقم عن النص داخل الخلية</label>
+<label class="ck"><input type="checkbox" id="dd" checked> إزالة النص المتراكب (الخط المزدوج)</label>
 <label class="ck"><input type="checkbox" id="num" checked> تحويل الأرقام إلى أرقام حقيقية</label>
 <label class="ck"><input type="checkbox" id="sty" checked> تنسيق احترافي (رأس وحدود)</label></div>
-<div class="acts"><button class="btn" id="go" type="button">تحويل إلى Excel</button><button class="btn alt" id="csv" type="button">تنزيل CSV</button></div>
-<div class="prog"><i id="pr"></i></div><div class="res" id="r"></div><div class="pv" id="pv" hidden></div>
-<p class="hint">يعمل داخل متصفحك دون رفع الملف. يقرأ النص الموجود في الملف ويوزّعه في صفوف وأعمدة حسب مواضعه. الملفات الممسوحة ضوئيًا (صور) تحتاج OCR أولًا. راجع الأرقام بعد التحويل، وإن اندمج عمودان أو انقسم عمود فغيّر «حساسية فصل الأعمدة».</p></div>
+<div class="acts"><button class="btn" id="go" type="button">🔍 تحليل البيانات والتحكم فيها</button><button class="btn alt" id="quick" type="button">تنزيل Excel مباشرة</button><button class="btn alt" id="csv" type="button">تنزيل CSV مباشرة</button></div>
+<div class="prog"><i id="pr"></i></div><div class="res" id="r"></div><div class="pv" id="pv" hidden></div><p class="hint">يعمل داخل متصفحك دون رفع الملف. يقرأ النص الموجود في الملف ويوزّعه في صفوف وأعمدة حسب مواضعه. الملفات الممسوحة ضوئيًا (صور) تحتاج OCR أولًا. راجع الأرقام بعد التحويل، وإن اندمج عمودان أو انقسم عمود فغيّر «حساسية فصل الأعمدة».</p></div>
+<div class="card" id="ed" hidden><h2>تحكّم كامل في البيانات المستخرجة</h2>
+<div id="sug"></div>
+<div class="tools"><b>الأعمدة</b> — اضغط على عنوان عمود لتحديده ثم اختر عملية:
+<div class="row" style="margin-top:8px"><label>العملية<select id="op"><option value="split">تقسيم بفاصل (نص أو Regex)</option><option value="numtext">فصل الرقم عن النص (14 Units ← 14 | Units)</option><option value="dupsplit">تقسيم القيمة المكررة (14 Units 14 Units)</option><option value="extract">استخراج بنمط إلى عمود جديد</option><option value="remove">حذف جزء بنمط من الخلايا</option><option value="replace">بحث واستبدال (Regex)</option><option value="merge">دمج مع العمود التالي</option><option value="fill">ملء الخلايا الفارغة من الأعلى</option><option value="trim">تنظيف النص والأرقام العربية</option><option value="num">تحويل إلى أرقام (إزالة الفواصل والرموز)</option><option value="t_n">تعيين النوع: رقم</option><option value="t_t">تعيين النوع: نص (يحفظ الأصفار)</option><option value="t_a">تعيين النوع: تلقائي</option><option value="dup">نسخ العمود</option><option value="del">حذف العمود</option><option value="left">نقل لليمين/السابق ◀</option><option value="right">نقل لليسار/التالي ▶</option></select></label>
+<label>نمط جاهز<select id="pre"><option value="">— اختياري —</option><option value="\[([^\]]*)\]">النص داخل [ ]</option><option value="\(([^)]*)\)">النص داخل ( )</option><option value="[0-9]+(?:[.,][0-9]+)*">الرقم</option><option value="[0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{2,4}">تاريخ</option><option value="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}">بريد إلكتروني</option><option value="[A-Z]{2,}-[A-Z0-9-]+">كود (BWD-006)</option><option value="[A-Za-z]+">كلمات إنجليزية</option><option value="[؀-ۿ ]+">نص عربي</option></select></label>
+<label>النمط / الفاصل<input type="text" id="p1" placeholder="مثال:  |  أو \s{2,}"></label><label>القيمة / الفاصل الجديد<input type="text" id="p2"></label><label class="ck"><input type="checkbox" id="rm" checked> احذف المستخرج من الأصل</label><button class="btn" id="apply" type="button">تنفيذ على العمود المحدد</button></div></div>
+<div class="tools"><b>الصفوف</b>
+<div class="acts" style="margin-top:8px"><button class="btn alt" id="rdel" type="button">🗑 حذف الصفوف المعلَّمة</button><button class="btn alt" id="rhd" type="button">حذف الترويسات المكررة</button><button class="btn alt" id="rdup" type="button">حذف الصفوف المكررة</button><button class="btn alt" id="rem" type="button">حذف الصفوف الفارغة</button><button class="btn alt" id="rone" type="button">حذف صفوف الخلية الواحدة</button><button class="btn alt" id="rrev" type="button">⇅ عكس الترتيب</button><button class="btn alt" id="rsa" type="button">فرز تصاعدي</button><button class="btn alt" id="rsd" type="button">فرز تنازلي</button></div>
+<div class="row"><label>حذف/إبقاء الصفوف المطابقة لنمط<input type="text" id="rp" placeholder="مثال: ^Page|المجموع"></label><label>النطاق<select id="rsc"><option value="all">كل الأعمدة</option><option value="col">العمود المحدد فقط</option></select></label><button class="btn alt" id="rmatch" type="button">حذف المطابق</button><button class="btn alt" id="rkeep" type="button">إبقاء المطابق فقط</button></div></div>
+<div class="tools"><b>التصدير</b><div class="row" style="margin-top:8px"><label class="ck"><input type="checkbox" id="xmeta" checked> ورقة «بيانات الملف» للأسطر فوق الترويسة</label><label class="ck"><input type="checkbox" id="xrtl" checked> ورقة من اليمين لليسار</label><label class="ck"><input type="checkbox" id="xnum" checked> الأرقام كأرقام حقيقية</label><label>تقسيم إلى أوراق حسب عمود<select id="gby"><option value="">بدون</option></select></label></div>
+<div class="acts"><button class="btn" id="xx" type="button">⬇ تنزيل Excel</button><button class="btn alt" id="xc" type="button">CSV</button><button class="btn alt" id="xj" type="button">JSON</button><button class="btn alt" id="und" type="button">↩ تراجع</button></div></div>
+<p class="hint">اضغط «ترويسة» بجانب أي صف ليصير صف العناوين (ما فوقه يُعدّ بيانات الملف). علّم الصفوف بالمربع ثم احذفها، وعدّل أي خلية مباشرة بالكتابة داخلها.</p>
+<div class="sc" style="max-height:560px;overflow:auto"><table class="t" id="gt"></table></div><div class="res" id="gi"></div></div>
+
 <p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
 <script>
 var $=function(s){return document.querySelector(s)};
@@ -91,9 +107,9 @@ function dataBytes(u){var b=atob(u.split(',')[1]),a=new Uint8Array(b.length);for
 function openPdf(f){return Promise.all([getPdfjs(),rdBuf(f)]).then(function(a){var bytes=new Uint8Array(a[1]);return a[0].getDocument(pdfOpts(bytes.slice())).promise.then(function(pdf){return{pdf:pdf,bytes:bytes}})}).catch(function(e){toast(e&&e.name==='PasswordException'?'الملف محمي بكلمة مرور':'تعذّر فتح الملف');throw e})}
 var AR=/[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]/,LAST=null;
 function norm(s){s=s.replace(/[٠-٩]/g,function(c){return c.charCodeAt(0)-1632}).replace(/[۰-۹]/g,function(c){return c.charCodeAt(0)-1776});if(/[ﭐ-﷿ﹰ-﻿]/.test(s))s=s.normalize('NFKC');return s.replace(/‏|‎|‪-‮/g,'')}
-function pageRows(tc,sens,mg,ph){
+function pageRows(tc,sens,mg,ph,dd){
  var its=[];tc.items.forEach(function(it){if(!it.str||!it.str.trim()&&it.str.length>2&&false)return;if(!it.str.trim())return;var h=it.height||Math.abs(it.transform[3])||10;its.push({s:norm(it.str),x:it.transform[4],y:it.transform[5],w:it.width,h:h})});
- if(mg&&ph)its=its.filter(function(i){return i.y<ph*(1-mg)&&i.y>ph*mg});its.sort(function(a,b){return b.y-a.y||a.x-b.x});var rows=[];
+ if(mg&&ph)its=its.filter(function(i){return i.y<ph*(1-mg)&&i.y>ph*mg});its.sort(function(a,b){return b.y-a.y||a.x-b.x});if(dd){var kept=[];its.forEach(function(it){for(var q=kept.length-1;q>=0&&q>kept.length-40;q--){var k=kept[q];if(Math.abs(k.y-it.y)<k.h*.3&&Math.abs(k.x-it.x)<Math.max(k.h*.6,k.w*.5)&&(k.s===it.s||k.s.indexOf(it.s)===0||it.s.indexOf(k.s)===0)){if(it.s.length>k.s.length)kept[q]=it;return}}kept.push(it)});its=kept;its.sort(function(a,b){return b.y-a.y||a.x-b.x})}var rows=[];
  its.forEach(function(it){var r=rows[rows.length-1];if(r&&Math.abs(r.y-it.y)<=Math.max(2,Math.min(r.h,it.h)*.5)){r.it.push(it);r.h=Math.max(r.h,it.h)}else rows.push({y:it.y,h:it.h,it:[it]})});
  rows.forEach(function(r){r.it.sort(function(a,b){return a.x-b.x});var cells=[],c=null;
   r.it.forEach(function(it){var gap=c?it.x-(c.x1):0;if(c&&gap<Math.max(r.h*sens,2.5)){c.parts.push(it);c.x1=Math.max(c.x1,it.x+it.w);c.gaps.push(gap)}else{c={x0:it.x,x1:it.x+it.w,parts:[it],gaps:[0]};cells.push(c)}});
@@ -126,7 +142,7 @@ var ST='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns
 function sheetXml(s,opt){var g=s.grid,n=s.n,w=new Array(n).fill(8),x=[],hdr=-1,zeb=0,first=-1,last=-1,prevMulti=false;
  g.forEach(function(r,ri){var cells=[],isHdr=false;if(r.multi&&!prevMulti&&opt.sty&&!s.plain){isHdr=true;zeb=0;if(hdr<0)hdr=ri}
   if(r.multi){if(first<0)first=ri;last=ri}
-  r.forEach(function(c,ci){if(!c)return;var ref=colL(ci)+(ri+1),t=c.t,nv=opt.num&&r.multi&&!isHdr?toNum(t):null,st;
+  r.forEach(function(c,ci){if(!c)return;var ref=colL(ci)+(ri+1),t=c.t,nv=opt.num&&r.multi&&!isHdr&&!c.txt?toNum(t):null,st;
    if(!opt.sty)st=0;else if(!r.multi&&!s.plain)st=6;else if(isHdr)st=1;else{var z=zeb%2?7:2,off=zeb%2?5:0;st=nv?(nv.pc?5+off:nv.dec?4+off:3+off):z}
    if(r.multi)w[ci]=Math.max(w[ci],Math.min(60,(nv?String(nv.v).length+3:t.length*1.15)+2));
    if(nv)cells.push('<c r="'+ref+'" s="'+st+'"><v>'+nv.v+'</v></c>');else cells.push('<c r="'+ref+'" s="'+st+'" t="inlineStr"><is><t xml:space="preserve">'+esc(t)+'</t></is></c>')});
@@ -144,15 +160,97 @@ function xlsx(sheets,opt){return getZip().then(function(Z){var z=new Z();
  z.file('xl/styles.xml',ST);sheets.forEach(function(s,i){z.file('xl/worksheets/sheet'+(i+1)+'.xml',sheetXml(s,opt))});
  return z.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})})}
 function parseRange(s,n){var a=[],i;if(!s||!s.trim()){for(i=1;i<=n;i++)a.push(i);return a}s.split(/[,،\s]+/).forEach(function(t){var m=t.match(/^(\d+)(?:-(\d+))?$/);if(!m)return;var x=+m[1],y=m[2]?+m[2]:x;for(i=Math.max(1,x);i<=Math.min(y,n);i++)if(a.indexOf(i)<0)a.push(i)});return a.length?a:parseRange('',n)}
-function opts(){return{mode:$('#mode').value,dir:$('#dir').value,num:$('#num').checked,sty:$('#sty').checked,sens:+$('#sens').value,split:$('#split').value,delim:$('#delim').value,ns:$('#ns').checked,mg:+$('#mg').value,rg:$('#rg').value,out:$('#out').value}}
-function readAll(f,o){return openPdf(f).then(function(d){var pages=[],tx=0,list=parseRange(o.rg,d.pdf.numPages),k=0;return new Promise(function(ok,no){(function step(){if(k>=list.length)return ok(pages);var i=list[k];$('#r').textContent='⏳ قراءة صفحة '+i+' من '+d.pdf.numPages;$('#pr').style.width=((k+1)/list.length*100)+'%';d.pdf.getPage(i).then(function(pg){var ph=pg.view[3];return pg.getTextContent().then(function(tc){var rows=pageRows(tc,o.sens,o.mg,ph);tx+=rows.length;if(rows.length)pages.push({n:i,rows:rows});k++;step()})}).catch(no)})()}).then(function(p){if(!tx)throw new Error('notext');return p})})}
+function opts(){return{mode:$('#mode').value,dir:$('#dir').value,num:$('#num').checked,sty:$('#sty').checked,sens:+$('#sens').value,split:$('#split').value,delim:$('#delim').value,ns:$('#ns').checked,mg:+$('#mg').value,rg:$('#rg').value,out:$('#out').value,dd:$('#dd').checked}}
+function readAll(f,o){return openPdf(f).then(function(d){var pages=[],tx=0,list=parseRange(o.rg,d.pdf.numPages),k=0;return new Promise(function(ok,no){(function step(){if(k>=list.length)return ok(pages);var i=list[k];$('#r').textContent='⏳ قراءة صفحة '+i+' من '+d.pdf.numPages;$('#pr').style.width=((k+1)/list.length*100)+'%';d.pdf.getPage(i).then(function(pg){var ph=pg.view[3];return pg.getTextContent().then(function(tc){var rows=pageRows(tc,o.sens,o.mg,ph,o.dd);tx+=rows.length;if(rows.length)pages.push({n:i,rows:rows});k++;step()})}).catch(no)})()}).then(function(p){if(!tx)throw new Error('notext');return p})})}
 function preview(sh){var s=sh[0],h='<table>',m=Math.min(s.grid.length,40);for(var i=0;i<m;i++){var r=s.grid[i];h+='<tr dir="'+(s.rtl?'rtl':'ltr')+'">'+r.map(function(c){return '<td>'+(c?c.t.replace(/</g,'&lt;'):'')+'</td>'}).join('')+'</tr>'}$('#pv').innerHTML=h+'</table>';$('#pv').hidden=false}
 function run(kind){var f=$('#f').files[0];if(!f){toast('اختر ملف PDF أولًا');return}var o=opts(),btn=$('#go');btn.disabled=true;
  readAll(f,o).then(function(pages){var sh=buildSheets(pages,o),base=f.name.replace(/\.pdf$/i,''),cells=0;sh.forEach(function(s){s.grid.forEach(function(r){r.forEach(function(c){if(c)cells++})})});preview(sh);
   if(kind==='csv'){var csv='﻿'+sh.map(function(s){return s.grid.map(function(r){return r.map(function(c){var t=c?c.t:'';return /[",\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t}).join(',')}).join('\r\n')}).join('\r\n');dl(new Blob([csv],{type:'text/csv'}),base+'.csv');$('#r').innerHTML='✅ تم تنزيل CSV';return}
   if(o.out==='zip'){return getZip().then(function(Z){var z=new Z();return sh.reduce(function(p,s){return p.then(function(){return xlsx([s],o)}).then(function(b){z.file(base+'-'+s.name.replace(/\s/g,'')+'.xlsx',b)})},Promise.resolve()).then(function(){return z.generateAsync({type:'blob'})})}).then(function(b){dl(b,base+'-xlsx.zip');$('#r').innerHTML='✅ <b>'+sh.length+'</b> ملفات Excel في ZIP'})}
   return xlsx(sh,o).then(function(b){dl(b,base+'.xlsx');$('#r').innerHTML='✅ <b>'+sh.length+'</b> ورقة، <b>'+cells+'</b> خلية — راجع المعاينة أدناه'})}).catch(function(e){if(e&&e.message==='notext')$('#r').textContent='⚠ لا يوجد نص في هذا الملف (غالبًا ممسوح ضوئيًا). يلزم OCR أولًا.';else if(!e||e.name!=='PasswordException')$('#r').textContent='تعذّر التحويل'}).then(function(){btn.disabled=false;$('#pr').style.width='0'})}
-$('#go').onclick=function(){run('x')};$('#csv').onclick=function(){run('csv')};
+$('#quick').onclick=function(){run('x')};$('#csv').onclick=function(){run('csv')};$('#go').onclick=analyze;
 $('#f').onchange=function(e){var f=e.target.files[0];if(f)$('#r').textContent='📄 '+f.name+' — اضغط «تحويل إلى Excel»'};
+
+// ===== مرحلة التحكم في البيانات =====
+var M={all:[],hdr:0,types:[],sel:-1,chk:{},rtl:true},UN=[];
+function snap(){UN.push(JSON.stringify({a:M.all,h:M.hdr,t:M.types,s:M.sel}));if(UN.length>25)UN.shift()}
+function undo(){if(!UN.length){toast('لا يوجد ما يُتراجع عنه');return}var o=JSON.parse(UN.pop());M.all=o.a;M.hdr=o.h;M.types=o.t;M.sel=o.s;M.chk={};draw()}
+function W(){var n=0;M.all.forEach(function(r){n=Math.max(n,r.length)});return n}
+function norm2(){var n=W();M.all.forEach(function(r){while(r.length<n)r.push('')});while(M.types.length<n)M.types.push('a');M.types.length=n}
+function analyze(){var f=$('#f').files[0];if(!f){toast('اختر ملف PDF أولًا');return}var o=opts();o.mode='one';var btn=$('#go');btn.disabled=true;
+ readAll(f,o).then(function(pages){var sh=buildSheets(pages,o)[0],all=[],firstMulti=-1;sh.grid.forEach(function(r){var row=r.map(function(c){return c?c.t:''});if(!row.some(function(x){return x}))return;if(r.multi&&firstMulti<0)firstMulti=all.length;all.push(row)});
+  M.all=all;M.hdr=Math.max(0,firstMulti);M.types=[];M.sel=-1;M.chk={};M.rtl=sh.rtl;$('#xrtl').checked=sh.rtl;UN=[];norm2();$('#ed').hidden=false;draw();$('#ed').scrollIntoView({behavior:'smooth',block:'start'});$('#r').innerHTML='✅ تم التحليل: <b>'+all.length+'</b> صفًا — تحكّم بالبيانات أدناه'}).catch(function(e){if(e&&e.message==='notext')$('#r').textContent='⚠ لا يوجد نص في هذا الملف (ممسوح ضوئيًا). يلزم OCR أولًا.';else if(!e||e.name!=='PasswordException')$('#r').textContent='تعذّر التحليل'}).then(function(){btn.disabled=false;$('#pr').style.width='0'})}
+function esc2(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function suggestions(){var d=M.all.slice(M.hdr+1),n=W(),out=[];if(!d.length)return out;
+ var hd=M.all[M.hdr]||[],hn=hd.map(function(x){return x.replace(/\s+/g,'').toLowerCase()}).join('|'),rep=d.filter(function(r){return r.map(function(x){return x.replace(/\s+/g,'').toLowerCase()}).join('|')===hn}).length;if(rep)out.push(['حذف '+rep+' ترويسة مكررة (تتكرر في كل صفحة)',function(){doRows('rhd')}]);
+ var one=d.filter(function(r){return r.filter(function(x){return x}).length<2}).length;if(one)out.push(['حذف '+one+' صفًا بخلية واحدة (عادةً ترويسة/تذييل الصفحة)',function(){doRows('rone')}]);
+ var dupc=0,seen={};d.forEach(function(r){var k=r.join('|');if(seen[k])dupc++;seen[k]=1});if(dupc)out.push(['حذف '+dupc+' صفًا مكررًا تمامًا',function(){doRows('rdup')}]);
+ for(var c=0;c<n;c++){(function(c){var v=d.map(function(r){return r[c]}).filter(function(x){return x}),m=v.length||1,nm=hd[c]||('العمود '+(c+1));
+  var a=v.filter(function(x){return/^(.+?)\s+\1$/.test(x)}).length;if(a/m>.5)out.push(['العمود «'+nm+'»: قيمة مكررة في الخلية — تقسيمها إلى عمودين',function(){M.sel=c;$('#op').value='dupsplit';doCol()}]);
+  var b=v.filter(function(x){return/\[[^\]]+\]/.test(x)}).length;if(b/m>.5)out.push(['العمود «'+nm+'»: يحوي أكوادًا بين [ ] — استخراجها لعمود مستقل',function(){M.sel=c;$('#op').value='extract';$('#p1').value='\\[([^\\]]*)\\]';$('#rm').checked=true;doCol()}]);
+  var u=v.filter(function(x){return/^\d[\d.,]*\s+[^\d\s]+$/.test(x)}).length;if(u/m>.5)out.push(['العمود «'+nm+'»: رقم ووحدة معًا — فصلهما',function(){M.sel=c;$('#op').value='numtext';doCol()}]);
+  var e=d.filter(function(r){return!r[c]}).length;if(e/d.length>.15&&e/d.length<.9)out.push(['العمود «'+nm+'»: فيه '+e+' خلية فارغة — ملؤها من الأعلى',function(){M.sel=c;$('#op').value='fill';doCol()}])})(c)}
+ return out.slice(0,8)}
+function draw(){norm2();var n=W(),h='<thead><tr><th></th><th></th>';for(var c=0;c<n;c++)h+='<th data-hc="'+c+'" style="cursor:pointer;'+(M.sel===c?'background:#fde68a;color:#000':'')+'">'+(c+1)+(M.types[c]!=='a'?' <small>('+(M.types[c]==='n'?'رقم':'نص')+')</small>':'')+'</th>';h+='</tr></thead><tbody>';
+ var lim=Math.min(M.all.length,400);for(var i=0;i<lim;i++){var r=M.all[i],isH=i===M.hdr,dim=i<M.hdr;h+='<tr style="'+(isH?'background:#1f4e79;color:#fff;font-weight:700':dim?'opacity:.45':'')+'"><td><input type="checkbox" data-rc="'+i+'" '+(M.chk[i]?'checked':'')+'></td><td><button type="button" class="btn alt" data-hr="'+i+'" style="padding:2px 6px;font-size:.72rem">'+(isH?'✔ ترويسة':dim?'معلومات':'ترويسة')+'</button></td>';for(var c=0;c<n;c++)h+='<td contenteditable="true" data-r="'+i+'" data-c="'+c+'" dir="auto">'+esc2(r[c]||'')+'</td>';h+='</tr>'}
+ h+='</tbody>';$('#gt').innerHTML=h;var sg=suggestions();$('#sug').innerHTML=sg.length?'<div class="note" style="margin:0 0 10px"><b>💡 اقتراحات ذكية:</b> '+sg.map(function(x,i){return '<button class="btn alt" type="button" data-sg="'+i+'" style="margin:3px">'+esc2(x[0])+'</button>'}).join('')+'</div>':'';window._sg=sg;
+ var gb=$('#gby'),cur=gb.value;gb.innerHTML='<option value="">بدون</option>'+(M.all[M.hdr]||[]).map(function(x,i){return '<option value="'+i+'">'+esc2(x||('العمود '+(i+1)))+'</option>'}).join('');gb.value=cur;
+ $('#gi').textContent='صفوف البيانات: '+Math.max(0,M.all.length-M.hdr-1)+' — الأعمدة: '+n+(M.all.length>lim?' (المعاينة أول '+lim+' صف، والعمليات تشمل الكل)':'')+(M.sel>=0?' — العمود المحدد: '+(M.sel+1):'')}
+$('#gt').addEventListener('input',function(e){var t=e.target;if(t.dataset.r==null)return;M.all[+t.dataset.r][+t.dataset.c]=t.textContent});
+$('#gt').addEventListener('focusin',function(e){if(e.target.dataset.c!=null)snap()});
+$('#gt').addEventListener('click',function(e){var t=e.target;if(t.dataset.hc!=null){M.sel=M.sel===+t.dataset.hc?-1:+t.dataset.hc;draw()}else if(t.dataset.hr!=null){snap();M.hdr=+t.dataset.hr;draw()}else if(t.dataset.rc!=null){M.chk[t.dataset.rc]=t.checked}});
+$('#sug').addEventListener('click',function(e){var i=e.target.dataset.sg;if(i!=null){snap();window._sg[+i][1]()}});
+$('#pre').onchange=function(){if(this.value){$('#p1').value=this.value;if($('#op').value==='split')$('#op').value='extract'}};
+function insCol(at,n){M.all.forEach(function(r){r.splice.apply(r,[at,0].concat(new Array(n).fill('')))});for(var i=0;i<n;i++)M.types.splice(at,0,'a')}
+function colName(c){return(M.all[M.hdr]||[])[c]||('العمود '+(c+1))}
+function reOf(p,fl){try{return new RegExp(p,fl||'')}catch(e){toast('نمط غير صالح');return null}}
+function doCol(){var c=M.sel,op=$('#op').value;if(c<0){toast('اضغط على عنوان عمود لتحديده أولًا');return}snap();var p1=$('#p1').value,p2=$('#p2').value,d=M.hdr+1,A=M.all,nm=colName(c),k;
+ function outCols(fn,names){var res=[],mx=0;for(k=d;k<A.length;k++){var o=fn(A[k][c]||'');res[k]=o;mx=Math.max(mx,o.length)}insCol(c+1,mx-1>0?mx-1:0);if(mx<1)return;A[M.hdr][c]=names[0];for(var j=1;j<mx;j++)A[M.hdr][c+j]=names[j]||(nm+' '+(j+1));for(k=d;k<A.length;k++){var o=res[k];for(var j2=0;j2<mx;j2++)A[k][c+j2]=o[j2]!==undefined?o[j2]:''}}
+ if(op==='split'){var re=reOf(p1||'\\s{2,}');if(!re)return;outCols(function(t){return t.split(re).map(function(x){return(x||'').trim()})},[nm+' 1'])}
+ else if(op==='numtext'){outCols(function(t){var m=t.match(/^(\d[\d.,]*%?)\s+(.*)$/)||t.match(/^(.*?)\s+(\d[\d.,]*%?)$/);if(!m)return[t,''];var a=m[1],b=m[2];if(!/^\d/.test(a)){var q=a;a=b;b=q}return[a,b]},[nm+' (رقم)',nm+' (نص)'])}
+ else if(op==='dupsplit'){outCols(function(t){var m=t.match(/^(.+?)\s+\1$/);return m?[m[1],m[1]]:[t,'']},[nm+' 1',nm+' 2'])}
+ else if(op==='extract'){var re2=reOf(p1||'\\[([^\\]]*)\\]');if(!re2)return;var rm=$('#rm').checked;outCols(function(t){var m=t.match(re2);if(!m)return[t,''];var v=m[1]!==undefined?m[1]:m[0];return[rm?t.replace(m[0],'').replace(/\s{2,}/g,' ').trim():t,v]},[nm,p2||(nm+' (مستخرج)')])}
+ else if(op==='remove'){var re3=reOf(p1,'g');if(!re3)return;for(k=d;k<A.length;k++)A[k][c]=(A[k][c]||'').replace(re3,'').replace(/\s{2,}/g,' ').trim()}
+ else if(op==='replace'){var re4=reOf(p1,'g');if(!re4)return;for(k=d;k<A.length;k++)A[k][c]=(A[k][c]||'').replace(re4,p2)}
+ else if(op==='merge'){if(c>=W()-1){toast('لا يوجد عمود تالٍ');return}var sp=p1===''?' ':p1;for(k=M.hdr;k<A.length;k++){A[k][c]=((A[k][c]||'')+(A[k][c+1]?sp+A[k][c+1]:'')).trim();A[k].splice(c+1,1)}M.types.splice(c+1,1)}
+ else if(op==='fill'){var last='';for(k=d;k<A.length;k++){if(A[k][c])last=A[k][c];else A[k][c]=last}}
+ else if(op==='trim'){for(k=M.hdr;k<A.length;k++)A[k][c]=norm((A[k][c]||'')).replace(/\s+/g,' ').trim()}
+ else if(op==='num'){for(k=d;k<A.length;k++){var t=norm(A[k][c]||'').replace(/[^\d.,\-()%]/g,'').replace(/,/g,'');A[k][c]=t}M.types[c]='n'}
+ else if(op==='t_n')M.types[c]='n';else if(op==='t_t')M.types[c]='t';else if(op==='t_a')M.types[c]='a';
+ else if(op==='dup'){insCol(c+1,1);for(k=M.hdr;k<A.length;k++)A[k][c+1]=A[k][c];A[M.hdr][c+1]=nm+' (نسخة)'}
+ else if(op==='del'){A.forEach(function(r){r.splice(c,1)});M.types.splice(c,1);M.sel=-1}
+ else if(op==='left'||op==='right'){var t2=op==='left'?c-1:c+1;if(t2<0||t2>=W()){return}A.forEach(function(r){var x=r[c];r[c]=r[t2];r[t2]=x});var y=M.types[c];M.types[c]=M.types[t2];M.types[t2]=y;M.sel=t2}
+ draw()}
+$('#apply').onclick=doCol;
+function sel(){return Object.keys(M.chk).filter(function(k){return M.chk[k]}).map(Number)}
+function doRows(op){snap();var d=M.hdr+1,A=M.all,keep=[],n0=A.length;function K(i,f){return i<=M.hdr||f}
+ if(op==='rdel'){var s=sel();M.all=A.filter(function(r,i){return s.indexOf(i)<0||i===M.hdr});M.chk={}}
+ else if(op==='rhd'){var hn=(A[M.hdr]||[]).map(function(x){return x.replace(/\s+/g,'').toLowerCase()}).join('|');M.all=A.filter(function(r,i){return i<=M.hdr||r.map(function(x){return x.replace(/\s+/g,'').toLowerCase()}).join('|')!==hn})}
+ else if(op==='rdup'){var seen={};M.all=A.filter(function(r,i){if(i<=M.hdr)return true;var k=r.join('|');if(seen[k])return false;seen[k]=1;return true})}
+ else if(op==='rem'){M.all=A.filter(function(r){return r.some(function(x){return x&&x.trim()})})}
+ else if(op==='rone'){M.all=A.filter(function(r,i){return i<=M.hdr||r.filter(function(x){return x&&x.trim()}).length>=2})}
+ else if(op==='rrev'){M.all=A.slice(0,d).concat(A.slice(d).reverse())}
+ else if(op==='rsa'||op==='rsd'){if(M.sel<0){toast('حدّد عمودًا للفرز');M.all=A;UN.pop();return}var c=M.sel,dir=op==='rsa'?1:-1,body=A.slice(d);body.sort(function(a,b){var x=a[c]||'',y=b[c]||'',nx=parseFloat(x.replace(/,/g,'')),ny=parseFloat(y.replace(/,/g,''));if(!isNaN(nx)&&!isNaN(ny))return(nx-ny)*dir;return x.localeCompare(y,'ar')*dir});M.all=A.slice(0,d).concat(body)}
+ M.chk={};if(M.hdr>=M.all.length)M.hdr=Math.max(0,M.all.length-1);draw();if(n0!==M.all.length)toast('تم حذف '+(n0-M.all.length)+' صفًا')}
+[['rdel','rdel'],['rhd','rhd'],['rdup','rdup'],['rem','rem'],['rone','rone'],['rrev','rrev'],['rsa','rsa'],['rsd','rsd']].forEach(function(x){$('#'+x[0]).onclick=function(){doRows(x[1])}});
+function rowMatch(keepOnly){var p=$('#rp').value;if(!p){toast('اكتب النمط');return}var re=reOf(p,'i');if(!re)return;snap();var c=M.sel,sc=$('#rsc').value==='col'&&c>=0,n0=M.all.length;M.all=M.all.filter(function(r,i){if(i<=M.hdr)return true;var t=sc?(r[c]||''):r.join(' ');var m=re.test(t);return keepOnly?m:!m});M.chk={};draw();toast('الصفوف: '+n0+' ← '+M.all.length)}
+$('#rmatch').onclick=function(){rowMatch(false)};$('#rkeep').onclick=function(){rowMatch(true)};$('#und').onclick=undo;
+function buildOut(){var A=M.all,hd=A[M.hdr]||[],n=W(),num=$('#xnum').checked,rtl=$('#xrtl').checked,sheets=[];
+ function mk(rows,name){var g=[],h=hd.map(function(x,i){return{t:x||('العمود '+(i+1))}});h.multi=true;g.push(h);rows.forEach(function(r){var row=r.map(function(x,i){return x===''?null:{t:x,txt:M.types[i]==='t'||(!num&&M.types[i]!=='n')}});row.multi=true;g.push(row)});return{name:name,grid:g,n:n,rtl:rtl,plain:false}}
+ var data=A.slice(M.hdr+1),gb=$('#gby').value;
+ if(gb!==''){var grp={},ord=[];data.forEach(function(r){var k=(r[+gb]||'(فارغ)').replace(/[\\\/\?\*\[\]:]/g,' ').trim().slice(0,28)||'x';if(!grp[k]){grp[k]=[];ord.push(k)}grp[k].push(r)});ord.forEach(function(k){sheets.push(mk(grp[k],k))})}else sheets.push(mk(data,'البيانات'));
+ if($('#xmeta').checked&&M.hdr>0){var g=[];A.slice(0,M.hdr).forEach(function(r){var row=r.map(function(x){return x?{t:x}:null});row.multi=false;g.push(row)});sheets.push({name:'بيانات الملف',grid:g,n:n,rtl:rtl,plain:true})}
+ return sheets}
+$('#xx').onclick=function(){var sh=buildOut(),o={sty:$('#sty').checked,num:$('#xnum').checked},base=($('#f').files[0]||{name:'data'}).name.replace(/\.pdf$/i,'');if(!sh.length)return;xlsx(sh,o).then(function(b){dl(b,base+'.xlsx');toast('✅ تم تنزيل Excel ('+sh.length+' ورقة)')})};
+function dataRows(){return M.all.slice(M.hdr)}
+$('#xc').onclick=function(){var s='﻿'+dataRows().map(function(r){return r.map(function(c){c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')}).join('\r\n');dl(new Blob([s],{type:'text/csv'}),'data.csv')};
+$('#xj').onclick=function(){var rows=dataRows(),h=rows[0]||[],js=rows.slice(1).map(function(r){var o={};h.forEach(function(k,i){o[k||('col'+(i+1))]=r[i]||''});return o});dl(new Blob([JSON.stringify(js,null,1)],{type:'application/json'}),'data.json')};
+
+(function(){var P={up:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12',dn:'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3',file:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8',rot:'M21 2v6h-6 M3 12a9 9 0 0 1 15-6.7L21 8 M3 22v-6h6 M21 12a9 9 0 0 1-15 6.7L3 16',trash:'M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6',copy:'M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1',plus:'M12 5v14 M5 12h14',type:'M4 7V4h16v3 M9 20h6 M12 4v16',pen:'M12 20h9 M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z',undo:'M3 7v6h6 M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13',ok:'M20 6 9 17l-5-5',next:'M19 12H5 M12 19l-7-7 7-7',prev:'M5 12h14 M12 5l7 7-7 7',search:'M11 3a8 8 0 1 0 0 16 8 8 0 0 0 0-16z M21 21l-4.3-4.3',sl:'M4 21v-7 M4 10V3 M12 21v-9 M12 8V3 M20 21v-5 M20 12V3 M1 14h6 M9 8h6 M17 16h6',tbl:'M12 3v18 M3 9h18 M3 15h18 M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z',img:'M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M21 15l-5-5L5 21',rep:'M17 1l4 4-4 4 M3 11V9a4 4 0 0 1 4-4h14 M7 23l-4-4 4-4 M21 13v2a4 4 0 0 1-4 4H3',prt:'M6 9V2h12v7 M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2 M6 14h12v8H6z',sort:'M3 6h18 M7 12h10 M10 18h4',zip:'M21 8v13H3V8 M1 3h22v5H1z M10 12h4',scis:'M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M20 4 8.1 15.9 M14.5 14.5 20 20 M8.1 8.1 12 12',stamp:'M5 22h14 M19 18H5v-3a4 4 0 0 1 4-4h0V7a3 3 0 1 1 6 0v4h0a4 4 0 0 1 4 4z',drop:'M12 3v12 M7 10l5 5 5-5 M5 21h14',wand:'M15 4V2 M15 16v-2 M8 9h2 M20 9h2 M17.8 11.8 19 13 M15 9h0 M17.8 6.2 19 5 M3 21l9-9 M12.2 6.2 11 5'};
+var K=[[/السابق/,'prev'],[/التالي/,'next'],[/تحليل|اقتراح/,'search'],[/تدوير/,'rot'],[/حذف|مسح/,'trash'],[/ZIP/,'zip'],[/تنزيل|تصدير|تحميل|CSV|JSON|Excel|ضغط|PDF$/,'dn'],[/إضافة|^\+/,'plus'],[/تراجع/,'undo'],[/استبدال|عكس/,'rep'],[/طباعة/,'prt'],[/نسخ|تكرار/,'copy'],[/السابق/,'prev'],[/التالي/,'next'],[/فرز/,'sort'],[/تطبيق|تنفيذ|احسب|تحويل|إنشاء|استخراج|ابدأ/,'ok'],[/نص/,'type'],[/صور|ختم/,'img'],[/توقيع|رسم/,'pen'],[/تعديل|وضع/,'pen'],[/تحديد/,'ok'],[/إلغاء/,'undo']];
+function svg(n){return '<svg class="ic" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+P[n].split(' M').map(function(d,i){return '<path d="'+(i?'M':'')+d+'"/>'}).join('')+'</svg>'}
+function dec(){[].forEach.call(document.querySelectorAll('.btn:not([data-ic]),.tabs button:not([data-ic]),.drop b:not([data-ic])'),function(b){b.setAttribute('data-ic',1);var t=(b.textContent||'').trim(),n=null;if(b.matches('.drop b'))n='up';else for(var i=0;i<K.length;i++)if(K[i][0].test(t)){n=K[i][1];break}if(!n)return;var h=b.innerHTML.replace(/^[\s←-⯿☀-➿\u{1F000}-\u{1FFFF}️+✔✏⬇↩⇄⇅◀▶]+/u,'').replace(/^\s+/,'');b.innerHTML=svg(n)+'<span>'+h+'</span>'})}
+var st=document.createElement('style');st.textContent='.btn,.tabs button{display:inline-flex;align-items:center;gap:7px;justify-content:center}.ic{flex:none}.drop b{display:flex!important;flex-direction:column;align-items:center;gap:8px}.drop b .ic{width:34px;height:34px;stroke-width:1.5}';document.head.appendChild(st);
+var tm;new MutationObserver(function(){clearTimeout(tm);tm=setTimeout(dec,30)}).observe(document.body,{childList:true,subtree:true});dec();window.addEventListener('load',dec)})();
 
 </script></body></html>
