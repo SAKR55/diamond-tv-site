@@ -195,7 +195,7 @@ body{background:#fff;background-image:radial-gradient(900px 420px at 100% -80px,
 .pnav .links a{transition:background .15s,color .15s}.pnav .links a.on{background:#efeaff;color:#5b21b6}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #a78bfa;outline-offset:2px;border-radius:8px}
 .phero{background:radial-gradient(60% 90% at 90% 0,#ece4ff 0,rgba(236,228,255,0) 70%),radial-gradient(50% 80% at 5% 10%,#e0f0ff 0,rgba(224,240,255,0) 70%),#fff}
-.phero:not(.dark) h1{letter-spacing:-.2px;color:#14103a}.phero .lead{color:#5d5780;font-size:clamp(15.5px,2vw,18px)}
+.phero:not(.dark) h1{color:#14103a}.phero .lead{color:#5d5780}
 .crumbs{font-size:13.5px;color:#8a84ab}.crumbs a{color:#6d4fd0}
 .card{border:1px solid #e5eaf5;border-radius:16px;box-shadow:0 1px 2px rgba(30,41,90,.04),0 6px 20px rgba(30,41,90,.05)}
 a.card:hover,.card.hov:hover{border-color:#cbbdf7;box-shadow:0 14px 38px rgba(91,33,182,.13);text-decoration:none}
@@ -207,7 +207,7 @@ a.card:hover,.card.hov:hover{border-color:#cbbdf7;box-shadow:0 14px 38px rgba(91
 input,select,textarea{border-radius:12px}input:focus,select:focus,textarea:focus{border-color:#8b5cf6}
 .eyebrow{display:inline-block;background:#f1edff;color:#6d28d9;border-radius:999px;padding:2px 14px;font-size:13px}
 section.s.alt{background:linear-gradient(180deg,#f7f9ff,#f3f0ff)}
-.prose{font-size:17.5px;line-height:2;color:#2a2548}
+.prose{color:#2a2548}
 .prose h2{position:relative;padding-inline-start:16px;margin-top:40px}.prose h2:before{content:"";position:absolute;inset-inline-start:0;top:.3em;bottom:.3em;width:5px;border-radius:4px;background:linear-gradient(180deg,#7c3aed,#ec4899)}
 .prose h2:after{display:none}
 .prose a{text-decoration:underline;text-underline-offset:4px;text-decoration-color:#c4b5fd}.prose a:hover{text-decoration-color:#7c3aed}
@@ -220,8 +220,13 @@ section.s.alt{background:linear-gradient(180deg,#f7f9ff,#f3f0ff)}
 footer.pf{background:linear-gradient(160deg,#17123a,#2a1b66 70%,#3b1f7a);border-top:1px solid #3a2d7a}footer.pf a{color:#e9e3ff;opacity:.92}footer.pf a:hover{opacity:1;color:#fff}
 .dh-top{box-shadow:0 8px 22px rgba(124,58,237,.35)}
 table{border-spacing:0}
-@media(max-width:640px){.prose{font-size:16.5px}.card{border-radius:14px}.phero:not(.dark){padding-block:22px 14px}}
+@media(max-width:640px){.card{border-radius:14px}.phero:not(.dark){padding-block:22px 14px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 .phero{background-color:transparent;background-image:radial-gradient(60% 90% at 90% 0,rgba(236,228,255,.9) 0,rgba(236,228,255,0) 70%),radial-gradient(50% 80% at 5% 10%,rgba(224,240,255,.9) 0,rgba(224,240,255,0) 70%)}
 .phero .pill{margin:2px 0 14px}.phero h1{margin:6px 0 12px}.phero .lead{margin-top:6px}
+/* دلائل المحاسبة: جداول وقيود وأسئلة */
+.prose .tw{overflow-x:auto;margin:14px 0;border:1px solid #e5eaf5;border-radius:12px}.prose .tw table{margin:0;border:0;min-width:480px}.prose .tw th{background:#f3f0ff;text-align:right;white-space:nowrap}
+.jebox{background:#f8faff;border:1px solid #dbe5fb;border-inline-start:4px solid #6d4fd0;border-radius:12px;padding:10px 16px;margin:12px 0;line-height:1.9}.jebox b{display:block;color:#4c2fb0;margin-bottom:2px}.jebox div{font-variant-numeric:tabular-nums}
+details.fq{border:1px solid #e5eaf5;border-radius:12px;padding:4px 14px;margin:8px 0;background:#fff}details.fq summary{cursor:pointer;font-weight:800;padding:8px 0}details.fq p{margin:4px 0 10px}
+.prose .tw table{width:100%;display:table}

@@ -7,7 +7,10 @@ import importlib, glob as _g
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lib'))
 DEEPA = {}
 for _f in sorted(_g.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)),'lib','accdeep*.py'))):
-    DEEPA.update(importlib.import_module(os.path.basename(_f)[:-3]).DEEPA)
+    _d = importlib.import_module(os.path.basename(_f)[:-3]).DEEPA
+    for _k, _v in _d.items():
+        if _f.endswith('accdeepx.py'): DEEPA.setdefault(_k, []).extend(_v)   # إضافات تُدمج بعد الأساس
+        else: DEEPA[_k] = _v
 def deep_a(code):
     o = ''
     for h, ps in DEEPA.get(code, []):
@@ -46,8 +49,31 @@ GUIDES = [
  [("هيكل الدليل",["نبذة عن المنشأة وإطار التقرير (IFRS أو المنشآت الصغيرة).","السياسات: الإيراد، المخزون، الأصول الثابتة، الأدوات المالية، الإيجارات، المخصصات، العملات.","حدود الرسملة والأعمار الإنتاجية ونسب المخصصات."]),
   ("الحوكمة",["صلاحيات الاعتماد وجدول الإقفال.","إجراءات تغيير السياسات وتوثيق التقديرات."])],"accounting-standards-finder"),
 ]
+import accguides_a, accguides_b
+GUIDES = accguides_a.G + accguides_b.G
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+def tool_url(s):
+    for b in ('business/tools', 'tools'):
+        if os.path.isdir(os.path.join(_ROOT, b, s)): return f'/{b}/{s}/'
+    return ''
 def tool_link(s):
-    return f'<a class="btn btn-o" href="/business/tools/{s}/">🧰 افتح الأداة المرتبطة ←</a>' if s else ''
+    u = tool_url(s) if s else ''
+    return f'<a class="btn btn-o" href="{u}">🧰 افتح الأداة المرتبطة ←</a>' if u else ''
+def render_blocks(blocks):
+    o = ''; faq = []
+    for b in blocks:
+        k = b[0]
+        if k == 'h': o += f'<h2>{e(b[1])}</h2>'
+        elif k == 'p': o += f'<p>{e(b[1])}</p>'
+        elif k == 'ul': o += '<ul>' + ''.join(f'<li>{e(x)}</li>' for x in b[1]) + '</ul>'
+        elif k == 'ol': o += '<ol>' + ''.join(f'<li>{e(x)}</li>' for x in b[1]) + '</ol>'
+        elif k == 't':
+            o += '<div class="tw"><table><thead><tr>' + ''.join(f'<th>{e(c)}</th>' for c in b[1]) + '</tr></thead><tbody>' + ''.join('<tr>' + ''.join(f'<td>{e(c)}</td>' for c in r) + '</tr>' for r in b[2]) + '</tbody></table></div>'
+        elif k == 'je': o += f'<div class="jebox"><b>{e(b[1])}</b>' + ''.join(f'<div>{e(x)}</div>' for x in b[2]) + '</div>'
+        elif k == 'note': o += f'<div class="note">{e(b[1])}</div>'
+        elif k == 'faq':
+            faq += b[1]; o += '<h2>أسئلة شائعة</h2>' + ''.join(f'<details class="fq"><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in b[1])
+    return o, faq
 # صفحات المعايير
 for code, name, summ, pts, ent, tips, tool in STD:
     s = sl(code); u = f"/accounting/standards/{s}/"
@@ -62,11 +88,18 @@ for code, name, summ, pts, ent, tips, tool in STD:
     write(u.strip('/') + '/index.html', page(u, f"{code} {name}: ملخص ومعالجة محاسبية ونصائح | DIAMOND HUB", f"{name} ({code}): {summ} أهم النقاط والقيود والتوصيات للمحاسب.", b, art + breadcrumb([("الرئيسية", "/"), ("مرجع المحاسب", "/accounting/"), (code, u)]), "/accounting/", "article"))
     URLS.append((u, "0.7"))
 # أدلة
-for slug, title, desc, secs, tool in GUIDES:
+for slug, title, desc, blocks, tool in GUIDES:
     u = f"/accounting/guides/{slug}/"
     b = hero(title, desc, CR + ' › أدلة')
-    b += '<main><section class="s"><div class="wrap narrow"><article class="prose">' + ''.join(f'<h2>{e(h)}</h2><ul>' + ''.join(f'<li>{e(p)}</li>' for p in ps) + '</ul>' for h, ps in secs) + '<p>' + tool_link(tool) + '</p></article></div></section></main>'
+    body, faq = render_blocks(blocks)
+    rel = [g for g in GUIDES if g[0] != slug]
+    i0 = [g[0] for g in GUIDES].index(slug)
+    rel = [GUIDES[(i0 + k) % len(GUIDES)] for k in (1, 2, 3)]
+    b += '<main><section class="s"><div class="wrap narrow"><article class="prose">' + body + '<p>' + tool_link(tool) + ' <a class="btn btn-o" href="/accounting/">← مرجع المحاسب</a></p>'
+    b += '<h2>أدلة ذات صلة</h2><ul>' + ''.join(f'<li><a href="/accounting/guides/{g[0]}/">{e(g[1])}</a></li>' for g in rel) + '</ul>'
+    b += '<div class="note">محتوى تعليمي بأرقام توضيحية، وليس استشارة محاسبية أو ضريبية. راجع الأنظمة المحدثة ومختصًا معتمدًا قبل التطبيق.</div></article></div></section></main>'
     art = ld({"@context": "https://schema.org", "@type": "Article", "headline": title, "description": desc, "inLanguage": "ar", "mainEntityOfPage": BASE + u, "author": {"@type": "Organization", "name": "DIAMOND HUB"}})
+    if faq: art += ld({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]})
     write(u.strip('/') + '/index.html', page(u, f"{title} | DIAMOND HUB", desc, b, art + breadcrumb([("الرئيسية", "/"), ("مرجع المحاسب", "/accounting/"), (title, u)]), "/accounting/", "article"))
     URLS.append((u, "0.7"))
 NEWT = [("general-ledger-trial-balance","📒","اليومية والأستاذ وميزان المراجعة","سجّل القيود فتحصل على الأستاذ والميزان وقائمتي الدخل والمركز المالي"),("journal-entries-guide","🧾","دليل القيود المحاسبية","36 قيدًا بالشرح والحسابات T وضريبة 15%"),("depreciation-calculator","🏭","حاسبة الإهلاك","أربع طرق مع الجدول وقيد الإهلاك"),("break-even-calculator","⚖️","حاسبة نقطة التعادل","هامش المساهمة والأمان والربح المستهدف برسم بياني"),("withholding-tax-calculator-saudi","🛂","ضريبة الاستقطاع","5% و15% و20% بالإجمالي أو الصافي مع القيد"),("payroll-calculator-saudi","👥","كشف الرواتب والتأمينات","الصافي وتكلفة المنشأة لعدة موظفين"),("vat-calculator","🧮","حاسبة ضريبة القيمة المضافة","إضافة واستخراج 15%"),("zakat-calculator","🕌","حاسبة الزكاة","وعاء الزكاة وقدرها"),("end-of-service-calculator-saudi","🏁","مكافأة نهاية الخدمة","وفق نظام العمل السعودي"),("loan-calculator","🏦","حاسبة القروض","القسط وجدول السداد"),("pdf-to-excel","📊","PDF to Excel","حوّل كشوف وجداول PDF إلى Excel منسّق"),("quotation-maker","📄","عرض سعر وفاتورة","بشعارك وضريبة 15%")]
