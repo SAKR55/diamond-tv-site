@@ -48,7 +48,7 @@
   function fixVis(c) { if (!c.v) return c.t; var t = c.p.map(function (q) { var x = q.s; if (!q.pf && x.length > 1 && /[\u0600-\u06FF]/.test(x)) x = rev(x); return (q.sp ? ' ' : '') + x; }).join('');
     return t.split(' ').reverse().map(function (w) { return /[\u0600-\u06FF]/.test(w) ? rev(w).replace(/[0-9.,]+/g, rev) : w; }).join(' '); }
   function lam(x) { return x.replace(/[\uFEF5\uFEF6]/g, 'آل').replace(/[\uFEF7\uFEF8]/g, 'أل').replace(/[\uFEF9\uFEFA]/g, 'إل').replace(/[\uFEFB\uFEFC]/g, 'ال'); }
-  function readPdf(buf) {
+  function readPdfLines(buf) {
     return getPdfjs().then(function (m) { return m.getDocument({ data: new Uint8Array(buf), disableFontFace: true, useSystemFonts: false, standardFontDataUrl: '/assets/vendor/pdfjs/standard_fonts/', cMapUrl: '/assets/vendor/pdfjs/cmaps/', cMapPacked: true, wasmUrl: '/assets/vendor/pdfjs/wasm/', iccUrl: '/assets/vendor/pdfjs/iccs/' }).promise; }).then(function (pdf) {
       var out = [], i = 1;
       return new Promise(function (ok, no) {
@@ -62,8 +62,62 @@
       });
     });
   }
+
+  var META = {};
+  function fixLA(t) { return t.replace(/(^|[\s\/(])ا([أإآا])ل/g, '$1ال$2').replace(/هللا/g, 'الله'); }
+  var MONRX = /(يناير|فبراير|مارس|[أإا]بريل|مايو|يونيو|يوليو|[أا]غسطس|سبتمبر|[أا]كتوبر|نوفمبر|ديسمبر)/;
+  function cellText(list) {
+    var main = list.filter(function (x) { return x.w > 0.5; }).sort(function (a, b) { return b.y - a.y; }), zw = list.filter(function (x) { return x.w <= 0.5; }), lines = [];
+    main.forEach(function (it) { var l = lines[lines.length - 1]; if (l && Math.abs(l.y - it.y) <= 2.6) l.it.push(it); else lines.push({ y: it.y, it: [it] }); });
+    if (!lines.length) return '';
+    zw.forEach(function (z) { var b = null, bd = 99; lines.forEach(function (l) { var d = Math.abs(l.y - z.y); if (d < bd) { bd = d; b = l; } }); if (b && bd <= 4.5) b.it.push(z); });
+    return lines.map(function (l) {
+      if (!l.it.some(function (q) { return q.v; })) {
+        var wi = l.it.filter(function (q) { return q.w > .5; }).map(function (q) { return { x: q.x, e: q.x + q.w, s: q.s, lead: q.lead, trail: q.trail, h: q.h }; });
+        l.it.filter(function (q) { return q.w <= .5; }).forEach(function (z) { var b = null, bd = 1e9; wi.forEach(function (q) { if (z.x >= q.x - 1.5 && z.x <= q.e + 1.5 && Math.abs(z.x - q.x) < bd) { bd = Math.abs(z.x - q.x); b = q; } }); if (b) b.s += z.s; else wi.push({ x: z.x, e: z.x, s: z.s, h: 8 }); });
+        wi.sort(function (a, b) { return b.x - a.x; });
+        return wi.reduce(function (t, q, k) { if (!k) return q.s; var pv = wi[k - 1], sp = pv.e - q.e > -1 && (pv.x - q.e > Math.max(q.h, 6) * .15) || q.lead || pv.trail || (pv.s.length > 3 && q.s.length > 3); return t + (sp ? ' ' : '') + q.s; }, '');
+      }
+      l.it.sort(function (a, b) { return a.x - b.x; });
+      var c = null, prev = null;
+      l.it.forEach(function (it) { var sp = prev && (it.x - prev.e > Math.max(it.h, 6) * .15 || prev.lead || it.trail); if (!c) c = { t: it.s, v: it.v, p: [{ s: it.s, sp: false, pf: it.v }] }; else { c.t += (sp ? ' ' : '') + it.s; c.v = c.v || it.v; c.p.push({ s: it.s, sp: !!sp, pf: it.v }); } prev = { e: Math.max(prev ? prev.e : -1e9, it.x + it.w), lead: it.lead }; });
+      return fixVis(c);
+    }).join(' ').replace(/\s+/g, ' ').trim();
+  }
+  function tableFromItems(its) {
+    var an = its.filter(function (it) { return /^[A-Za-z]{1,6}\s*[\/\-]\s*\d{2,}$/.test(it.s) || /^\d{6,}$/.test(it.s) && false; });
+    if (an.length < 2) return null;
+    var cnt = {}; an.forEach(function (a) { var k = Math.round(a.x / 4); cnt[k] = (cnt[k] || 0) + 1; }); var bk = null; for (var k in cnt) if (bk === null || cnt[k] > cnt[bk]) bk = k;
+    an = an.filter(function (a) { return Math.abs(Math.round(a.x / 4) - bk) <= 1; }).sort(function (a, b) { return b.y - a.y; });
+    if (an.length < 2) return null;
+    var gp = []; for (var i = 1; i < an.length; i++) gp.push(an[i - 1].y - an[i].y); gp.sort(function (a, b) { return a - b; }); var sp = gp[Math.floor(gp.length / 2)] || 10, cap = Math.max(3.5, sp * .5);
+    var data = an.map(function () { return []; }), head = [], anc = {}; an.forEach(function (a, i) { anc[an.indexOf(a)] = 1; data[i].push(a); });
+    its.forEach(function (it) { if (an.indexOf(it) >= 0) return; var bi = -1, bd = 1e9; an.forEach(function (a, i) { var d = Math.abs(a.y - it.y); if (d < bd) { bd = d; bi = i; } }); if (bd <= cap) data[bi].push(it); else if (it.y > an[0].y && it.y - an[0].y < 400) head.push(it); });
+    var iv = []; data.forEach(function (r) { r.forEach(function (it) { if (it.w > 0.5) iv.push([it.x, it.x + it.w]); }); }); iv.sort(function (a, b) { return a[0] - b[0]; });
+    var cols = []; iv.forEach(function (q) { var c = cols[cols.length - 1]; if (c && q[0] - c[1] < 4) c[1] = Math.max(c[1], q[1]); else cols.push([q[0], q[1]]); });
+    var colOf = function (x, w, tol) { var cx = x + w / 2, b = -1, bd = 1e9; cols.forEach(function (c, j) { if (cx >= c[0] - tol && cx <= c[1] + tol) { var d = Math.abs(cx - (c[0] + c[1]) / 2); if (d < bd) { bd = d; b = j; } } }); return b; };
+    // header zone
+    var hm = head.filter(function (x) { return x.w > 0.5; }).sort(function (a, b) { return a.y - b.y; }), hl = [];
+    hm.forEach(function (it) { var l = hl[hl.length - 1]; if (l && Math.abs(it.y - l.y) <= 2.6) l.it.push(it); else hl.push({ y: it.y, it: [it] }); });
+    var inc = [], prev = an[0].y; for (var q = 0; q < hl.length; q++) { var gap = hl[q].y - prev, lim = q === 0 ? Math.max(18, sp * 2.3) : Math.max(9, sp * 1.2); if (gap > lim) break; inc.push(hl[q]); prev = hl[q].y; }
+    var top = inc.length ? inc[inc.length - 1].y + 3 : an[0].y + 3, hz = head.filter(function (x) { return x.y <= top; }), hc = cols.map(function () { return []; });
+    hz.forEach(function (it) { var j = colOf(it.x, it.w, it.w > .5 ? 6 : 16); if (j >= 0) hc[j].push(it); });
+    var ar = false, rows = data.map(function (r) { var cc = cols.map(function () { return []; }); r.forEach(function (it) { var j = colOf(it.x, it.w, it.w > .5 ? 1.5 : 6); if (j >= 0) cc[j].push(it); }); return cc.map(cellText); });
+    ar = AR.test(rows.slice(0, 5).map(function (r) { return r.join(''); }).join('')); var hd = hc.map(cellText).map(function (t, j) { return t || ('عمود ' + (j + 1)); });
+    var ord = cols.map(function (c, j) { return j; }); if (ar) ord.reverse();
+    var out = [ord.map(function (j) { return hd[j]; })].concat(rows.map(function (r) { return ord.map(function (j) { return r[j]; }); }));
+    // meta: month / year
+    var txt = its.filter(function (x) { return x.y > an[0].y; }).map(function (x) { return x.s; }).join(' '), mm = txt.match(MONRX), yy = txt.match(/\b(20\d\d)\b/); META = { month: mm ? mm[1] : '', year: yy ? yy[1] : '' };
+    return out.map(function (r) { return r.map(function (t) { return fixLA(t); }); });
+  }
+  function readPdf(buf) {
+    return getPdfjs().then(function (m) { return m.getDocument({ data: new Uint8Array(buf.slice(0)), disableFontFace: true, useSystemFonts: false, standardFontDataUrl: '/assets/vendor/pdfjs/standard_fonts/', cMapUrl: '/assets/vendor/pdfjs/cmaps/', cMapPacked: true, wasmUrl: '/assets/vendor/pdfjs/wasm/', iccUrl: '/assets/vendor/pdfjs/iccs/' }).promise; }).then(function (pdf) {
+      var its = [], i = 1;
+      return new Promise(function (ok, no) { (function step() { if (i > pdf.numPages) return ok(its); var pn = i; pdf.getPage(i).then(function (pg) { return pg.getTextContent(); }).then(function (tc) { tc.items.forEach(function (it) { if (it.str && it.str.trim()) its.push({ raw: it.str, v: /[ﭐ-﷿ﹰ-﻿]/.test(it.str), s: nz(lam(it.str)), lead: /^\s/.test(it.str), trail: /\s$/.test(it.str), x: it.transform[4], y: it.transform[5] - (pn - 1) * 5000, w: it.width, h: it.height || 10 }); }); i++; step(); }).catch(no); })(); });
+    }).then(function (its) { var t = null; try { t = tableFromItems(its); } catch (e) { t = null; } if (t && t.length > 1) return t; META = {}; return readPdfLines(buf); });
+  }
   $f.onchange = function (e) {
-    var f = e.target.files[0]; e.target.value = ''; if (!f) return; var n = f.name.toLowerCase(); $('#bres').textContent = 'جارٍ قراءة الملف…'; ZIPF = null; SH = []; $('#bsheet').hidden = true;
+    var f = e.target.files[0]; e.target.value = ''; if (!f) return; var n = f.name.toLowerCase(); $('#bres').textContent = 'جارٍ قراءة الملف…'; ZIPF = null; SH = []; META = {}; $('#bsheet').hidden = true;
     var p;
     if (/\.xlsx$/.test(n)) p = rd(f).then(readXlsx);
     else if (/\.pdf$/.test(n)) p = rd(f).then(readPdf);
@@ -72,10 +126,10 @@
     p.then(function (r) { ROWS = r; afterParse(); }).catch(function () { $('#bres').textContent = 'تعذّر قراءة الملف. جرّب حفظه بصيغة CSV أو لصق الجدول.'; });
   };
   var HDR = true, MAP = {};
-  var BKADD = /أساسي|بدل|عمولة|إضافي|اضافي|مكافأة|مكافاة|حوافز|basic|allowance|bonus|overtime|commission|incentive/i, BKSUB = /خصم|سلفة|تأمينات|غياب|جزاء|استقطاع|deduction|gosi|loan|advance|penalty|absence/i;
-  var FIELDS = [['n', 'الاسم / الجهة *'], ['a', 'المبلغ *'], ['d', 'البيان / الوصف'], ['i', 'رقم الهوية / الموظف'], ['r', 'المرجع / الآيبان / البنك']];
-  function guess(h) { var rules = { n: [/اسم|الموظف|المستفيد|الجهة|name|employee|beneficiary|payee/i], a: [/صافي|net/i, /المبلغ|amount|قيمة|value/i, /راتب|salary|pay/i, /إجمالي|اجمالي|total/i], d: [/بيان|وصف|ملاحظ|description|note|details|remark/i], i: [/هوية|إقامة|اقامة|رقم الموظف|\bid\b|iqama|emp/i], r: [/آيبان|ايبان|iban|بنك|bank|مرجع|ref|حساب|account/i] }, m = {}; for (var k in rules) { for (var q = 0; q < rules[k].length && m[k] === undefined; q++) h.forEach(function (c, i) { if (m[k] === undefined && rules[k][q].test(c)) m[k] = i; }); } return m; }
-  function bkOpts(rx) { var o = ''; for (var j = 0; j < ROWS[0].length; j++) { var h = ROWS[0][j] || ('عمود ' + (j + 1)); o += '<option value="' + j + '"' + (rx.test(h) && j !== MAP.a && j !== MAP.n ? ' selected' : '') + '>' + h.slice(0, 30) + '</option>'; } return o; }
+  var BKADD = /أساسي|مستحق|بدل|عمولة|إضافي|اضافي|مكافأة|مكافاة|حوافز|basic|allowance|bonus|overtime|commission|incentive/i, BKSUB = /خصم|سلفة|تأمينات|غياب|جزاء|استقطاع|deduction|gosi|loan|advance|penalty|absence/i;
+  var FIELDS = [['n', 'الاسم / الجهة *'], ['a', 'المبلغ *'], ['d', 'البيان / الوصف'], ['i', 'رقم الهوية / الموظف'], ['r', 'المرجع / الآيبان / البنك'], ['p', 'الوظيفة'], ['g', 'القسم / الإدارة'], ['b', 'الفرع']];
+  function guess(h) { var rules = { n: [/اسم|name/i, /الموظف|المستفيد|الجهة|employee|beneficiary|payee/i], p: [/الوظيفة|المسمى|المهنة|\bjob\b|title|position/i], g: [/قسم|إدارة|department|dept/i], b: [/فرع|branch/i, /مكان العمل|الموقع|location/i], a: [/صافي|net/i, /المبلغ|amount|قيمة|value/i, /راتب|salary|pay/i, /إجمالي|اجمالي|total/i], d: [/بيان|وصف|ملاحظ|description|note|details|remark/i], i: [/الرقم الوظيفي|رقم الموظف|هوية|إقامة|اقامة|\bid\b|iqama|emp/i], r: [/آيبان|ايبان|iban|بنك|bank|مرجع|ref|حساب|account/i] }, m = {}; for (var k in rules) { for (var q = 0; q < rules[k].length && m[k] === undefined; q++) h.forEach(function (c, i) { if (m[k] === undefined && rules[k][q].test(c)) m[k] = i; }); } return m; }
+  function bkOpts(rx) { var o = ''; for (var j = 0; j < ROWS[0].length; j++) { var h = ROWS[0][j] || ('عمود ' + (j + 1)); o += '<option value="' + j + '"' + (rx.test(h) && !/مجموع|إجمالي|اجمالي|صافي|total|net|gross/i.test(h) && j !== MAP.a && j !== MAP.n ? ' selected' : '') + '>' + h.slice(0, 30) + '</option>'; } return o; }
   function afterParse() {
     if (!ROWS.length) { $('#bres').textContent = 'لم يُعثر على صفوف في الملف.'; return; }
     var w = Math.max.apply(null, ROWS.map(function (r) { return r.length; }));
@@ -89,7 +143,7 @@
       '<label class="full" style="grid-column:1/-1">أعمدة تفصيل الاستحقاقات (أجر أساسي، بدلات…) — تُعرض كبنود إضافة<select id="bka" multiple size="4">'+bkOpts(BKADD)+'</select></label><label class="full" style="grid-column:1/-1">أعمدة الخصومات (سلف، تأمينات، غياب…)<select id="bks" multiple size="4">'+bkOpts(BKSUB)+'</select></label><label>الصف الأول عناوين<select id="bh"><option value="1">نعم (تخطّيه)</option><option value="0">لا (كل الصفوف بيانات)</option></select></label>' +
       '<div class="full" style="grid-column:1/-1;border:1px dashed #94a3b8;border-radius:10px;padding:10px"><b>➕ بنود يدوية تُضاف لكل السندات (بدلات / خصومات)</b><div class="hint" style="font-size:.8rem;margin:4px 0 8px">مثال: بدل طعام 300 لكل موظف، أو تأمينات 9.75% من الأجر الأساسي. تُضاف فوق أعمدة الملف ويُحسب الصافي تلقائيًا.</div><div id="bman"></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button type="button" class="btn alt" id="bmadd">+ بند يدوي</button><button type="button" class="btn alt" id="bmgosi">+ تأمينات 9.75%</button><button type="button" class="btn alt" id="bmfood">+ بدل طعام</button></div></div>'+
       '<label>نوع السند<select id="bt">'+Object.keys(VT).filter(function(k){return !VT[k].jv}).map(function(k){return '<option value="'+k+'"'+(k==='p'?' selected':'')+'>'+VT[k].ta+'</option>'}).join('')+'</select></label>' +
-      '<label>البيان (يمكن استخدام {الاسم} {المبلغ} {البيان})<input type="text" id="bd" value="راتب شهر ' + ((new Date()).getMonth() + 1) + '/' + (new Date()).getFullYear() + '"></label>' +
+      '<label>البيان (يمكن استخدام {الاسم} {المبلغ} {البيان} {الوظيفة} {القسم} {الفرع})<input type="text" id="bd" value="راتب شهر ' + (META.month ? META.month + ' ' + (META.year || '') : ((new Date()).getMonth() + 1) + '/' + (new Date()).getFullYear()) + '"></label>' +
       '<label>طريقة الدفع<select id="bm"><option>تحويل بنكي</option><option>نقدًا</option><option>شيك</option><option>بطاقة مدى/ائتمان</option></select></label>' +
       '<label>عدد السندات في الصفحة<select id="bn"><option value="1">1 (A4 كاملة)</option><option value="2">2 في الصفحة</option><option value="3">3 في الصفحة</option></select></label>' +
       '<label>تاريخ السندات<input type="text" id="bdt" value="' + ($('#vd') ? document.getElementById('vd').value : '') + '"></label></div><div class="acts"><button class="btn" id="bgo" type="button">⚙ إنشاء السندات</button></div>';
@@ -99,10 +153,10 @@
   }
   function gen() {
     var hdr = $('#bh').value === '1', rows = hdr ? ROWS.slice(1) : ROWS, desc = $('#bd').value, rec = [], skip = 0;
-    rows.forEach(function (r) { var name = nz(r[MAP.n]), amt = num(r[MAP.a]); var bk = []; var hh = hdr ? ROWS[0] : []; ['bka', 'bks'].forEach(function (id) { [].forEach.call($('#' + id).selectedOptions, function (o) { var j = +o.value, v = num(r[j]); if (v > 0) bk.push({ l: (hh[j] || 'بند ' + (j + 1)), a: v, t: id === 'bka' ? '+' : '-' }); }); });
+    rows.forEach(function (r) { var name = nz(r[MAP.n]), amt = num(r[MAP.a]); var bk = []; var hh = hdr ? ROWS[0] : []; ['bka', 'bks'].forEach(function (id) { [].forEach.call($('#' + id).selectedOptions, function (o) { var j = +o.value, v = num(r[j]); v = Math.abs(v); if (v > 0) bk.push({ l: (hh[j] || 'بند ' + (j + 1)), a: v, t: id === 'bka' ? '+' : '-' }); }); });
       var MI = manItems(); if (MI.length) { var base = (bk.filter(function (q) { return q.t === '+'; })[0] || {}).a || (amt > 0 ? amt : 0); MI.forEach(function (x) { var a = x.m === 'p' ? Math.round(base * x.v) / 100 : x.v; if (a > 0) bk.push({ l: x.l, a: a, t: x.t }); }); if (bk.length) { var nt = bk.reduce(function (y, q) { return y + (q.t === '-' ? -1 : 1) * q.a; }, 0); if (nt > 0) amt = Math.round(nt * 100) / 100; } }
       if (isNaN(amt) || !(amt > 0)) { var nn = bk.reduce(function (x, q) { return x + (q.t === '-' ? -1 : 1) * q.a; }, 0); if (nn > 0) amt = nn; }
-      if (!name || !(amt > 0) || /^(الإجمالي|اجمالي|الاجمالي|المجموع|مجموع|total|sum|grand)/i.test(name)) { skip++; return; } rec.push({ bk: bk, name: name, amt: amt, d: MAP.d !== undefined ? nz(r[MAP.d]) : '', id: MAP.i !== undefined ? nz(r[MAP.i]) : '', ref: MAP.r !== undefined ? nz(r[MAP.r]) : '' }); });
+      if (!name || !(amt > 0) || /^(الإجمالي|اجمالي|الاجمالي|المجموع|مجموع|total|sum|grand)/i.test(name)) { skip++; return; } var gv = function (k) { return MAP[k] !== undefined ? nz(r[MAP[k]]) : ''; }, job = gv('p'), dep = gv('g'); rec.push({ bk: bk, name: name, amt: amt, job: job, dept: dep, br: gv('b'), d: MAP.d !== undefined ? nz(r[MAP.d]) : [job, dep].filter(Boolean).join(' - '), id: MAP.i !== undefined ? nz(r[MAP.i]) : '', ref: MAP.r !== undefined ? nz(r[MAP.r]) : '' }); });
     REC = rec; var tot = rec.reduce(function (a, b) { return a + b.amt; }, 0);
     $('#bres').innerHTML = rec.length ? '✅ تم تجهيز <b>' + rec.length + '</b> سندًا — إجمالي المبالغ <b>' + nf(tot) + '</b>' + (skip ? ' (تم تخطي ' + skip + ' صفًا فارغًا أو إجماليًا)' : '') : 'لم يُعثر على صفوف صالحة. تأكد من اختيار عمودي الاسم والمبلغ.';
     var act = $('#bact'); act.hidden = !rec.length; act.innerHTML = '<button class="btn" id="bpr" type="button">🖨 طباعة / حفظ PDF لكل السندات</button><button class="btn alt" id="bcsv" type="button">⬇ سجل السندات CSV</button>';
@@ -118,10 +172,10 @@
   if (!document.getElementById('bmlist')) { var dl = document.createElement('datalist'); dl.id = 'bmlist'; dl.innerHTML = MANP.map(function (x) { return '<option value="' + x + '">'; }).join(''); document.body.appendChild(dl); }
   function manItems() { return [].map.call(document.querySelectorAll('#bman .bmr'), function (d) { var i = d.querySelectorAll('input,select'); return { l: i[0].value.trim(), t: i[1].value, m: i[2].value, v: +i[3].value || 0 }; }).filter(function (x) { return x.l && x.v > 0; }); }
   function build() {
-    var g = function (id) { return document.getElementById(id); }, keep = {}; ['vt', 'vw', 'va', 'vp', 'vn', 'vr', 'vm', 'vd', 'vid', 'vcopy', 'vtot', 'vst'].forEach(function (i) { keep[i] = g(i).type === 'checkbox' ? g(i).checked : g(i).value; });
+    var g = function (id) { return document.getElementById(id); }, keep = {}; ['vt', 'vw', 'va', 'vp', 'vn', 'vr', 'vm', 'vd', 'vid', 'vbr', 'vcc', 'vcopy', 'vtot', 'vst'].forEach(function (i) { keep[i] = g(i).type === 'checkbox' ? g(i).checked : g(i).value; });
     var tp = $('#bt').value, per = +$('#bn').value, seq = (+ls('vc_seq_' + tp) || 0), pre = VT[tp].p, out = [];
     g('vt').value = tp; var _dv = g('vp').value; g('vm').value = $('#bm').value; g('vd').value = $('#bdt').value || keep.vd; g('vcopy').checked = false; g('vtot').value = 0; g('vst').value = '';
-    REC.forEach(function (r, k) { g('vw').value = r.name; g('va').value = r.amt; g('vn').value = pre + String(seq + k + 1).padStart(4, '0'); g('vp').value = $('#bd').value.replace(/\{الاسم\}/g, r.name).replace(/\{المبلغ\}/g, nf(r.amt)).replace(/\{البيان\}/g, r.d) + (r.d && $('#bd').value.indexOf('{البيان}') < 0 ? ' - ' + r.d : ''); g('vr').value = r.ref; g('vid').value = r.id; r.no = g('vn').value; window.BKX = r.bk; out.push(html(false)); window.BKX = null; });
+    REC.forEach(function (r, k) { g('vw').value = r.name; g('va').value = r.amt; g('vn').value = pre + String(seq + k + 1).padStart(4, '0'); g('vp').value = $('#bd').value.replace(/\{الاسم\}/g, r.name).replace(/\{المبلغ\}/g, nf(r.amt)).replace(/\{البيان\}/g, r.d).replace(/\{الوظيفة\}/g, r.job || '').replace(/\{القسم\}/g, r.dept || '').replace(/\{الفرع\}/g, r.br || '') + (r.d && $('#bd').value.indexOf('{البيان}') < 0 ? ' - ' + r.d : ''); g('vr').value = r.ref; g('vid').value = r.id; if (r.br) g('vbr').value = r.br; if (r.dept) g('vcc').value = r.dept; r.no = g('vn').value; window.BKX = r.bk; out.push(html(false)); window.BKX = null; });
     Object.keys(keep).forEach(function (i) { if (g(i).type === 'checkbox') g(i).checked = keep[i]; else g(i).value = keep[i]; });
     var sl = sealHTML(); out = out.map(function (h) { if (sl) { var inn = sealSB(); if (inn && /class="sb"/.test(h)) h = h.replace(/(<div class="sb"><div)([^>]*)>([\s\S]*?)<\/div><\/div>/, function (m, a1, a2, a3) { return a1 + ' class="f" style="position:relative;overflow:visible">' + inn + '</div></div>'; }); else h = h.replace(/<\/div>$/, sl + '</div>'); } return h + (typeof siteF === 'function' ? siteF() : ''); });
     var pr = document.getElementById('bprint'); if (!pr) { pr = document.createElement('div'); pr.id = 'bprint'; pr.style.display = 'none'; document.querySelector('.wrap').appendChild(pr); }
