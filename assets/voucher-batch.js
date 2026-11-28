@@ -1,0 +1,119 @@
+/* إنشاء سندات دفعة واحدة من Excel / CSV / PDF (كشف رواتب أو مصروفات). يعمل داخل المتصفح. */
+(function () {
+  var AR = /[؀-ۿﭐ-﷿ﹰ-﻿]/;
+  var host = document.getElementById('batchpanel'); if (!host) return;
+  var ROWS = [], REC = [], SH = [], ZIPF = null;
+  var $ = function (s) { return host.querySelector(s); };
+  function nz(s) { s = String(s == null ? '' : s).replace(/[٠-٩]/g, function (c) { return c.charCodeAt(0) - 1632; }).replace(/[۰-۹]/g, function (c) { return c.charCodeAt(0) - 1776; }); if (/[ﭐ-﷿ﹰ-﻿]/.test(s)) s = s.normalize('NFKC'); return s.replace(/[‎‏‪-‮]/g, '').trim(); }
+  function num(s) { var m = nz(s).replace(/[,٬\s]/g, '').replace(/٫/g, '.').match(/-?\d+(?:\.\d+)?/); return m ? parseFloat(m[0]) : NaN; }
+  function loadScript(s) { return new Promise(function (ok, no) { if (document.querySelector('script[data-l="' + s + '"]')) return ok(); var e = document.createElement('script'); e.src = s; e.dataset.l = s; e.onload = ok; e.onerror = function () { no(new Error('load ' + s)); }; document.head.appendChild(e); }); }
+  function getZip() { return window.JSZip ? Promise.resolve(window.JSZip) : loadScript('/assets/vendor/jszip/jszip.min.js').then(function () { return window.JSZip; }); }
+  var _pj = null; function getPdfjs() { if (_pj) return _pj; _pj = import('/assets/vendor/pdfjs/pdf.min.mjs').then(function (m) { m.GlobalWorkerOptions.workerSrc = '/assets/vendor/pdfjs/pdf.worker.min.mjs'; return m; }); return _pj; }
+  function rd(f, t) { return new Promise(function (ok, no) { var r = new FileReader(); r.onload = function () { ok(r.result); }; r.onerror = no; t ? r.readAsText(f) : r.readAsArrayBuffer(f); }); }
+  var CSS = '.bt{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:8px}.bt th,.bt td{border:1px solid var(--line,#d8dce5);padding:4px 7px;text-align:right;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}.bt th{background:var(--soft,#e6e9f0)}.bsc{overflow:auto;max-height:260px;border-radius:10px}.bgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px 12px;margin-top:10px}.bgrid label{display:flex;flex-direction:column;gap:2px;font-size:.82rem;color:var(--mut,#667085)}.bgrid input[type=text],.bgrid input[type=number],.bgrid select{background:var(--field,#f7f8fb);border:1px solid var(--line,#d8dce5);border-radius:10px;padding:8px 10px;width:100%}.bres{margin-top:12px;font-weight:600}.bpages{display:none}' +
+    '@media print{body.batch .wrap>*:not(#bprint){display:none!important}body.batch .wrap>#bprint{display:block!important}body.batch .wrap{padding:0!important;max-width:none!important}#bprint .bp{page-break-after:always;break-after:page;padding:8mm 0}#bprint .bp.per2{page-break-after:auto;break-after:auto;page-break-inside:avoid;break-inside:avoid;padding:3mm 0}#bprint .bp.brk{page-break-after:always;break-after:page}#bprint .bp:last-child{page-break-after:auto}}';
+  var st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
+  host.innerHTML = '<p class="hint" style="margin-top:0">ارفع كشف رواتب أو مصروفات (Excel .xlsx أو CSV أو PDF) فيُنشأ سند لكل صف تلقائيًا، ثم تطبعها كلها دفعة واحدة. لا يُرفع الملف لأي خادم.</p>' +
+    '<div class="acts" style="margin-top:0"><label class="btn" style="cursor:pointer;flex-direction:row">📂 رفع ملف (Excel / CSV / PDF)<input type="file" id="bf" accept=".xlsx,.csv,.txt,.pdf" hidden></label><button class="btn alt" id="bpaste" type="button">لصق جدول من Excel</button></div>' +
+    '<textarea id="bta" hidden placeholder="انسخ الأعمدة من Excel والصقها هنا (الصف الأول عناوين)" style="margin-top:8px;min-height:90px"></textarea><div class="acts" id="bpa" hidden style="margin-top:6px"><button class="btn" id="bpar" type="button">قراءة الجدول</button></div>' +
+    '<div id="bsheet" class="bgrid" hidden></div><div id="bprev"></div><div id="bmap" hidden></div><div class="bres" id="bres"></div><div class="acts" id="bact" hidden></div><div id="bout"></div>';
+  var $f = $('#bf');
+  $('#bpaste').onclick = function () { $('#bta').hidden = !$('#bta').hidden; $('#bpa').hidden = $('#bta').hidden; };
+  $('#bpar').onclick = function () { ROWS = parseText($('#bta').value); afterParse(); };
+  function parseText(t) { var d = /\t/.test(t) ? '\t' : (t.split(';').length > t.split(',').length ? ';' : ','), rows = [], r = [], c = '', q = false; for (var i = 0; i < t.length; i++) { var ch = t[i]; if (q) { if (ch === '"') { if (t[i + 1] === '"') { c += '"'; i++; } else q = false; } else c += ch; } else if (ch === '"') q = true; else if (ch === d) { r.push(c); c = ''; } else if (ch === '\n' || ch === '\r') { if (ch === '\r' && t[i + 1] === '\n') i++; r.push(c); c = ''; if (r.some(function (x) { return x.trim(); })) rows.push(r); r = []; } else c += ch; } r.push(c); if (r.some(function (x) { return x.trim(); })) rows.push(r); return rows.map(function (r) { return r.map(function (x) { return nz(x); }); }); }
+  function colIdx(ref) { var s = ref.replace(/\d/g, ''), n = 0; for (var i = 0; i < s.length; i++) n = n * 26 + s.charCodeAt(i) - 64; return n - 1; }
+  function xml(s) { return new DOMParser().parseFromString(s, 'application/xml'); }
+  function readXlsx(buf) {
+    return getZip().then(function (Z) { return Z.loadAsync(buf); }).then(function (z) {
+      ZIPF = z; var wb = z.file('xl/workbook.xml'), rel = z.file('xl/_rels/workbook.xml.rels');
+      if (!wb) throw new Error('bad');
+      return Promise.all([wb.async('string'), rel ? rel.async('string') : '', z.file('xl/sharedStrings.xml') ? z.file('xl/sharedStrings.xml').async('string') : '']).then(function (a) {
+        var w = xml(a[0]), rl = a[1] ? xml(a[1]) : null, rm = {};
+        if (rl) [].forEach.call(rl.getElementsByTagName('Relationship'), function (r) { rm[r.getAttribute('Id')] = r.getAttribute('Target'); });
+        SH = [].map.call(w.getElementsByTagName('sheet'), function (s, i) { var rid = s.getAttribute('r:id') || s.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'id'), t = rm[rid] || ('worksheets/sheet' + (i + 1) + '.xml'); t = t.replace(/^\//, ''); if (!/^xl\//.test(t)) t = 'xl/' + t; return { n: s.getAttribute('name'), p: t }; });
+        var ss = []; if (a[2]) [].forEach.call(xml(a[2]).getElementsByTagName('si'), function (si) { var t = ''; [].forEach.call(si.getElementsByTagName('t'), function (x) { t += x.textContent; }); ss.push(t); });
+        ZIPF.ss = ss; return loadSheet(0);
+      });
+    });
+  }
+  function loadSheet(k) {
+    var f = ZIPF.file(SH[k].p); if (!f) return [];
+    return f.async('string').then(function (x) {
+      var d = xml(x), rows = [];
+      [].forEach.call(d.getElementsByTagName('row'), function (r) { var row = []; [].forEach.call(r.getElementsByTagName('c'), function (c) { var i = colIdx(c.getAttribute('r') || 'A1'), t = c.getAttribute('t'), v = c.getElementsByTagName('v')[0], val = ''; if (t === 's') val = ZIPF.ss[+(v ? v.textContent : 0)] || ''; else if (t === 'inlineStr') val = c.textContent; else val = v ? v.textContent : ''; row[i] = nz(val); }); for (var j = 0; j < row.length; j++) if (row[j] === undefined) row[j] = ''; if (row.some(function (q) { return q; })) rows.push(row); });
+      return rows;
+    });
+  }
+  function readPdf(buf) {
+    return getPdfjs().then(function (m) { return m.getDocument({ data: new Uint8Array(buf), disableFontFace: true, useSystemFonts: false, standardFontDataUrl: '/assets/vendor/pdfjs/standard_fonts/', cMapUrl: '/assets/vendor/pdfjs/cmaps/', cMapPacked: true, wasmUrl: '/assets/vendor/pdfjs/wasm/', iccUrl: '/assets/vendor/pdfjs/iccs/' }).promise; }).then(function (pdf) {
+      var out = [], i = 1;
+      return new Promise(function (ok, no) {
+        (function step() { if (i > pdf.numPages) return ok(out); pdf.getPage(i).then(function (pg) { return pg.getTextContent(); }).then(function (tc) {
+          var its = []; tc.items.forEach(function (it) { if (it.str && it.str.trim()) its.push({ s: nz(it.str), x: it.transform[4], y: it.transform[5], w: it.width, h: it.height || 10 }); });
+          its.sort(function (a, b) { return b.y - a.y || a.x - b.x; }); var rows = [];
+          its.forEach(function (it) { var r = rows[rows.length - 1]; if (r && Math.abs(r.y - it.y) <= Math.max(2, Math.min(r.h, it.h) * .5)) r.it.push(it); else rows.push({ y: it.y, h: it.h, it: [it] }); });
+          rows.forEach(function (r) { r.it.sort(function (a, b) { return a.x - b.x; }); var cells = [], c = null; r.it.forEach(function (it) { if (c && it.x - c.x1 < Math.max(r.h * .9, 4)) { c.t += (it.x - c.x1 > r.h * .15 ? ' ' : '') + it.s; c.x1 = Math.max(c.x1, it.x + it.w); } else { c = { t: it.s, x1: it.x + it.w }; cells.push(c); } });
+            var txt = cells.map(function (q) { return q.t; }), ar = AR.test(txt.join('')); if (ar) txt.reverse(); if (txt.length) out.push(txt); });
+          i++; step(); }).catch(no); })();
+      });
+    });
+  }
+  $f.onchange = function (e) {
+    var f = e.target.files[0]; e.target.value = ''; if (!f) return; var n = f.name.toLowerCase(); $('#bres').textContent = 'جارٍ قراءة الملف…'; ZIPF = null; SH = []; $('#bsheet').hidden = true;
+    var p;
+    if (/\.xlsx$/.test(n)) p = rd(f).then(readXlsx);
+    else if (/\.pdf$/.test(n)) p = rd(f).then(readPdf);
+    else if (/\.xls$/.test(n)) { $('#bres').textContent = 'صيغة .xls القديمة غير مدعومة. افتح الملف في Excel واحفظه بصيغة .xlsx أو CSV ثم ارفعه.'; return; }
+    else p = rd(f, true).then(parseText);
+    p.then(function (r) { ROWS = r; afterParse(); }).catch(function () { $('#bres').textContent = 'تعذّر قراءة الملف. جرّب حفظه بصيغة CSV أو لصق الجدول.'; });
+  };
+  var HDR = true, MAP = {};
+  var BKADD = /أساسي|بدل|عمولة|إضافي|اضافي|مكافأة|مكافاة|حوافز|basic|allowance|bonus|overtime|commission|incentive/i, BKSUB = /خصم|سلفة|تأمينات|غياب|جزاء|استقطاع|deduction|gosi|loan|advance|penalty|absence/i;
+  var FIELDS = [['n', 'الاسم / الجهة *'], ['a', 'المبلغ *'], ['d', 'البيان / الوصف'], ['i', 'رقم الهوية / الموظف'], ['r', 'المرجع / الآيبان / البنك']];
+  function guess(h) { var rules = { n: [/اسم|الموظف|المستفيد|الجهة|name|employee|beneficiary|payee/i], a: [/صافي|net/i, /المبلغ|amount|قيمة|value/i, /راتب|salary|pay/i, /إجمالي|اجمالي|total/i], d: [/بيان|وصف|ملاحظ|description|note|details|remark/i], i: [/هوية|إقامة|اقامة|رقم الموظف|\bid\b|iqama|emp/i], r: [/آيبان|ايبان|iban|بنك|bank|مرجع|ref|حساب|account/i] }, m = {}; for (var k in rules) { for (var q = 0; q < rules[k].length && m[k] === undefined; q++) h.forEach(function (c, i) { if (m[k] === undefined && rules[k][q].test(c)) m[k] = i; }); } return m; }
+  function bkOpts(rx) { var o = ''; for (var j = 0; j < ROWS[0].length; j++) { var h = ROWS[0][j] || ('عمود ' + (j + 1)); o += '<option value="' + j + '"' + (rx.test(h) && j !== MAP.a && j !== MAP.n ? ' selected' : '') + '>' + h.slice(0, 30) + '</option>'; } return o; }
+  function afterParse() {
+    if (!ROWS.length) { $('#bres').textContent = 'لم يُعثر على صفوف في الملف.'; return; }
+    var w = Math.max.apply(null, ROWS.map(function (r) { return r.length; }));
+    HDR = true; var head = ROWS[0]; MAP = guess(head);
+    if (MAP.n === undefined && MAP.a === undefined) { var best = 0; for (var i = 0; i < Math.min(8, ROWS.length); i++) { var g = guess(ROWS[i]); if (Object.keys(g).length > Object.keys(MAP).length) { MAP = g; best = i; } } if (best) ROWS = ROWS.slice(best); }
+    if (SH.length > 1) { $('#bsheet').hidden = false; $('#bsheet').innerHTML = '<label>الورقة<select id="bsel">' + SH.map(function (s, i) { return '<option value="' + i + '">' + s.n + '</option>'; }).join('') + '</select></label>'; $('#bsel').onchange = function () { loadSheet(+this.value).then(function (r) { ROWS = r; afterParse(); }); }; }
+    var pv = ROWS.slice(0, 8), opts = function (sel) { var o = '<option value="">— بدون —</option>'; for (var j = 0; j < w; j++) o += '<option value="' + j + '"' + (sel === j ? ' selected' : '') + '>' + (HDR && ROWS[0][j] ? ROWS[0][j].slice(0, 28) : 'عمود ' + (j + 1)) + '</option>'; return o; };
+    $('#bprev').innerHTML = '<div class="bsc"><table class="bt"><tbody>' + pv.map(function (r, ri) { var h = '';for (var j = 0; j < w; j++) h += (ri === 0 ? '<th>' : '<td>') + (r[j] == null ? '' : r[j].replace(/</g, '&lt;')) + (ri === 0 ? '</th>' : '</td>'); return '<tr>' + h + '</tr>'; }).join('') + '</tbody></table></div><p class="hint">' + ROWS.length + ' صفًا تم قراءتها. تأكد أن الأعمدة مطابقة أدناه.</p>';
+    $('#bmap').hidden = false;
+    $('#bmap').innerHTML = '<div class="bgrid">' + FIELDS.map(function (f) { return '<label>' + f[1] + '<select data-f="' + f[0] + '">' + opts(MAP[f[0]]) + '</select></label>'; }).join('') +
+      '<label class="full" style="grid-column:1/-1">أعمدة تفصيل الاستحقاقات (أجر أساسي، بدلات…) — تُعرض كبنود إضافة<select id="bka" multiple size="4">'+bkOpts(BKADD)+'</select></label><label class="full" style="grid-column:1/-1">أعمدة الخصومات (سلف، تأمينات، غياب…)<select id="bks" multiple size="4">'+bkOpts(BKSUB)+'</select></label><label>الصف الأول عناوين<select id="bh"><option value="1">نعم (تخطّيه)</option><option value="0">لا (كل الصفوف بيانات)</option></select></label>' +
+      '<label>نوع السند<select id="bt">'+Object.keys(VT).filter(function(k){return !VT[k].jv}).map(function(k){return '<option value="'+k+'">'+VT[k].ta+'</option>'}).join('')+'</select></label>' +
+      '<label>البيان (يمكن استخدام {الاسم} {المبلغ} {البيان})<input type="text" id="bd" value="راتب شهر ' + ((new Date()).getMonth() + 1) + '/' + (new Date()).getFullYear() + '"></label>' +
+      '<label>طريقة الدفع<select id="bm"><option>تحويل بنكي</option><option>نقدًا</option><option>شيك</option><option>بطاقة مدى/ائتمان</option></select></label>' +
+      '<label>عدد السندات في الصفحة<select id="bn"><option value="1">1 (A4 كاملة)</option><option value="2">2 في الصفحة</option><option value="3">3 في الصفحة</option></select></label>' +
+      '<label>تاريخ السندات<input type="text" id="bdt" value="' + ($('#vd') ? document.getElementById('vd').value : '') + '"></label></div><div class="acts"><button class="btn" id="bgo" type="button">⚙ إنشاء السندات</button></div>';
+    host.querySelectorAll('#bmap select[data-f]').forEach(function (s) { s.onchange = function () { MAP[s.dataset.f] = s.value === '' ? undefined : +s.value; }; });
+    $('#bgo').onclick = gen; $('#bres').textContent = '';
+  }
+  function gen() {
+    var hdr = $('#bh').value === '1', rows = hdr ? ROWS.slice(1) : ROWS, desc = $('#bd').value, rec = [], skip = 0;
+    rows.forEach(function (r) { var name = nz(r[MAP.n]), amt = num(r[MAP.a]); var bk = []; var hh = hdr ? ROWS[0] : []; ['bka', 'bks'].forEach(function (id) { [].forEach.call($('#' + id).selectedOptions, function (o) { var j = +o.value, v = num(r[j]); if (v > 0) bk.push({ l: (hh[j] || 'بند ' + (j + 1)), a: v, t: id === 'bka' ? '+' : '-' }); }); });
+      if (isNaN(amt) || !(amt > 0)) { var nn = bk.reduce(function (x, q) { return x + (q.t === '-' ? -1 : 1) * q.a; }, 0); if (nn > 0) amt = nn; }
+      if (!name || !(amt > 0) || /^(الإجمالي|اجمالي|الاجمالي|المجموع|مجموع|total|sum|grand)/i.test(name)) { skip++; return; } rec.push({ bk: bk, name: name, amt: amt, d: MAP.d !== undefined ? nz(r[MAP.d]) : '', id: MAP.i !== undefined ? nz(r[MAP.i]) : '', ref: MAP.r !== undefined ? nz(r[MAP.r]) : '' }); });
+    REC = rec; var tot = rec.reduce(function (a, b) { return a + b.amt; }, 0);
+    $('#bres').innerHTML = rec.length ? '✅ تم تجهيز <b>' + rec.length + '</b> سندًا — إجمالي المبالغ <b>' + nf(tot) + '</b>' + (skip ? ' (تم تخطي ' + skip + ' صفًا فارغًا أو إجماليًا)' : '') : 'لم يُعثر على صفوف صالحة. تأكد من اختيار عمودي الاسم والمبلغ.';
+    var act = $('#bact'); act.hidden = !rec.length; act.innerHTML = '<button class="btn" id="bpr" type="button">🖨 طباعة / حفظ PDF لكل السندات</button><button class="btn alt" id="bcsv" type="button">⬇ سجل السندات CSV</button>';
+    $('#bpr').onclick = printAll; $('#bcsv').onclick = csv; build();
+  }
+  function fill(rec, n) { return (typeof $$ === 'function' ? 0 : 0); }
+  function sealHTML() { var it = []; try { it = JSON.parse(localStorage.getItem('sp_voucher') || '[]'); } catch (e) { } if (!it.length) return ''; return '<div class="sp-layer" style="position:absolute;inset:0;pointer-events:none">' + it.map(function (x) { return '<div class="sp-i" style="position:absolute;left:' + x.x + '%;top:' + x.y + '%;width:' + x.w + '%;transform:translate(-50%,-50%) rotate(' + x.r + 'deg)"><img alt="" src="' + x.d + '" style="display:block;width:100%;opacity:' + x.o / 100 + ';' + (x.m ? 'mix-blend-mode:multiply;' : '') + (x.f ? 'transform:scaleX(-1);' : '') + '"></div>'; }).join('') + '</div>'; }
+  function build() {
+    var g = function (id) { return document.getElementById(id); }, keep = {}; ['vt', 'vw', 'va', 'vp', 'vn', 'vr', 'vm', 'vd', 'vid', 'vcopy', 'vtot', 'vst'].forEach(function (i) { keep[i] = g(i).type === 'checkbox' ? g(i).checked : g(i).value; });
+    var tp = $('#bt').value, per = +$('#bn').value, seq = (+ls('vc_seq_' + tp) || 0), pre = VT[tp].p, out = [];
+    g('vt').value = tp; var _dv = g('vp').value; g('vm').value = $('#bm').value; g('vd').value = $('#bdt').value || keep.vd; g('vcopy').checked = false; g('vtot').value = 0; g('vst').value = '';
+    REC.forEach(function (r, k) { g('vw').value = r.name; g('va').value = r.amt; g('vn').value = pre + String(seq + k + 1).padStart(4, '0'); g('vp').value = $('#bd').value.replace(/\{الاسم\}/g, r.name).replace(/\{المبلغ\}/g, nf(r.amt)).replace(/\{البيان\}/g, r.d) + (r.d && $('#bd').value.indexOf('{البيان}') < 0 ? ' - ' + r.d : ''); g('vr').value = r.ref; g('vid').value = r.id; r.no = g('vn').value; window.BKX = r.bk; out.push(html(false)); window.BKX = null; });
+    Object.keys(keep).forEach(function (i) { if (g(i).type === 'checkbox') g(i).checked = keep[i]; else g(i).value = keep[i]; });
+    var sl = sealHTML(); out = out.map(function (h) { return sl ? h.replace(/<\/div>$/, sl + '</div>') : h; });
+    var pr = document.getElementById('bprint'); if (!pr) { pr = document.createElement('div'); pr.id = 'bprint'; pr.style.display = 'none'; document.querySelector('.wrap').appendChild(pr); }
+    pr.innerHTML = out.map(function (h, k) { return '<div class="bp' + (per > 1 ? ' per2' + ((k + 1) % per === 0 ? ' brk' : '') : '') + '">' + h + '</div>'; }).join('');
+    $('#bout').innerHTML = '<p class="hint">معاينة أول 3 سندات (الباقي يُطبع مع الجميع):</p><div style="display:grid;gap:12px;margin-top:6px">' + out.slice(0, 3).map(function (h) { return '<div style="transform-origin:top;overflow:hidden;border-radius:8px">' + h + '</div>'; }).join('') + '</div>';
+  }
+  function printAll() { document.body.classList.add('batch'); var tp = $('#bt').value; var done = function () { document.body.classList.remove('batch'); window.removeEventListener('afterprint', done); }; window.addEventListener('afterprint', done); try { localStorage.setItem('vc_seq_' + tp, String((+localStorage.getItem('vc_seq_' + tp) || 0) + REC.length)); } catch (e) { } window.print(); }
+  function csv() { var rows = [['رقم السند', 'الاسم', 'المبلغ', 'البيان', 'رقم الهوية', 'المرجع']].concat(REC.map(function (r) { return [r.no, r.name, r.amt, r.d, r.id, r.ref]; })); var s = '﻿' + rows.map(function (r) { return r.map(function (c) { c = String(c == null ? '' : c); return /[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(','); }).join('\n'), a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([s], { type: 'text/csv;charset=utf-8' })); a.download = 'vouchers-register.csv'; a.click(); }
+})();
