@@ -27,26 +27,32 @@ details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(
 .stage{background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/20px 20px;border:1px solid var(--line);border-radius:14px;display:flex;justify-content:center;align-items:center;padding:10px;min-height:200px}.stage canvas{max-width:100%;height:auto;display:block}
 #pad{background:#fff;border:2px dashed var(--line);border-radius:12px;width:100%;touch-action:none;cursor:crosshair;display:block}
 .lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:8px}.lib div{position:relative;border:1px solid var(--line);border-radius:10px;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/12px 12px;padding:4px}.lib img{width:100%;display:block;cursor:pointer}.lib button{position:absolute;top:2px;inset-inline-start:2px;border:0;background:#fff;border-radius:50%;width:22px;height:22px;cursor:pointer;line-height:1}
-input[type=range]{width:100%;accent-color:var(--acc)}output{font-weight:700;color:var(--ink)}
-</style><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/tool-theme.css"><meta property="og:url" content="https://diamond-tv.shop/tools/signature-stamp-designer/"><meta property="og:image" content="https://diamond-tv.shop/assets/og.png"><meta property="og:description" content="صمّم ختمًا دائريًا أو بيضاويًا أو مستطيلًا بنص عربي وشعار، وتوقيعًا بخط اليد أو بخط جاهز، وحمّله PNG شفاف مجانًا داخل المتصفح."><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "مصمم الأختام والتوقيعات: ختم رسمي وتوقيع بخلفية شفافة", "url": "https://diamond-tv.shop/tools/signature-stamp-designer/", "description": "صمّم ختمًا دائريًا أو بيضاويًا أو مستطيلًا بنص عربي وشعار، وتوقيعًا بخط اليد أو بخط جاهز، وحمّله PNG شفاف مجانًا داخل المتصفح.", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "inLanguage": "ar", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "SAR"}}</script></head><body><div class="dh-top"><a class="lg" href="/">💎 DIAMOND HUB</a><a href="/tools/">الأدوات</a><a href="/accounting/">المحاسبة</a><a href="/articles/">المقالات</a></div><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>مصمم الأختام والتوقيعات<small>ختم رسمي وتوقيع بخلفية شفافة لسنداتك وفواتيرك ومستنداتك</small></h1>
+input[type=range]{width:100%;accent-color:var(--acc)}.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}.tg button{border:2px solid var(--line);background:repeating-conic-gradient(#eef0f4 0 25%,#fff 0 50%) 0 0/14px 14px;border-radius:12px;padding:4px;cursor:pointer;font:600 .75rem var(--fb);color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:2px}.tg button:hover{border-color:var(--acc)}.tg canvas{width:100%;height:auto;display:block}.tg span{background:#fffd;border-radius:6px;padding:0 6px}output{font-weight:700;color:var(--ink)}
+</style><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/tool-theme.css"></head><body><div class="dh-top"><a class="lg" href="/">💎 DIAMOND HUB</a><a href="/tools/">الأدوات</a><a href="/accounting/">المحاسبة</a><a href="/articles/">المقالات</a></div><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>مصمم الأختام والتوقيعات<small>ختم رسمي وتوقيع بخلفية شفافة لسنداتك وفواتيرك ومستنداتك</small></h1>
 <div class="tabs" role="tablist"><button type="button" id="tabS" class="on">🔵 ختم / طابع</button><button type="button" id="tabG">✍ توقيع</button></div>
 <div class="card"><div class="stage"><canvas id="out" width="800" height="800"></canvas></div>
 <div class="acts"><button class="btn" id="dl" type="button">⬇ تحميل PNG شفاف</button><button class="btn alt" id="cp" type="button">نسخ الصورة</button><button class="btn alt" id="sv" type="button">+ حفظ في مكتبتي</button><label class="chk" style="margin-inline-start:8px"><input type="checkbox" id="wbg"> خلفية بيضاء</label><label class="chk"><input type="checkbox" id="hq" checked> جودة عالية</label></div>
 <p class="hint">يُحفظ التصميم على هذا الجهاز فقط. الصورة الشفافة تُدرج مباشرة في Word وPDF وأدوات الموقع.</p></div>
-<div id="stp"><div class="card"><h2>تصميم الختم</h2><div class="row">
-<label>الشكل<select id="stshape"><option value="round">دائري</option><option value="round2">دائري بإطار مزدوج</option><option value="oval">بيضاوي</option><option value="oval2">بيضاوي مزدوج</option><option value="rect">مستطيل</option><option value="rect2">مستطيل بإطار مزدوج</option><option value="rrect">مستطيل بزوايا دائرية</option><option value="tri">مثمّن (سداسي)</option></select></label>
+<div id="stp"><div class="card"><h2>قوالب جاهزة للأختام</h2><div class="tg" id="stg"></div><p class="hint">اضغط أي قالب ثم عدّل النصوص والألوان والأشكال كما تشاء.</p></div>
+<div class="card"><h2>تصميم الختم</h2><div class="row">
+<label>الشكل<select id="stshape"><option value="round">دائري</option><option value="round2">دائري بإطار مزدوج</option><option value="oval">بيضاوي</option><option value="oval2">بيضاوي مزدوج</option><option value="rect">مستطيل</option><option value="rect2">مستطيل بإطار مزدوج</option><option value="rrect">مستطيل بزوايا دائرية</option><option value="scal">دائري بحافة مموجة</option><option value="poly">مضلع (عدد أضلاع)</option></select></label>
 <label>النص العلوي / اسم المنشأة<input type="text" id="sttop" value="مؤسسة الألماس التجارية"></label>
 <label>النص السفلي<input type="text" id="stbot" value="المملكة العربية السعودية"></label>
 <label>سطر وسط 1 (كبير)<input type="text" id="stc1" value="معتمد"></label>
 <label>سطر وسط 2<input type="text" id="stc2" value="س.ت 1010123456"></label>
 <label>سطر وسط 3<input type="text" id="stc3" value="الرياض"></label>
 <label>اللون<input type="color" id="stcol" value="#1d4ed8"></label>
-<label>الخط<select id="stfont"><option>Cairo</option><option>Reem Kufi</option><option>Amiri</option><option>Aref Ruqaa</option><option>Lateef</option><option>Arial</option><option>Georgia</option></select></label>
+<label>خط النص الدائري / الأعلى والأسفل<select id="stfont"><option>Cairo</option><option>Tajawal</option><option>Almarai</option><option>Changa</option><option>El Messiri</option><option>Reem Kufi</option><option>Amiri</option><option>Aref Ruqaa</option><option>Lateef</option><option>Scheherazade New</option><option>Noto Kufi Arabic</option><option>Markazi Text</option><option>Lalezar</option><option>Arial</option><option>Georgia</option><option>Times New Roman</option><option>Courier New</option><option>Impact</option></select></label><label>خط أسطر الوسط<select id="stfont2"><option value="">نفس الخط</option><option>Cairo</option><option>Tajawal</option><option>Almarai</option><option>Changa</option><option>El Messiri</option><option>Reem Kufi</option><option>Amiri</option><option>Aref Ruqaa</option><option>Lateef</option><option>Scheherazade New</option><option>Noto Kufi Arabic</option><option>Markazi Text</option><option>Lalezar</option><option>Arial</option><option>Georgia</option><option>Times New Roman</option><option>Courier New</option><option>Impact</option></select></label><label>وزن الخط<select id="stwt"><option value="400">عادي</option><option value="600">متوسط</option><option value="700">عريض</option><option value="800" selected>عريض جدًا</option><option value="900">أسود</option></select></label><label>تباعد الحروف: <output id="stlso">0</output><input type="range" id="stls" min="0" max="12" value="0"></label><label class="chk"><input type="checkbox" id="stit"> خط مائل</label>
 <label>سماكة الإطار: <output id="stwo">10</output><input type="range" id="stw" min="3" max="24" value="10"></label>
 <label>حجم النص الدائري: <output id="stfo">52</output><input type="range" id="stfs" min="24" max="80" value="52"></label>
 <label>حجم نص الوسط: <output id="stco">64</output><input type="range" id="stcf" min="24" max="130" value="64"></label>
 <label>الدوران: <output id="strt">-8</output>°<input type="range" id="strot" min="-45" max="45" value="-8"></label>
 <label>تأثير حبر قديم / تآكل: <output id="stio">25</output>%<input type="range" id="stink" min="0" max="100" value="25"></label>
+<label>عرض الشكل: <output id="stwo2">100</output>%<input type="range" id="stshw" min="40" max="100" value="100"></label>
+<label>ارتفاع الشكل: <output id="stho2">100</output>%<input type="range" id="stsh" min="40" max="100" value="100"></label>
+<label>استدارة الزوايا: <output id="stcro">70</output><input type="range" id="stcr" min="0" max="200" value="70"></label>
+<label>عدد الأضلاع / التموجات: <output id="stsdo">8</output><input type="range" id="stsides" min="3" max="48" value="8"></label>
+<label>المسافة بين الإطارين: <output id="stgpo">19</output><input type="range" id="stgap" min="8" max="50" value="19"></label>
 <label>نمط الإطار<select id="stbs"><option value="s">متصل</option><option value="d">متقطع</option><option value="o">منقط</option><option value="m">متصل + متقطع داخلي</option></select></label>
 <label>رمز المنتصف<select id="stsym"><option value="">بدون</option><option value="star">نجمة</option><option value="check">صح ✔</option><option value="crescent">هلال ونجمة</option><option value="gem">ماسة</option><option value="shield">درع</option><option value="seal">وسام</option></select></label>
 <label>حجم الرمز: <output id="stzo">60</output><input type="range" id="stsz" min="30" max="160" value="60"></label>
@@ -57,7 +63,8 @@ input[type=range]{width:100%;accent-color:var(--acc)}output{font-weight:700;colo
 <div class="full" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><label class="btn alt" style="cursor:pointer;flex-direction:row;color:var(--ink)">🖼 شعار في المنتصف<input type="file" id="stlogo" accept="image/*" hidden></label><button class="btn alt" id="stlogoDel" type="button">إزالة الشعار</button>
 <button class="btn alt" id="stpre" type="button">🎲 نمط جاهز</button></div></div>
 <p class="hint">النص الدائري يتناسب تلقائيًا مع طول الكلمات. جرّب «إطار مزدوج» و«حبر قديم» لمظهر ختم رسمي واقعي.</p></div></div>
-<div id="sgp" hidden><div class="card"><h2>التوقيع</h2><div class="row"><label>طريقة التوقيع<select id="sgmode"><option value="draw">ارسم بإصبعك أو الماوس</option><option value="type">اكتب اسمك بخط توقيع</option></select></label>
+<div id="sgp" hidden><div class="card"><h2>قوالب التوقيع</h2><div class="tg" id="sgg"></div></div>
+<div class="card"><h2>التوقيع</h2><div class="row"><label>طريقة التوقيع<select id="sgmode"><option value="draw">ارسم بإصبعك أو الماوس</option><option value="type">اكتب اسمك بخط توقيع</option></select></label>
 <label>لون الحبر<input type="color" id="sgcol" value="#0f172a"></label>
 <label>السماكة: <output id="sgwo">4</output><input type="range" id="sgw" min="1" max="14" value="4"></label></div>
 <div id="drawbox" style="margin-top:12px"><canvas id="pad" width="1000" height="340"></canvas><div class="acts"><button class="btn alt" id="undo" type="button">↶ تراجع</button><button class="btn alt" id="clr" type="button">مسح</button></div><p class="hint">ارسم توقيعك داخل المربع؛ السماكة تتغير مع سرعة اليد لتبدو كتابة حقيقية.</p></div>
@@ -77,26 +84,26 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return
 function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
 var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
 function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
-var FL=['Aref Ruqaa:wght@400;700','Amiri:wght@400;700','Lateef','Katibeh','Mirza','Harmattan:wght@400;700','Great Vibes','Dancing Script:wght@700','Allura','Caveat:wght@700','Satisfy','Pacifico'];
+var FL=['Tajawal:wght@400;700;800','Almarai:wght@400;700;800','Changa:wght@400;700;800','El Messiri:wght@400;700','Scheherazade New:wght@400;700','Noto Kufi Arabic:wght@400;700;800','Markazi Text:wght@400;700','Lalezar','Aref Ruqaa:wght@400;700','Amiri:wght@400;700','Lateef','Katibeh','Mirza','Harmattan:wght@400;700','Great Vibes','Dancing Script:wght@700','Allura','Caveat:wght@700','Satisfy','Pacifico'];
 var lk=document.createElement('link');lk.rel='stylesheet';lk.href='https://fonts.googleapis.com/css2?'+FL.map(function(f){return 'family='+f.replace(/ /g,'+')}).join('&')+'&display=swap';document.head.appendChild(lk);
 var M='st',OUT=$('#out'),LOGO=null,PAD=$('#pad'),ST=[],cur=null;
-var IDS=['stshape','sttop','stbot','stc1','stc2','stc3','stcol','stfont','stw','stfs','stcf','strot','stink','ststars','stdate','stlines','stbs','stsym','stsz','stop','stbl','stfx','sgn2','sgt2','sgln','sgdt','sgmode','sgcol','sgw','sgname','sgfont','sgs','sgk','sgul','wbg','hq'];
+var IDS=['stshape','sttop','stbot','stc1','stc2','stc3','stcol','stfont','stfont2','stwt','stls','stit','stw','stfs','stcf','strot','stink','ststars','stdate','stlines','stshw','stsh','stcr','stsides','stgap','stbs','stsym','stsz','stop','stbl','stfx','sgn2','sgt2','sgln','sgdt','sgmode','sgcol','sgw','sgname','sgfont','sgs','sgk','sgul','wbg','hq'];
 var CFG={};try{CFG=JSON.parse(ls('sg_cfg')||'{}')}catch(e){}
 IDS.forEach(function(i){var e=$('#'+i);if(!e||CFG[i]===undefined)return;if(e.type==='checkbox')e.checked=CFG[i];else e.value=CFG[i]});
 function save(){IDS.forEach(function(i){var e=$('#'+i);CFG[i]=e.type==='checkbox'?e.checked:e.value});ls('sg_cfg',JSON.stringify(CFG))}
-var OUTS={stsz:'stzo',stop:'stoo',stbl:'stbo',stw:'stwo',stfs:'stfo',stcf:'stco',strot:'strt',stink:'stio',sgw:'sgwo',sgs:'sgso',sgk:'sgko'};
+var OUTS={stls:'stlso',stshw:'stwo2',stsh:'stho2',stcr:'stcro',stsides:'stsdo',stgap:'stgpo',stsz:'stzo',stop:'stoo',stbl:'stbo',stw:'stwo',stfs:'stfo',stcf:'stco',strot:'strt',stink:'stio',sgw:'sgwo',sgs:'sgso',sgk:'sgko'};
 function sync(){Object.keys(OUTS).forEach(function(k){$('#'+OUTS[k]).textContent=$('#'+k).value})}
 var seed=7;function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646}
 function AR(t){return /[؀-ۿ]/.test(t)}
-function fit(x,txt,fs,max,ff,wt){x.font=(wt||800)+' '+fs+'px "'+ff+'",Cairo,sans-serif';while(x.measureText(txt).width>max&&fs>12){fs-=2;x.font=(wt||800)+' '+fs+'px "'+ff+'",Cairo,sans-serif'}return fs}
+var GW=800,GI='';function fit(x,txt,fs,max,ff,wt){x.font=GI+GW+' '+fs+'px "'+ff+'",Cairo,sans-serif';while(x.measureText(txt).width>max&&fs>12){fs-=2;x.font=GI+GW+' '+fs+'px "'+ff+'",Cairo,sans-serif'}return fs}
 function arcText(x,text,cx,cy,r,fs,top,ff){text=(text||'').trim();if(!text)return;var ar=AR(text),maxSpan=2.35,units,sp,ws,total;
- for(;;){x.font='800 '+fs+'px "'+ff+'",Cairo,sans-serif';units=ar?text.split(/\s+/):Array.from(text);sp=x.measureText(' ').width;ws=units.map(function(u){return x.measureText(u).width});total=ws.reduce(function(a,b){return a+b},0)+(ar?sp*(units.length-1):0);if(total/r<=maxSpan||fs<=14)break;fs-=2}
+ for(;;){x.font=GI+GW+' '+fs+'px "'+ff+'",Cairo,sans-serif';units=ar?text.split(/\s+/):Array.from(text);sp=x.measureText(' ').width;ws=units.map(function(u){return x.measureText(u).width});total=ws.reduce(function(a,b){return a+b},0)+(ar?sp*(units.length-1):0);if(total/r<=maxSpan||fs<=14)break;fs-=2}
  var vis=ar?units.slice().reverse():units,vw=ar?ws.slice().reverse():ws,span=total/r,pos=0;
  vis.forEach(function(u,i){var w=vw[i],a=(pos+w/2)/r-span/2;pos+=w+(ar?sp:0);var th=top?-Math.PI/2+a:Math.PI/2-a;x.save();x.translate(cx+r*Math.cos(th),cy+r*Math.sin(th));x.rotate(top?th+Math.PI/2:th-Math.PI/2);x.fillText(u,0,0);x.restore()})}
 function star(x,cx,cy,r){x.beginPath();for(var i=0;i<10;i++){var a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.42:r;x[i?'lineTo':'moveTo'](cx+rr*Math.cos(a),cy+rr*Math.sin(a))}x.closePath();x.fill()}
 function ring(x,cx,cy,rx,ry,lw){x.lineWidth=lw;x.beginPath();x.ellipse(cx,cy,rx,ry,0,0,7);x.stroke()}
 function rrect(x,l,t,w,h,r,lw){x.lineWidth=lw;x.beginPath();x.moveTo(l+r,t);x.arcTo(l+w,t,l+w,t+h,r);x.arcTo(l+w,t+h,l,t+h,r);x.arcTo(l,t+h,l,t,r);x.arcTo(l,t,l+w,t,r);x.closePath();x.stroke()}
-function stackLines(x,lines,cx,cy,maxW,ff,gap){var tot=0;lines.forEach(function(l){l.fs=fit(x,l.t,l.fs,maxW,ff);tot+=l.fs*1.15+gap});tot-=gap;var y=cy-tot/2;lines.forEach(function(l){x.font='800 '+l.fs+'px "'+ff+'",Cairo,sans-serif';x.fillText(l.t,cx,y+l.fs*.92);y+=l.fs*1.15+gap})}
+function stackLines(x,lines,cx,cy,maxW,ff,gap){var tot=0;lines.forEach(function(l){l.fs=fit(x,l.t,l.fs,maxW,l.f||ff);tot+=l.fs*1.15+gap});tot-=gap;var y=cy-tot/2;lines.forEach(function(l){x.font=GI+GW+' '+l.fs+'px "'+(l.f||ff)+'",Cairo,sans-serif';x.fillText(l.t,cx,y+l.fs*.92);y+=l.fs*1.15+gap})}
 function symb(x,t,cx,cy,r){x.save();x.setLineDash([]);x.lineJoin='round';x.lineCap='round';x.lineWidth=Math.max(4,r*.14);
  if(t==='star')star(x,cx,cy,r*.62);
  else if(t==='check'){x.beginPath();x.moveTo(cx-r*.5,cy);x.lineTo(cx-r*.12,cy+r*.38);x.lineTo(cx+r*.55,cy-r*.42);x.lineWidth=r*.2;x.stroke()}
@@ -116,31 +123,33 @@ function ink(x,W,H,lv){if(!lv)return;seed=11;x.save();x.globalCompositeOperation
  for(i=0;i<lv*.6;i++){x.globalAlpha=.55;x.beginPath();x.arc(rnd()*W,rnd()*H,4+rnd()*10,0,7);x.fill()}
  x.lineWidth=1.3;for(i=0;i<lv*.25;i++){x.globalAlpha=.5;var a=rnd()*W,b=rnd()*H;x.beginPath();x.moveTo(a,b);x.lineTo(a+(rnd()-.5)*160,b+(rnd()-.5)*160);x.stroke()}x.restore()}
 function drawStamp(cv,k){cv=cv||OUT;k=k||1;var W=800,cx=400,cy=400,x=cv.getContext('2d');cv.width=W*k;cv.height=W*k;x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,W*k,W*k);x.scale(k,k);
- var col=$('#stcol').value,bw=+$('#stw').value,sh=$('#stshape').value,ff=$('#stfont').value,fs=+$('#stfs').value,cf=+$('#stcf').value;
+ var col=$('#stcol').value,bw=+$('#stw').value,sh=$('#stshape').value,ff=$('#stfont').value,ff2=$('#stfont2').value||ff,fs=+$('#stfs').value,cf=+$('#stcf').value;
+ GW=$('#stwt').value;GI=$('#stit').checked?'italic ':'';try{x.letterSpacing=(+$('#stls').value)+'px'}catch(e){}
  x.save();x.translate(cx,cy);x.rotate(+$('#strot').value*Math.PI/180);x.translate(-cx,-cy);x.strokeStyle=col;x.fillStyle=col;x.textAlign='center';x.textBaseline='alphabetic';x.lineJoin='round';
  var bs=$('#stbs').value;x.setLineDash(bs==='d'?[bw*2.2,bw*1.2]:bs==='o'?[1,bw*1.6]:[]);if(bs==='o')x.lineCap='round';
- var lines=[[$('#stc1').value,cf],[$('#stc2').value,cf*.5],[$('#stc3').value,cf*.5]].filter(function(l){return l[0]}).map(function(l){return{t:l[0],fs:l[1]}});
- if($('#stdate').checked){var d=new Date();lines.push({t:d.getFullYear()+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+('0'+d.getDate()).slice(-2),fs:cf*.4})}
+ var lines=[[$('#stc1').value,cf],[$('#stc2').value,cf*.5],[$('#stc3').value,cf*.5]].filter(function(l){return l[0]}).map(function(l){return{t:l[0],fs:l[1],f:ff2}});
+ if($('#stdate').checked){var d=new Date();lines.push({t:d.getFullYear()+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+('0'+d.getDate()).slice(-2),fs:cf*.4,f:ff2})}
  var top=$('#sttop').value,bot=$('#stbot').value,stars=$('#ststars').checked,ln=$('#stlines').checked;
- if(sh==='round'||sh==='round2'){var R=366-bw/2;ring(x,cx,cy,R,R,bw);if(sh==='round2')ring(x,cx,cy,R-bw*1.9,R-bw*1.9,bw*.45);
-  var o=sh==='round2'?bw*1.9+bw*.3:bw*.5,band=fs*1.3+10,R2=R-o-band;ring(x,cx,cy,R2,R2,bw*.55);
+ var SW=+$('#stshw').value/100,SH=+$('#stsh').value/100,GP=+$('#stgap').value/10;
+ if(sh==='round'||sh==='round2'||sh==='scal'){var R=(366-bw/2)*SW;if(sh==='scal'){var nn=+$('#stsides').value,am=bw*.9;x.lineWidth=bw;x.beginPath();for(var q=0;q<=360;q++){var a0=q*Math.PI/180,rr0=R+am*Math.cos(a0*nn)*.7;x[q?'lineTo':'moveTo'](cx+rr0*Math.cos(a0),cy+rr0*Math.sin(a0))}x.closePath();x.stroke();R-=am*1.3}else ring(x,cx,cy,R,R,bw);if(sh==='round2')ring(x,cx,cy,R-bw*GP,R-bw*GP,bw*.45);
+  var o=sh==='round2'?bw*GP+bw*.3:bw*.5,band=fs*1.3+10,R2=R-o-band;ring(x,cx,cy,R2,R2,bw*.55);
   arcText(x,top,cx,cy,R2+fs*.3,fs,true,ff);arcText(x,bot,cx,cy,R2+fs*1.02,fs,false,ff);
   if(stars){var sr=R2+band/2;star(x,cx-sr,cy,fs*.32);star(x,cx+sr,cy,fs*.32)}
   var ly=cy;var sym=$('#stsym').value;if(sym&&!LOGO){var sz=+$('#stsz').value;symb(x,sym,cx,cy-R2*.5,sz);ly=cy+R2*.22}if(LOGO){var lh=R2*.62,lw=LOGO.width/LOGO.height*lh;if(lw>R2*1.1){lw=R2*1.1;lh=lw*LOGO.height/LOGO.width}x.drawImage(LOGO,cx-lw/2,cy-R2*.88,lw,lh);ly=cy+R2*.32}
   stackLines(x,lines,cx,ly,R2*1.55,ff,4)}
- else if(sh==='oval'||sh==='oval2'){var rx=380-bw/2,ry=250;ring(x,cx,cy,rx,ry,bw);if(sh==='oval2')ring(x,cx,cy,rx-bw*1.9,ry-bw*1.9,bw*.45);
-  var all=[];if(top)all.push({t:top,fs:fs});lines.forEach(function(l){all.push(l)});if(bot)all.push({t:bot,fs:fs});
+ else if(sh==='oval'||sh==='oval2'){var rx=(380-bw/2)*SW,ry=250*SH*1.4;ring(x,cx,cy,rx,ry,bw);if(sh==='oval2')ring(x,cx,cy,rx-bw*GP,ry-bw*GP,bw*.45);
+  var all=[];if(top)all.push({t:top,fs:fs,f:ff});lines.forEach(function(l){all.push(l)});if(bot)all.push({t:bot,fs:fs,f:ff});
   if(LOGO){var lh2=130,lw2=LOGO.width/LOGO.height*lh2;x.drawImage(LOGO,cx-lw2/2,cy-ry+40,lw2,lh2)}
   stackLines(x,all,cx,cy+(LOGO?70:0),rx*1.25,ff,8)}
- else if(sh==='tri'){var Rr=370;x.lineWidth=bw;x.beginPath();for(var i=0;i<8;i++){var a=Math.PI/8+i*Math.PI/4;x[i?'lineTo':'moveTo'](cx+Rr*Math.cos(a),cy+Rr*Math.sin(a))}x.closePath();x.stroke();
-  var Ri=Rr-bw*2.4;x.lineWidth=bw*.45;x.beginPath();for(i=0;i<8;i++){a=Math.PI/8+i*Math.PI/4;x[i?'lineTo':'moveTo'](cx+Ri*Math.cos(a),cy+Ri*Math.sin(a))}x.closePath();x.stroke();
-  var al=[];if(top)al.push({t:top,fs:fs});lines.forEach(function(l){al.push(l)});if(bot)al.push({t:bot,fs:fs});stackLines(x,al,cx,cy,Ri*1.5,ff,8)}
- else{var bwid=740,bh=480,l=cx-bwid/2,t=cy-bh/2;if(sh==='rrect')rrect(x,l,t,bwid,bh,70,bw);else{x.lineWidth=bw;x.strokeRect(l,t,bwid,bh)}
-  if(sh==='rect2'){x.lineWidth=bw*.45;x.strokeRect(l+bw*1.9,t+bw*1.9,bwid-bw*3.8,bh-bw*3.8)}
-  var pad=bw*2.6+20,items=[],y=t+pad,hh=bh-pad*2;if(top)items.push({t:top,fs:fs});lines.forEach(function(q){items.push(q)});if(bot)items.push({t:bot,fs:fs});
+ else if(sh==='poly'){var Rr=370*SW,ns=+$('#stsides').value,a1=-Math.PI/2+(ns%2?0:Math.PI/ns);x.lineWidth=bw;x.beginPath();for(var i=0;i<ns;i++){var a=a1+i*2*Math.PI/ns;x[i?'lineTo':'moveTo'](cx+Rr*Math.cos(a),cy+Rr*Math.sin(a)*SH)}x.closePath();x.stroke();
+  var Ri=Rr-bw*GP*1.25;x.lineWidth=bw*.45;x.beginPath();for(i=0;i<ns;i++){a=a1+i*2*Math.PI/ns;x[i?'lineTo':'moveTo'](cx+Ri*Math.cos(a),cy+Ri*Math.sin(a)*SH)}x.closePath();x.stroke();
+  var al=[];if(top)al.push({t:top,fs:fs,f:ff});lines.forEach(function(l){al.push(l)});if(bot)al.push({t:bot,fs:fs,f:ff});stackLines(x,al,cx,cy,Ri*1.5,ff,8)}
+ else{var bwid=740*SW,bh=480*SH*1.35,l=cx-bwid/2,t=cy-bh/2;if(sh==='rrect')rrect(x,l,t,bwid,bh,+$('#stcr').value,bw);else{x.lineWidth=bw;x.strokeRect(l,t,bwid,bh)}
+  if(sh==='rect2'){x.lineWidth=bw*.45;x.strokeRect(l+bw*GP,t+bw*GP,bwid-bw*GP*2,bh-bw*GP*2)}
+  var pad=bw*2.6+20,items=[],y=t+pad,hh=bh-pad*2;if(top)items.push({t:top,fs:fs,f:ff});lines.forEach(function(q){items.push(q)});if(bot)items.push({t:bot,fs:fs,f:ff});
   if(LOGO){var lh3=110,lw3=LOGO.width/LOGO.height*lh3;x.drawImage(LOGO,l+30,cy-lh3/2,lw3,lh3)}
-  var tot=0;items.forEach(function(q){q.fs=fit(x,q.t,q.fs,bwid-pad*2-(LOGO?170:0),ff);tot+=q.fs*1.25});var gap=Math.max(6,(hh-tot)/(items.length+1)),yy=y+gap;
-  items.forEach(function(q,i){x.font='800 '+q.fs+'px "'+ff+'",Cairo,sans-serif';x.fillText(q.t,cx+(LOGO?85:0),yy+q.fs*.95);yy+=q.fs*1.25;if(ln&&i<items.length-1){x.lineWidth=bw*.3;x.globalAlpha=.7;x.beginPath();x.moveTo(l+pad,yy+gap/2);x.lineTo(l+bwid-pad,yy+gap/2);x.stroke();x.globalAlpha=1}yy+=gap})}
+  var tot=0;items.forEach(function(q){q.fs=fit(x,q.t,q.fs,bwid-pad*2-(LOGO?170:0),q.f||ff);tot+=q.fs*1.25});var gap=Math.max(6,(hh-tot)/(items.length+1)),yy=y+gap;
+  items.forEach(function(q,i){x.font=GI+GW+' '+q.fs+'px "'+(q.f||ff)+'",Cairo,sans-serif';x.fillText(q.t,cx+(LOGO?85:0),yy+q.fs*.95);yy+=q.fs*1.25;if(ln&&i<items.length-1){x.lineWidth=bw*.3;x.globalAlpha=.7;x.beginPath();x.moveTo(l+pad,yy+gap/2);x.lineTo(l+bwid-pad,yy+gap/2);x.stroke();x.globalAlpha=1}yy+=gap})}
  x.restore();ink(x,W,W,+$('#stink').value);x.setTransform(1,0,0,1,0,0);fx(cv)}
 /* التوقيع */
 function drawPad(){var x=PAD.getContext('2d');x.clearRect(0,0,PAD.width,PAD.height);x.strokeStyle=x.fillStyle=$('#sgcol').value;x.lineCap='round';x.lineJoin='round';var bw=+$('#sgw').value;
@@ -162,7 +171,7 @@ function drawSig(){var w=$('#sgmode').value==='draw';$('#drawbox').hidden=!w;$('
   x.save();x.translate(800,330);x.transform(1,0,Math.tan(-(+$('#sgk').value)*Math.PI/180)*.5,1,0,0);x.fillText(nm,0,0);x.restore();
   if($('#sgul').checked&&nm){var tw=Math.min(1500,x.measureText(nm).width*1.05);x.lineWidth=Math.max(3,+$('#sgw').value*1.6);x.lineCap='round';x.beginPath();x.moveTo(800-tw/2,s*.2+330);x.bezierCurveTo(800-tw/6,s*.2+300,800+tw/4,s*.2+372,800+tw/2,s*.2+322);x.stroke()}}
  var t=trim(base,24);t=block(t);OUT.width=Math.max(t.width,40);OUT.height=Math.max(t.height,40);OUT.getContext('2d').clearRect(0,0,OUT.width,OUT.height);OUT.getContext('2d').drawImage(t,0,0)}
-function render(){sync();save();var f=M==='st'?$('#stfont').value:($('#sgmode').value==='type'?$('#sgfont').value:null);
+function render(){sync();save();var f=M==='st'?($('#stfont2').value||$('#stfont').value):($('#sgmode').value==='type'?$('#sgfont').value:null);
  var go=function(){M==='st'?drawStamp():drawSig()};if(f&&document.fonts&&document.fonts.load){Promise.race([document.fonts.load('800 40px "'+f+'"','ابجد abc'),new Promise(function(r){setTimeout(r,1500)})]).then(go)}else go()}
 function setM(m){M=m;$('#tabS').classList.toggle('on',m==='st');$('#tabG').classList.toggle('on',m==='sg');$('#stp').hidden=m!=='st';$('#sgp').hidden=m!=='sg';render()}
 $('#tabS').onclick=function(){setM('st')};$('#tabG').onclick=function(){setM('sg')};
@@ -170,8 +179,30 @@ IDS.forEach(function(i){var e=$('#'+i);e.oninput=e.onchange=render});
 $('#stlogo').onchange=function(e){var f=e.target.files[0];e.target.value='';if(!f)return;var im=new Image();im.onload=function(){var m=Math.min(1,500/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*m;c.height=im.height*m;var cx=c.getContext('2d');cx.drawImage(im,0,0,c.width,c.height);var id=cx.getImageData(0,0,c.width,c.height),d=id.data,col=$('#stcol').value,r=parseInt(col.substr(1,2),16),g=parseInt(col.substr(3,2),16),b=parseInt(col.substr(5,2),16);
  for(var i=0;i<d.length;i+=4){var lum=(d[i]*.3+d[i+1]*.59+d[i+2]*.11),al=d[i+3]*(1-lum/255);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=al}cx.putImageData(id,0,0);LOGO=c;render();toast('تم تحويل الشعار إلى لون الختم')};im.src=URL.createObjectURL(f)};
 $('#stlogoDel').onclick=function(){LOGO=null;render()};
-var PRE=[{stshape:'round2',stcol:'#1d4ed8',sttop:'مؤسسة النور التجارية',stbot:'المملكة العربية السعودية',stc1:'معتمد',stc2:'س.ت 1010123456',stc3:'الرياض'},{stshape:'rect2',stcol:'#b91c1c',sttop:'شركة الأفق للمقاولات',stbot:'الإدارة المالية',stc1:'مدفوع',stc2:'',stc3:''},{stshape:'oval2',stcol:'#047857',sttop:'مكتب الخبرة للمحاسبة',stbot:'جدة - المملكة العربية السعودية',stc1:'مصدّق',stc2:'ترخيص 4455',stc3:''},{stshape:'round',stcol:'#111827',sttop:'DIAMOND HUB TRADING CO.',stbot:'RIYADH - KSA',stc1:'APPROVED',stc2:'CR 1010123456',stc3:''},{stshape:'rrect',stcol:'#7c3aed',sttop:'متجر الألماس',stbot:'نسخة مطابقة للأصل',stc1:'مستلم',stc2:'',stc3:''}],pi=0;
-$('#stpre').onclick=function(){var p=PRE[pi++%PRE.length];for(var k in p)$('#'+k).value=p[k];render()};
+var OLDPRE=[{stshape:'round2',stcol:'#1d4ed8',sttop:'مؤسسة النور التجارية',stbot:'المملكة العربية السعودية',stc1:'معتمد',stc2:'س.ت 1010123456',stc3:'الرياض'},{stshape:'rect2',stcol:'#b91c1c',sttop:'شركة الأفق للمقاولات',stbot:'الإدارة المالية',stc1:'مدفوع',stc2:'',stc3:''},{stshape:'oval2',stcol:'#047857',sttop:'مكتب الخبرة للمحاسبة',stbot:'جدة - المملكة العربية السعودية',stc1:'مصدّق',stc2:'ترخيص 4455',stc3:''},{stshape:'round',stcol:'#111827',sttop:'DIAMOND HUB TRADING CO.',stbot:'RIYADH - KSA',stc1:'APPROVED',stc2:'CR 1010123456',stc3:''},{stshape:'rrect',stcol:'#7c3aed',sttop:'متجر الألماس',stbot:'نسخة مطابقة للأصل',stc1:'مستلم',stc2:'',stc3:''}],pi=0;
+var DEF={stshw:100,stsh:100,stcr:70,stsides:8,stgap:19,stbs:'s',stsym:'',stfx:'ink',stw:10,stfs:52,stcf:64,strot:-8,stink:25,stop:92,stfont:'Cairo',stfont2:'',stwt:800,stls:0,stit:false,stc2:'',stc3:'',stdate:false,ststars:true,stlines:true};
+var TPL=[
+['رسمي دائري',{stshape:'round2',stcol:'#1d4ed8',sttop:'مؤسسة النور التجارية',stbot:'المملكة العربية السعودية',stc1:'معتمد',stc2:'س.ت 1010123456',stc3:'الرياض',stw:9}],
+['مدفوع',{stshape:'rect2',stcol:'#b91c1c',sttop:'شركة الأفق للمقاولات',stbot:'الإدارة المالية',stc1:'مدفوع',stdate:true,strot:-12,stink:45,stcf:90}],
+['مستلم',{stshape:'rrect',stcol:'#047857',sttop:'متجر الألماس',stbot:'قسم المستودعات',stc1:'تم الاستلام',stdate:true,strot:-6,stcr:90}],
+['بيضاوي محاسبي',{stshape:'oval2',stcol:'#1e3a8a',sttop:'مكتب الخبرة للمحاسبة',stbot:'جدة - المملكة العربية السعودية',stc1:'مصدّق',stc2:'ترخيص 4455',strot:-4}],
+['ذهبي فاخر',{stshape:'scal',stcol:'#b8860b',sttop:'مجموعة الراجحي القابضة',stbot:'تأسست 1995',stc1:'أصلي',stsym:'seal',stfx:'gold',stsides:40,stink:10,stw:7,stcf:70}],
+['ختم بارز',{stshape:'round2',stcol:'#64748b',sttop:'DIAMOND HUB TRADING',stbot:'RIYADH · KSA',stc1:'OFFICIAL',stsym:'star',stfx:'emb',stink:0,stfont:'Georgia'}],
+['إنجليزي رسمي',{stshape:'round',stcol:'#111827',sttop:'DIAMOND HUB TRADING CO.',stbot:'CR 1010123456',stc1:'APPROVED',stc2:'RIYADH - KSA',stfont:'Arial',strot:0,stink:15}],
+['مصدّق',{stshape:'poly',stcol:'#7c3aed',sttop:'هيئة المراجعة الداخلية',stbot:'مصدّق رسميًا',stc1:'نسخة طبق الأصل',stsides:8,stsym:'check',stcf:56,stfs:46}],
+['منقط تجاري',{stshape:'round',stcol:'#0f766e',sttop:'متجر الصفوة للعطور',stbot:'الدمام - الشرقية',stc1:'شكرًا لتسوقكم',stbs:'o',stw:6,stsym:'gem',stcf:44,stink:20}],
+['متقطع قديم',{stshape:'oval',stcol:'#7f1d1d',sttop:'إدارة الشؤون القانونية',stbot:'سري',stc1:'مراجَع',stdate:true,stbs:'d',strot:10,stink:70,stw:8}],
+['سداسي تقني',{stshape:'poly',stcol:'#0369a1',sttop:'شركة الحلول الرقمية',stbot:'قسم الجودة',stc1:'اجتاز الفحص',stsides:6,stsym:'shield',stshw:96,stfs:48,stcf:52}],
+['مستطيل تسليم',{stshape:'rect',stcol:'#c2410c',sttop:'مؤسسة التوريدات السريعة',stbot:'تم التسليم',stc1:'DELIVERED',stdate:true,stcf:80,strot:-5,stsh:80,stink:40}]];
+function applyV(p){for(var k in DEF){var e=$('#'+k);if(!e)continue;if(e.type==='checkbox')e.checked=DEF[k];else e.value=DEF[k]}for(k in p){e=$('#'+k);if(!e)continue;if(e.type==='checkbox')e.checked=p[k];else e.value=p[k]}}
+function thumbs(){var snap={};IDS.forEach(function(i){var e=$('#'+i);if(e)snap[i]=e.type==='checkbox'?e.checked:e.value});$('#stg').innerHTML='';
+ TPL.forEach(function(t){applyV(t[1]);var c=document.createElement('canvas');drawStamp(c,.18);var b=document.createElement('button');b.type='button';b.appendChild(c);var sp=document.createElement('span');sp.textContent=t[0];b.appendChild(sp);b.onclick=function(){applyV(t[1]);render();toast('تم تطبيق القالب')};$('#stg').appendChild(b)});
+ for(var k in snap){var e=$('#'+k);if(e.type==='checkbox')e.checked=snap[k];else e.value=snap[k]}render()}
+$('#stpre').onclick=function(){var t=TPL[pi++%TPL.length];applyV(t[1]);render()};
+var SGT=[['توقيع رسمي أزرق',{sgmode:'type',sgfont:'Great Vibes',sgcol:'#1e3a8a',sgs:130,sgk:-8,sgul:true}],['كلاسيكي أسود',{sgmode:'type',sgfont:'Dancing Script',sgcol:'#0f172a',sgs:110,sgk:-12,sgul:true}],['عربي رقعة',{sgmode:'type',sgfont:'Aref Ruqaa',sgcol:'#0f172a',sgs:120,sgk:-6,sgul:true}],['عربي كتابي',{sgmode:'type',sgfont:'Katibeh',sgcol:'#1d4ed8',sgs:150,sgk:0,sgul:false}],['قلم حبر بسيط',{sgmode:'type',sgfont:'Caveat',sgcol:'#111827',sgs:140,sgk:-4,sgul:false}],['فاخر مزخرف',{sgmode:'type',sgfont:'Allura',sgcol:'#7c2d12',sgs:150,sgk:-10,sgul:true}],['ارسم بنفسك',{sgmode:'draw',sgcol:'#0f172a',sgw:4}]];
+$('#sgg').innerHTML=SGT.map(function(t,i){return '<button type="button" data-i="'+i+'" style="padding:14px 6px"><span style="font-size:.85rem">'+t[0]+'</span></button>'}).join('');
+[].forEach.call(document.querySelectorAll('#sgg button'),function(b){b.onclick=function(){var p=SGT[+b.dataset.i][1];for(var k in p){var e=$('#'+k);if(e.type==='checkbox')e.checked=p[k];else e.value=p[k]}render()}});
+
 function finalCanvas(){var c=document.createElement('canvas'),hq=$('#hq').checked,k=hq?1:.5;if(M==='st'){drawStamp(c,hq?2.5:1);if($('#wbg').checked){var w=document.createElement('canvas');w.width=c.width;w.height=c.height;var wx=w.getContext('2d');wx.fillStyle='#fff';wx.fillRect(0,0,w.width,w.height);wx.drawImage(c,0,0);return w}return c}c.width=Math.round(OUT.width*k);c.height=Math.round(OUT.height*k);var x=c.getContext('2d');if($('#wbg').checked){x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height)}x.drawImage(OUT,0,0,c.width,c.height);return c}
 $('#dl').onclick=function(){var a=document.createElement('a');a.download=(M==='st'?'stamp':'signature')+'.png';a.href=finalCanvas().toDataURL('image/png');a.click()};
 $('#cp').onclick=function(){finalCanvas().toBlob(function(b){try{navigator.clipboard.write([new ClipboardItem({'image/png':b})]).then(function(){toast('تم نسخ الصورة')},function(){toast('تعذّر النسخ، استخدم التحميل')})}catch(e){toast('تعذّر النسخ، استخدم التحميل')}})};
@@ -180,5 +211,5 @@ function libDraw(){$('#lib').innerHTML=LIB.map(function(it,i){return '<div><img 
  [].forEach.call(document.querySelectorAll('#lib img'),function(im){im.onclick=function(){var a=document.createElement('a');a.download='saved-'+im.dataset.i+'.png';a.href=im.src;a.click()}});
  [].forEach.call(document.querySelectorAll('#lib button'),function(b){b.onclick=function(){LIB.splice(+b.dataset.x,1);ls('sg_lib',JSON.stringify(LIB));libDraw()}})}
 $('#sv').onclick=function(){var src=OUT,k=Math.min(1,520/Math.max(src.width,src.height)),c=document.createElement('canvas');c.width=Math.round(src.width*k);c.height=Math.round(src.height*k);c.getContext('2d').drawImage(src,0,0,c.width,c.height);var d=c.toDataURL('image/png');LIB.unshift({t:M==='st'?'ختم':'توقيع',d:d});LIB=LIB.slice(0,12);ls('sg_lib',JSON.stringify(LIB));ls('dh_seal_last',d);libDraw();toast('تم الحفظ في مكتبتك')};
-libDraw();sync();render();
+libDraw();sync();render();setTimeout(thumbs,1800);
 </script></body></html>
