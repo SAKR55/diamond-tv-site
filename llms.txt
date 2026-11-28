@@ -56,3 +56,4 @@
 - [محوّل المستندات](https://diamond-tv.shop/tools/document-converter/): تحويل Word إلى نص وHTML وMarkdown، ونص وMarkdown إلى Word وPDF، وCSV إلى JSON.
 - [دليل القيود المحاسبية](https://diamond-tv.shop/tools/journal-entries-guide/): 36 قيد يومية شائعة بالشرح وحسابات T مع ضريبة القيمة المضافة 15%.
 - [كل الأدوات](https://diamond-tv.shop/tools/): فهرس منظّم لأكثر من 290 أداة
+- [دليل سند القبض وسند الصرف](https://diamond-tv.shop/accounting/guides/voucher-receipt-payment-guide/) · [سندات رواتب من Excel أو PDF](https://diamond-tv.shop/accounting/guides/payroll-vouchers-from-excel-pdf/)
