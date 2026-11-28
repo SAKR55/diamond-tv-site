@@ -14,6 +14,7 @@
 ## المحاسبة والمالية
 - [مرجع المحاسب](https://diamond-tv.shop/accounting/): 43 معيارًا دوليًا مع أمثلة رقمية وقيود، وأدلة عملية
 - [العمليات المحاسبية](https://diamond-tv.shop/accounting/operations/): 32 عملية بخطوات وقيود وقوانين ومستندات لكل عملية
+- [مصمم الأختام والتوقيعات](https://diamond-tv.shop/tools/signature-stamp-designer/): ختم وتوقيع PNG شفاف
 - [سندات قبض وصرف](https://diamond-tv.shop/tools/receipt-payment-voucher/) · [باركود الفاتورة الضريبية](https://diamond-tv.shop/tools/zatca-invoice-qr/) · [محلل النسب المالية](https://diamond-tv.shop/tools/financial-ratios-analyzer/) · [أعمار الذمم](https://diamond-tv.shop/tools/receivables-aging-report/)
 - [مخطط المشروع الذكي](https://diamond-tv.shop/tools/smart-project-planner/): خطة وميزانية وبرومتات من اسم المشروع
 - [كل الأدوات](https://diamond-tv.shop/tools/): أكثر من 300 أداة مجانية
