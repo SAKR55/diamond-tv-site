@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>صانع عرض السعر: عرض سعر بشعارك وضريبة 15% وطباعة PDF | DIAMOND HUB</title>
+<meta name="description" content="أنشئ عرض سعر احترافيًا بشعارك وترويسة قابلة للتعديل، بنود وخصم وضريبة 15% ثم اطبعه أو احفظه PDF أو انسخه لواتساب."><link rel="canonical" href="https://diamond-tv.shop/tools/quotation-maker/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="صانع عرض السعر: عرض سعر بشعارك وضريبة 15% وطباعة PDF"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+.qdoc{background:#fff;color:#14213d;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.qh{display:flex;gap:14px;align-items:center;padding:18px 20px;color:#fff}.qh img{width:74px;height:74px;object-fit:contain;background:#fff;border-radius:12px;padding:4px}
+.qh b{font:700 1.5rem var(--fd);display:block}.qh small{opacity:.85;display:block}
+.qb{padding:16px 20px}.qm{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.92rem;margin-bottom:12px}
+table.qt{width:100%;border-collapse:collapse;font-size:.92rem}table.qt th{background:#eef0f4;padding:8px;text-align:right}table.qt td{padding:8px;border-bottom:1px solid #e3e6ee}
+.num{text-align:left;direction:ltr;white-space:nowrap}.qtot{margin:12px 0 0 auto;max-width:300px;font-size:.95rem}.qtot div{display:flex;justify-content:space-between;padding:3px 0}.qtot .g{font-weight:700;font-size:1.1rem;border-top:2px solid #14213d;margin-top:4px;padding-top:6px}
+.it{display:grid;grid-template-columns:3fr 1fr 1.3fr 36px;gap:8px;margin-bottom:8px;align-items:end}.it button{height:40px;border:0;border-radius:10px;background:var(--soft);cursor:pointer}
+.qf{padding:12px 20px;border-top:1px dashed #cdd2de;font-size:.85rem;color:#556}
+@media print{html,body{background:#fff!important}.wrap>*:not(#docwrap){display:none!important}.wrap{padding:0;max-width:none}.qdoc{border:0;border-radius:0}.qh{-webkit-print-color-adjust:exact;print-color-adjust:exact}table.qt th{-webkit-print-color-adjust:exact;print-color-adjust:exact}.toast{display:none}}
+</style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>صانع عرض السعر<small>بنود وخصم وضريبة 15% بشعارك، ثم طباعة أو PDF أو نسخ لواتساب</small></h1>
+<div class="card"><h2>بيانات العرض</h2><div class="row">
+<label>رقم العرض<input type="text" id="qn"></label><label>التاريخ<input type="text" id="qd"></label>
+<label>صالح لمدة (أيام)<input type="number" id="qv" value="7" min="1"></label><label>اسم العميل<input type="text" id="qc"></label>
+<label class="full">ملاحظات / شروط<textarea id="qnote">الأسعار شاملة التوصيل داخل المدينة. الدفع عند الاستلام أو بالتحويل.</textarea></label></div>
+<h2 style="margin-top:14px">البنود</h2><div id="items"></div><div class="acts"><button class="btn alt" id="add" type="button">+ إضافة بند</button></div>
+<div class="row" style="margin-top:12px"><label>خصم %<input type="number" id="qdisc" value="0" min="0" max="100"></label>
+<label>ضريبة القيمة المضافة<select id="qvat"><option value="15">15% مضافة على السعر</option><option value="inc">15% مشمولة في السعر</option><option value="0">بدون ضريبة</option></select></label></div></div>
+<details class="card"><summary>⚙ الترويسة والشعار</summary><div class="row" style="margin-top:12px">
+<label>اسم النشاط<input type="text" id="pName"></label><label>عبارة تحت الاسم<input type="text" id="pTag"></label>
+<label>الهاتف<input type="text" id="pPhone" dir="ltr"></label><label>السجل / الرقم الضريبي<input type="text" id="pReg" dir="ltr"></label>
+<label class="full">العنوان<input type="text" id="pAddr"></label><label class="full">نص أسفل العرض<textarea id="pFoot" style="min-height:56px"></textarea></label>
+<label>لون الترويسة<input type="color" id="pColor" value="#14213d"></label>
+<div class="full" style="display:flex;gap:10px;align-items:center"><label class="btn alt" style="cursor:pointer;flex-direction:row;color:var(--ink)">🖼 رفع الشعار<input type="file" id="pLogo" accept="image/*" hidden></label><button class="btn alt" id="pLogoDel" type="button">إزالة</button></div></div>
+<p class="hint">تُحفظ على هذا الجهاز فقط.</p></details>
+<div id="docwrap"><div class="qdoc" id="doc"></div><div class="acts"><button class="btn" id="print" type="button">🖨 طباعة / حفظ PDF</button><button class="btn alt" id="copy" type="button">نسخ كنص (واتساب)</button></div></div>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+var PF={name:'',tag:'',phone:'',reg:'',addr:'',foot:'',color:'#14213d',logo:''};try{var _p=JSON.parse(ls('qt_prof')||'{}');for(var k in _p)PF[k]=_p[k]}catch(e){}
+var IT=[{n:'',q:1,p:0}];try{var _i=JSON.parse(ls('qt_items')||'null');if(_i&&_i.length)IT=_i}catch(e){}
+var MAP={pName:'name',pTag:'tag',pPhone:'phone',pReg:'reg',pAddr:'addr',pFoot:'foot',pColor:'color'};
+Object.keys(MAP).forEach(function(id){var e=$('#'+id);e.value=PF[MAP[id]];e.oninput=function(){PF[MAP[id]]=e.value;ls('qt_prof',JSON.stringify(PF));draw()}});
+$('#pLogo').onchange=function(e){var f=e.target.files[0];e.target.value='';if(!f)return;var im=new Image();im.onload=function(){var m=Math.min(1,300/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*m);c.height=Math.round(im.height*m);c.getContext('2d').drawImage(im,0,0,c.width,c.height);PF.logo=c.toDataURL('image/png');ls('qt_prof',JSON.stringify(PF));draw()};im.src=URL.createObjectURL(f)};
+$('#pLogoDel').onclick=function(){PF.logo='';ls('qt_prof',JSON.stringify(PF));draw()};
+var d0=new Date();$('#qd').value=d0.getFullYear()+'-'+('0'+(d0.getMonth()+1)).slice(-2)+'-'+('0'+d0.getDate()).slice(-2);
+var seq=(+ls('qt_seq')||0)+1;$('#qn').value='Q-'+String(seq).padStart(4,'0');
+function rows(){$('#items').innerHTML=IT.map(function(r,i){return '<div class="it"><label>البند<input type="text" data-i="'+i+'" data-k="n" value="'+esc(r.n)+'"></label><label>الكمية<input type="number" data-i="'+i+'" data-k="q" value="'+r.q+'" min="0" step="any"></label><label>السعر<input type="number" data-i="'+i+'" data-k="p" value="'+r.p+'" min="0" step="any"></label><button type="button" data-d="'+i+'" aria-label="حذف">×</button></div>'}).join('');
+[].forEach.call(document.querySelectorAll('#items input'),function(e){e.oninput=function(){var r=IT[+e.dataset.i];r[e.dataset.k]=e.dataset.k==='n'?e.value:(+e.value||0);ls('qt_items',JSON.stringify(IT));draw()}});
+[].forEach.call(document.querySelectorAll('#items button'),function(b){b.onclick=function(){IT.splice(+b.dataset.d,1);if(!IT.length)IT.push({n:'',q:1,p:0});rows();draw()}})}
+$('#add').onclick=function(){IT.push({n:'',q:1,p:0});rows();draw()};
+function calc(){var sub=0;IT.forEach(function(r){sub+=r.q*r.p});var dp=Math.min(100,Math.max(0,+$('#qdisc').value||0)),ds=sub*dp/100,v=$('#qvat').value,base=sub-ds,vat=0,tot=base;
+ if(v==='15'){vat=base*.15;tot=base+vat}else if(v==='inc'){vat=base-base/1.15;tot=base}return{sub:sub,ds:ds,vat:vat,tot:tot,v:v,dp:dp}}
+function draw(){var c=calc(),vd=+$('#qv').value||7,e=new Date($('#qd').value||Date.now());e.setDate(e.getDate()+vd);
+ var ee=isNaN(e)?'':e.toISOString().slice(0,10),ci=[PF.phone,PF.reg,PF.addr].filter(Boolean).join(' · ');
+ $('#doc').innerHTML='<div class="qh" style="background:'+esc(PF.color)+'">'+(PF.logo?'<img src="'+PF.logo+'" alt="">':'')+'<div><b>'+esc(PF.name||'اسم النشاط')+'</b><small>'+esc(PF.tag||'عرض سعر')+'</small>'+(ci?'<small>'+esc(ci)+'</small>':'')+'</div></div><div class="qb"><div class="qm"><span><b>عرض سعر</b> '+esc($('#qn').value)+'</span><span>التاريخ: '+esc($('#qd').value)+'</span><span>صالح حتى: '+ee+'</span></div>'+($('#qc').value?'<div style="margin-bottom:10px">إلى: <b>'+esc($('#qc').value)+'</b></div>':'')+
+ '<table class="qt"><thead><tr><th>#</th><th>البند</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody>'+IT.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.n||'—')+'</td><td class="num">'+r.q+'</td><td class="num">'+nf(r.p)+'</td><td class="num">'+nf(r.q*r.p)+'</td></tr>'}).join('')+'</tbody></table>'+
+ '<div class="qtot"><div><span>المجموع</span><span class="num">'+nf(c.sub)+'</span></div>'+(c.ds?'<div><span>خصم '+c.dp+'%</span><span class="num">-'+nf(c.ds)+'</span></div>':'')+(c.v!=='0'?'<div><span>ضريبة 15%'+(c.v==='inc'?' (مشمولة)':'')+'</span><span class="num">'+nf(c.vat)+'</span></div>':'')+'<div class="g"><span>الإجمالي (ر.س)</span><span class="num">'+nf(c.tot)+'</span></div></div>'+($('#qnote').value?'<p style="margin-top:14px;font-size:.88rem;white-space:pre-wrap">'+esc($('#qnote').value)+'</p>':'')+'</div>'+(PF.foot?'<div class="qf">'+esc(PF.foot)+'</div>':'')}
+['qn','qd','qv','qc','qnote','qdisc','qvat'].forEach(function(id){$('#'+id).oninput=draw;$('#'+id).onchange=draw});
+$('#print').onclick=function(){ls('qt_seq',String(seq));window.print()};
+$('#copy').onclick=function(){var c=calc(),t=(PF.name||'')+'\nعرض سعر '+$('#qn').value+' — '+$('#qd').value+'\n'+IT.map(function(r,i){return (i+1)+'. '+r.n+' × '+r.q+' = '+nf(r.q*r.p)}).join('\n')+'\nالإجمالي: '+nf(c.tot)+' ر.س'+(c.v!=='0'?' (شامل الضريبة)':'');try{navigator.clipboard.writeText(t).then(function(){toast('تم النسخ')},function(){toast('تعذّر النسخ')})}catch(e){toast('تعذّر النسخ')}};
+rows();draw();
+</script></body></html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>صانع ملصق الشحن: ملصق شحنة بباركود والدفع عند الاستلام | DIAMOND HUB</title>
+<meta name="description" content="اطبع ملصق شحنة واضحًا: المرسل والمستلم والعنوان والمحتوى ومبلغ الدفع عند الاستلام وباركود برقم الطلب، بنسخ متعددة."><link rel="canonical" href="https://diamond-tv.shop/tools/shipping-label-maker/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="صانع ملصق الشحن: ملصق شحنة بباركود والدفع عند الاستلام"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+.lab{background:#fff;color:#000;border:2px solid #000;width:100%;max-width:400px;margin:0 auto;font-size:15px}
+.lab .s{padding:8px 12px;border-bottom:1.5px solid #000}.lab .l{font-size:11px;color:#444}.lab b{font-size:1.05em}.lab .big{font:700 22px var(--fb)}
+.lab .cod{background:#000;color:#fff;text-align:center;padding:6px;font:700 20px var(--fb)}.lab svg{display:block;margin:6px auto 0;max-width:100%}
+.lab .code{text-align:center;font:600 13px monospace;letter-spacing:2px}
+#sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+@media print{html,body{background:#fff!important}.wrap>*:not(#docwrap){display:none!important}.wrap{padding:0;max-width:none}#sheet{display:block}.lab{max-width:none;width:100%;page-break-after:always;break-inside:avoid;margin:0}.toast{display:none}}
+</style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>صانع ملصق الشحن<small>ملصق جاهز للطباعة بباركود ومبلغ الدفع عند الاستلام</small></h1>
+<div class="card"><h2>بيانات الشحنة</h2><div class="row">
+<label>اسم المرسل / المتجر<input type="text" id="sn"></label><label>هاتف المرسل<input type="text" id="sp" dir="ltr"></label>
+<label>اسم المستلم<input type="text" id="rn"></label><label>هاتف المستلم<input type="text" id="rp" dir="ltr" inputmode="tel"></label>
+<label>المدينة<input type="text" id="rc"></label><label>الحي والعنوان<input type="text" id="ra"></label>
+<label>محتوى الشحنة<input type="text" id="ct"></label><label>رقم الطلب<input type="text" id="no"></label>
+<label>المبلغ المطلوب عند الاستلام (ر.س) — 0 للمدفوع<input type="number" id="cod" value="0" min="0" step="any"></label>
+<label>عدد النسخ<input type="number" id="cp" value="1" min="1" max="20"></label>
+<label class="chk"><input type="checkbox" id="bc" checked> إظهار الباركود برقم الطلب</label></div>
+<p class="hint">يُحفظ اسم المرسل وهاتفه على جهازك.</p></div>
+<div id="docwrap"><div id="sheet"></div><div class="acts"><button class="btn" id="print" type="button">🖨 طباعة الملصق</button></div><p class="hint">في نافذة الطباعة اختر مقاس الورق (A6 أو ملصق حراري 100×150 مم).</p></div>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+var C39={'0':'nnnwwnwnn','1':'wnnwnnnnw','2':'nnwwnnnnw','3':'wnwwnnnnn','4':'nnnwwnnnw','5':'wnnwwnnnn','6':'nnwwwnnnn','7':'nnnwnnwnw','8':'wnnwnnwnn','9':'nnwwnnwnn','A':'wnnnnwnnw','B':'nnwnnwnnw','C':'wnwnnwnnn','D':'nnnnwwnnw','E':'wnnnwwnnn','F':'nnwnwwnnn','G':'nnnnnwwnw','H':'wnnnnwwnn','I':'nnwnnwwnn','J':'nnnnwwwnn','K':'wnnnnnnww','L':'nnwnnnnww','M':'wnwnnnnwn','N':'nnnnwnnww','O':'wnnnwnnwn','P':'nnwnwnnwn','Q':'nnnnnnwww','R':'wnnnnnwwn','S':'nnwnnnwwn','T':'nnnnwnwwn','U':'wwnnnnnnw','V':'nwwnnnnnw','W':'wwwnnnnnn','X':'nwnnwnnnw','Y':'wwnnwnnnn','Z':'nwwnwnnnn','-':'nwnnnnwnw','.':'wwnnnnwnn',' ':'nwwnnnwnn','*':'nwnnwnwnn','$':'nwnwnwnnn','/':'nwnwnnnwn','+':'nwnnnwnwn','%':'nnnwnwnwn'};
+function bars(txt){txt=('*'+String(txt).toUpperCase().replace(/[^0-9A-Z\-. $\/+%]/g,'')+'*');var x=0,r='',n=1.5,w=4;for(var i=0;i<txt.length;i++){var p=C39[txt[i]];if(!p)continue;for(var j=0;j<9;j++){var wd=p[j]==='w'?w:n;if(j%2===0)r+='<rect x="'+x+'" y="0" width="'+wd+'" height="56" fill="#000"/>';x+=wd}x+=n}return '<svg viewBox="0 0 '+x+' 56" height="56" preserveAspectRatio="none" style="width:90%">'+r+'</svg>'}
+['sn','sp'].forEach(function(id){$('#'+id).value=ls('sl_'+id)||''});
+function draw(){var cod=+$('#cod').value||0,n=Math.max(1,Math.min(20,+$('#cp').value||1)),one='<div class="lab"><div class="s"><span class="l">من</span><br><b>'+esc($('#sn').value||'—')+'</b> <span dir="ltr">'+esc($('#sp').value)+'</span></div><div class="s"><span class="l">إلى</span><br><span class="big">'+esc($('#rn').value||'—')+'</span><br><b dir="ltr">'+esc($('#rp').value)+'</b><br>'+esc($('#rc').value)+(($('#ra').value)?' — '+esc($('#ra').value):'')+'</div><div class="s"><span class="l">المحتوى</span><br>'+esc($('#ct').value||'—')+'</div>'+(cod>0?'<div class="cod">الدفع عند الاستلام: '+nf(cod)+' ر.س</div>':'<div class="cod" style="background:#fff;color:#000;border-bottom:1.5px solid #000">مدفوع مسبقًا</div>')+'<div class="s" style="border:0">'+($('#bc').checked&&$('#no').value?bars($('#no').value)+'<div class="code">'+esc($('#no').value)+'</div>':'<div class="code">'+esc($('#no').value)+'</div>')+'</div></div>';
+ var h='';for(var i=0;i<n;i++)h+=one;$('#sheet').innerHTML=h}
+['sn','sp','rn','rp','rc','ra','ct','no','cod','cp','bc'].forEach(function(id){var e=$('#'+id);e.oninput=function(){if(id==='sn'||id==='sp')ls('sl_'+id,e.value);draw()};e.onchange=e.oninput});
+$('#print').onclick=function(){window.print()};draw();
+</script></body></html>

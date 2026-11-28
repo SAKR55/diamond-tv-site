@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>فاحص الآيبان السعودي: تحقق من صحة IBAN واعرف البنك | DIAMOND HUB</title>
+<meta name="description" content="تحقق من صحة رقم الآيبان السعودي (SA) من الطول ورقم التحقق MOD 97، واعرف رمز البنك ونسّق الرقم وانسخه."><link rel="canonical" href="https://diamond-tv.shop/tools/saudi-iban-checker/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="فاحص الآيبان السعودي: تحقق من صحة IBAN واعرف البنك"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+.res{margin-top:12px;padding:12px 14px;border-radius:12px;font-weight:600;display:none}.res.ok{display:block;background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}.res.no{display:block;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.out{font:700 1.4rem monospace;direction:ltr;text-align:center;letter-spacing:1px;margin:10px 0;word-break:break-all}.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.92rem}.kv span:nth-child(odd){color:var(--mut)}
+</style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>فاحص الآيبان السعودي<small>تحقق فوري من صحة الآيبان واستخرج رمز البنك</small></h1>
+<div class="card"><h2>ادخل رقم الآيبان</h2><label>الآيبان (يقبل المسافات والحروف الصغيرة)<input type="text" id="ib" dir="ltr" placeholder="SA03 8000 0000 6080 1016 7519" autocomplete="off"></label>
+<div class="res" id="rs"></div><div id="info" style="display:none"><div class="out" id="fm"></div><div class="kv" id="kv"></div><div class="acts"><button class="btn" id="cp" type="button">نسخ منسّقًا</button><button class="btn alt" id="cp2" type="button">نسخ بدون مسافات</button></div></div>
+<p class="hint">يتحقق من الطول والصيغة ورقم التحقق (MOD 97). صحة الرقم لا تعني أن الحساب موجود أو أن اسم صاحبه مطابق، فتأكد من الاسم قبل التحويل.</p></div>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+var BK={'05':'مصرف الإنماء','10':'البنك الأهلي السعودي','15':'بنك البلاد','20':'بنك الرياض','30':'البنك العربي الوطني','45':'البنك السعودي الأول (ساب)','55':'البنك السعودي الفرنسي','60':'بنك الجزيرة','65':'البنك السعودي للاستثمار','80':'مصرف الراجحي'};
+function mod97(s){var r='';s=s.slice(4)+s.slice(0,4);for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);r+=(c>=65&&c<=90)?(c-55):s[i]}var m=0;for(var j=0;j<r.length;j++)m=(m*10+(+r[j]))%97;return m}
+function chk(){var v=$('#ib').value.replace(/[\s\-]/g,'').toUpperCase(),rs=$('#rs'),inf=$('#info');rs.className='res';inf.style.display='none';if(!v){return}
+ if(!/^[A-Z0-9]+$/.test(v)){rs.className='res no';rs.textContent='يحتوي على رموز غير مسموحة';return}
+ if(v.slice(0,2)!=='SA'){rs.className='res no';rs.textContent='الآيبان السعودي يبدأ بـ SA';return}
+ if(v.length!==24){rs.className='res no';rs.textContent='الطول '+v.length+' والمطلوب 24 خانة';return}
+ if(!/^SA\d{22}$/.test(v)){rs.className='res no';rs.textContent='بعد SA يجب أن تكون كل الخانات أرقامًا';return}
+ if(mod97(v)!==1){rs.className='res no';rs.textContent='رقم التحقق غير صحيح — يوجد خطأ في رقم أو أكثر';return}
+ rs.className='res ok';rs.textContent='الآيبان صحيح ✓';inf.style.display='block';var f=v.replace(/(.{4})/g,'$1 ').trim();$('#fm').textContent=f;var bc=v.slice(4,6);
+ $('#kv').innerHTML='<span>رمز الدولة</span><span>SA — السعودية</span><span>رقم التحقق</span><span>'+v.slice(2,4)+'</span><span>رمز البنك</span><span>'+bc+' — '+(BK[bc]||'غير مدرج لدينا')+'</span><span>رقم الحساب</span><span dir="ltr">'+v.slice(6)+'</span>';
+ $('#cp').onclick=function(){cpy(f)};$('#cp2').onclick=function(){cpy(v)}}
+function cpy(t){try{navigator.clipboard.writeText(t).then(function(){toast('تم النسخ')},function(){toast('تعذّر النسخ')})}catch(e){toast('تعذّر النسخ')}}
+$('#ib').oninput=chk;
+</script></body></html>
