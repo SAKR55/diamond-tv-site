@@ -145,4 +145,4 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
 })();
 
-(function(){var s=document.createElement("script");s.src="/assets/ico.js?v=3";s.defer=true;document.head.appendChild(s)})();
+(function(){var s=document.createElement("script");s.src="/assets/ico.js?v=6";s.defer=true;document.head.appendChild(s)})();
