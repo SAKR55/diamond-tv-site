@@ -138,7 +138,7 @@ input[type=color]{width:100%;height:42px;border:1px solid var(--line);border-rad
  <label class="full">نص أسفل الإيصال (شروط، شكر، سياسة الإرجاع…)<textarea id="pFoot" maxlength="300" style="min-height:64px"></textarea></label>
  <label>لون الترويسة<input type="color" id="pColor" value="#14213d"></label>
  <label>لون التمييز<input type="color" id="pAcc" value="#e8590c"></label>
- <label>مقاس الطباعة<select id="pPaper"><option value="a4">A4</option><option value="t">حراري 80 مم</option></select></label>
+ <label>قالب الإيصال<select id="pTpl"><option value="1">1 — كلاسيكي (شريط داكن)</option><option value="6">2 — متدرج حديث</option><option value="2">3 — أبيض بشريط علوي</option><option value="3">4 — مركزي بإطار مزدوج</option><option value="4">5 — شريط جانبي</option><option value="5">6 — بسيط أنيق</option><option value="7">7 — داكن مع خط مميز</option></select></label><label>مقاس الطباعة<select id="pPaper"><option value="a4">A4</option><option value="t">حراري 80 مم</option></select></label>
  <label>عدد الصور في الصف<select id="pCols"><option value="2">2</option><option value="3">3</option><option value="1">1 (كبيرة)</option></select></label>
  <div class="full lg"><img id="pLogoImg" alt="" hidden><label class="btn alt" style="cursor:pointer;flex-direction:row;color:var(--ink);font-size:.95rem">🖼 رفع الشعار<input type="file" id="pLogo" accept="image/*" hidden></label><button class="btn alt" id="pLogoDel" type="button" hidden>إزالة الشعار</button></div>
  <label class="chk"><input type="checkbox" id="pLoc" checked> إظهار الموقع في الإيصال</label>
@@ -158,9 +158,9 @@ function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearT
 function showErr(m){var e=$('#err');e.textContent=m;e.style.display=m?'block':'none'}
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){window._m=window._m||{};if(v===undefined)return window._m[k]||null;window._m[k]=v}}
 /* ---------- الإعدادات ---------- */
-var PF={name:'',tag:'',phone:'',reg:'',addr:'',foot:'',color:'#14213d',acc:'#e8590c',paper:'a4',cols:'2',loc:true,stampTxt:true,logo:''};
+var PF={tpl:'1',name:'',tag:'',phone:'',reg:'',addr:'',foot:'',color:'#14213d',acc:'#e8590c',paper:'a4',cols:'2',loc:true,stampTxt:true,logo:''};
 try{var _p=JSON.parse(ls('pd_prof')||'{}');for(var k in _p)PF[k]=_p[k]}catch(e){}
-var PMAP={pName:'name',pTag:'tag',pPhone:'phone',pReg:'reg',pAddr:'addr',pFoot:'foot',pColor:'color',pAcc:'acc',pPaper:'paper',pCols:'cols'};
+var PMAP={pName:'name',pTag:'tag',pPhone:'phone',pReg:'reg',pAddr:'addr',pFoot:'foot',pColor:'color',pAcc:'acc',pPaper:'paper',pCols:'cols',pTpl:'tpl'};
 function saveP(){ls('pd_prof',JSON.stringify(PF))}
 function logoUI(){var i=$('#pLogoImg');i.hidden=!PF.logo;if(PF.logo)i.src=PF.logo;$('#pLogoDel').hidden=!PF.logo}
 Object.keys(PMAP).forEach(function(id){var e=$('#'+id);e.value=PF[PMAP[id]];e.addEventListener('input',function(){PF[PMAP[id]]=e.value;saveP()})});
@@ -208,12 +208,21 @@ function render(B){
     var lg=imgs.pop(),sigImg=imgs.pop();imgs.logo=lg;var W=1080,P=60,c=document.createElement('canvas');c.width=W;c.height=5200;var x=c.getContext('2d');x.direction='rtl';x.textBaseline='alphabetic';
     x.fillStyle='#fbfaf6';x.fillRect(0,0,W,5200);
     var pf=B.prof||PF,HC=pf.color||'#14213d',AC=pf.acc||'#e8590c';var logoI=pf.logo?imgs.logo:null;
-    x.fillStyle=HC;x.fillRect(0,0,W,210);x.fillStyle=AC;x.fillRect(0,210,W,10);
-    var rightX=W-P;if(logoI){var ls2=140,ly2=35;x.fillStyle='#fff';x.beginPath();x.roundRect?x.roundRect(W-P-ls2,ly2,ls2,ls2,20):x.rect(W-P-ls2,ly2,ls2,ls2);x.fill();var sc=Math.min((ls2-16)/logoI.width,(ls2-16)/logoI.height);x.drawImage(logoI,W-P-ls2+(ls2-logoI.width*sc)/2,ly2+(ls2-logoI.height*sc)/2,logoI.width*sc,logoI.height*sc);rightX=W-P-ls2-24}
-    x.textAlign='right';x.fillStyle='#fff';var nm=pf.name||d.from||'المسلِّم';var fs=62;x.font='700 '+fs+'px "Reem Kufi",sans-serif';while(x.measureText(nm).width>rightX-P-260&&fs>28){fs-=2;x.font='700 '+fs+'px "Reem Kufi",sans-serif'}x.fillText(nm,rightX,110);
-    x.fillStyle='#ffb48a';x.font='500 30px "IBM Plex Sans Arabic",sans-serif';x.fillText(pf.tag||'إيصال تسليم رقمي',rightX,165);
-    x.textAlign='left';x.direction='ltr';x.fillStyle='#fff';x.font='600 30px monospace';x.fillText('#'+d.id,P,115);x.direction='rtl';
-    var y=250;var ci=[pf.phone,pf.reg,pf.addr].filter(Boolean).join('  ·  ');if(ci){x.textAlign='center';x.fillStyle='#667085';x.font='500 25px "IBM Plex Sans Arabic",sans-serif';var nci=wrap(x,ci,W-2*P,36,W/2,y+20,false);y+=nci*36+30}else y=290;
+    var T=+(pf.tpl||1),dark=(T===1||T===6||T===7),fgN=dark?'#fff':HC,fgT=dark?'#ffb48a':'#667085',LS=140;
+    if(T===1||T===7){x.fillStyle=HC;x.fillRect(0,0,W,210);x.fillStyle=AC;x.fillRect(0,210,W,10)}
+    else if(T===6){var gr=x.createLinearGradient(0,0,W,0);gr.addColorStop(0,HC);gr.addColorStop(1,AC);x.fillStyle=gr;x.fillRect(0,0,W,220)}
+    else if(T===2){x.fillStyle='#fff';x.fillRect(0,0,W,210);x.fillStyle=HC;x.fillRect(0,0,W,14);x.fillStyle=AC;x.fillRect(0,206,W,6)}
+    else if(T===3){x.fillStyle='#fff';x.fillRect(0,0,W,225);var fh=logoI?250:177;x.strokeStyle=HC;x.lineWidth=4;x.strokeRect(24,24,W-48,fh);x.lineWidth=1.5;x.strokeRect(34,34,W-68,fh-20)}
+    else if(T===4){x.fillStyle=HC;x.fillRect(W-34,0,34,5200);x.fillStyle='#fff';x.fillRect(0,0,W-34,210);x.fillStyle=AC;x.fillRect(0,206,W-34,6)}
+    else if(T===5){x.fillStyle='#fff';x.fillRect(0,0,W,210);x.fillStyle=HC;x.fillRect(P,200,W-2*P,3)}
+    var rightX=W-P-(T===4?34:0),cen=(T===3);
+    if(logoI){var ly2=35,lx=cen?(W-LS)/2:rightX-LS;if(cen)ly2=38;if(dark){x.fillStyle='#fff';x.beginPath();x.roundRect?x.roundRect(lx,ly2,LS,LS,20):x.rect(lx,ly2,LS,LS);x.fill()}var sc=Math.min((LS-16)/logoI.width,(LS-16)/logoI.height);x.drawImage(logoI,lx+(LS-logoI.width*sc)/2,ly2+(LS-logoI.height*sc)/2,logoI.width*sc,logoI.height*sc);if(!cen)rightX=rightX-LS-24}
+    var nm=pf.name||d.from||'المسلِّم';
+    if(cen){x.textAlign='center';x.fillStyle=HC;var fs3=44;x.font='700 '+fs3+'px "Reem Kufi",sans-serif';while(x.measureText(nm).width>W-160&&fs3>26){fs3-=2;x.font='700 '+fs3+'px "Reem Kufi",sans-serif'}x.fillText(nm,W/2,logoI?(38+LS+34):100);x.fillStyle='#667085';x.font='500 24px "IBM Plex Sans Arabic",sans-serif';x.fillText((pf.tag||'إيصال تسليم رقمي')+'   #'+d.id,W/2,logoI?(38+LS+66):146)}
+    else{x.textAlign='right';x.fillStyle=fgN;var fs=62;x.font='700 '+fs+'px "Reem Kufi",sans-serif';while(x.measureText(nm).width>rightX-P-260&&fs>28){fs-=2;x.font='700 '+fs+'px "Reem Kufi",sans-serif'}x.fillText(nm,rightX,110);
+    x.fillStyle=fgT;x.font='500 30px "IBM Plex Sans Arabic",sans-serif';x.fillText(pf.tag||'إيصال تسليم رقمي',rightX,165);
+    x.textAlign='left';x.direction='ltr';x.fillStyle=fgN;x.font='600 30px monospace';x.fillText('#'+d.id,P,115);x.direction='rtl'}
+    var y=(T===3&&logoI)?320:250;var ci=[pf.phone,pf.reg,pf.addr].filter(Boolean).join('  ·  ');if(ci){x.textAlign='center';x.fillStyle='#667085';x.font='500 25px "IBM Plex Sans Arabic",sans-serif';var nci=wrap(x,ci,W-2*P,36,W/2,y+20,false);y+=nci*36+30}else y=290;
     function row(l,v,bold){x.textAlign='right';x.fillStyle='#667085';x.font='500 27px "IBM Plex Sans Arabic",sans-serif';x.fillText(l,W-P,y);y+=44;x.fillStyle='#14213d';x.font=(bold?'600 ':'500 ')+'36px "IBM Plex Sans Arabic",sans-serif';var n=wrap(x,v||'—',W-2*P,50,W-P,y,false);y+=n*50+22}
     row('المستلم',d.to);row('الرقم المرجعي',d.ref);row('ما سُلِّم',d.item,true);
     row('التاريخ والوقت',stamp(new Date(d.ts)));
