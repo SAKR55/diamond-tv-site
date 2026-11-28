@@ -147,8 +147,8 @@ function etafq(a,ci){var r=Math.round(a*100),i=Math.floor(r/100),f=r%100,c=ECU[c
 function LG(){return ($('#vlang')||{}).value||'both'}
 function L(a,e){var g=LG();return g==='ar'?a:g==='en'?e:a+' <i class="e">'+e+'</i>'}
 var BK=[];try{BK=JSON.parse(ls('vc_bk')||'[]')}catch(e){BK=[]}
-var BKP=[['أجر أساسي','+'],['بدل سكن','+'],['بدل نقل','+'],['بدل اتصال','+'],['ساعات إضافية','+'],['عمولة','+'],['مكافأة','+'],['خصم غياب','-'],['سلفة','-'],['تأمينات اجتماعية','-'],['خصم جزاء','-'],['ضريبة','-']];
-var BKE={'أجر أساسي':'Basic salary','بدل سكن':'Housing allowance','بدل نقل':'Transport allowance','بدل اتصال':'Phone allowance','ساعات إضافية':'Overtime','عمولة':'Commission','مكافأة':'Bonus','خصم غياب':'Absence deduction','سلفة':'Advance','تأمينات اجتماعية':'GOSI','خصم جزاء':'Penalty','ضريبة':'Tax'};
+var BKP=[['أجر أساسي','+'],['بدل سكن','+'],['بدل نقل','+'],['بدل اتصال','+'],['بدل طعام','+'],['بدل طبيعة عمل','+'],['حوافز','+'],['خصم تأخير','-'],['قسط قرض','-'],['تأمين طبي','-'],['ساعات إضافية','+'],['عمولة','+'],['مكافأة','+'],['خصم غياب','-'],['سلفة','-'],['تأمينات اجتماعية','-'],['خصم جزاء','-'],['ضريبة','-']];
+var BKE={'أجر أساسي':'Basic salary','بدل سكن':'Housing allowance','بدل نقل':'Transport allowance','بدل اتصال':'Phone allowance','بدل طعام':'Food allowance','بدل طبيعة عمل':'Nature of work allowance','حوافز':'Incentives','خصم تأخير':'Late deduction','قسط قرض':'Loan installment','تأمين طبي':'Medical insurance','ساعات إضافية':'Overtime','عمولة':'Commission','مكافأة':'Bonus','خصم غياب':'Absence deduction','سلفة':'Advance','تأمينات اجتماعية':'GOSI','خصم جزاء':'Penalty','ضريبة':'Tax'};
 var BKJ=[['الصندوق','+'],['البنك','+'],['العملاء','+'],['المصروفات','+'],['المبيعات','-'],['الموردين','-'],['ضريبة القيمة المضافة','-'],['رأس المال','-']];function JVM(){return ($('#vt')||{}).value==='jv'}
 function bkNet(a){a=a||BK;var n=0;a.forEach(function(r){n+=(r.t==='-'?-1:1)*(+r.a||0)});return n}
 function bkSave(){ls('vc_bk',JSON.stringify(BK))}
