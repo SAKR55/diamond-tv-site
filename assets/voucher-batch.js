@@ -64,7 +64,7 @@
   }
 
   var META = {};
-  function fixLA(t) { return t.replace(/(^|[\s\/(])ا([أإآا])ل/g, '$1ال$2').replace(/هللا/g, 'الله'); }
+  function fixLA(t) { return t.replace(/(^|[\s\/(])ا([أإآا])ل/g, '$1ال$2').replace(/هللا/g, 'الله').replace(/[إا]ل?كي?ر? ?ونية/g, 'إلكترونية'); }
   var MONRX = /(يناير|فبراير|مارس|[أإا]بريل|مايو|يونيو|يوليو|[أا]غسطس|سبتمبر|[أا]كتوبر|نوفمبر|ديسمبر)/;
   function cellText(list) {
     var main = list.filter(function (x) { return x.w > 0.5; }).sort(function (a, b) { return b.y - a.y; }), zw = list.filter(function (x) { return x.w <= 0.5; }), lines = [];
@@ -85,7 +85,7 @@
     }).join(' ').replace(/\s+/g, ' ').trim();
   }
   function tableFromItems(its) {
-    var an = its.filter(function (it) { return /^[A-Za-z]{1,6}\s*[\/\-]\s*\d{2,}$/.test(it.s) || /^\d{6,}$/.test(it.s) && false; });
+    var an = findAnchors(its);
     if (an.length < 2) return null;
     var cnt = {}; an.forEach(function (a) { var k = Math.round(a.x / 4); cnt[k] = (cnt[k] || 0) + 1; }); var bk = null; for (var k in cnt) if (bk === null || cnt[k] > cnt[bk]) bk = k;
     an = an.filter(function (a) { return Math.abs(Math.round(a.x / 4) - bk) <= 1; }).sort(function (a, b) { return b.y - a.y; });
@@ -110,6 +110,34 @@
     var txt = its.filter(function (x) { return x.y > an[0].y; }).map(function (x) { return x.s; }).join(' '), mm = txt.match(MONRX), yy = txt.match(/\b(20\d\d)\b/); META = { month: mm ? mm[1] : '', year: yy ? yy[1] : '' };
     return out.map(function (r) { return r.map(function (t) { return fixLA(t); }); });
   }
+
+  function findAnchors(its) {
+    var a = its.filter(function (it) { return /^[A-Za-z]{1,6}\s*[\/\-]\s*\d{2,}$/.test(it.s); }); if (a.length >= 2) return a;
+    var cand = its.filter(function (it) { return it.w > .5 && /^[A-Za-z0-9\-\/]{1,14}$/.test(it.s) && /\d/.test(it.s); }), bs = {};
+    cand.forEach(function (it) { var k = Math.round(it.x / 5); (bs[k] = bs[k] || []).push(it); });
+    var best = null, bsc = 0;
+    Object.keys(bs).forEach(function (k) {
+      var l = (bs[+k - 1] || []).concat(bs[k], bs[+k + 1] || []), seen = {}; l = l.filter(function (it) { var kk = Math.round(it.y); if (seen[kk]) return false; seen[kk] = 1; return Math.abs(it.x - bs[k][0].x) <= 7; });
+      if (l.length < 3) return; l.sort(function (x, y) { return y.y - x.y; });
+      var vs = l.map(function (it) { return it.s; }), du = {}; vs.forEach(function (v) { du[v] = 1; }); if (Object.keys(du).length < l.length * .9) return;
+      var sc = 0; if (vs.every(function (v) { return /^\d{1,4}$/.test(v); })) { var st = 0; for (var i = 1; i < vs.length; i++) if (+vs[i] === +vs[i - 1] + 1) st++; if (st >= (vs.length - 1) * .7) sc = 3 * l.length; }
+      else if (vs.every(function (v) { return /[A-Za-z]/.test(v) || v.length >= 6; })) sc = 2 * l.length;
+      if (sc > bsc) { bsc = sc; best = l; }
+    });
+    return best || [];
+  }
+  function isNumS(v) { return /^[\s\-\(]*[\d.,٬]+\)?\s*(ر\.?س|SAR|ريال)?\s*$/i.test(nz(v)); }
+  function smart() {
+    var lim = Math.min(25, ROWS.length), bi = 0, bn = 0, bm = {};
+    for (var i = 0; i < lim; i++) { var g = guess(ROWS[i].map(function (c) { return c || ''; })), n = Object.keys(g).length + (g.n !== undefined ? 1 : 0) + (g.a !== undefined ? 1 : 0); if (n > bn) { bn = n; bi = i; bm = g; } }
+    var w0 = Math.max.apply(null, ROWS.map(function (r) { return r.length; }));
+    if (bn >= 1) { ROWS = ROWS.slice(bi); MAP = bm; } else { var h = []; for (var k = 0; k < w0; k++) h.push('عمود ' + (k + 1)); ROWS = [h].concat(ROWS); MAP = {}; }
+    var body = ROWS.slice(1, 80), used = function (j) { return Object.keys(MAP).some(function (f) { return MAP[f] === j; }); }, st = [];
+    for (var j = 0; j < w0; j++) { var c = body.map(function (r) { return nz(r[j]); }).filter(Boolean), nn = c.filter(isNumS).length, idl = c.filter(function (v) { return /^[A-Za-z]{0,6}[\/\-]?\d{3,}$/.test(v) && (/[A-Za-z\/\-]/.test(v) || v.length >= 9); }).length, tx = c.filter(function (v) { return !isNumS(v) && /[A-Za-z؀-ۿ]{2,}/.test(v); }).length, len = c.reduce(function (a, v) { return a + v.length; }, 0) / (c.length || 1); st.push({ c: c.length, nn: nn / (c.length || 1), idl: idl / (c.length || 1), tx: tx / (c.length || 1), len: len }); }
+    if (MAP.n === undefined) { var bj = -1, bv = 0; st.forEach(function (q, j) { if (!used(j) && q.tx >= .6 && q.idl < .5 && q.len >= 4 && q.c * q.len > bv) { bv = q.c * q.len; bj = j; } }); if (bj >= 0) MAP.n = bj; }
+    if (MAP.i === undefined) { st.forEach(function (q, j) { if (MAP.i === undefined && !used(j) && q.idl >= .6) MAP.i = j; }); }
+    if (MAP.a === undefined) { var lj = -1; st.forEach(function (q, j) { if (!used(j) && q.nn >= .6 && q.c >= 1) lj = j; }); if (lj >= 0) MAP.a = lj; }
+  }
   function readPdf(buf) {
     return getPdfjs().then(function (m) { return m.getDocument({ data: new Uint8Array(buf.slice(0)), disableFontFace: true, useSystemFonts: false, standardFontDataUrl: '/assets/vendor/pdfjs/standard_fonts/', cMapUrl: '/assets/vendor/pdfjs/cmaps/', cMapPacked: true, wasmUrl: '/assets/vendor/pdfjs/wasm/', iccUrl: '/assets/vendor/pdfjs/iccs/' }).promise; }).then(function (pdf) {
       var its = [], i = 1;
@@ -129,12 +157,12 @@
   var BKADD = /أساسي|مستحق|بدل|عمولة|إضافي|اضافي|مكافأة|مكافاة|حوافز|basic|allowance|bonus|overtime|commission|incentive/i, BKSUB = /خصم|سلفة|تأمينات|غياب|جزاء|استقطاع|deduction|gosi|loan|advance|penalty|absence/i;
   var FIELDS = [['n', 'الاسم / الجهة *'], ['a', 'المبلغ *'], ['d', 'البيان / الوصف'], ['i', 'رقم الهوية / الموظف'], ['r', 'المرجع / الآيبان / البنك'], ['p', 'الوظيفة'], ['g', 'القسم / الإدارة'], ['b', 'الفرع']];
   function guess(h) { var rules = { n: [/اسم|name/i, /الموظف|المستفيد|الجهة|employee|beneficiary|payee/i], p: [/الوظيفة|المسمى|المهنة|\bjob\b|title|position/i], g: [/قسم|إدارة|department|dept/i], b: [/فرع|branch/i, /مكان العمل|الموقع|location/i], a: [/صافي|net/i, /المبلغ|amount|قيمة|value/i, /راتب|salary|pay/i, /إجمالي|اجمالي|total/i], d: [/بيان|وصف|ملاحظ|description|note|details|remark/i], i: [/الرقم الوظيفي|رقم الموظف|هوية|إقامة|اقامة|\bid\b|iqama|emp/i], r: [/آيبان|ايبان|iban|بنك|bank|مرجع|ref|حساب|account/i] }, m = {}; for (var k in rules) { for (var q = 0; q < rules[k].length && m[k] === undefined; q++) h.forEach(function (c, i) { if (m[k] === undefined && rules[k][q].test(c)) m[k] = i; }); } return m; }
-  function bkOpts(rx) { var o = ''; for (var j = 0; j < ROWS[0].length; j++) { var h = ROWS[0][j] || ('عمود ' + (j + 1)); o += '<option value="' + j + '"' + (rx.test(h) && !/مجموع|إجمالي|اجمالي|صافي|total|net|gross/i.test(h) && j !== MAP.a && j !== MAP.n ? ' selected' : '') + '>' + h.slice(0, 30) + '</option>'; } return o; }
+  function numCol(j) { var c = ROWS.slice(1, 80).map(function (r) { return nz(r[j]); }).filter(Boolean); return c.length >= 1 && c.filter(isNumS).length / c.length >= .8; }
+  function bkOpts(rx) { var o = ''; for (var j = 0; j < ROWS[0].length; j++) { var h = ROWS[0][j] || ('عمود ' + (j + 1)); o += '<option value="' + j + '"' + ((rx.test(h) || (rx === BKADD && numCol(j) && !BKSUB.test(h))) && !/مجموع|إجمالي|اجمالي|صافي|total|net|gross/i.test(h) && Object.keys(MAP).every(function (f) { return MAP[f] !== j; }) ? ' selected' : '') + '>' + h.slice(0, 30) + '</option>'; } return o; }
   function afterParse() {
     if (!ROWS.length) { $('#bres').textContent = 'لم يُعثر على صفوف في الملف.'; return; }
     var w = Math.max.apply(null, ROWS.map(function (r) { return r.length; }));
-    HDR = true; var head = ROWS[0]; MAP = guess(head);
-    if (MAP.n === undefined && MAP.a === undefined) { var best = 0; for (var i = 0; i < Math.min(8, ROWS.length); i++) { var g = guess(ROWS[i]); if (Object.keys(g).length > Object.keys(MAP).length) { MAP = g; best = i; } } if (best) ROWS = ROWS.slice(best); }
+    HDR = true; smart(); w = Math.max.apply(null, ROWS.map(function (r) { return r.length; }));
     if (SH.length > 1) { $('#bsheet').hidden = false; $('#bsheet').innerHTML = '<label>الورقة<select id="bsel">' + SH.map(function (s, i) { return '<option value="' + i + '">' + s.n + '</option>'; }).join('') + '</select></label>'; $('#bsel').onchange = function () { loadSheet(+this.value).then(function (r) { ROWS = r; afterParse(); }); }; }
     var pv = ROWS.slice(0, 8), opts = function (sel) { var o = '<option value="">— بدون —</option>'; for (var j = 0; j < w; j++) o += '<option value="' + j + '"' + (sel === j ? ' selected' : '') + '>' + (HDR && ROWS[0][j] ? ROWS[0][j].slice(0, 28) : 'عمود ' + (j + 1)) + '</option>'; return o; };
     function pvHtml() { var inv = {}; FIELDS.forEach(function (f) { if (MAP[f[0]] !== undefined) inv[MAP[f[0]]] = (inv[MAP[f[0]]] ? inv[MAP[f[0]]] + ' + ' : '') + f[1].replace(/ \*|\s*\/.*/g, ''); });
@@ -158,7 +186,7 @@
   }
   function gen() {
     var hdr = $('#bh').value === '1', rows = hdr ? ROWS.slice(1) : ROWS, desc = $('#bd').value, rec = [], skip = 0;
-    rows.forEach(function (r) { var name = nz(r[MAP.n]), amt = num(r[MAP.a]); var bk = []; var hh = hdr ? ROWS[0] : []; ['bka', 'bks'].forEach(function (id) { [].forEach.call($('#' + id).selectedOptions, function (o) { var j = +o.value, v = num(r[j]); v = Math.abs(v); if (v > 0) bk.push({ l: (hh[j] || 'بند ' + (j + 1)), a: v, t: id === 'bka' ? '+' : '-' }); }); });
+    rows.forEach(function (r) { var name = nz(r[MAP.n]), amt = num(r[MAP.a]); var bk = []; var hh = hdr ? ROWS[0] : []; ['bka', 'bks'].forEach(function (id) { [].forEach.call($('#' + id).selectedOptions, function (o) { var j = +o.value, v = num(r[j]); v = Math.abs(isNaN(v) ? 0 : v); if (v >= 0) bk.push({ l: (hh[j] || 'بند ' + (j + 1)), a: v, t: id === 'bka' ? '+' : '-' }); }); });
       var MI = manItems(); if (MI.length) { var base = (bk.filter(function (q) { return q.t === '+'; })[0] || {}).a || (amt > 0 ? amt : 0); MI.forEach(function (x) { var a = x.m === 'p' ? Math.round(base * x.v) / 100 : x.v; if (a > 0) bk.push({ l: x.l, a: a, t: x.t }); }); if (bk.length) { var nt = bk.reduce(function (y, q) { return y + (q.t === '-' ? -1 : 1) * q.a; }, 0); if (nt > 0) amt = Math.round(nt * 100) / 100; } }
       if (isNaN(amt) || !(amt > 0)) { var nn = bk.reduce(function (x, q) { return x + (q.t === '-' ? -1 : 1) * q.a; }, 0); if (nn > 0) amt = nn; }
       if (!name || !(amt > 0) || /^(الإجمالي|اجمالي|الاجمالي|المجموع|مجموع|total|sum|grand)/i.test(name)) { skip++; return; } var gv = function (k) { return MAP[k] !== undefined ? nz(r[MAP[k]]) : ''; }, job = gv('p'), dep = gv('g'); rec.push({ bk: bk, name: name, amt: amt, job: job, dept: dep, br: gv('b'), d: MAP.d !== undefined ? nz(r[MAP.d]) : [job, dep].filter(Boolean).join(' - '), id: MAP.i !== undefined ? nz(r[MAP.i]) : '', ref: MAP.r !== undefined ? nz(r[MAP.r]) : '' }); });
