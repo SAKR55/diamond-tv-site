@@ -13,3 +13,6 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid #
 .dh-top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid #e9e5f5;display:flex;align-items:center;gap:14px;padding:9px 16px;font-family:"Cairo",sans-serif}
 .dh-top a{color:#4c1d95;text-decoration:none;font-weight:700;font-size:.92rem}.dh-top a.lg{font-weight:900;color:#7c3aed;margin-inline-end:auto}
 @media print{.dh-top{display:none!important}}
+/* طباعة موحّدة: بلا ترويسة/تذييل المتصفح، بلا أزرار، وشعار الموقع + QR أسفل المطبوع */
+@page{margin:0}
+@media print{html,body{background:#fff!important}body{padding:10mm!important;box-sizing:border-box}.acts,.toast,.dh-top,.actions,.btns,.btn-row,.toolbar,button#print,#print,#newv,#copy{display:none!important}body::after{content:"";display:block;height:64px;margin:14px auto 0;background:url(/assets/print-brand.svg) center/contain no-repeat}.sitef{display:none!important}}
