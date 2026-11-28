@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>حاسبة ضريبة الاستقطاع في السعودية مع القيد المحاسبي | DIAMOND HUB</title>
+<meta name="description" content="احسب ضريبة الاستقطاع على المدفوعات لغير المقيمين (5% و15% و20%) بطريقة الإجمالي أو الصافي مع قيد الدفع الجاهز — مجانًا."><link rel="canonical" href="https://diamond-tv.shop/tools/withholding-tax-calculator-saudi/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="حاسبة ضريبة الاستقطاع في السعودية مع القيد المحاسبي"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}table.t th{background:var(--soft);padding:7px;text-align:right;white-space:nowrap}table.t td{padding:6px 7px;border-bottom:1px solid var(--line)}table.t td.n,table.t th.n{text-align:left;direction:ltr;white-space:nowrap}table.t tfoot td{font-weight:700;border-top:2px solid var(--ink)}.sc{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.kpi{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card)}.kpi span{display:block;color:var(--mut);font-size:.8rem}.kpi b{font-size:1.15rem}.ok{color:var(--ok)}.bad{color:var(--bad)}.note{background:var(--field);border-radius:12px;padding:10px 14px;font-size:.88rem;color:var(--mut);margin-top:12px}
+h3.sh{margin:18px 0 6px;font-size:1.05rem}
+</style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>حاسبة ضريبة الاستقطاع<small>5% و15% و20% مع الإجمالي والصافي وقيد الدفع</small></h1>
+<div class="card"><h2>ضريبة الاستقطاع على المدفوعات لغير المقيمين (السعودية)</h2><div class="row"><label>نوع الدفعة<select id="ty"></select></label><label>المبلغ<input type="number" id="am" value="100000" step="any"></label><label>الحالة<select id="gr"><option value="gross">المبلغ إجمالي (قبل الضريبة)</option><option value="net">المبلغ صافٍ والضريبة على المنشأة (Gross-up)</option></select></label></div></div><div id="out"></div>
+<p class="note">النسب الافتراضية حسب نظام ضريبة الدخل السعودي (المادة 68 من اللائحة) وقت إعداد الأداة: <b>5%</b> للأرباح الموزعة والفوائد والإيجار والخدمات الفنية والاستشارية والاتصالات الدولية وتذاكر الطيران وإعادة التأمين، <b>15%</b> للإتاوات وسائر المدفوعات، <b>20%</b> للخدمات الإدارية. قد تخفضها اتفاقيات تجنب الازدواج الضريبي؛ سدّد الضريبة خلال العاشر من الشهر التالي، وتحقق من النسب المحدّثة لدى هيئة الزكاة والضريبة والجمارك قبل الاعتماد.</p>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+var T=[['أرباح موزعة',5],['فوائد (قروض)',5],['إيجار',5],['خدمات فنية واستشارية',5],['اتصالات دولية',5],['تذاكر طيران وشحن دولي',5],['إعادة تأمين',5],['إتاوات (حقوق ملكية)',15],['أخرى (سائر المدفوعات)',15],['خدمات إدارية / رسوم إدارة',20]];
+$('#ty').innerHTML=T.map(function(t,i){return '<option value="'+i+'">'+t[0]+' — '+t[1]+'%</option>'}).join('');
+function render(){var t=T[+$('#ty').value],a=parseFloat($('#am').value)||0,r=t[1]/100,g=$('#gr').value,gross,tax,net;if(g==='gross'){gross=a;tax=a*r;net=a-tax}else{gross=a/(1-r);tax=gross-a;net=a}
+ $('#out').innerHTML='<div class="kpis"><div class="kpi"><span>النسبة</span><b>'+t[1]+'%</b></div><div class="kpi"><span>المبلغ الإجمالي</span><b>'+nf(gross)+'</b></div><div class="kpi"><span>ضريبة الاستقطاع</span><b class="bad">'+nf(tax)+'</b></div><div class="kpi"><span>الصافي للمستفيد</span><b class="ok">'+nf(net)+'</b></div></div><div class="card"><h2>قيد الدفع</h2><div class="sc"><table class="t"><thead><tr><th>الحساب</th><th class="n">مدين</th><th class="n">دائن</th></tr></thead><tbody><tr><td>من ح/ '+t[0]+' (مصروف)</td><td class="n">'+nf(gross)+'</td><td></td></tr><tr><td style="padding-right:30px">إلى ح/ ضريبة الاستقطاع المستحقة</td><td></td><td class="n">'+nf(tax)+'</td></tr><tr><td style="padding-right:30px">إلى ح/ البنك / المورد</td><td></td><td class="n">'+nf(net)+'</td></tr></tbody></table></div></div>'}
+['#ty','#am','#gr'].forEach(function(i){$(i).oninput=render;$(i).onchange=render});render();
+
+</script></body></html>

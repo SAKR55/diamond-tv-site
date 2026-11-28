@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>حاسبة كشف الرواتب والتأمينات الاجتماعية في السعودية | DIAMOND HUB</title>
+<meta name="description" content="أنشئ كشف رواتب لعدة موظفين بالأساسي والسكن والبدلات وخصم التأمينات الاجتماعية والصافي وتكلفة المنشأة مع تنزيل CSV — مجانًا."><link rel="canonical" href="https://diamond-tv.shop/tools/payroll-calculator-saudi/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="حاسبة كشف الرواتب والتأمينات الاجتماعية في السعودية"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}table.t th{background:var(--soft);padding:7px;text-align:right;white-space:nowrap}table.t td{padding:6px 7px;border-bottom:1px solid var(--line)}table.t td.n,table.t th.n{text-align:left;direction:ltr;white-space:nowrap}table.t tfoot td{font-weight:700;border-top:2px solid var(--ink)}.sc{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.kpi{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card)}.kpi span{display:block;color:var(--mut);font-size:.8rem}.kpi b{font-size:1.15rem}.ok{color:var(--ok)}.bad{color:var(--bad)}.note{background:var(--field);border-radius:12px;padding:10px 14px;font-size:.88rem;color:var(--mut);margin-top:12px}
+h3.sh{margin:18px 0 6px;font-size:1.05rem}.pr input{padding:6px 8px;border-radius:8px;width:100%;min-width:80px}.pr td{padding:3px}.pr .x{border:0;background:none;color:var(--bad);cursor:pointer}
+</style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>كشف الرواتب والتأمينات<small>الصافي وتكلفة المنشأة لعدة موظفين</small></h1>
+<div class="card"><h2>كشف الرواتب</h2><div class="row"><label>نسبة خصم التأمينات من الموظف %<input type="number" id="gs" value="9.75" step="any"></label><label>نسبة التأمينات على المنشأة %<input type="number" id="ge" value="11.75" step="any"></label><label>سقف أجر الاشتراك (أساسي + سكن)<input type="number" id="gc" value="45000"></label></div>
+<div class="sc" style="margin-top:10px"><table class="t pr"><thead><tr><th>الموظف</th><th class="n">أساسي</th><th class="n">سكن</th><th class="n">بدلات أخرى</th><th>سعودي؟</th><th class="n">خصومات أخرى</th><th class="n">التأمينات (موظف)</th><th class="n">الصافي</th><th class="n">تكلفة المنشأة</th><th></th></tr></thead><tbody id="pb"></tbody><tfoot id="pf"></tfoot></table></div>
+<div class="acts"><button class="btn" id="add" type="button">+ موظف</button><button class="btn alt" id="csv" type="button">CSV</button><button class="btn alt" id="prt" type="button">🖨 طباعة</button></div></div>
+<p class="note">نسب وسقف التأمينات قابلة للتعديل لأنها تتغير بقرارات رسمية؛ تحقق من النسب الحالية لدى المؤسسة العامة للتأمينات الاجتماعية. لغير السعودي تُحتسب على المنشأة نسبة المخاطر المهنية فقط (الافتراضي هنا 2%) ولا يُخصم من الموظف شيء. الأداة للتقدير والتخطيط وليست كشفًا رسميًا.</p>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+var E=[];try{E=JSON.parse(localStorage.getItem('pr_e')||'[]')}catch(e){}if(!E.length)E=[{n:'موظف 1',b:6000,h:1500,o:500,s:1,d:0},{n:'موظف 2',b:4000,h:1000,o:300,s:0,d:0}];
+function n(v){return parseFloat(v)||0}function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+function calc(e){var gs=n($('#gs').value)/100,ge=n($('#ge').value)/100,cap=n($('#gc').value),base=Math.min(n(e.b)+n(e.h),cap),tot=n(e.b)+n(e.h)+n(e.o),ded=e.s?base*gs:0,net=tot-ded-n(e.d),er=tot+(e.s?base*ge:base*.02);return{tot:tot,ded:ded,net:net,er:er}}
+function draw(){var T={t:0,d:0,n:0,e:0};$('#pb').innerHTML=E.map(function(e,i){var c=calc(e);T.t+=c.tot;T.d+=c.ded+n(e.d);T.n+=c.net;T.e+=c.er;return '<tr><td><input data-i="'+i+'" data-k="n" value="'+esc(e.n)+'"></td><td><input class="n" type="number" data-i="'+i+'" data-k="b" value="'+esc(e.b)+'"></td><td><input class="n" type="number" data-i="'+i+'" data-k="h" value="'+esc(e.h)+'"></td><td><input class="n" type="number" data-i="'+i+'" data-k="o" value="'+esc(e.o)+'"></td><td><input type="checkbox" data-i="'+i+'" data-k="s" '+(e.s?'checked':'')+' style="width:auto"></td><td><input class="n" type="number" data-i="'+i+'" data-k="d" value="'+esc(e.d)+'"></td><td class="n">'+nf(c.ded)+'</td><td class="n"><b>'+nf(c.net)+'</b></td><td class="n">'+nf(c.er)+'</td><td><button class="x" data-del="'+i+'" type="button">✕</button></td></tr>'}).join('');$('#pf').innerHTML='<tr><td>الإجمالي ('+E.length+')</td><td colspan="5" class="n">'+nf(T.t)+' إجمالي المستحق</td><td class="n">'+nf(T.d)+'</td><td class="n">'+nf(T.n)+'</td><td class="n">'+nf(T.e)+'</td><td></td></tr>';window._T=T;try{localStorage.setItem('pr_e',JSON.stringify(E))}catch(e){}}
+function redraw(focus){var a=document.activeElement,k=a&&a.dataset,pos=a&&a.selectionStart;draw();if(k&&k.i!=null){var el=document.querySelector('[data-i="'+k.i+'"][data-k="'+k.k+'"]');if(el&&el.type!=='checkbox'){el.focus();try{el.setSelectionRange(pos,pos)}catch(e){}}}}
+$('#pb').addEventListener('input',function(e){var t=e.target,i=t.dataset.i;if(i==null)return;E[+i][t.dataset.k]=t.type==='checkbox'?(t.checked?1:0):t.value;redraw()});
+$('#pb').addEventListener('click',function(e){var d=e.target.dataset.del;if(d==null)return;E.splice(+d,1);draw()});
+['#gs','#ge','#gc'].forEach(function(i){$(i).oninput=draw});$('#add').onclick=function(){E.push({n:'موظف '+(E.length+1),b:0,h:0,o:0,s:1,d:0});draw()};$('#prt').onclick=function(){window.print()};
+$('#csv').onclick=function(){var s='﻿الموظف,أساسي,سكن,بدلات,سعودي,خصومات أخرى,التأمينات,الصافي,تكلفة المنشأة\r\n'+E.map(function(e){var c=calc(e);return[e.n,e.b,e.h,e.o,e.s?'نعم':'لا',e.d,c.ded.toFixed(2),c.net.toFixed(2),c.er.toFixed(2)].join(',')}).join('\r\n');dl(new Blob([s],{type:'text/csv'}),'payroll.csv')};draw();
+
+</script></body></html>

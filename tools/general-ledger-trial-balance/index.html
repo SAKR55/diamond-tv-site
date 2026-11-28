@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>دفتر اليومية والأستاذ وميزان المراجعة مع القوائم المالية | DIAMOND HUB</title>
+<meta name="description" content="سجّل القيود المحاسبية فتحصل تلقائيًا على دفتر الأستاذ وميزان المراجعة وقائمة الدخل والمركز المالي مع فحص توازن القيود — مجانًا داخل متصفحك."><link rel="canonical" href="https://diamond-tv.shop/tools/general-ledger-trial-balance/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="دفتر اليومية والأستاذ وميزان المراجعة مع القوائم المالية"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}table.t th{background:var(--soft);padding:7px;text-align:right;white-space:nowrap}table.t td{padding:6px 7px;border-bottom:1px solid var(--line)}table.t td.n,table.t th.n{text-align:left;direction:ltr;white-space:nowrap}table.t tfoot td{font-weight:700;border-top:2px solid var(--ink)}.sc{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.kpi{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card)}.kpi span{display:block;color:var(--mut);font-size:.8rem}.kpi b{font-size:1.15rem}.ok{color:var(--ok)}.bad{color:var(--bad)}.note{background:var(--field);border-radius:12px;padding:10px 14px;font-size:.88rem;color:var(--mut);margin-top:12px}
+h3.sh{margin:18px 0 6px;font-size:1.05rem}.je input,.je select{padding:6px 8px;border-radius:8px}.je td{padding:3px}.je .x{border:0;background:none;cursor:pointer;color:var(--bad);font-size:1.1rem}details.l{border:1px solid var(--line);border-radius:10px;margin:6px 0;background:var(--card)}details.l summary{padding:8px 12px;cursor:pointer;font-weight:600}details.l table{margin:0}@media print{.noprint{display:none!important}}
+</style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>اليومية والأستاذ وميزان المراجعة<small>من القيود إلى القوائم المالية في خطوة واحدة</small></h1>
+<div class="card noprint"><h2>1) سجّل القيود</h2><p class="hint">اكتب كل قيد في أكثر من سطر بنفس رقم القيد (مدين ودائن). الأداة تتحقق من توازن كل قيد، وتبني الأستاذ وميزان المراجعة وقائمتي الدخل والمركز المالي تلقائيًا.</p>
+<div class="sc"><table class="t je" id="jt"><thead><tr><th>قيد</th><th>التاريخ</th><th>البيان</th><th>الحساب</th><th class="n">مدين</th><th class="n">دائن</th><th></th></tr></thead><tbody id="jb"></tbody></table></div>
+<datalist id="acc"></datalist>
+<div class="acts"><button class="btn" id="add" type="button">+ سطر</button><button class="btn alt" id="addE" type="button">+ قيد جديد</button><button class="btn alt" id="smp" type="button">مثال جاهز</button><button class="btn alt" id="clr" type="button">مسح الكل</button></div></div>
+<div id="out"></div>
+<div class="acts noprint"><button class="btn alt" id="csv" type="button">تنزيل ميزان المراجعة CSV</button><button class="btn alt" id="csv2" type="button">تنزيل اليومية CSV</button><button class="btn alt" id="prt" type="button">🖨 طباعة التقارير</button></div>
+<p class="note">أداة تعليمية ومساعدة للمحاسب؛ تُحفظ بياناتك على جهازك فقط. للتقارير الرسمية راجع نظامك المحاسبي ومعايير IFRS المعتمدة لديك.</p>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+var CH={'الصندوق':'a','البنك':'a','العملاء':'a','أوراق القبض':'a','المخزون':'a','مصروفات مدفوعة مقدمًا':'a','ضريبة القيمة المضافة - مدخلات':'a','الأصول الثابتة':'a','سلف الموظفين':'a','مجمع الإهلاك':'a2',
+'الموردون':'l','أوراق الدفع':'l','مصروفات مستحقة':'l','إيرادات مقدمة':'l','ضريبة القيمة المضافة - مخرجات':'l','قروض':'l','مستحقات الموظفين':'l','مخصص نهاية الخدمة':'l',
+'رأس المال':'q','الأرباح المحتجزة':'q','جاري الشريك':'q','المسحوبات':'q2',
+'المبيعات':'r','إيرادات أخرى':'r','مردودات المبيعات':'r2','تكلفة المبيعات':'x','المشتريات':'x','الرواتب والأجور':'x','الإيجار':'x','مصروف الإهلاك':'x','مصروفات عمومية وإدارية':'x','الكهرباء والماء':'x','مصروفات تسويق':'x','عمولات بنكية':'x'};
+var TN={a:'أصول',l:'خصوم',q:'حقوق ملكية',r:'إيرادات',x:'مصروفات'};
+function base(t){return t==='a2'?'a':t==='q2'?'q':t==='r2'?'r':t}
+var CT={},R=[];try{R=JSON.parse(localStorage.getItem('gl_rows')||'[]');CT=JSON.parse(localStorage.getItem('gl_ct')||'{}')}catch(e){}
+if(!R.length)R=[{e:1,d:'',t:'',a:'',dr:'',cr:''},{e:1,d:'',t:'',a:'',dr:'',cr:''}];
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+function sv(){try{localStorage.setItem('gl_rows',JSON.stringify(R));localStorage.setItem('gl_ct',JSON.stringify(CT))}catch(e){}}
+function typ(a){return CH[a]||CT[a]||null}
+$('#acc').innerHTML=Object.keys(CH).map(function(k){return '<option value="'+esc(k)+'">'}).join('');
+function drawRows(){$('#jb').innerHTML=R.map(function(r,i){return '<tr><td><input type="number" min="1" style="width:60px" data-i="'+i+'" data-k="e" value="'+esc(r.e)+'"></td><td><input type="date" data-i="'+i+'" data-k="d" value="'+esc(r.d)+'"></td><td><input type="text" data-i="'+i+'" data-k="t" value="'+esc(r.t)+'"></td><td><input type="text" list="acc" data-i="'+i+'" data-k="a" value="'+esc(r.a)+'"></td><td><input type="number" step="any" min="0" class="n" style="width:110px" data-i="'+i+'" data-k="dr" value="'+esc(r.dr)+'"></td><td><input type="number" step="any" min="0" class="n" style="width:110px" data-i="'+i+'" data-k="cr" value="'+esc(r.cr)+'"></td><td><button class="x" data-del="'+i+'" type="button" aria-label="حذف">✕</button></td></tr>'}).join('')}
+function num(v){var n=parseFloat(v);return isNaN(n)?0:n}
+function nf2(n){return nf(Math.abs(n)<.005?0:n)}
+function calc(){var L=R.filter(function(r){return r.a&&(num(r.dr)||num(r.cr))}),ents={},acc={},bad=[];
+ L.forEach(function(r){var k=r.e;(ents[k]=ents[k]||{dr:0,cr:0}).dr+=num(r.dr);ents[k].cr+=num(r.cr);var a=acc[r.a]=acc[r.a]||{rows:[],dr:0,cr:0};a.rows.push(r);a.dr+=num(r.dr);a.cr+=num(r.cr)});
+ Object.keys(ents).forEach(function(k){if(Math.abs(ents[k].dr-ents[k].cr)>.005)bad.push({e:k,d:ents[k].dr,c:ents[k].cr})});
+ return{L:L,ents:ents,acc:acc,bad:bad}}
+function render(){var c=calc(),h='',unk=Object.keys(c.acc).filter(function(a){return!typ(a)});
+ if(!c.L.length){$('#out').innerHTML='<div class="card"><p class="hint">أضف قيدًا لتظهر التقارير.</p></div>';return}
+ if(c.bad.length)h+='<div class="card" style="border-color:var(--bad)"><b class="bad">⚠ قيود غير متوازنة:</b> '+c.bad.map(function(b){return 'قيد '+b.e+' (مدين '+nf(b.d)+' ≠ دائن '+nf(b.c)+')'}).join('، ')+'</div>';
+ if(unk.length)h+='<div class="card noprint"><b>صنّف الحسابات الجديدة:</b><div class="row" style="margin-top:8px">'+unk.map(function(a){return '<label>'+esc(a)+'<select data-ct="'+esc(a)+'"><option value="">— اختر —</option>'+Object.keys(TN).map(function(k){return '<option value="'+k+'">'+TN[k]+'</option>'}).join('')+'</select></label>'}).join('')+'</div></div>';
+ var names=Object.keys(c.acc).sort(),td=0,tc=0,tb='';
+ names.forEach(function(a){var x=c.acc[a],b=x.dr-x.cr,d=b>0?b:0,k=b<0?-b:0;td+=d;tc+=k;var t=typ(a);tb+='<tr><td>'+esc(a)+'</td><td>'+(t?TN[base(t)]:'—')+'</td><td class="n">'+(d?nf(d):'')+'</td><td class="n">'+(k?nf(k):'')+'</td></tr>'});
+ var ok=Math.abs(td-tc)<.005;
+ h+='<div class="card"><h2>2) ميزان المراجعة</h2><div class="sc"><table class="t"><thead><tr><th>الحساب</th><th>النوع</th><th class="n">رصيد مدين</th><th class="n">رصيد دائن</th></tr></thead><tbody>'+tb+'</tbody><tfoot><tr><td colspan="2">الإجمالي '+(ok?'<span class="ok">✔ متوازن</span>':'<span class="bad">✘ غير متوازن</span>')+'</td><td class="n">'+nf(td)+'</td><td class="n">'+nf(tc)+'</td></tr></tfoot></table></div></div>';
+ var A=0,Li=0,Q=0,Rv=0,Ex=0,rows={a:'',l:'',q:'',r:'',x:''};
+ names.forEach(function(a){var t=typ(a);if(!t)return;var x=c.acc[a],b=base(t),v=(b==='a'||b==='x')?x.dr-x.cr:x.cr-x.dr;if(!v)return;rows[b]+='<tr><td>'+esc(a)+'</td><td class="n">'+nf2(v)+'</td></tr>';if(b==='a')A+=v;else if(b==='l')Li+=v;else if(b==='q')Q+=v;else if(b==='r')Rv+=v;else Ex+=v});
+ var NI=Rv-Ex;
+ h+='<div class="card"><h2>3) قائمة الدخل</h2><div class="sc"><table class="t"><tbody><tr><td colspan="2"><b>الإيرادات</b></td></tr>'+rows.r+'<tr><td><b>إجمالي الإيرادات</b></td><td class="n"><b>'+nf2(Rv)+'</b></td></tr><tr><td colspan="2"><b>المصروفات</b></td></tr>'+rows.x+'<tr><td><b>إجمالي المصروفات</b></td><td class="n"><b>'+nf2(Ex)+'</b></td></tr></tbody><tfoot><tr><td>'+(NI>=0?'صافي الربح':'صافي الخسارة')+'</td><td class="n '+(NI>=0?'ok':'bad')+'">'+nf2(NI)+'</td></tr></tfoot></table></div></div>';
+ var EQ=Q+NI,chk=Math.abs(A-(Li+EQ))<.005;
+ h+='<div class="card"><h2>4) قائمة المركز المالي</h2><div class="sc"><table class="t"><tbody><tr><td colspan="2"><b>الأصول</b></td></tr>'+rows.a+'<tr><td><b>إجمالي الأصول</b></td><td class="n"><b>'+nf2(A)+'</b></td></tr><tr><td colspan="2"><b>الخصوم</b></td></tr>'+rows.l+'<tr><td><b>إجمالي الخصوم</b></td><td class="n"><b>'+nf2(Li)+'</b></td></tr><tr><td colspan="2"><b>حقوق الملكية</b></td></tr>'+rows.q+'<tr><td>'+(NI>=0?'صافي ربح الفترة':'صافي خسارة الفترة')+'</td><td class="n">'+nf2(NI)+'</td></tr><tr><td><b>إجمالي حقوق الملكية</b></td><td class="n"><b>'+nf2(EQ)+'</b></td></tr></tbody><tfoot><tr><td>الخصوم + حقوق الملكية '+(chk?'<span class="ok">✔ يساوي الأصول</span>':'<span class="bad">✘ لا يساوي الأصول</span>')+'</td><td class="n">'+nf2(Li+EQ)+'</td></tr></tfoot></table></div></div>';
+ h+='<div class="card"><h2>5) دفتر الأستاذ</h2>'+names.map(function(a){var x=c.acc[a],run=0;return '<details class="l"><summary>'+esc(a)+' — الرصيد: '+nf2(x.dr-x.cr)+((x.dr-x.cr)>=0?' مدين':' دائن')+'</summary><div class="sc"><table class="t"><thead><tr><th>قيد</th><th>التاريخ</th><th>البيان</th><th class="n">مدين</th><th class="n">دائن</th><th class="n">الرصيد</th></tr></thead><tbody>'+x.rows.map(function(r){run+=num(r.dr)-num(r.cr);return '<tr><td>'+esc(r.e)+'</td><td>'+esc(r.d)+'</td><td>'+esc(r.t)+'</td><td class="n">'+(num(r.dr)?nf(num(r.dr)):'')+'</td><td class="n">'+(num(r.cr)?nf(num(r.cr)):'')+'</td><td class="n">'+nf2(run)+'</td></tr>'}).join('')+'</tbody></table></div></details>'}).join('')+'</div>';
+ $('#out').innerHTML=h;window._tb=names.map(function(a){var x=c.acc[a],b=x.dr-x.cr;return[a,typ(a)?TN[base(typ(a))]:'',b>0?b:0,b<0?-b:0]})}
+function upd(){sv();render()}
+$('#jb').addEventListener('input',function(e){var t=e.target,i=t.dataset.i;if(i==null)return;R[+i][t.dataset.k]=t.value;upd()});
+$('#jb').addEventListener('click',function(e){var d=e.target.dataset.del;if(d==null)return;R.splice(+d,1);if(!R.length)R.push({e:1,d:'',t:'',a:'',dr:'',cr:''});drawRows();upd()});
+$('#out').addEventListener('change',function(e){var a=e.target.dataset.ct;if(a&&e.target.value){CT[a]=e.target.value;upd()}});
+$('#add').onclick=function(){var l=R[R.length-1];R.push({e:l?l.e:1,d:l?l.d:'',t:l?l.t:'',a:'',dr:'',cr:''});drawRows();upd()};
+$('#addE').onclick=function(){var m=0;R.forEach(function(r){m=Math.max(m,+r.e||0)});R.push({e:m+1,d:'',t:'',a:'',dr:'',cr:''},{e:m+1,d:'',t:'',a:'',dr:'',cr:''});drawRows();upd()};
+$('#clr').onclick=function(){if(!confirm('مسح كل القيود؟'))return;R=[{e:1,d:'',t:'',a:'',dr:'',cr:''},{e:1,d:'',t:'',a:'',dr:'',cr:''}];CT={};drawRows();upd()};
+$('#smp').onclick=function(){var d='2026-01-01';R=[[1,'إثبات رأس المال','البنك',100000,0],[1,'إثبات رأس المال','رأس المال',0,100000],[2,'شراء بضاعة بالآجل','المخزون',40000,0],[2,'شراء بضاعة بالآجل','الموردون',0,40000],[3,'بيع بضاعة نقدًا','الصندوق',30000,0],[3,'بيع بضاعة نقدًا','المبيعات',0,30000],[4,'تكلفة البضاعة المباعة','تكلفة المبيعات',18000,0],[4,'تكلفة البضاعة المباعة','المخزون',0,18000],[5,'دفع إيجار','الإيجار',5000,0],[5,'دفع إيجار','البنك',0,5000],[6,'سداد للمورد','الموردون',15000,0],[6,'سداد للمورد','البنك',0,15000]].map(function(x){return{e:x[0],d:d,t:x[1],a:x[2],dr:x[3]||'',cr:x[4]||''}});drawRows();upd()};
+function csvDl(rows,name){var s='﻿'+rows.map(function(r){return r.map(function(c){c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')}).join('\r\n');dl(new Blob([s],{type:'text/csv'}),name)}
+$('#csv').onclick=function(){if(!window._tb){toast('لا توجد بيانات');return}csvDl([['الحساب','النوع','مدين','دائن']].concat(window._tb),'trial-balance.csv')};
+$('#csv2').onclick=function(){csvDl([['قيد','التاريخ','البيان','الحساب','مدين','دائن']].concat(R.filter(function(r){return r.a}).map(function(r){return[r.e,r.d,r.t,r.a,r.dr,r.cr]})),'journal.csv')};
+$('#prt').onclick=function(){window.print()};
+drawRows();render();
+
+</script></body></html>
