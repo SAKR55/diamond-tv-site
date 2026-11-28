@@ -74,14 +74,24 @@ def render_blocks(blocks):
         elif k == 'faq':
             faq += b[1]; o += '<h2>أسئلة شائعة</h2>' + ''.join(f'<details class="fq"><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in b[1])
     return o, faq
+
+OPSM = {"IAS 2":"inv-nrv,purchase-credit","IAS 12":"deferred-tax","IAS 16":"asset-purchase,asset-disposal","IAS 19":"payroll,eosb","IAS 20":"grant","IAS 21":"fx","IAS 23":"loan","IAS 33":"eps","IAS 36":"impairment","IAS 37":"provision","IAS 40":"invprop","IFRS 2":"sbp","IFRS 3":"goodwill","IFRS 9":"ecl,loan,customer-receipt","IFRS 15":"credit-sale,unearned,multi-element,sales-return","IFRS 16":"lease","IAS 1":"year-end-close,equity-tx","IAS 7":"bank-rec,petty-cash","IAS 32":"equity-tx"}
+GOPS = {"vat-return-preparation-saudi":"vat-settlement,credit-sale,purchase-credit","bank-reconciliation-step-by-step":"bank-rec","fixed-assets-depreciation-guide":"asset-purchase,asset-disposal","inventory-costing-fifo-weighted-average-example":"purchase-credit,inv-nrv","payroll-and-end-of-service-accounting-saudi":"payroll,eosb","year-end-closing-entries-guide":"year-end-close,prepaid,accrued","receivables-expected-credit-loss-guide":"ecl,customer-receipt","petty-cash-imprest-system-guide":"petty-cash","common-journal-entries-cheat-sheet":"credit-sale,purchase-credit,prepaid,accrued,payroll","month-end-close-checklist":"prepaid,accrued,bank-rec,year-end-close"}
+def wiz(ops, title="طبّق العملية بأرقامك: خطوات وقيود وقوانين"):
+    return f'<section class="aw-embed"><h2>{title}</h2><div class="accwiz" data-ops="{ops}"></div><p><a class="btn btn-o" href="/accounting/operations/">كل العمليات المحاسبية ←</a></p></section><script src="/assets/acc-ops.js" defer></script><script src="/assets/acc-wizard.js" defer></script>'
 # صفحات المعايير
+import accfix
 for code, name, summ, pts, ent, tips, tool in STD:
+    if isinstance(tips, str): tips = accfix.TIPS.get(code) or [tips]
+    if len(ent) < 55 and code in accfix.ENT: ent = accfix.ENT[code]
+    if isinstance(pts, str): pts = [pts]
     s = sl(code); u = f"/accounting/standards/{s}/"
     b = hero(f"{code}: {name}", summ, CR + ' › المعايير')
     b += '<main><section class="s"><div class="wrap narrow"><article class="prose">'
     b += f'<h2>ملخص المعيار</h2><p>{e(summ)}</p><h2>أهم النقاط</h2><ul>' + ''.join(f'<li>{e(p)}</li>' for p in pts) + '</ul>'
     b += f'<h2>المعالجة المحاسبية / القيد</h2><p>{e(ent)}</p><h2>نصائح وتوصيات للمحاسب</h2><ul>' + ''.join(f'<li>{e(t)}</li>' for t in tips) + '</ul>'
     b += deep_a(code)
+    b += wiz(OPSM.get(code,'credit-sale,purchase-credit,prepaid,accrued'))
     b += '<div class="note">مرجع تعليمي مختصر. اعتمد دائمًا نص المعيار الأصلي وسياسات منشأتك واستشر مراجعًا معتمدًا في الحالات المعقدة.</div>'
     b += '<p>' + tool_link(tool) + ' <a class="btn btn-o" href="/accounting/">← كل المعايير</a></p></article></div></section></main>'
     art = ld({"@context": "https://schema.org", "@type": "Article", "headline": f"{code} {name}", "description": summ, "inLanguage": "ar", "mainEntityOfPage": BASE + u, "author": {"@type": "Organization", "name": "DIAMOND HUB"}, "publisher": {"@type": "Organization", "name": "DIAMOND HUB"}})
@@ -96,17 +106,23 @@ for slug, title, desc, blocks, tool in GUIDES:
     i0 = [g[0] for g in GUIDES].index(slug)
     rel = [GUIDES[(i0 + k) % len(GUIDES)] for k in (1, 2, 3)]
     b += '<main><section class="s"><div class="wrap narrow"><article class="prose">' + body + '<p>' + tool_link(tool) + ' <a class="btn btn-o" href="/accounting/">← مرجع المحاسب</a></p>'
+    b += wiz(GOPS.get(slug,'credit-sale,purchase-credit,prepaid,accrued'))
     b += '<h2>أدلة ذات صلة</h2><ul>' + ''.join(f'<li><a href="/accounting/guides/{g[0]}/">{e(g[1])}</a></li>' for g in rel) + '</ul>'
     b += '<div class="note">محتوى تعليمي بأرقام توضيحية، وليس استشارة محاسبية أو ضريبية. راجع الأنظمة المحدثة ومختصًا معتمدًا قبل التطبيق.</div></article></div></section></main>'
     art = ld({"@context": "https://schema.org", "@type": "Article", "headline": title, "description": desc, "inLanguage": "ar", "mainEntityOfPage": BASE + u, "author": {"@type": "Organization", "name": "DIAMOND HUB"}})
     if faq: art += ld({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]})
     write(u.strip('/') + '/index.html', page(u, f"{title} | DIAMOND HUB", desc, b, art + breadcrumb([("الرئيسية", "/"), ("مرجع المحاسب", "/accounting/"), (title, u)]), "/accounting/", "article"))
     URLS.append((u, "0.7"))
+
+b = hero("العمليات المحاسبية: أدخل العملية فتظهر الخطوات والقيود والقوانين", "اختر عملية أو اكتبها بكلماتك، أدخل أرقامك، فيعرض لك الإجراءات خطوة بخطوة والقيود المحاسبية المتوازنة والمعايير والأنظمة الحاكمة والمستندات والأخطاء الشائعة.", CR + " › العمليات")
+b += '<main><section class="s"><div class="wrap narrow"><div class="accwiz" data-ops=""></div><div class="note">أرقام ونسب توضيحية؛ راجع الأنظمة السارية (الضريبة، العمل، التأمينات) ومختصًا معتمدًا قبل التطبيق.</div></div></section></main><script src="/assets/acc-ops.js" defer></script><script src="/assets/acc-wizard.js" defer></script>'
+write("accounting/operations/index.html", page("/accounting/operations/", "العمليات المحاسبية: خطوات وقيود وقوانين لكل عملية | DIAMOND HUB", "اكتب العملية المحاسبية أو اخترها وأدخل أرقامك لتظهر الخطوات والقيود المتوازنة والمعايير والمستندات: مبيعات، مشتريات، ضريبة، أصول، رواتب، قروض، IFRS.", b, breadcrumb([("الرئيسية","/"),("مرجع المحاسب","/accounting/"),("العمليات","/accounting/operations/")]), "/accounting/"))
+URLS.append(("/accounting/operations/","0.9"))
 NEWT = [("general-ledger-trial-balance","📒","اليومية والأستاذ وميزان المراجعة","سجّل القيود فتحصل على الأستاذ والميزان وقائمتي الدخل والمركز المالي"),("journal-entries-guide","🧾","دليل القيود المحاسبية","36 قيدًا بالشرح والحسابات T وضريبة 15%"),("depreciation-calculator","🏭","حاسبة الإهلاك","أربع طرق مع الجدول وقيد الإهلاك"),("break-even-calculator","⚖️","حاسبة نقطة التعادل","هامش المساهمة والأمان والربح المستهدف برسم بياني"),("withholding-tax-calculator-saudi","🛂","ضريبة الاستقطاع","5% و15% و20% بالإجمالي أو الصافي مع القيد"),("payroll-calculator-saudi","👥","كشف الرواتب والتأمينات","الصافي وتكلفة المنشأة لعدة موظفين"),("vat-calculator","🧮","حاسبة ضريبة القيمة المضافة","إضافة واستخراج 15%"),("zakat-calculator","🕌","حاسبة الزكاة","وعاء الزكاة وقدرها"),("end-of-service-calculator-saudi","🏁","مكافأة نهاية الخدمة","وفق نظام العمل السعودي"),("loan-calculator","🏦","حاسبة القروض","القسط وجدول السداد"),("pdf-to-excel","📊","PDF to Excel","حوّل كشوف وجداول PDF إلى Excel منسّق"),("quotation-maker","📄","عرض سعر وفاتورة","بشعارك وضريبة 15%")]
 # المركز
 def card(code, name, summ): return f'<a class="card std" href="/accounting/standards/{sl(code)}/" data-q="{e(code+" "+name+" "+summ)}"><h3><span class="pill">{e(code)}</span> {e(name)}</h3><p>{e(summ)}</p></a>'
 b = hero("مرجع المحاسب: المعايير والأدوات والأدلة", f"{len(STD)} معيارًا دوليًا بملخص ومعالجة ونصائح، و28 أداة وحاسبة (يومية وأستاذ وميزان، إهلاك، تعادل، استقطاع، رواتب، مطابقات وفحوص)، وأدلة عملية للإقفال والضبط الداخلي.", CR)
-b += '<main><section class="s"><div class="wrap"><h2 class="h2">🧮 حاسبات وأدوات الحسابات والتقارير</h2><div class="grid g4" style="margin-top:12px">' + ''.join(f'<a class="card" href="/tools/{s}/"><h3 style="font-size:1rem">{i} {t}</h3><p style="font-size:.85rem">{d}</p></a>' for s, i, t, d in NEWT) + '</div>'
+b += '<main><section class="s"><div class="wrap"><a class="card" href="/accounting/operations/" style="display:block;margin-bottom:22px;background:linear-gradient(135deg,#f5f3ff,#ede9fe)"><h3>🧭 العمليات المحاسبية: أدخل العملية واحصل على الخطوات والقيود والقوانين</h3><p>32 عملية: مبيعات، مشتريات، ضريبة، أصول، إيجارات، رواتب، قروض، IFRS — أو اكتب العملية بكلماتك.</p></a><h2 class="h2">🧮 حاسبات وأدوات الحسابات والتقارير</h2><div class="grid g4" style="margin-top:12px">' + ''.join(f'<a class="card" href="/tools/{s}/"><h3 style="font-size:1rem">{i} {t}</h3><p style="font-size:.85rem">{d}</p></a>' for s, i, t, d in NEWT) + '</div>'
 b += '<h2 class="h2" style="margin-top:34px">🧰 أدوات المحاسب الذكية</h2><div class="grid g4" style="margin-top:12px">' + ''.join(f'<a class="card" href="/business/tools/{s}/"><h3 style="font-size:1rem">{t}</h3></a>' for s, t in SMART) + '</div>'
 b += '<h2 class="h2" style="margin-top:34px">📘 أدلة عملية</h2><div class="grid g3" style="margin-top:12px">' + ''.join(f'<a class="card" href="/accounting/guides/{s}/"><h3>{e(t)}</h3><p>{e(d)}</p></a>' for s, t, d, _, _ in GUIDES) + '</div>'
 b += '<h2 class="h2" style="margin-top:34px">📚 المعايير المحاسبية الدولية</h2><input id="q" type="search" placeholder="ابحث: إيجار، مخزون، IFRS 16 ..." style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid #cbd5e1;margin:12px 0;font:inherit"><div class="grid g3" id="gs">' + ''.join(card(c, n, s) for c, n, s, *_ in STD) + '</div></div></section></main>'
