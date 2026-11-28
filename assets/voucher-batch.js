@@ -44,16 +44,20 @@
       return rows;
     });
   }
+  function rev(w) { return w.split('').reverse().join(''); }
+  function fixVis(c) { if (!c.v) return c.t; var t = c.p.map(function (q) { var x = q.s; if (!q.pf && x.length > 1 && /[\u0600-\u06FF]/.test(x)) x = rev(x); return (q.sp ? ' ' : '') + x; }).join('');
+    return t.split(' ').reverse().map(function (w) { return /[\u0600-\u06FF]/.test(w) ? rev(w).replace(/[0-9.,]+/g, rev) : w; }).join(' '); }
+  function lam(x) { return x.replace(/[\uFEF5\uFEF6]/g, 'آل').replace(/[\uFEF7\uFEF8]/g, 'أل').replace(/[\uFEF9\uFEFA]/g, 'إل').replace(/[\uFEFB\uFEFC]/g, 'ال'); }
   function readPdf(buf) {
     return getPdfjs().then(function (m) { return m.getDocument({ data: new Uint8Array(buf), disableFontFace: true, useSystemFonts: false, standardFontDataUrl: '/assets/vendor/pdfjs/standard_fonts/', cMapUrl: '/assets/vendor/pdfjs/cmaps/', cMapPacked: true, wasmUrl: '/assets/vendor/pdfjs/wasm/', iccUrl: '/assets/vendor/pdfjs/iccs/' }).promise; }).then(function (pdf) {
       var out = [], i = 1;
       return new Promise(function (ok, no) {
         (function step() { if (i > pdf.numPages) return ok(out); pdf.getPage(i).then(function (pg) { return pg.getTextContent(); }).then(function (tc) {
-          var its = []; tc.items.forEach(function (it) { if (it.str && it.str.trim()) its.push({ s: nz(it.str), x: it.transform[4], y: it.transform[5], w: it.width, h: it.height || 10 }); });
+          var its = []; tc.items.forEach(function (it) { if (it.str && it.str.trim()) its.push({ v: /[\uFB50-\uFDFF\uFE70-\uFEFF]/.test(it.str), s: nz(lam(it.str)), x: it.transform[4], y: it.transform[5], w: it.width, h: it.height || 10 }); });
           its.sort(function (a, b) { return b.y - a.y || a.x - b.x; }); var rows = [];
           its.forEach(function (it) { var r = rows[rows.length - 1]; if (r && Math.abs(r.y - it.y) <= Math.max(2, Math.min(r.h, it.h) * .5)) r.it.push(it); else rows.push({ y: it.y, h: it.h, it: [it] }); });
-          rows.forEach(function (r) { r.it.sort(function (a, b) { return a.x - b.x; }); var cells = [], c = null; r.it.forEach(function (it) { if (c && it.x - c.x1 < Math.max(r.h * .9, 4)) { c.t += (it.x - c.x1 > r.h * .15 ? ' ' : '') + it.s; c.x1 = Math.max(c.x1, it.x + it.w); } else { c = { t: it.s, x1: it.x + it.w }; cells.push(c); } });
-            var txt = cells.map(function (q) { return q.t; }), ar = AR.test(txt.join('')); if (ar) txt.reverse(); if (txt.length) out.push(txt); });
+          rows.forEach(function (r) { r.it.sort(function (a, b) { return a.x - b.x; }); var cells = [], c = null; r.it.forEach(function (it) { if (c && it.x - c.x1 < Math.max(r.h * .6, 4)) { var sp = it.x - c.x1 > r.h * .15; c.t += (sp ? ' ' : '') + it.s; c.p.push({ s: it.s, sp: sp, pf: it.v }); c.x1 = Math.max(c.x1, it.x + it.w); c.v = c.v || it.v; } else { c = { t: it.s, x1: it.x + it.w, v: it.v, p: [{ s: it.s, sp: false, pf: it.v }] }; cells.push(c); } });
+            var txt = cells.map(function (q) { return fixVis(q); }), ar = AR.test(txt.join('')); if (ar) txt.reverse(); if (txt.length) out.push(txt); });
           i++; step(); }).catch(no); })();
       });
     });
@@ -84,7 +88,7 @@
     $('#bmap').innerHTML = '<div class="bgrid">' + FIELDS.map(function (f) { return '<label>' + f[1] + '<select data-f="' + f[0] + '">' + opts(MAP[f[0]]) + '</select></label>'; }).join('') +
       '<label class="full" style="grid-column:1/-1">أعمدة تفصيل الاستحقاقات (أجر أساسي، بدلات…) — تُعرض كبنود إضافة<select id="bka" multiple size="4">'+bkOpts(BKADD)+'</select></label><label class="full" style="grid-column:1/-1">أعمدة الخصومات (سلف، تأمينات، غياب…)<select id="bks" multiple size="4">'+bkOpts(BKSUB)+'</select></label><label>الصف الأول عناوين<select id="bh"><option value="1">نعم (تخطّيه)</option><option value="0">لا (كل الصفوف بيانات)</option></select></label>' +
       '<div class="full" style="grid-column:1/-1;border:1px dashed #94a3b8;border-radius:10px;padding:10px"><b>➕ بنود يدوية تُضاف لكل السندات (بدلات / خصومات)</b><div class="hint" style="font-size:.8rem;margin:4px 0 8px">مثال: بدل طعام 300 لكل موظف، أو تأمينات 9.75% من الأجر الأساسي. تُضاف فوق أعمدة الملف ويُحسب الصافي تلقائيًا.</div><div id="bman"></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button type="button" class="btn alt" id="bmadd">+ بند يدوي</button><button type="button" class="btn alt" id="bmgosi">+ تأمينات 9.75%</button><button type="button" class="btn alt" id="bmfood">+ بدل طعام</button></div></div>'+
-      '<label>نوع السند<select id="bt">'+Object.keys(VT).filter(function(k){return !VT[k].jv}).map(function(k){return '<option value="'+k+'">'+VT[k].ta+'</option>'}).join('')+'</select></label>' +
+      '<label>نوع السند<select id="bt">'+Object.keys(VT).filter(function(k){return !VT[k].jv}).map(function(k){return '<option value="'+k+'"'+(k==='p'?' selected':'')+'>'+VT[k].ta+'</option>'}).join('')+'</select></label>' +
       '<label>البيان (يمكن استخدام {الاسم} {المبلغ} {البيان})<input type="text" id="bd" value="راتب شهر ' + ((new Date()).getMonth() + 1) + '/' + (new Date()).getFullYear() + '"></label>' +
       '<label>طريقة الدفع<select id="bm"><option>تحويل بنكي</option><option>نقدًا</option><option>شيك</option><option>بطاقة مدى/ائتمان</option></select></label>' +
       '<label>عدد السندات في الصفحة<select id="bn"><option value="1">1 (A4 كاملة)</option><option value="2">2 في الصفحة</option><option value="3">3 في الصفحة</option></select></label>' +
@@ -122,6 +126,6 @@
     pr.innerHTML = out.map(function (h, k) { return '<div class="bp' + (per > 1 ? ' per2' + ((k + 1) % per === 0 ? ' brk' : '') : '') + '">' + h + '</div>'; }).join('');
     $('#bout').innerHTML = '<p class="hint">معاينة أول 3 سندات (الباقي يُطبع مع الجميع):</p><div style="display:grid;gap:12px;margin-top:6px">' + out.slice(0, 3).map(function (h) { return '<div style="transform-origin:top;overflow:hidden;border-radius:8px">' + h + '</div>'; }).join('') + '</div>';
   }
-  function printAll() { document.body.classList.add('batch'); var tp = $('#bt').value; var done = function () { document.body.classList.remove('batch'); window.removeEventListener('afterprint', done); }; window.addEventListener('afterprint', done); try { localStorage.setItem('vc_seq_' + tp, String((+localStorage.getItem('vc_seq_' + tp) || 0) + REC.length)); } catch (e) { } window.print(); }
+  function printAll() { if (!REC.length || !document.querySelector('#bprint .vd')) { alert('لا توجد سندات جاهزة للطباعة. اختر عمودي الاسم والمبلغ ثم اضغط «إنشاء السندات».'); return; } document.body.classList.add('batch'); var tp = $('#bt').value; var done = function () { document.body.classList.remove('batch'); window.removeEventListener('afterprint', done); }; window.addEventListener('afterprint', done); try { localStorage.setItem('vc_seq_' + tp, String((+localStorage.getItem('vc_seq_' + tp) || 0) + REC.length)); } catch (e) { } window.print(); }
   function csv() { var rows = [['رقم السند', 'الاسم', 'المبلغ', 'البيان', 'رقم الهوية', 'المرجع']].concat(REC.map(function (r) { return [r.no, r.name, r.amt, r.d, r.id, r.ref]; })); var s = '﻿' + rows.map(function (r) { return r.map(function (c) { c = String(c == null ? '' : c); return /[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(','); }).join('\n'), a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([s], { type: 'text/csv;charset=utf-8' })); a.download = 'vouchers-register.csv'; a.click(); }
 })();
