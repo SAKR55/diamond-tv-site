@@ -12,6 +12,7 @@
       var host = $(o.host), mount = $(o.mount), key = 'sp_' + o.key, items = [], sel = -1, layers = [];
       try { items = JSON.parse(ls(key) || '[]'); } catch (e) { items = []; }
       function save() { try { localStorage.setItem(key, JSON.stringify(items)); } catch (e) { } }
+      function snapPos(bx) { var sb = bx.querySelector('.sb>div'); if (!sb) return null; var rb = bx.getBoundingClientRect(), rs = sb.getBoundingClientRect(); if (!rb.width) return null; return { x: (rs.left + rs.width / 2 - rb.left) / rb.width * 100, y: (rs.top + rs.height / 2 - rb.top) / rb.height * 100 }; }
       function boxes() { return [].slice.call(host.querySelectorAll(o.box)); }
       function build() {
         layers = [];
@@ -21,7 +22,7 @@
           var ly = document.createElement('div'); ly.className = 'sp-layer'; bx.appendChild(ly); layers.push(ly);
           items.forEach(function (it, i) {
             var d = document.createElement('div'); d.className = 'sp-i' + (i === sel ? ' on' : ''); d.dataset.i = i;
-            d.style.cssText = 'left:' + it.x + '%;top:' + it.y + '%;width:' + it.w + '%;transform:translate(-50%,-50%) rotate(' + it.r + 'deg)';
+            d.style.cssText = 'left:' + it.x + '%;top:' + it.y + '%;width:' + it.w + '%;transform:translate(-50%,-50%) rotate(' + it.r + 'deg)'; if (it.snap) { var spz = snapPos(bx); if (spz) { d.style.left = spz.x + '%'; d.style.top = spz.y + '%'; d.dataset.snap = 1; } }
             d.innerHTML = '<img alt="" src="' + it.d + '" style="opacity:' + it.o / 100 + ';' + (it.m ? 'mix-blend-mode:multiply;' : '') + (it.f ? 'transform:scaleX(-1);' : '') + '"><span class="sp-h"></span>';
             ly.appendChild(d); bind(d, bx, i);
           });
@@ -33,7 +34,7 @@
         d.onpointerdown = function (e) {
           e.preventDefault(); e.stopPropagation(); d.setPointerCapture(e.pointerId);
           sel = i; var r = bx.getBoundingClientRect(), it = items[i];
-          drag = { mode: e.target.classList.contains('sp-h') ? 'rs' : 'mv', sx: e.clientX, sy: e.clientY, x0: it.x, y0: it.y, w0: it.w, r: r, i: i };
+          if (it.snap) { var spz = snapPos(bx); if (spz) { it.x = spz.x; it.y = spz.y; } it.snap = 0; d.removeAttribute('data-snap'); } drag = { mode: e.target.classList.contains('sp-h') ? 'rs' : 'mv', sx: e.clientX, sy: e.clientY, x0: it.x, y0: it.y, w0: it.w, r: r, i: i };
           refreshSel();
         };
         d.onpointermove = function (e) {
@@ -44,9 +45,9 @@
         };
         d.onpointerup = d.onpointercancel = function () { if (drag) { drag = null; save(); } };
       }
-      function place() { layers.forEach(function (ly) { [].forEach.call(ly.children, function (d) { var it = items[+d.dataset.i]; if (!it) return; d.style.left = it.x + '%'; d.style.top = it.y + '%'; d.style.width = it.w + '%'; d.style.transform = 'translate(-50%,-50%) rotate(' + it.r + 'deg)'; var im = d.firstChild; im.style.opacity = it.o / 100; im.style.mixBlendMode = it.m ? 'multiply' : ''; im.style.transform = it.f ? 'scaleX(-1)' : ''; }); }); }
+      function place() { layers.forEach(function (ly) { [].forEach.call(ly.children, function (d) { var it = items[+d.dataset.i]; if (!it) return; d.style.left = it.x + '%'; d.style.top = it.y + '%'; if (it.snap) { var spz = snapPos(ly.parentNode); if (spz) { d.style.left = spz.x + '%'; d.style.top = spz.y + '%'; } } d.style.width = it.w + '%'; d.style.transform = 'translate(-50%,-50%) rotate(' + it.r + 'deg)'; var im = d.firstChild; im.style.opacity = it.o / 100; im.style.mixBlendMode = it.m ? 'multiply' : ''; im.style.transform = it.f ? 'scaleX(-1)' : ''; }); }); }
       function refreshSel() { layers.forEach(function (ly) { [].forEach.call(ly.children, function (d) { d.classList.toggle('on', +d.dataset.i === sel); }); }); ui(); }
-      function add(src) { var px = 75, py = 82, pw = 24; try { var bx0 = boxes()[0], sb = bx0.querySelector('.sb>div'); if (sb) { var rb = bx0.getBoundingClientRect(), rs = sb.getBoundingClientRect(); px = Math.round((rs.left + rs.width / 2 - rb.left) / rb.width * 100); py = Math.round((rs.top + rs.height / 2 - rb.top) / rb.height * 100); pw = Math.max(14, Math.round(rs.width / rb.width * 100)); } } catch (e) { } items.push({ d: src, x: px, y: py, w: pw, r: 0, o: 92, m: 1, f: 0 }); sel = items.length - 1; save(); build(); ui(); }
+      function add(src) { var px = 75, py = 82, pw = 24; try { var bx0 = boxes()[0], sb = bx0.querySelector('.sb>div'); if (sb) { var rb = bx0.getBoundingClientRect(), rs = sb.getBoundingClientRect(); px = Math.round((rs.left + rs.width / 2 - rb.left) / rb.width * 100); py = Math.round((rs.top + rs.height / 2 - rb.top) / rb.height * 100); pw = Math.max(14, Math.round(rs.width / rb.width * 100)); } } catch (e) { } items.push({ d: src, x: px, y: py, w: pw, r: 0, o: 92, m: 1, f: 0, snap: 1 }); sel = items.length - 1; save(); build(); ui(); }
       var LIB = function () { try { return JSON.parse(ls('sg_lib') || '[]'); } catch (e) { return []; } };
       var cur = null;
       function ui() {
@@ -66,10 +67,10 @@
         bind2('#sW', 'w', '#oW'); bind2('#sR', 'r', '#oR'); bind2('#sO', 'o', '#oO'); bind2('#sX', 'x', '#oX'); bind2('#sY', 'y', '#oY');
         q('#sM').onchange = function () { it.m = this.checked ? 1 : 0; place(); save(); };
         q('#sF').onchange = function () { it.f = this.checked ? 1 : 0; place(); save(); };
-        q('#sC').onclick = function () { it.x = 50; it.y = 50; place(); save(); syncCtl(); };
-        q('#sBL').onclick = function () { it.x = 22; it.y = 84; place(); save(); syncCtl(); };
-        q('#sBR').onclick = function () { it.x = 78; it.y = 84; place(); save(); syncCtl(); };
-        q('#sDup').onclick = function () { var c = JSON.parse(JSON.stringify(it)); c.x = Math.min(95, c.x + 6); c.y = Math.min(95, c.y + 6); items.push(c); sel = items.length - 1; save(); build(); ui(); };
+        q('#sC').onclick = function () { it.x = 50; it.y = 50; it.snap = 0; place(); save(); syncCtl(); };
+        q('#sBL').onclick = function () { it.x = 22; it.y = 84; it.snap = 0; place(); save(); syncCtl(); };
+        q('#sBR').onclick = function () { it.x = 78; it.y = 84; it.snap = 0; place(); save(); syncCtl(); };
+        q('#sDup').onclick = function () { var c = JSON.parse(JSON.stringify(it)); c.snap = 0; c.x = Math.min(95, c.x + 6); c.y = Math.min(95, c.y + 6); items.push(c); sel = items.length - 1; save(); build(); ui(); };
         q('#sDel').onclick = function () { items.splice(sel, 1); sel = items.length - 1; save(); build(); ui(); };
       }
       function syncCtl() { var it = items[sel]; if (!it) return;[['W', 'w'], ['R', 'r'], ['O', 'o'], ['X', 'x'], ['Y', 'y']].forEach(function (p) { var s = $('#s' + p[0], mount), t = $('#o' + p[0], mount); if (s) s.value = it[p[1]]; if (t) t.textContent = Math.round(it[p[1]]); }); }
