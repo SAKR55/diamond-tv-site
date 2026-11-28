@@ -28,27 +28,31 @@ details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(
 .res{margin-top:10px;font-size:.9rem;color:var(--mut)}.res b{color:var(--ink)}textarea.big{min-height:220px;font-size:.92rem}
 .imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:10px}.imgs div{border:1px solid var(--line);border-radius:10px;padding:4px;text-align:center;font-size:.75rem}.imgs img{width:100%;height:90px;object-fit:cover;border-radius:6px}.imgs button{border:0;background:var(--soft);border-radius:6px;cursor:pointer;margin:2px;padding:2px 7px}
 .prog{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:8px}.prog i{display:block;height:100%;width:0;background:var(--acc);transition:width .15s}
-/* مظهر فاتح */
-.card{border:1px solid rgba(120,140,190,.28);box-shadow:0 6px 20px rgba(60,80,140,.07);border-radius:18px;background:linear-gradient(180deg,rgba(235,243,255,.55),var(--card) 90px)}
-.drop{background:linear-gradient(135deg,#eef5ff,#f6f0ff);border:2px dashed #9db7ee;border-radius:18px;transition:.2s}.drop:hover{border-color:#5b8def;background:linear-gradient(135deg,#e6f0ff,#f0e8ff);transform:translateY(-1px)}
-.btn{background:linear-gradient(135deg,#ffb27a,#ff8f4a);color:#4a1d00;border:1px solid #ffc9a1;box-shadow:0 3px 10px rgba(255,143,74,.28);transition:.15s}.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(255,143,74,.35)}
-.btn.alt{background:#e8f0fe;color:#1e40af;border:1px solid #c7d8fb;box-shadow:none}.btn.alt:hover{background:#dbe8ff}
-.acts .btn.alt:nth-child(3n+2){background:#e6f7ee;color:#15803d;border-color:#bfe8d0}.acts .btn.alt:nth-child(3n+3){background:#fdf0e1;color:#b45309;border-color:#f5d9b3}
-.pc{border:2px solid rgba(150,170,215,.35);border-radius:14px;background:#f8fbff;transition:.15s}.pc:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(60,80,140,.12)}.pc.cur{border-color:#ff8f4a;box-shadow:0 0 0 3px rgba(255,143,74,.18)}
-.pc .b button{background:#e8f0fe;color:#1e40af;border-radius:8px}.pc .b button:hover{background:#d3e3ff}
-#stage{border-radius:12px;box-shadow:0 10px 30px rgba(60,80,140,.15);border:1px solid #d6e0f5}
-.tools{background:#f3f7ff;border:1px solid #dbe6fb;border-radius:14px;padding:10px;margin-bottom:8px}
-input[type=text],input[type=number],select,textarea{background:#fff;border:1px solid #cfdcf5;border-radius:12px}
-input:focus,select:focus,textarea:focus{border-color:#5b8def;outline:3px solid rgba(91,141,239,.2);outline-offset:0}
-#epan{background:#fff8f0;border:1px solid #ffd2ac;border-radius:14px}
-#segl .seg{border-radius:4px;background:rgba(91,141,239,.08)}.seg:hover{border-color:#5b8def;background:rgba(91,141,239,.2)}
-#sigpad{background:#fff;border:2px dashed #b9cdf3;border-radius:14px}
-.chk{background:#f3f7ff;border:1px solid #dbe6fb;border-radius:10px;padding:6px 10px}
-@media(prefers-color-scheme:dark){.card{background:var(--card)}.drop,.tools,.chk,#epan,.pc{background:var(--field)}.btn.alt,.pc .b button{background:var(--soft);color:var(--ink);border-color:var(--line)}input[type=text],input[type=number],select,textarea{background:var(--field);border-color:var(--line)}}
-
-.tabs button{background:#e8f0fe;color:#1e40af;border:1px solid #c7d8fb;font-weight:600;transition:.15s}.tabs button:hover{background:#dbe8ff}.tabs button.on{background:linear-gradient(135deg,#ffb27a,#ff8f4a);color:#4a1d00;border-color:#ffc9a1;box-shadow:0 3px 10px rgba(255,143,74,.3)}
-.imgs div{background:#f8fbff;border-color:#d6e0f5;border-radius:12px}.prog{background:#e1eafc}.prog i{background:linear-gradient(90deg,#5b8def,#ff8f4a)}.res{background:#f3f7ff;border-radius:10px;padding:8px 12px}.res:empty{display:none}
-@media(prefers-color-scheme:dark){.tabs button{background:var(--soft);color:var(--ink);border-color:var(--line)}.imgs div,.res{background:var(--field)}}
+/* مظهر احترافي */
+:root{--pn:#1e3a5f;--pn2:#2b5287;--pb:#d5dce8}
+body{background:#eef1f6}
+.card{background:#fff;border:1px solid var(--pb);border-radius:12px;box-shadow:0 1px 2px rgba(16,32,64,.05),0 6px 18px rgba(16,32,64,.04);padding:18px 20px;position:relative}
+.card>h2:first-child{font-size:1.05rem;margin:0 0 12px;padding-right:12px;border-right:4px solid var(--pn);line-height:1.3}
+.drop{background:#f7f9fc;border:1.5px dashed #9fb0c9;border-radius:12px;transition:.15s}.drop:hover{border-color:var(--pn);background:#f0f4fa}
+.btn{background:var(--pn);color:#fff;border:1px solid var(--pn);border-radius:9px;padding:9px 16px;font-weight:600;box-shadow:0 1px 2px rgba(16,32,64,.15);transition:.12s}.btn:hover{background:var(--pn2);border-color:var(--pn2)}.btn:disabled{opacity:.55}
+.btn.alt{background:#fff;color:var(--pn);border:1px solid var(--pb);box-shadow:none}.btn.alt:hover{background:#f0f4fa;border-color:#9fb0c9}
+.acts{gap:8px}
+.pc{border:1.5px solid var(--pb);border-radius:10px;background:#fff;transition:.12s}.pc:hover{box-shadow:0 4px 12px rgba(16,32,64,.1)}.pc.cur{border-color:var(--pn);box-shadow:0 0 0 3px rgba(30,58,95,.15)}
+.pc canvas{border:1px solid #e3e8f0}.pc .b button{background:#f0f4fa;color:var(--pn);border:1px solid #e0e6f0;border-radius:6px}.pc .b button:hover{background:#e2e9f5}
+#stage{background:#fff;border:1px solid #c5cfdf;border-radius:4px;box-shadow:0 8px 28px rgba(16,32,64,.18);margin:14px auto}
+.tools{background:#f7f9fc;border:1px solid #e3e8f0;border-radius:10px;padding:10px 12px;margin-bottom:8px}
+input[type=text],input[type=number],input[type=date],select,textarea{background:#fff;border:1px solid #c9d3e3;border-radius:8px}
+input:focus,select:focus,textarea:focus{border-color:var(--pn2);outline:3px solid rgba(43,82,135,.18);outline-offset:0}
+#epan{background:#fff;border:1px solid var(--pn);border-radius:12px;box-shadow:0 6px 20px rgba(16,32,64,.12)}
+details>summary{color:var(--pn);padding:4px 0}
+#segl .seg{background:rgba(30,58,95,.06);border-radius:3px}.seg:hover{border-color:var(--pn2);background:rgba(43,82,135,.18)}
+#sigpad{background:#fff;border:1.5px dashed #9fb0c9;border-radius:10px}
+.chk{background:#f7f9fc;border:1px solid #e3e8f0;border-radius:8px;padding:6px 10px}
+.hint{color:#5d6b82}.note{background:#f7f9fc;border:1px solid #e3e8f0}
+.tabs button{background:#fff;color:var(--pn);border:1px solid var(--pb);border-radius:9px;font-weight:600;padding:8px 14px}.tabs button:hover{background:#f0f4fa}.tabs button.on{background:var(--pn);color:#fff;border-color:var(--pn)}
+.imgs div{background:#fff;border:1px solid var(--pb);border-radius:10px}.prog{background:#dfe6f1}.prog i{background:var(--pn2)}.res{background:#f7f9fc;border:1px solid #e3e8f0;border-radius:8px;padding:8px 12px}.res:empty{display:none}
+.pv th{background:var(--pn)!important}
+@media(prefers-color-scheme:dark){body{background:var(--bg)}.card,.pc,.drop,.tools,.chk,.imgs div,.res,.note,#epan{background:var(--card);border-color:var(--line)}.btn.alt,.tabs button,.pc .b button{background:var(--soft);color:var(--ink);border-color:var(--line)}.btn{background:#3b6fb6;border-color:#3b6fb6}.tabs button.on{background:#3b6fb6}input[type=text],input[type=number],input[type=date],select,textarea{background:var(--field);border-color:var(--line)}.card>h2:first-child{border-color:#3b6fb6}}
 
 </style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>PDF Converter &amp; Toolkit<small>PDF إلى صور ونص، صور إلى PDF، ضغط، استخراج وتقسيم الصفحات</small></h1>
 <div class="tabs" id="tabs"><button class="on" data-p="p1">PDF ← صور</button><button data-p="p2">PDF ← نص</button><button data-p="p3">صور ← PDF</button><button data-p="p4">ضغط PDF</button><button data-p="p5">استخراج / تقسيم صفحات</button></div>
