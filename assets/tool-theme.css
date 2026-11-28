@@ -15,4 +15,4 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid #
 @media print{.dh-top{display:none!important}}
 /* طباعة موحّدة: بلا ترويسة/تذييل المتصفح، بلا أزرار، وشعار الموقع + QR أسفل المطبوع */
 @page{margin:0}
-@media print{html,body{background:#fff!important}body{padding:10mm!important;box-sizing:border-box}.acts,.toast,.dh-top,.actions,.btns,.btn-row,.toolbar,button#print,#print,#newv,#copy{display:none!important}body::after{content:"";display:block;height:64px;margin:14px auto 0;background:url(/assets/print-brand.svg) center/contain no-repeat}.sitef{display:none!important}}
+@media print{html,body{background:#fff!important}body{padding:10mm!important;box-sizing:border-box}.acts,.toast,.dh-top,.actions,.btns,.btn-row,.toolbar,button#print,#print,#newv,#copy{display:none!important}body::after{content:url(/assets/print-brand.svg);display:block;text-align:center;margin:14px auto 0}}

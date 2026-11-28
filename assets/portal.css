@@ -255,4 +255,4 @@ details.fq{border:1px solid #e5eaf5;border-radius:12px;padding:4px 14px;margin:8
 .aw-go{white-space:nowrap;flex:none}
 /* طباعة موحّدة (نفس قاعدة الأدوات) */
 @page{margin:0}
-@media print{html,body{background:#fff!important}body{padding:10mm!important;box-sizing:border-box}.toast{display:none!important}body::after{content:"";display:block;height:64px;margin:14px auto 0;background:url(/assets/print-brand.svg) center/contain no-repeat}}
+@media print{html,body{background:#fff!important}body{padding:10mm!important;box-sizing:border-box}.toast{display:none!important}body::after{content:url(/assets/print-brand.svg);display:block;text-align:center;margin:14px auto 0}}
