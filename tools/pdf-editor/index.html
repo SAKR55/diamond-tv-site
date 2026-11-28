@@ -34,6 +34,25 @@ details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(
 .tools{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}.tools label{flex:1;min-width:140px}
 #sigpad{background:#fff;border:1px dashed var(--line);border-radius:10px;touch-action:none;width:100%;max-width:360px;height:120px}
 .sw{display:flex;gap:6px;flex-wrap:wrap}.sw button{border:1px solid var(--line);background:var(--field);border-radius:999px;padding:5px 12px;cursor:pointer}
+/* مظهر فاتح */
+.wrap{counter-reset:st}
+.card{border:1px solid rgba(120,140,190,.28);box-shadow:0 6px 20px rgba(60,80,140,.07);border-radius:18px;background:linear-gradient(180deg,rgba(235,243,255,.55),var(--card) 90px)}
+.drop{background:linear-gradient(135deg,#eef5ff,#f6f0ff);border:2px dashed #9db7ee;border-radius:18px;transition:.2s}.drop:hover{border-color:#5b8def;background:linear-gradient(135deg,#e6f0ff,#f0e8ff);transform:translateY(-1px)}
+.btn{background:linear-gradient(135deg,#ffb27a,#ff8f4a);color:#4a1d00;border:1px solid #ffc9a1;box-shadow:0 3px 10px rgba(255,143,74,.28);transition:.15s}.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(255,143,74,.35)}
+.btn.alt{background:#e8f0fe;color:#1e40af;border:1px solid #c7d8fb;box-shadow:none}.btn.alt:hover{background:#dbe8ff}
+.acts .btn.alt:nth-child(3n+2){background:#e6f7ee;color:#15803d;border-color:#bfe8d0}.acts .btn.alt:nth-child(3n+3){background:#fdf0e1;color:#b45309;border-color:#f5d9b3}
+.pc{border:2px solid rgba(150,170,215,.35);border-radius:14px;background:#f8fbff;transition:.15s}.pc:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(60,80,140,.12)}.pc.cur{border-color:#ff8f4a;box-shadow:0 0 0 3px rgba(255,143,74,.18)}
+.pc .b button{background:#e8f0fe;color:#1e40af;border-radius:8px}.pc .b button:hover{background:#d3e3ff}
+#stage{border-radius:12px;box-shadow:0 10px 30px rgba(60,80,140,.15);border:1px solid #d6e0f5}
+.tools{background:#f3f7ff;border:1px solid #dbe6fb;border-radius:14px;padding:10px;margin-bottom:8px}
+input[type=text],input[type=number],select,textarea{background:#fff;border:1px solid #cfdcf5;border-radius:12px}
+input:focus,select:focus,textarea:focus{border-color:#5b8def;outline:3px solid rgba(91,141,239,.2);outline-offset:0}
+#epan{background:#fff8f0;border:1px solid #ffd2ac;border-radius:14px}
+#segl .seg{border-radius:4px;background:rgba(91,141,239,.08)}.seg:hover{border-color:#5b8def;background:rgba(91,141,239,.2)}
+#sigpad{background:#fff;border:2px dashed #b9cdf3;border-radius:14px}
+.chk{background:#f3f7ff;border:1px solid #dbe6fb;border-radius:10px;padding:6px 10px}
+@media(prefers-color-scheme:dark){.card{background:var(--card)}.drop,.tools,.chk,#epan,.pc{background:var(--field)}.btn.alt,.pc .b button{background:var(--soft);color:var(--ink);border-color:var(--line)}input[type=text],input[type=number],select,textarea{background:var(--field);border-color:var(--line)}}
+
 </style></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>محرر PDF<small>دمج، تقسيم، ترتيب، تدوير، نص عربي، توقيع، ختم، علامة مائية وترقيم — داخل متصفحك</small></h1>
 <div class="card"><h2>1) افتح ملف PDF (أو عدة ملفات لدمجها)</h2>
 <label class="drop" id="drop"><b>📄 اضغط لاختيار PDF أو اسحبه هنا</b><span class="hint">يمكنك اختيار عدة ملفات فتُدمج صفحاتها. لا يُرفع شيء لأي خادم.</span><input type="file" id="f" accept="application/pdf" multiple hidden></label></div>
