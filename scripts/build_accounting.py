@@ -9,7 +9,7 @@ DEEPA = {}
 for _f in sorted(_g.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)),'lib','accdeep*.py'))):
     _d = importlib.import_module(os.path.basename(_f)[:-3]).DEEPA
     for _k, _v in _d.items():
-        if _f.endswith('accdeepx.py'): DEEPA.setdefault(_k, []).extend(_v)   # إضافات تُدمج بعد الأساس
+        if _f.endswith(('accdeepx.py','accdeepy.py')): DEEPA.setdefault(_k, []).extend(_v)   # إضافات تُدمج بعد الأساس
         else: DEEPA[_k] = _v
 def deep_a(code):
     o = ''
@@ -75,7 +75,7 @@ def render_blocks(blocks):
             faq += b[1]; o += '<h2>أسئلة شائعة</h2>' + ''.join(f'<details class="fq"><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in b[1])
     return o, faq
 
-OPSM = {"IAS 2":"inv-nrv,purchase-credit","IAS 12":"deferred-tax","IAS 16":"asset-purchase,asset-disposal","IAS 19":"payroll,eosb","IAS 20":"grant","IAS 21":"fx","IAS 23":"loan","IAS 33":"eps","IAS 36":"impairment","IAS 37":"provision","IAS 40":"invprop","IFRS 2":"sbp","IFRS 3":"goodwill","IFRS 9":"ecl,loan,customer-receipt","IFRS 15":"credit-sale,unearned,multi-element,sales-return","IFRS 16":"lease","IAS 1":"year-end-close,equity-tx","IAS 7":"bank-rec,petty-cash","IAS 32":"equity-tx"}
+OPSM = {"IAS 2":"inv-nrv,purchase-credit","IAS 12":"deferred-tax","IAS 16":"asset-purchase,asset-disposal","IAS 19":"payroll,eosb","IAS 20":"grant","IAS 21":"fx","IAS 23":"loan","IAS 33":"eps","IAS 36":"impairment","IAS 37":"provision","IAS 40":"invprop","IFRS 2":"sbp","IFRS 3":"goodwill","IFRS 9":"ecl,loan,customer-receipt","IFRS 15":"credit-sale,unearned,multi-element,sales-return","IFRS 16":"lease","IAS 1":"year-end-close,equity-tx","IAS 7":"bank-rec,petty-cash","IAS 32":"equity-tx","IAS 10":"provision","IAS 38":"asset-purchase,impairment","IFRS 5":"asset-disposal,impairment","IFRS 13":"invprop","IFRS 10":"goodwill","IAS 28":"goodwill","IAS 27":"goodwill","IAS 34":"prepaid,accrued","IFRS 7":"ecl"}
 GOPS = {"vat-return-preparation-saudi":"vat-settlement,credit-sale,purchase-credit","bank-reconciliation-step-by-step":"bank-rec","fixed-assets-depreciation-guide":"asset-purchase,asset-disposal","inventory-costing-fifo-weighted-average-example":"purchase-credit,inv-nrv","payroll-and-end-of-service-accounting-saudi":"payroll,eosb","year-end-closing-entries-guide":"year-end-close,prepaid,accrued","receivables-expected-credit-loss-guide":"ecl,customer-receipt","petty-cash-imprest-system-guide":"petty-cash","common-journal-entries-cheat-sheet":"credit-sale,purchase-credit,prepaid,accrued,payroll","month-end-close-checklist":"prepaid,accrued,bank-rec,year-end-close"}
 def wiz(ops, title="طبّق العملية بأرقامك: خطوات وقيود وقوانين"):
     return f'<section class="aw-embed"><h2>{title}</h2><div class="accwiz" data-ops="{ops}"></div><p><a class="btn btn-o" href="/accounting/operations/">كل العمليات المحاسبية ←</a></p></section><script src="/assets/acc-ops.js" defer></script><script src="/assets/acc-wizard.js" defer></script>'
