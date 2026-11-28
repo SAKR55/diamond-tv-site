@@ -27,11 +27,11 @@ SECS = [
  ("📖","كتب الذكاء الاصطناعي","12 كتابًا عربيًا مجانيًا بفصول مفصلة عن الذكاء الاصطناعي والاستيراد وبدء المتجر للقراءة أو الطباعة.","#8b5cf6",[("المكتبة","/library/")]),
  ("📺","تطبيق DIAMOND TV","مشغّل IPTV عربي مجاني: تحميل وتفعيل وشرح كامل.","#7c3aed",[("التطبيق","/app/"),("تحميل","/download/")]),
 ]
-body = '<header class="phero"><div class="wrap center"><span class="pill">💎 منصة عربية مجانية للتعلّم والأدوات</span>' \
- '<h1>تعلّم، أنشئ، وتاجر<br><span class="g-text">كل ذلك في مكان واحد</span></h1>' \
- '<p class="lead">كورسات الذكاء الاصطناعي، أدوات التجار، مكتبة الأطفال، تعلّم الإنجليزية، وتطبيق المشاهدة — مجانًا وبالعربية.</p>' \
- '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px"><a class="btn btn-g" href="/claude/course/">🚀 ابدأ كورس Claude</a><a class="btn btn-o" href="/tools/">🛠️ كل الأدوات (300+)</a></div>' \
- '<div class="path"><a href="/tools/pdf-editor/">📄 PDF Editor</a><a href="/tools/journal-entries-guide/">📒 دليل القيود المحاسبية</a><a href="/tools/quotation-maker/">🧾 صانع عرض سعر</a><a href="/claude/prompt-builder/">✍️ أنشئ برومت احترافيًا</a><a href="/ecommerce/tools/margin-calculator/">🧮 احسب سعر البيع</a><a href="/mugharrid/">🗣️ تدرّب على الإنجليزية</a><a href="/studio/design/?tool=barcode">▮▯ مولّد الباركود</a><a href="/tools/data-card/">📇 بطاقة البيانات</a><a href="/studio/design/?tool=price">🏷 بطاقات الأسعار</a><a href="/studio/design/?tool=magazine">📰 مجلة عروض</a><a href="/tools/everyday/">🧰 أدوات يومية</a><a href="/tools/museum-of-unmade/">🏛 متحف الأشياء التي لم تُصنع</a><a href="/tools/ai-skill-quiz/">🎯 اختبر مستواك في الذكاء الاصطناعي</a><a href="/search/">🔍 ابحث في الموقع</a></div>' \
+body = '<header class="phero"><div class="wrap center"><span class="pill">💎 أدوات احترافية مجانية بالعربية</span>' \
+ '<h1>أدواتك المهنية في مكان واحد<br><span class="g-text">PDF · محاسبة · تصميم · تعلّم</span></h1>' \
+ '<p class="lead">حوّل وحرّر ملفات PDF وExcel، أدر حساباتك وقيودك وضرائبك، صمّم وأنشئ عروض الأسعار والسير الذاتية، وتعلّم الذكاء الاصطناعي والإنجليزية — كل شيء مجاني، بالعربية، ويعمل داخل متصفحك دون رفع ملفاتك.</p>' \
+ '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px"><a class="btn btn-g" href="/tools/">🛠️ تصفّح كل الأدوات (300+)</a><a class="btn btn-o" href="/claude/course/">🚀 كورس Claude</a></div>' \
+ '<div class="path"><a href="/tools/pdf-editor/">📄 PDF Editor</a><a href="/tools/pdf-to-excel/">📊 PDF to Excel</a><a href="/tools/general-ledger-trial-balance/">📒 اليومية والأستاذ</a><a href="/tools/quotation-maker/">🧾 عرض سعر</a><a href="/studio/design/">🎨 محرر التصميم</a><a href="/cv/builder/">💼 سيرة ذاتية</a><a href="/claude/prompt-builder/">✍️ أنشئ برومت</a></div>' \
  '<div class="stats"><div class="stat"><b>9</b><span>أقسام</span></div><div class="stat"><b>+210</b><span>مقالًا ودليلًا</span></div><div class="stat"><b>+300</b><span>أداة مجانية</span></div><div class="stat"><b>100%</b><span>مجاني بلا تسجيل</span></div></div></div></header><main>'
 PERS=[("🛒","أنا تاجر","ابدأ من الأرقام: هامش وتسعير وعمولات","/ecommerce/tools/margin-calculator/",[("حاسبة الهامش","/ecommerce/tools/margin-calculator/"),("حاسبة العمولات","/business/tools/sales-commission-calculator/"),("عرض سعر بشعارك","/tools/quotation-maker/"),("ملصق شحن","/tools/shipping-label-maker/"),("كل أدوات التاجر","/ecommerce/tools/")]),
  ("🧮","أنا محاسب","معايير وقيود وأدوات مطابقة","/accounting/",[("دليل القيود بالشرح","/tools/journal-entries-guide/"),("مرجع المعايير","/accounting/"),("مطابقة البنك","/business/tools/bank-reconciliation-matcher/"),("أدوات المحاسبة","/business/finance/")]),
@@ -61,10 +61,10 @@ body += '''<section class="s alt" id="contact"><div class="wrap narrow center"><
 body += '<script>/* مصادر الروابط الاجتماعية */</script>' + open('/tmp/contact_script.html', encoding='utf-8').read()
 
 org = {"@context": "https://schema.org", "@graph": [
- {"@type": "Organization", "name": "DIAMOND HUB", "url": BASE + "/", "email": "sales@diamond-tv.shop", "logo": BASE + "/assets/og.png", "description": "منصة عربية مجانية للتعلّم والأدوات والتجارة الإلكترونية."},
+ {"@type": "Organization", "name": "DIAMOND HUB", "url": BASE + "/", "email": "sales@diamond-tv.shop", "logo": BASE + "/assets/og.png", "description": "منصة عربية مجانية تضم أكثر من 300 أداة (PDF، محاسبة، تصميم، تجارة إلكترونية، سير ذاتية) وكورسات الذكاء الاصطناعي ومحتوى تعليمي."},
  {"@type": "WebSite", "name": "DIAMOND HUB", "url": BASE + "/", "inLanguage": "ar", "potentialAction": {"@type": "SearchAction", "target": BASE + "/search/?q={search_term_string}", "query-input": "required name=search_term_string"}}]}
-title = "DIAMOND HUB | أكاديمية Claude والتجارة الإلكترونية وتعلّم الإنجليزية ومكتبة الأطفال"
-desc = "منصة عربية مجانية: كورس Claude الاحترافي وأداة البرومت، أدوات التجار وحاسبة الهامش، مكتبة الأطفال، تعلّم الإنجليزية، وتطبيق DIAMOND TV."
+title = "DIAMOND HUB | أدوات مجانية بالعربية: PDF والمحاسبة والتصميم وكورسات الذكاء الاصطناعي"
+desc = "أكثر من 300 أداة مجانية بالعربية تعمل داخل متصفحك: تحويل وتحرير PDF وExcel، مرجع المحاسب وحاسبات الضرائب والرواتب، محرر تصميم وفيديو، سيرة ذاتية، وأدوات التجار، مع كورس Claude وتعلّم الإنجليزية ومكتبة الأطفال وتطبيق DIAMOND TV."
 h = page("/", title, desc, body, ld(org) + faq_ld(SITE_FAQ), "/",
          css_extra='<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="alternate" type="application/rss+xml" title="مقالات DIAMOND HUB" href="/feed.xml"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1133894458639371" crossorigin="anonymous"></script>')
 write("index.html", h)
