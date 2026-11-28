@@ -57,3 +57,4 @@
 - [دليل القيود المحاسبية](https://diamond-tv.shop/tools/journal-entries-guide/): 36 قيد يومية شائعة بالشرح وحسابات T مع ضريبة القيمة المضافة 15%.
 - [كل الأدوات](https://diamond-tv.shop/tools/): فهرس منظّم لأكثر من 290 أداة
 - [دليل سند القبض وسند الصرف](https://diamond-tv.shop/accounting/guides/voucher-receipt-payment-guide/) · [سندات رواتب من Excel أو PDF](https://diamond-tv.shop/accounting/guides/payroll-vouchers-from-excel-pdf/)
+- أدوات حسب الوظيفة: [الموارد البشرية والرواتب](https://diamond-tv.shop/jobs/hr/) · [المبيعات وخدمة العملاء](https://diamond-tv.shop/jobs/sales/) · [أمين المخزن واللوجستيات](https://diamond-tv.shop/jobs/warehouse/) · [المحاسبة والمالية](https://diamond-tv.shop/jobs/accountant/)
