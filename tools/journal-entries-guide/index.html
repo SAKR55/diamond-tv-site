@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>دليل القيود المحاسبية بالشرح: 36 قيدًا جاهزًا مع ضريبة 15% والحسابات | DIAMOND HUB</title>
+<meta name="description" content="دليل تفاعلي لـ 36 قيد يومية شائعة: مبيعات ومشتريات ورواتب وإهلاك وقروض وزكاة، مع ضريبة القيمة المضافة والحسابات T وشرح سبب كل مدين ودائن وقاعدة المعيار."><link rel="canonical" href="https://diamond-tv.shop/tools/journal-entries-guide/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="دليل القيود المحاسبية بالشرح: 36 قيدًا جاهزًا مع ضريبة 15% والحسابات"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chips button{border:1px solid var(--line);background:var(--field);border-radius:999px;padding:6px 13px;cursor:pointer;font-size:.88rem}.chips button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.lay{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:14px}@media(max-width:760px){.lay{grid-template-columns:1fr}}
+#list{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}#list button{display:block;width:100%;text-align:right;border:0;border-bottom:1px solid var(--line);background:none;padding:9px 12px;cursor:pointer;font-size:.92rem}#list button.on{background:var(--soft);font-weight:600}#list small{display:block;color:var(--mut);font-weight:400}
+table.je{width:100%;border-collapse:collapse;font-size:.93rem}table.je th{background:var(--soft);padding:7px;text-align:right}table.je td{padding:7px;border-bottom:1px solid var(--line)}table.je td.n{text-align:left;direction:ltr;white-space:nowrap}table.je tr.cr td:first-child{padding-right:34px}table.je tfoot td{font-weight:700;border-top:2px solid var(--ink)}
+.ok{color:var(--ok)}.why{background:var(--field);border-radius:12px;padding:12px 14px;margin-top:12px;font-size:.93rem}.why h3{margin:0 0 4px;font-size:1rem}
+.tas{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}.ta{border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:.85rem}.ta b{display:block;text-align:center;border-bottom:2px solid var(--ink);padding:4px}.ta div{display:grid;grid-template-columns:1fr 1fr}.ta span{padding:6px;text-align:center;min-height:30px}.ta span:first-child{border-left:2px solid var(--ink)}
+@media print{html,body{background:#fff!important}.wrap>*:not(#docwrap){display:none!important}.wrap{padding:0;max-width:none}.toast{display:none}}
+</style><meta property="og:url" content="https://diamond-tv.shop/tools/journal-entries-guide/"><meta property="og:image" content="https://diamond-tv.shop/og.png"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "دليل القيود المحاسبية", "url": "https://diamond-tv.shop/tools/journal-entries-guide/", "description": "دليل تفاعلي لـ 36 قيد يومية شائعة: مبيعات ومشتريات ورواتب وإهلاك وقروض وزكاة، مع ضريبة القيمة المضافة والحسابات T وشرح سبب كل مدين ودائن وقاعدة المعيار.", "applicationCategory": "BusinessApplication", "operatingSystem": "Any", "inLanguage": "ar", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "SAR"}, "publisher": {"@type": "Organization", "name": "DIAMOND HUB", "url": "https://diamond-tv.shop/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://diamond-tv.shop/"}, {"@type": "ListItem", "position": 2, "name": "الأدوات", "item": "https://diamond-tv.shop/tools/"}, {"@type": "ListItem", "position": 3, "name": "دليل القيود المحاسبية", "item": "https://diamond-tv.shop/tools/journal-entries-guide/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "كيف أسجل بيعًا نقديًا مع ضريبة القيمة المضافة؟", "acceptedAnswer": {"@type": "Answer", "text": "الصندوق أو البنك مدين بالإجمالي، والمبيعات دائن بقيمة البيع، وضريبة القيمة المضافة المستحقة دائن بقيمة الضريبة، مع قيد تكلفة المبيعات والمخزون."}}, {"@type": "Question", "name": "ما الفرق بين المدين والدائن؟", "acceptedAnswer": {"@type": "Answer", "text": "الأصول والمصروفات تزيد بالمدين وتنقص بالدائن، أما الالتزامات وحقوق الملكية والإيرادات فتزيد بالدائن وتنقص بالمدين."}}, {"@type": "Question", "name": "هل أسماء الحسابات ثابتة؟", "acceptedAnswer": {"@type": "Answer", "text": "لا، هي أمثلة تعليمية ويمكنك تغييرها حسب دليل حساباتك."}}, {"@type": "Question", "name": "هل تصلح للمحاسبة الرسمية؟", "acceptedAnswer": {"@type": "Answer", "text": "هي للتعلّم والتخطيط، وللحالات الخاصة راجع محاسبًا مرخصًا."}}]}</script></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>دليل القيود المحاسبية بالشرح<small>36 قيدًا جاهزًا: أدخل المبلغ فيظهر القيد والحسابات T وسبب كل مدين ودائن</small></h1>
+<div class="card"><label>ابحث عن عملية<input type="text" id="q" placeholder="مثال: إيجار، إهلاك، مردودات…"></label><div class="chips" id="gs"></div></div>
+<div class="lay"><div id="list"></div><div id="docwrap"><div class="card"><h2 id="tt"></h2><div class="row" id="ps"></div>
+<table class="je" style="margin-top:12px"><thead><tr><th>الحساب</th><th>مدين</th><th>دائن</th></tr></thead><tbody id="tb"></tbody><tfoot id="tf"></tfoot></table>
+<div class="tas" id="tas"></div><div class="why" id="why"></div>
+<div class="acts"><button class="btn alt" id="cp" type="button">📋 نسخ القيد</button><button class="btn alt" id="csv" type="button">⬇ CSV</button><button class="btn alt" id="pr" type="button">🖨 طباعة</button></div></div></div></div>
+<p class="hint">الأمثلة تعليمية وفق النظام المحاسبي العام وضريبة القيمة المضافة 15% في السعودية. أسماء الحسابات قابلة للتغيير حسب دليل حساباتك، وراجع محاسبًا مرخصًا للحالات الخاصة.</p>
+<section class="card" style="margin-top:14px"><h2>أسئلة شائعة</h2><details style="margin:6px 0"><summary>كيف أسجل بيعًا نقديًا مع ضريبة القيمة المضافة؟</summary><p class="hint" style="font-size:.9rem">الصندوق أو البنك مدين بالإجمالي، والمبيعات دائن بقيمة البيع، وضريبة القيمة المضافة المستحقة دائن بقيمة الضريبة، مع قيد تكلفة المبيعات والمخزون.</p></details><details style="margin:6px 0"><summary>ما الفرق بين المدين والدائن؟</summary><p class="hint" style="font-size:.9rem">الأصول والمصروفات تزيد بالمدين وتنقص بالدائن، أما الالتزامات وحقوق الملكية والإيرادات فتزيد بالدائن وتنقص بالمدين.</p></details><details style="margin:6px 0"><summary>هل أسماء الحسابات ثابتة؟</summary><p class="hint" style="font-size:.9rem">لا، هي أمثلة تعليمية ويمكنك تغييرها حسب دليل حساباتك.</p></details><details style="margin:6px 0"><summary>هل تصلح للمحاسبة الرسمية؟</summary><p class="hint" style="font-size:.9rem">هي للتعلّم والتخطيط، وللحالات الخاصة راجع محاسبًا مرخصًا.</p></details><p class="hint">أدوات أخرى: <a href="/tools/">كل الأدوات</a> · <a href="/tools/pdf-editor/">محرر PDF</a> · <a href="/tools/pdf-converter/">محوّل PDF</a> · <a href="/tools/document-converter/">محوّل المستندات</a> · <a href="/tools/quotation-maker/">عرض سعر</a> · <a href="/tools/delivery-proof/">إثبات التسليم</a></p></section>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+var V=.15;
+function r2(n){return Math.round(n*100)/100}
+var E=[
+// ---- مبيعات ومشتريات ----
+{g:'مبيعات ومشتريات',t:'بيع بضاعة نقدًا (مع الضريبة)',p:[['a','قيمة البيع قبل الضريبة',10000],['c','تكلفة البضاعة المباعة',6000]],
+ f:function(v){var t=v.a*V;return [['الصندوق / البنك',v.a+t,0],['المبيعات',0,v.a],['ضريبة القيمة المضافة المستحقة (مخرجات)',0,t],['تكلفة المبيعات',v.c,0],['المخزون',0,v.c]]},
+ why:'استلمنا نقدًا أكثر من قيمة البيع لأن العميل دفع الضريبة، لذلك الصندوق مدين بالإجمالي. المبيعات إيراد (دائن)، والضريبة التزام للهيئة وليست إيرادًا لنا (دائن). ثم نثبت تكلفة البضاعة التي خرجت: التكلفة مصروف (مدين) والمخزون أصل نقص (دائن).',std:'IFRS 15 الإيراد · نظام ضريبة القيمة المضافة'},
+{g:'مبيعات ومشتريات',t:'بيع بضاعة آجلًا',p:[['a','قيمة البيع قبل الضريبة',10000],['c','تكلفة البضاعة',6000]],
+ f:function(v){var t=v.a*V;return [['العملاء (ذمم مدينة)',v.a+t,0],['المبيعات',0,v.a],['ضريبة القيمة المضافة المستحقة (مخرجات)',0,t],['تكلفة المبيعات',v.c,0],['المخزون',0,v.c]]},
+ why:'الفرق عن البيع النقدي أن حق التحصيل يُسجَّل على حساب العملاء (أصل) بدل الصندوق. تُحتسب الضريبة عند التوريد/الفاتورة حتى لو لم يُدفع المبلغ.',std:'IFRS 15 · IFRS 9 للذمم'},
+{g:'مبيعات ومشتريات',t:'شراء بضاعة نقدًا (مع ضريبة المدخلات)',p:[['a','قيمة الشراء قبل الضريبة',8000]],
+ f:function(v){var t=v.a*V;return [['المخزون',v.a,0],['ضريبة القيمة المضافة المدخلات',t,0],['البنك / الصندوق',0,v.a+t]]},
+ why:'المخزون أصل زاد بقيمة الشراء فقط. الضريبة التي دفعناها للمورد ليست جزءًا من تكلفة المخزون إن كنت مسجلًا في الضريبة، لأنها تُخصم من المخرجات، فنسجلها أصلًا (مدين). الخارج من البنك الإجمالي.',std:'IAS 2 المخزون'},
+{g:'مبيعات ومشتريات',t:'شراء بضاعة آجلًا',p:[['a','قيمة الشراء قبل الضريبة',8000]],
+ f:function(v){var t=v.a*V;return [['المخزون',v.a,0],['ضريبة القيمة المضافة المدخلات',t,0],['الموردون (ذمم دائنة)',0,v.a+t]]},
+ why:'بدل خروج النقد نسجل التزامًا على المورد (دائن) يُسدَّد لاحقًا.',std:'IAS 2'},
+{g:'مبيعات ومشتريات',t:'مردودات المبيعات (عميل أرجع بضاعة)',p:[['a','قيمة المرتجع قبل الضريبة',2000],['c','تكلفة البضاعة المرتجعة',1200]],
+ f:function(v){var t=v.a*V;return [['مردودات المبيعات',v.a,0],['ضريبة القيمة المضافة المستحقة (مخرجات)',t,0],['العملاء',0,v.a+t],['المخزون',v.c,0],['تكلفة المبيعات',0,v.c]]},
+ why:'نعكس البيع: ننقص الإيراد عبر مردودات المبيعات (حساب مقابل للمبيعات) وننقص ضريبة المخرجات، وننقص ما يدين به العميل. وإن رجعت البضاعة للمخزن نعيدها بتكلفتها ونعكس التكلفة.',std:'IFRS 15 · إشعار دائن'},
+{g:'مبيعات ومشتريات',t:'مردودات المشتريات (إرجاع بضاعة لمورد)',p:[['a','قيمة المرتجع قبل الضريبة',1500]],
+ f:function(v){var t=v.a*V;return [['الموردون',v.a+t,0],['المخزون',0,v.a],['ضريبة القيمة المضافة المدخلات',0,t]]},
+ why:'ينقص التزامنا للمورد (مدين) وينقص المخزون وضريبة المدخلات التي كنا سنخصمها (دائن).',std:'IAS 2'},
+{g:'مبيعات ومشتريات',t:'تحصيل من عميل',p:[['a','المبلغ المحصَّل',5000]],f:function(v){return [['البنك / الصندوق',v.a,0],['العملاء',0,v.a]]},
+ why:'أصل تحوّل من أصل إلى أصل: زاد النقد (مدين) وانخفض ما نطلبه من العميل (دائن). لا أثر على الإيراد لأنه سُجّل عند البيع.',std:'مبدأ الاستحقاق'},
+{g:'مبيعات ومشتريات',t:'سداد لمورد',p:[['a','المبلغ المسدَّد',4000]],f:function(v){return [['الموردون',v.a,0],['البنك / الصندوق',0,v.a]]},
+ why:'ينقص التزامنا (مدين) وينقص النقد (دائن).',std:'—'},
+{g:'مبيعات ومشتريات',t:'خصم نقدي مسموح به لعميل (سداد مبكر)',p:[['a','المبلغ الأصلي المستحق',10000],['d','قيمة الخصم',200]],f:function(v){return [['البنك / الصندوق',v.a-v.d,0],['خصم مسموح به',v.d,0],['العملاء',0,v.a]]},
+ why:'أغلقنا ذمة العميل كاملة لكننا استلمنا أقل، والفرق مصروف (خصم مسموح به). عند ضريبة القيمة المضافة يلزم إشعار دائن إن غيّر الخصم قيمة التوريد، فراجع محاسبك.',std:'IFRS 15'},
+{g:'مبيعات ومشتريات',t:'استيراد بضاعة (جمارك وضريبة استيراد)',p:[['a','قيمة البضاعة CIF',50000],['d','نسبة الرسوم الجمركية %',5]],
+ f:function(v){var du=v.a*v.d/100,t=(v.a+du)*V;return [['المخزون (بضاعة + جمارك)',v.a+du,0],['ضريبة القيمة المضافة المدخلات (استيراد)',t,0],['الموردون / البنك',0,v.a],['البنك (جمارك وضريبة الاستيراد)',0,du+t]]},
+ why:'تكلفة المخزون تشمل ثمن البضاعة والرسوم الجمركية لأنها لازمة لإحضاره. ضريبة الاستيراد 15% تُحتسب على (CIF + الجمارك) وتُسجَّل مدخلات قابلة للاسترداد للمسجَّل. الرسوم حسب البند الجمركي وقد تختلف عن 5%.',std:'IAS 2 · نظام الجمارك'},
+{g:'مبيعات ومشتريات',t:'تسوية ضريبة القيمة المضافة (سداد الصافي)',p:[['o','إجمالي المخرجات',15000],['i','إجمالي المدخلات',9000]],
+ f:function(v){var n=v.o-v.i;return n>=0?[['ضريبة القيمة المضافة المستحقة (مخرجات)',v.o,0],['ضريبة القيمة المضافة المدخلات',0,v.i],['البنك',0,n]]:[['ضريبة القيمة المضافة المستحقة (مخرجات)',v.o,0],['مستحق من الهيئة (استرداد)',-n,0],['ضريبة القيمة المضافة المدخلات',0,v.i]]},
+ why:'نغلق حسابي المخرجات والمدخلات ونسدد الفرق للهيئة. إن زادت المدخلات عن المخرجات يصير الفرق مبلغًا مستحقًا لنا من الهيئة.',std:'نظام ضريبة القيمة المضافة / ZATCA'},
+// ---- مصروفات ورواتب ----
+{g:'مصروفات ورواتب',t:'دفع إيجار شهري',p:[['a','الإيجار قبل الضريبة',5000],['v','عليه ضريبة (1=نعم, 0=لا)',1]],f:function(v){var t=v.v?v.a*V:0,r=[['مصروف الإيجار',v.a,0]];if(t)r.push(['ضريبة القيمة المضافة المدخلات',t,0]);r.push(['البنك',0,v.a+t]);return r},
+ why:'مصروف الفترة مدين، والنقد الخارج دائن. الإيجار السكني معفى من الضريبة والتجاري خاضع لها.',std:'IFRS 16 (للعقود طويلة الأجل)'},
+{g:'مصروفات ورواتب',t:'إيجار مدفوع مقدمًا (سنة) ثم إطفاؤه الشهري',p:[['a','إيجار السنة',60000]],f:function(v){return [['إيجار مدفوع مقدمًا (أصل)',v.a,0],['البنك',0,v.a],['— وفي نهاية كل شهر —',0,0],['مصروف الإيجار',v.a/12,0],['إيجار مدفوع مقدمًا (أصل)',0,v.a/12]]},
+ why:'ما دفعناه للأشهر القادمة ليس مصروفًا بعد، بل أصل (منفعة قادمة). كل شهر ننقل حصة الشهر من الأصل إلى المصروف.',std:'مبدأ المقابلة · IAS 1'},
+{g:'مصروفات ورواتب',t:'استحقاق رواتب الشهر ثم دفعها',p:[['a','إجمالي الرواتب',40000]],f:function(v){return [['مصروف الرواتب',v.a,0],['رواتب مستحقة',0,v.a],['— عند الدفع —',0,0],['رواتب مستحقة',v.a,0],['البنك',0,v.a]]},
+ why:'المصروف يُثبَّت عند استحقاقه في الشهر حتى لو لم يُدفع (أساس الاستحقاق)، فننشئ التزامًا، ثم يُقفل بالدفع.',std:'IAS 19'},
+{g:'مصروفات ورواتب',t:'رواتب مع حصة الموظف وصاحب العمل في التأمينات',p:[['s','الراتب الإجمالي',10000],['e','نسبة الموظف %',9.75],['r','نسبة صاحب العمل %',11.75]],f:function(v){var e=v.s*v.e/100,r=v.s*v.r/100;return [['مصروف الرواتب',v.s,0],['مصروف التأمينات (حصة صاحب العمل)',r,0],['البنك (صافي الراتب)',0,v.s-e],['التأمينات الاجتماعية المستحقة',0,e+r]]},
+ why:'نسبة الموظف تُخصم من راتبه فلا تزيد مصروفنا لكنها التزام نحو المؤسسة. حصة صاحب العمل مصروف إضافي. النسب الافتراضية للسعوديين وتختلف لغيرهم وحسب التحديثات، فعدّلها.',std:'نظام التأمينات الاجتماعية'},
+{g:'مصروفات ورواتب',t:'مصروف مستحق لم يُدفع (كهرباء مثلًا)',p:[['a','قيمة المصروف',1800]],f:function(v){return [['مصروف الكهرباء',v.a,0],['مصروفات مستحقة',0,v.a]]},
+ why:'استفدنا من الخدمة في هذه الفترة فالمصروف لها، وإن لم تصل الفاتورة بعد.',std:'مبدأ الاستحقاق'},
+{g:'مصروفات ورواتب',t:'فاتورة خدمات / تسويق من مورد (مع ضريبة)',p:[['a','قيمة الفاتورة قبل الضريبة',3000]],f:function(v){var t=v.a*V;return [['مصروف التسويق',v.a,0],['ضريبة القيمة المضافة المدخلات',t,0],['الموردون',0,v.a+t]]},
+ why:'مصروف خدمي يقيَّد على حسابه، ونسجل ضريبة المدخلات القابلة للخصم، والالتزام للمورد بالإجمالي.',std:'IAS 1'},
+{g:'مصروفات ورواتب',t:'عمولة بوابة الدفع / المنصة',p:[['s','المبلغ المحوَّل',10000],['c','العمولة',250]],f:function(v){return [['البنك (الصافي)',v.s-v.c,0],['مصروف عمولات الدفع',v.c,0],['حساب بوابة الدفع (مستحق)',0,v.s]]},
+ why:'العمولة تُخصم من المبلغ فنستلم أقل. نسجلها مصروفًا بدل تقليل الإيراد، ليظهر حجم المبيعات الحقيقي.',std:'—'},
+{g:'مصروفات ورواتب',t:'سلفة موظف ثم خصمها من الراتب',p:[['a','السلفة',2000]],f:function(v){return [['سلف الموظفين',v.a,0],['الصندوق',0,v.a],['— عند الخصم من الراتب —',0,0],['رواتب مستحقة',v.a,0],['سلف الموظفين',0,v.a]]},
+ why:'السلفة حق لنا على الموظف (أصل) وليست مصروفًا، وتتحول لتخفيض من الراتب المستحق عند الخصم.',std:'—'},
+{g:'مصروفات ورواتب',t:'مخصص مكافأة نهاية الخدمة الشهري',p:[['a','المخصص عن الشهر',3000]],f:function(v){return [['مصروف مكافأة نهاية الخدمة',v.a,0],['مخصص مكافأة نهاية الخدمة',0,v.a]]},
+ why:'نحمّل كل فترة بجزء من التزام سيُدفع مستقبلًا. استخدم حاسبة نهاية الخدمة لتقدير المبلغ.',std:'IAS 19'},
+// ---- أصول وإهلاك ----
+{g:'أصول وإهلاك',t:'شراء أصل ثابت (سيارة / جهاز) مع ضريبة',p:[['a','سعر الأصل قبل الضريبة',60000]],f:function(v){var t=v.a*V;return [['الأصول الثابتة',v.a,0],['ضريبة القيمة المضافة المدخلات',t,0],['البنك',0,v.a+t]]},
+ why:'الأصل يُسجَّل بتكلفته ويُهلك على عمره الإنتاجي. ضريبة المدخلات تُخصم إن كان الاستخدام تجاريًا ولا تُضاف لتكلفة الأصل (قد تختلف في بعض الحالات كالسيارات الخاصة).',std:'IAS 16'},
+{g:'أصول وإهلاك',t:'إهلاك سنوي (قسط ثابت)',p:[['c','تكلفة الأصل',60000],['s','القيمة المتبقية',5000],['l','العمر (سنوات)',5]],f:function(v){var d=(v.c-v.s)/v.l;return [['مصروف الإهلاك',d,0],['مجمع الإهلاك',0,d]]},
+ why:'القسط = (التكلفة − المتبقية) ÷ العمر. مجمع الإهلاك حساب مقابل للأصل (دائن) يخفّض قيمته الدفترية دون المساس بتكلفته الأصلية.',std:'IAS 16'},
+{g:'أصول وإهلاك',t:'بيع أصل ثابت (ربح أو خسارة)',p:[['c','تكلفة الأصل',60000],['d','مجمع الإهلاك',36000],['p','سعر البيع',30000]],f:function(v){var nb=v.c-v.d,g=v.p-nb,r=[['البنك',v.p,0],['مجمع الإهلاك',v.d,0]];if(g<0)r.push(['خسارة بيع أصل',-g,0]);r.push(['الأصول الثابتة',0,v.c]);if(g>0)r.push(['ربح بيع أصل',0,g]);return r},
+ why:'نخرج الأصل بتكلفته (دائن) ونخرج مجمع إهلاكه (مدين)، فيبقى القيمة الدفترية. الفرق بينها وبين سعر البيع ربح أو خسارة.',std:'IAS 16'},
+{g:'أصول وإهلاك',t:'تسوية جرد: عجز في المخزون',p:[['a','قيمة العجز',1500]],f:function(v){return [['خسائر / تسوية مخزون',v.a,0],['المخزون',0,v.a]]},
+ why:'ما لا نجده في الجرد فقدناه فعليًا، فنخفض المخزون إلى الواقع ونحمّل الفرق مصروفًا.',std:'IAS 2'},
+// ---- ذمم ومخصصات ----
+{g:'ذمم ومخصصات',t:'إعدام دين عميل',p:[['a','المبلغ',3000]],f:function(v){return [['مصروف ديون معدومة',v.a,0],['العملاء',0,v.a]]},
+ why:'تأكدنا أن العميل لن يسدد فنشطب الذمة ونحمّل خسارتها. إن كان لدينا مخصص سابق نخصم منه بدل المصروف.',std:'IFRS 9'},
+{g:'ذمم ومخصصات',t:'مخصص ديون مشكوك في تحصيلها',p:[['ar','رصيد العملاء',200000],['r','نسبة المخصص %',3]],f:function(v){var m=v.ar*v.r/100;return [['مصروف خسائر ائتمانية متوقعة',m,0],['مخصص ديون مشكوك فيها',0,m]]},
+ why:'نقدّر مقدمًا الخسارة المتوقعة من الذمم ونحمّلها الفترة الحالية، دون تحديد عميل بعينه بعد.',std:'IFRS 9 الخسائر الائتمانية المتوقعة'},
+{g:'ذمم ومخصصات',t:'إيراد مستلم مقدمًا',p:[['a','المبلغ المستلم',12000]],f:function(v){return [['البنك',v.a,0],['إيراد مقدم (التزام)',0,v.a],['— عند تقديم الخدمة لكل شهر —',0,0],['إيراد مقدم (التزام)',v.a/12,0],['إيرادات الخدمات',0,v.a/12]]},
+ why:'استلمنا النقد قبل أداء الخدمة، فهو التزام علينا لا إيراد بعد. نعترف بالإيراد تدريجيًا بقدر ما نؤدي.',std:'IFRS 15'},
+{g:'ذمم ومخصصات',t:'إيراد مستحق لم يُفوتَر',p:[['a','قيمة الخدمة المقدمة',4000]],f:function(v){return [['إيرادات مستحقة (أصل)',v.a,0],['إيرادات الخدمات',0,v.a]]},
+ why:'قدّمنا الخدمة ولم نفوتر بعد، فالإيراد حقنا في هذه الفترة وله ذمة مستحقة.',std:'IFRS 15'},
+{g:'ذمم ومخصصات',t:'دفعة مقدمة من عميل ثم استخدامها',p:[['a','الدفعة المقدمة',5000],['s','قيمة البيع النهائي',20000]],f:function(v){var t=v.s*V;return [['البنك',v.a,0],['دفعات مقدمة من العملاء',0,v.a],['— عند البيع —',0,0],['دفعات مقدمة من العملاء',v.a,0],['البنك / العملاء',v.s+t-v.a,0],['المبيعات',0,v.s],['ضريبة القيمة المضافة المستحقة (مخرجات)',0,t]]},
+ why:'الدفعة قبل التسليم التزام. عند التسليم نقفلها ونحصّل الباقي ونثبت الإيراد والضريبة.',std:'IFRS 15'},
+{g:'ذمم ومخصصات',t:'تكوين مخصص الزكاة',p:[['b','الوعاء الزكوي التقديري',400000],['r','النسبة %',2.5]],f:function(v){var z=v.b*v.r/100;return [['مصروف الزكاة',z,0],['زكاة مستحقة',0,z]]},
+ why:'الزكاة على المنشآت السعودية تُحتسب على الوعاء الزكوي بنسبة 2.5% تقريبًا، ويُحدَّد الوعاء وفق لوائح الهيئة، فهذا تقدير للتخطيط فقط.',std:'لوائح ZATCA للزكاة'},
+// ---- تمويل وملكية ----
+{g:'تمويل وملكية',t:'إيداع رأس المال نقدًا',p:[['a','رأس المال',100000]],f:function(v){return [['البنك',v.a,0],['رأس المال',0,v.a]]},
+ why:'زاد النقد (أصل) مقابل حق المالك (حقوق ملكية).',std:'IAS 1'},
+{g:'تمويل وملكية',t:'مسحوبات المالك',p:[['a','المبلغ',5000]],f:function(v){return [['مسحوبات المالك',v.a,0],['البنك',0,v.a]]},
+ why:'ما يأخذه المالك لا يُعدّ مصروفًا، بل تخفيض لحقوق ملكيته يُقفل في آخر الفترة.',std:'—'},
+{g:'تمويل وملكية',t:'استلام قرض بنكي',p:[['a','مبلغ القرض',200000]],f:function(v){return [['البنك',v.a,0],['قروض طويلة الأجل',0,v.a]]},
+ why:'دخل نقد وقابله التزام بسداده. لا إيراد.',std:'IFRS 9'},
+{g:'تمويل وملكية',t:'سداد قسط قرض مع فائدة',p:[['p','أصل القسط',8000],['i','الفائدة / الربح',1200]],f:function(v){return [['قروض طويلة الأجل',v.p,0],['مصروف تمويل',v.i,0],['البنك',0,v.p+v.i]]},
+ why:'الجزء الأصلي ينقص الالتزام، والفائدة مصروف الفترة. في التمويل الإسلامي يكون المسمى هامش ربح المرابحة ويُعالج محاسبيًا بالطريقة نفسها.',std:'IFRS 9'},
+{g:'تمويل وملكية',t:'توزيع أرباح للشركاء',p:[['a','المبلغ',30000]],f:function(v){return [['الأرباح المبقاة',v.a,0],['أرباح موزعة مستحقة',0,v.a],['— عند الدفع —',0,0],['أرباح موزعة مستحقة',v.a,0],['البنك',0,v.a]]},
+ why:'التوزيع يقلل الأرباح المبقاة وينشئ التزامًا يُسدَّد لاحقًا.',std:'IAS 1 · نظام الشركات'},
+{g:'تمويل وملكية',t:'إقفال الإيرادات والمصروفات في نهاية السنة',p:[['r','إجمالي الإيرادات',500000],['x','إجمالي المصروفات',420000]],f:function(v){var n=v.r-v.x,a=[['الإيرادات',v.r,0],['ملخص الدخل',0,v.r],['ملخص الدخل',v.x,0],['المصروفات',0,v.x]];a.push(n>=0?['ملخص الدخل',n,0]:['الأرباح المبقاة',-n,0]);a.push(n>=0?['الأرباح المبقاة',0,n]:['ملخص الدخل',0,-n]);return a},
+ why:'حسابات الإيرادات والمصروفات مؤقتة تبدأ كل سنة من الصفر، فنقفلها في ملخص الدخل ثم ننقل الصافي (ربح أو خسارة) إلى الأرباح المبقاة.',std:'دورة المحاسبة'}
+];
+var G=['الكل'].concat(E.map(function(e){return e.g}).filter(function(g,i,a){return a.indexOf(g)===i})),grp='الكل',cur=0,vals={};
+function nf0(n){return nf(n)}
+function list(){var q=$('#q').value.trim();var h='';E.forEach(function(e,i){if(grp!=='الكل'&&e.g!==grp)return;if(q&&(e.t+e.g).indexOf(q)<0)return;h+='<button type="button" data-i="'+i+'" class="'+(i===cur?'on':'')+'">'+esc(e.t)+'<small>'+esc(e.g)+'</small></button>'});$('#list').innerHTML=h||'<p class="hint" style="padding:12px">لا نتائج</p>';[].forEach.call(document.querySelectorAll('#list button'),function(b){b.onclick=function(){cur=+b.dataset.i;vals={};show()}})}
+$('#gs').innerHTML=G.map(function(g){return '<button type="button" data-g="'+esc(g)+'" class="'+(g===grp?'on':'')+'">'+esc(g)+'</button>'}).join('');
+[].forEach.call(document.querySelectorAll('#gs button'),function(b){b.onclick=function(){grp=b.dataset.g;[].forEach.call(document.querySelectorAll('#gs button'),function(x){x.classList.toggle('on',x===b)});list()}});
+$('#q').oninput=list;
+var ROWS=[];
+function show(){var e=E[cur];$('#tt').textContent=e.t;$('#ps').innerHTML=e.p.map(function(p){return '<label>'+esc(p[1])+'<input type="number" step="any" data-k="'+p[0]+'" value="'+(vals[p[0]]!=null?vals[p[0]]:p[2])+'"></label>'}).join('');[].forEach.call(document.querySelectorAll('#ps input'),function(i){i.oninput=function(){vals[i.dataset.k]=i.value;calc()}});calc();list()}
+function calc(){var e=E[cur],v={};e.p.forEach(function(p){var x=document.querySelector('#ps [data-k="'+p[0]+'"]');v[p[0]]=x?(+x.value||0):p[2]});var rows=e.f(v).map(function(r){return [r[0],r2(r[1]),r2(r[2])]});ROWS=rows;var dr=0,cr=0,h='';
+ rows.forEach(function(r){var sep=/^—/.test(r[0]);if(sep){h+='<tr><td colspan="3" style="color:var(--mut);text-align:center;font-size:.85rem">'+esc(r[0])+'</td></tr>';return}dr+=r[1];cr+=r[2];h+='<tr class="'+(r[2]&&!r[1]?'cr':'')+'"><td>'+esc(r[0])+'</td><td class="n">'+(r[1]?nf(r[1]):'')+'</td><td class="n">'+(r[2]?nf(r[2]):'')+'</td></tr>'});
+ $('#tb').innerHTML=h;var ok=Math.abs(dr-cr)<.02;$('#tf').innerHTML='<tr><td>المجموع</td><td class="n">'+nf(dr)+'</td><td class="n">'+nf(cr)+'</td></tr><tr><td colspan="3" class="'+(ok?'ok':'')+'" style="border:0;font-size:.85rem">'+(ok?'✔ القيد متوازن (المدين = الدائن)':'⚠ القيد غير متوازن — راجع المدخلات')+'</td></tr>';
+ var T={};rows.forEach(function(r){if(/^—/.test(r[0]))return;T[r[0]]=T[r[0]]||[0,0];T[r[0]][0]+=r[1];T[r[0]][1]+=r[2]});$('#tas').innerHTML=Object.keys(T).map(function(k){return '<div class="ta"><b>'+esc(k)+'</b><div><span>'+(T[k][0]?nf(T[k][0]):'')+'</span><span>'+(T[k][1]?nf(T[k][1]):'')+'</span></div></div>'}).join('');
+ $('#why').innerHTML='<h3>💡 لماذا هذا القيد؟</h3>'+esc(e.why)+(e.std&&e.std!=='—'?'<p class="hint" style="margin-top:8px">المرجع: '+esc(e.std)+'</p>':'')+'<p class="hint">قاعدة التذكير: الأصول والمصروفات تزيد بالمدين، والالتزامات وحقوق الملكية والإيرادات تزيد بالدائن.</p>'}
+$('#cp').onclick=function(){var t=E[cur].t+'\n'+ROWS.map(function(r){return /^—/.test(r[0])?r[0]:r[0]+'\t'+(r[1]||'')+'\t'+(r[2]||'')}).join('\n');try{navigator.clipboard.writeText(t).then(function(){toast('تم النسخ')},function(){toast('تعذّر النسخ')})}catch(e){toast('تعذّر النسخ')}};
+$('#csv').onclick=function(){var s='﻿الحساب,مدين,دائن\n'+ROWS.map(function(r){return '"'+r[0].replace(/"/g,'""')+'",'+(r[1]||'')+','+(r[2]||'')}).join('\n');var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'text/csv;charset=utf-8'}));a.download='journal-entry.csv';a.click()};
+$('#pr').onclick=function(){window.print()};
+show();
+
+</script></body></html>

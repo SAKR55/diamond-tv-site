@@ -43,4 +43,8 @@
 - [صانع ملصق الشحن](https://diamond-tv.shop/tools/shipping-label-maker/): ملصق شحنة بباركود وخيار الدفع عند الاستلام
 - [فاحص الآيبان السعودي](https://diamond-tv.shop/tools/saudi-iban-checker/): تحقق من صحة الآيبان السعودي وعرف البنك
 - [إثبات التسليم](https://diamond-tv.shop/tools/delivery-proof/): إيصال تسليم رقمي بصور مختومة وتوقيع وبصمة تحقق
+- [محرر PDF](https://diamond-tv.shop/tools/pdf-editor/): دمج وتقسيم وتدوير وإضافة نص عربي وتوقيع وختم وعلامة مائية وترقيم لملفات PDF.
+- [محوّل PDF](https://diamond-tv.shop/tools/pdf-converter/): تحويل PDF إلى صور ونص، دمج صور في PDF، ضغط وتقسيم واستخراج صفحات.
+- [محوّل المستندات](https://diamond-tv.shop/tools/document-converter/): تحويل Word إلى نص وHTML وMarkdown، ونص وMarkdown إلى Word وPDF، وCSV إلى JSON.
+- [دليل القيود المحاسبية](https://diamond-tv.shop/tools/journal-entries-guide/): 36 قيد يومية شائعة بالشرح وحسابات T مع ضريبة القيمة المضافة 15%.
 - [كل الأدوات](https://diamond-tv.shop/tools/): فهرس منظّم لأكثر من 290 أداة

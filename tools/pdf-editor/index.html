@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><title>محرر PDF أونلاين: دمج وتقسيم وتدوير وإضافة نص وتوقيع وعلامة مائية | DIAMOND HUB</title>
+<meta name="description" content="عدّل ملفات PDF مجانًا في متصفحك: ادمج عدة ملفات، احذف ورتّب وأدر الصفحات، أضف نصًا عربيًا وتوقيعًا وأختامًا وعلامة مائية وترقيمًا، دون رفع الملف لأي خادم."><link rel="canonical" href="https://diamond-tv.shop/tools/pdf-editor/"><meta name="robots" content="index,follow">
+<meta property="og:title" content="محرر PDF أونلاين: دمج وتقسيم وتدوير وإضافة نص وتوقيع وعلامة مائية"><meta property="og:type" content="website"><meta property="og:locale" content="ar_AR"><meta property="og:site_name" content="DIAMOND HUB">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d8dce5;--acc:#e8590c;--acc-ink:#fff;--soft:#e6e9f0;--field:#f7f8fb;--ok:#1b8a4b;--bad:#c0392b;--fd:'Reem Kufi','IBM Plex Sans Arabic',sans-serif;--fb:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--card:#161d30;--ink:#eef1f8;--mut:#9aa5bd;--line:#2a3350;--acc:#ff8a4c;--acc-ink:#1b0b00;--soft:#1f2842;--field:#111829;--ok:#52d58a;--bad:#ff8579;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.7}
+.wrap{max-width:900px;margin:0 auto;padding:12px 14px 80px}
+h1{font-family:var(--fd);font-size:1.8rem;margin:4px 0;line-height:1.15}h1 small{display:block;font:400 .85rem var(--fb);color:var(--mut);margin-top:4px}
+h2{font-family:var(--fd);font-size:1.15rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:3px;font-size:.84rem;color:var(--mut);min-width:0}
+input,select,textarea,button{font:inherit;color:var(--ink)}
+input[type=text],input[type=number],select,textarea{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}.full{grid-column:1/-1}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:11px 16px;cursor:pointer;font-weight:600}.btn.alt{background:var(--soft);color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hint{font-size:.82rem;color:var(--mut);margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:.9rem}.chk input{width:18px;height:18px;accent-color:var(--acc)}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--field);padding:3px}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}.toast.on{opacity:1}
+details summary{cursor:pointer;font-weight:600}.back{font-size:.85rem;color:var(--mut);text-decoration:none}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:22px;text-align:center;cursor:pointer;background:var(--field)}.drop b{display:block;font-size:1.05rem}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:10px}
+.pc{border:2px solid var(--line);border-radius:10px;padding:6px;background:var(--card);position:relative}.pc.cur{border-color:var(--acc)}.pc canvas{width:100%;height:auto;display:block;cursor:pointer;background:#fff;border-radius:4px}
+.pc .n{font-size:.75rem;color:var(--mut);display:flex;justify-content:space-between;align-items:center;margin:4px 0}
+.pc .b{display:flex;gap:3px;flex-wrap:wrap}.pc .b button{flex:1;border:0;background:var(--soft);border-radius:6px;padding:3px 0;cursor:pointer;font-size:.85rem;min-width:24px}
+#stage{position:relative;margin:10px auto;max-width:100%;width:fit-content;border:1px solid var(--line);background:#fff;touch-action:none}#stage canvas{display:block;max-width:100%;height:auto}
+#ovl{position:absolute;inset:0;overflow:hidden}#ovl img{position:absolute;cursor:move;user-select:none;-webkit-user-drag:none;outline:1px dashed transparent}#ovl img.on{outline:1px dashed var(--acc)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}.tools label{flex:1;min-width:140px}
+#sigpad{background:#fff;border:1px dashed var(--line);border-radius:10px;touch-action:none;width:100%;max-width:360px;height:120px}
+.sw{display:flex;gap:6px;flex-wrap:wrap}.sw button{border:1px solid var(--line);background:var(--field);border-radius:999px;padding:5px 12px;cursor:pointer}
+</style><meta property="og:url" content="https://diamond-tv.shop/tools/pdf-editor/"><meta property="og:image" content="https://diamond-tv.shop/og.png"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "محرر PDF", "url": "https://diamond-tv.shop/tools/pdf-editor/", "description": "عدّل ملفات PDF مجانًا في متصفحك: ادمج عدة ملفات، احذف ورتّب وأدر الصفحات، أضف نصًا عربيًا وتوقيعًا وأختامًا وعلامة مائية وترقيمًا، دون رفع الملف لأي خادم.", "applicationCategory": "BusinessApplication", "operatingSystem": "Any", "inLanguage": "ar", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "SAR"}, "publisher": {"@type": "Organization", "name": "DIAMOND HUB", "url": "https://diamond-tv.shop/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://diamond-tv.shop/"}, {"@type": "ListItem", "position": 2, "name": "الأدوات", "item": "https://diamond-tv.shop/tools/"}, {"@type": "ListItem", "position": 3, "name": "محرر PDF", "item": "https://diamond-tv.shop/tools/pdf-editor/"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "كيف أدمج عدة ملفات PDF؟", "acceptedAnswer": {"@type": "Answer", "text": "افتح الملفات معًا أو أضف ملفًا آخر من زر «إضافة ملف»، رتّب الصفحات بالأسهم ثم اضغط تصدير فيُحفظ ملف واحد."}}, {"@type": "Question", "name": "هل يدعم النص العربي؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، يُرسم النص العربي بخط واضح ويُدمج في الصفحة بشكل صحيح من اليمين لليسار، وكذلك العلامة المائية والترقيم."}}, {"@type": "Question", "name": "كيف أضيف توقيعي؟", "acceptedAnswer": {"@type": "Answer", "text": "ارسم التوقيع بإصبعك أو الماوس في قسم «رسم توقيع» أو ارفع صورته، ثم حرّكه إلى مكانه في الصفحة."}}, {"@type": "Question", "name": "هل يُرفع ملفي إلى الإنترنت؟", "acceptedAnswer": {"@type": "Answer", "text": "لا. كل المعالجة داخل متصفحك ولا تغادر ملفاتك جهازك."}}, {"@type": "Question", "name": "هل أستطيع تعديل نص موجود داخل الملف؟", "acceptedAnswer": {"@type": "Answer", "text": "الأداة تضيف نصًا وتواقيع وأختامًا فوق الصفحة وتحذف وترتّب الصفحات، لكنها لا تعدّل النص الأصلي المدمج داخل الملف."}}]}</script></head><body><div class="wrap"><a class="back" href="/tools/">← كل الأدوات</a><h1>محرر PDF<small>دمج، تقسيم، ترتيب، تدوير، نص عربي، توقيع، ختم، علامة مائية وترقيم — داخل متصفحك</small></h1>
+<div class="card"><h2>1) افتح ملف PDF (أو عدة ملفات لدمجها)</h2>
+<label class="drop" id="drop"><b>📄 اضغط لاختيار PDF أو اسحبه هنا</b><span class="hint">يمكنك اختيار عدة ملفات فتُدمج صفحاتها. لا يُرفع شيء لأي خادم.</span><input type="file" id="f" accept="application/pdf" multiple hidden></label></div>
+<div class="card" id="pg" hidden><h2>2) الصفحات</h2>
+<div class="acts" style="margin:0"><button class="btn alt" id="selall" type="button">تحديد الكل</button><button class="btn alt" id="rotsel" type="button">↻ تدوير المحدد</button><button class="btn alt" id="delsel" type="button">🗑 حذف المحدد</button><button class="btn alt" id="addmore" type="button">+ إضافة ملف</button></div>
+<label class="chk" style="margin-top:8px"><input type="checkbox" id="onlysel"> تصدير الصفحات المحددة فقط (استخراج / تقسيم)</label>
+<div id="grid"></div><p class="hint">اضغط على صفحة لتعديلها بالأسفل. الأزرار: ▶◀ تحريك، ↻ تدوير، ⧉ تكرار، × حذف.</p></div>
+<div class="card" id="ed" hidden><h2>3) تحرير الصفحة <span id="edn"></span></h2>
+<div class="tools"><label>نص<textarea id="tx" style="min-height:48px" placeholder="اكتب النص ثم اضغط إضافة"></textarea></label>
+<label>الحجم<input type="number" id="tfs" value="28" min="8" max="120"></label><label>اللون<input type="color" id="tco" value="#111111"></label>
+<label class="chk"><input type="checkbox" id="tbd"> عريض</label><button class="btn" id="addtx" type="button">+ إضافة النص</button></div>
+<div class="tools" style="margin-top:10px"><label class="btn alt" style="cursor:pointer;flex-direction:row;flex:0 0 auto;color:var(--ink)">🖼 إضافة صورة / ختم<input type="file" id="im" accept="image/*" hidden></label>
+<div class="sw" id="stamps"></div></div>
+<details style="margin-top:10px"><summary>✍ رسم توقيع</summary><canvas id="sigpad" width="720" height="240"></canvas><div class="acts"><button class="btn alt" id="sigadd" type="button">أضف التوقيع للصفحة</button><button class="btn alt" id="sigclr" type="button">مسح</button></div></details>
+<div id="stage"><canvas id="pv"></canvas><div id="ovl"></div></div>
+<div class="tools" id="itb" hidden><label>حجم العنصر المحدد<input type="range" id="isz" min="3" max="100" value="30"></label><button class="btn alt" id="idel" type="button">حذف العنصر</button></div>
+<p class="hint">اسحب أي عنصر لتحريكه. العناصر تُدمج في الملف عند التصدير.</p></div>
+<div class="card" id="ex" hidden><h2>4) إضافات على كل الصفحات</h2><div class="row">
+<label>علامة مائية (نص)<input type="text" id="wm" placeholder="مثال: سري / نسخة للعميل"></label><label>شفافية العلامة<input type="range" id="wmo" min="5" max="60" value="18"></label>
+<label>ترقيم الصفحات<select id="pn"><option value="">بدون</option><option value="c">أسفل المنتصف</option><option value="r">أسفل اليمين</option><option value="l">أسفل اليسار</option></select></label></div>
+<div class="acts"><button class="btn" id="go" type="button">⬇ تصدير PDF</button></div><div class="hint" id="st"></div></div>
+<section class="card" style="margin-top:14px"><h2>أسئلة شائعة</h2><details style="margin:6px 0"><summary>كيف أدمج عدة ملفات PDF؟</summary><p class="hint" style="font-size:.9rem">افتح الملفات معًا أو أضف ملفًا آخر من زر «إضافة ملف»، رتّب الصفحات بالأسهم ثم اضغط تصدير فيُحفظ ملف واحد.</p></details><details style="margin:6px 0"><summary>هل يدعم النص العربي؟</summary><p class="hint" style="font-size:.9rem">نعم، يُرسم النص العربي بخط واضح ويُدمج في الصفحة بشكل صحيح من اليمين لليسار، وكذلك العلامة المائية والترقيم.</p></details><details style="margin:6px 0"><summary>كيف أضيف توقيعي؟</summary><p class="hint" style="font-size:.9rem">ارسم التوقيع بإصبعك أو الماوس في قسم «رسم توقيع» أو ارفع صورته، ثم حرّكه إلى مكانه في الصفحة.</p></details><details style="margin:6px 0"><summary>هل يُرفع ملفي إلى الإنترنت؟</summary><p class="hint" style="font-size:.9rem">لا. كل المعالجة داخل متصفحك ولا تغادر ملفاتك جهازك.</p></details><details style="margin:6px 0"><summary>هل أستطيع تعديل نص موجود داخل الملف؟</summary><p class="hint" style="font-size:.9rem">الأداة تضيف نصًا وتواقيع وأختامًا فوق الصفحة وتحذف وترتّب الصفحات، لكنها لا تعدّل النص الأصلي المدمج داخل الملف.</p></details><p class="hint">أدوات أخرى: <a href="/tools/">كل الأدوات</a> · <a href="/tools/pdf-converter/">محوّل PDF</a> · <a href="/tools/document-converter/">محوّل المستندات</a> · <a href="/tools/journal-entries-guide/">دليل القيود</a> · <a href="/tools/quotation-maker/">عرض سعر</a> · <a href="/tools/delivery-proof/">إثبات التسليم</a></p></section>
+<p class="hint" style="text-align:center;margin-top:22px">كل شيء يعمل داخل متصفحك ولا تُرسل بياناتك إلى أي خادم.</p></div><div class="toast" id="toast" role="status"></div>
+<script>
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2000)}
+var _m={};function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){if(v===undefined)return _m[k]||null;_m[k]=v}}
+function nf(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+function loadScript(s){return new Promise(function(ok,no){if(document.querySelector('script[data-l="'+s+'"]'))return ok();var e=document.createElement('script');e.src=s;e.dataset.l=s;e.onload=ok;e.onerror=function(){no(new Error('load '+s))};document.head.appendChild(e)})}
+var _pdfjs=null;function getPdfjs(){if(_pdfjs)return _pdfjs;_pdfjs=import('/assets/vendor/pdfjs/pdf.min.mjs').then(function(m){m.GlobalWorkerOptions.workerSrc='/assets/vendor/pdfjs/pdf.worker.min.mjs';return m});return _pdfjs}
+function getPdfLib(){return window.PDFLib?Promise.resolve(window.PDFLib):loadScript('/assets/vendor/pdf-lib/pdf-lib.min.js').then(function(){return window.PDFLib})}
+function getZip(){return window.JSZip?Promise.resolve(window.JSZip):loadScript('/assets/vendor/jszip/jszip.min.js').then(function(){return window.JSZip})}
+function dl(blob,name){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},4000)}
+function rdBuf(f){return new Promise(function(ok,no){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=no;r.readAsArrayBuffer(f)})}
+function dataBytes(u){var b=atob(u.split(',')[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+
+var DOCS=[],PG=[],CUR=-1,SEL=-1,PDFJS=null,REFW=600,TH={};
+function busy(m){$('#st').textContent=m||''}
+function fresh(){return PG.some(function(p){return p.sel})}
+function addFiles(files){var fs=[].slice.call(files);if(!fs.length)return Promise.resolve();toast('جارٍ فتح الملفات…');
+ return getPdfjs().then(function(m){PDFJS=m;var ch=Promise.resolve();fs.forEach(function(f){ch=ch.then(function(){return rdBuf(f).then(function(buf){var bytes=new Uint8Array(buf);return PDFJS.getDocument({data:bytes.slice()}).promise.then(function(pdf){var d=DOCS.push({bytes:bytes,pdf:pdf,name:f.name})-1,p=Promise.resolve();for(var i=1;i<=pdf.numPages;i++)(function(i){p=p.then(function(){return pdf.getPage(i).then(function(pg){PG.push({d:d,i:i-1,rot:0,ri:pg.rotate||0,ov:[],sel:false,id:Math.random().toString(36).slice(2)})})})})(i);return p})}).catch(function(e){toast((e&&e.name==='PasswordException')?'«'+f.name+'» محمي بكلمة مرور':'تعذّر فتح «'+f.name+'»')})})});return ch})
+ .then(function(){if(PG.length&&CUR<0)CUR=0;$('#pg').hidden=$('#ex').hidden=!PG.length;grid();edit()})}
+$('#f').onchange=function(e){addFiles(e.target.files);e.target.value=''};$('#addmore').onclick=function(){$('#f').click()};
+var dr=$('#drop');['dragover','dragenter'].forEach(function(n){dr.addEventListener(n,function(e){e.preventDefault()})});dr.addEventListener('drop',function(e){e.preventDefault();addFiles(e.dataTransfer.files)});
+function thumb(p){var key=p.id+':'+((p.ri+p.rot)%360);if(TH[key])return Promise.resolve(TH[key]);return DOCS[p.d].pdf.getPage(p.i+1).then(function(pg){var vp=pg.getViewport({scale:.3,rotation:(p.ri+p.rot)%360}),c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;return pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise.then(function(){TH[key]=c;return c})})}
+function grid(){var g=$('#grid');g.innerHTML='';PG.forEach(function(p,i){var d=document.createElement('div');d.className='pc'+(i===CUR?' cur':'');d.innerHTML='<canvas></canvas><div class="n"><label class="chk" style="gap:4px"><input type="checkbox"'+(p.sel?' checked':'')+'> '+(i+1)+'</label><span>'+(p.ov.length?'✎'+p.ov.length:'')+'</span></div><div class="b"><button data-a="l" title="قبل">◀</button><button data-a="r" title="بعد">▶</button><button data-a="rot" title="تدوير">↻</button><button data-a="dup" title="تكرار">⧉</button><button data-a="del" title="حذف">×</button></div>';g.appendChild(d);
+ thumb(p).then(function(c){var t=d.querySelector('canvas');t.width=c.width;t.height=c.height;t.getContext('2d').drawImage(c,0,0)});
+ d.querySelector('canvas').onclick=function(){CUR=i;SEL=-1;grid();edit()};d.querySelector('input').onchange=function(){p.sel=this.checked};
+ [].forEach.call(d.querySelectorAll('.b button'),function(b){b.onclick=function(){var a=b.dataset.a;if(a==='rot')p.rot=(p.rot+90)%360;else if(a==='del'){PG.splice(i,1);if(CUR>=PG.length)CUR=PG.length-1}else if(a==='dup'){PG.splice(i+1,0,{d:p.d,i:p.i,rot:p.rot,ri:p.ri,ov:p.ov.map(function(o){return Object.assign({},o)}),sel:false,id:Math.random().toString(36).slice(2)})}else if(a==='l'&&i>0){var t=PG[i-1];PG[i-1]=p;PG[i]=t;if(CUR===i)CUR=i-1}else if(a==='r'&&i<PG.length-1){var t2=PG[i+1];PG[i+1]=p;PG[i]=t2;if(CUR===i)CUR=i+1}
+  if(!PG.length){$('#pg').hidden=$('#ex').hidden=true}grid();edit()}})})}
+$('#selall').onclick=function(){var v=!PG.every(function(p){return p.sel});PG.forEach(function(p){p.sel=v});grid()};
+$('#rotsel').onclick=function(){var any=fresh();PG.forEach(function(p){if(!any||p.sel)p.rot=(p.rot+90)%360});grid();edit()};
+$('#delsel').onclick=function(){if(!fresh()){toast('حدّد صفحات أولًا');return}PG=PG.filter(function(p){return!p.sel});CUR=Math.min(CUR,PG.length-1);if(!PG.length)$('#pg').hidden=$('#ex').hidden=true;grid();edit()};
+// ---- تحرير الصفحة ----
+var SC=1;function edit(){var ed=$('#ed');if(CUR<0||!PG[CUR]){ed.hidden=true;return}ed.hidden=false;var p=PG[CUR];$('#edn').textContent='(صفحة '+(CUR+1)+')';
+ DOCS[p.d].pdf.getPage(p.i+1).then(function(pg){var vp=pg.getViewport({scale:1.4,rotation:(p.ri+p.rot)%360}),c=$('#pv');c.width=vp.width;c.height=vp.height;return pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise}).then(ovl)}
+function ovl(){var p=PG[CUR],o=$('#ovl');o.innerHTML='';if(!p)return;var W=$('#pv').clientWidth||$('#pv').width;p.ov.forEach(function(it,k){var im=document.createElement('img');im.src=it.src;im.style.left=(it.x*100)+'%';im.style.top=(it.y*100)+'%';im.style.width=(it.w*100)+'%';if(k===SEL)im.className='on';
+ im.onpointerdown=function(e){e.preventDefault();SEL=k;var st=$('#stage').getBoundingClientRect(),sx=e.clientX,sy=e.clientY,ox=it.x,oy=it.y;im.setPointerCapture(e.pointerId);[].forEach.call(o.children,function(c,j){c.className=j===k?'on':''});sync();
+  im.onpointermove=function(ev){it.x=Math.max(-.2,Math.min(1.1-it.w,ox+(ev.clientX-sx)/st.width));it.y=Math.max(-.2,Math.min(1.1,oy+(ev.clientY-sy)/st.height));im.style.left=it.x*100+'%';im.style.top=it.y*100+'%'};im.onpointerup=function(){im.onpointermove=null;grid()}};o.appendChild(im)});sync()}
+function sync(){var p=PG[CUR],it=p&&p.ov[SEL];$('#itb').hidden=!it;if(it)$('#isz').value=Math.round(it.w*100)}
+$('#isz').oninput=function(){var it=PG[CUR].ov[SEL];if(!it)return;it.w=this.value/100;ovl()};
+$('#idel').onclick=function(){PG[CUR].ov.splice(SEL,1);SEL=-1;ovl();grid()};
+function addItem(src,w,ar){var p=PG[CUR];if(!p)return;p.ov.push({src:src,x:.3,y:.4,w:w,ar:ar});SEL=p.ov.length-1;ovl();grid()}
+function textPng(txt,fs,col,bold,opt){opt=opt||{};var f=(bold?'700 ':'500 ')+fs*2+'px "IBM Plex Sans Arabic",Tahoma,Arial,sans-serif',c=document.createElement('canvas'),x=c.getContext('2d');x.font=f;var lines=String(txt).split('\n'),lh=fs*2*1.5,w=0;lines.forEach(function(l){w=Math.max(w,x.measureText(l).width)});var pd=opt.pad||0;c.width=Math.ceil(w+pd*2+4);c.height=Math.ceil(lh*lines.length+pd*2);x=c.getContext('2d');if(opt.bg){x.fillStyle=opt.bg;x.fillRect(0,0,c.width,c.height)}if(opt.border){x.strokeStyle=col;x.lineWidth=fs*.3;x.strokeRect(x.lineWidth/2,x.lineWidth/2,c.width-x.lineWidth,c.height-x.lineWidth)}x.font=f;x.fillStyle=col;x.textBaseline='middle';x.direction=opt.ltr?'ltr':'rtl';x.textAlign='center';lines.forEach(function(l,i){x.fillText(l,c.width/2,pd+lh*i+lh/2)});return {src:c.toDataURL('image/png'),w:c.width/2/REFW,ar:c.height/c.width}}
+$('#addtx').onclick=function(){var t=$('#tx').value.trim();if(!t){toast('اكتب نصًا أولًا');return}var r=textPng(t,+$('#tfs').value||28,$('#tco').value,$('#tbd').checked);addItem(r.src,Math.min(.95,r.w),r.ar)};
+var ST=[['مدفوع','#16a34a'],['مستلم','#2563eb'],['مرفوض','#dc2626'],['نسخة','#7c3aed'],['سري','#dc2626'],['معتمد','#0f766e']];
+$('#stamps').innerHTML=ST.map(function(s,i){return '<button type="button" data-i="'+i+'" style="color:'+s[1]+';border-color:'+s[1]+'">'+s[0]+'</button>'}).join('');
+[].forEach.call(document.querySelectorAll('#stamps button'),function(b){b.onclick=function(){var s=ST[+b.dataset.i],r=textPng(s[0],40,s[1],true,{pad:14,border:true});addItem(r.src,r.w,r.ar)}});
+$('#im').onchange=function(e){var f=e.target.files[0];e.target.value='';if(!f)return;var im=new Image();im.onload=function(){var m=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*m);c.height=Math.round(im.height*m);c.getContext('2d').drawImage(im,0,0,c.width,c.height);addItem(c.toDataURL('image/png'),.3,c.height/c.width)};im.src=URL.createObjectURL(f)};
+(function(){var cv=$('#sigpad'),x=cv.getContext('2d'),dn=false,lx,ly,ink=false;x.lineWidth=5;x.lineCap='round';x.strokeStyle='#111';function pt(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]}
+ cv.onpointerdown=function(e){dn=true;ink=true;var p=pt(e);lx=p[0];ly=p[1];cv.setPointerCapture(e.pointerId);e.preventDefault()};cv.onpointermove=function(e){if(!dn)return;var p=pt(e);x.beginPath();x.moveTo(lx,ly);x.lineTo(p[0],p[1]);x.stroke();lx=p[0];ly=p[1]};cv.onpointerup=function(){dn=false};
+ $('#sigclr').onclick=function(){x.clearRect(0,0,cv.width,cv.height);ink=false};
+ $('#sigadd').onclick=function(){if(!ink){toast('ارسم التوقيع أولًا');return}var d=x.getImageData(0,0,cv.width,cv.height).data,x0=1e9,y0=1e9,x1=0,y1=0;for(var y=0;y<cv.height;y++)for(var xx=0;xx<cv.width;xx++)if(d[(y*cv.width+xx)*4+3]>20){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y}var w=x1-x0+10,h=y1-y0+10,c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(cv,x0-5,y0-5,w,h,0,0,w,h);addItem(c.toDataURL('image/png'),.25,h/w)}})();
+// ---- التصدير ----
+function mapPt(R,pw,ph,X,Y){return R===0?[X,ph-Y]:R===90?[Y,X]:R===180?[pw-X,Y]:[pw-Y,ph-X]}
+$('#go').onclick=function(){var list=PG.filter(function(p){return!$('#onlysel').checked||p.sel});if(!list.length){toast(PG.length?'حدّد صفحات للتصدير':'لا صفحات');return}var btn=this;btn.disabled=true;busy('⏳ جارٍ التجهيز…');
+ getPdfLib().then(function(L){var out;return L.PDFDocument.create().then(function(o){out=o;var srcs={},imgs={};function src(d){return srcs[d]?Promise.resolve(srcs[d]):L.PDFDocument.load(DOCS[d].bytes,{ignoreEncryption:true}).then(function(s){return srcs[d]=s})}
+  function emb(u){return imgs[u]?Promise.resolve(imgs[u]):out.embedPng(dataBytes(u)).then(function(i){return imgs[u]=i})}
+  var wm=$('#wm').value.trim(),wmo=$('#wmo').value/100,pn=$('#pn').value,total=list.length,wmPng=null;
+  if(wm){var c=document.createElement('canvas');c.width=c.height=1400;var x=c.getContext('2d');x.translate(700,700);x.rotate(-Math.PI/5);x.font='700 150px "IBM Plex Sans Arabic",Tahoma,Arial,sans-serif';x.textAlign='center';x.textBaseline='middle';x.direction='rtl';x.fillStyle='rgba(120,120,120,'+wmo+')';x.fillText(wm,0,0);wmPng=c.toDataURL('image/png')}
+  var ch=Promise.resolve();list.forEach(function(p,idx){ch=ch.then(function(){busy('⏳ صفحة '+(idx+1)+' من '+total);return src(p.d).then(function(sd){return out.copyPages(sd,[p.i])}).then(function(a){var cp=a[0],R=((cp.getRotation().angle||0)+p.rot)%360;cp.setRotation(L.degrees(R));out.addPage(cp);var box=cp.getCropBox?cp.getCropBox():cp.getMediaBox(),pw=box.width,ph=box.height,Dw=(R%180)?ph:pw,Dh=(R%180)?pw:ph;
+   function put(u,X,Y,w,h){return emb(u).then(function(im){var m=mapPt(R,pw,ph,X,Y+h);cp.drawImage(im,{x:box.x+m[0],y:box.y+m[1],width:w,height:h,rotate:L.degrees(R)})})}
+   var sub=Promise.resolve();
+   if(wmPng)sub=sub.then(function(){var s=Math.min(Dw,Dh)*.9;return put(wmPng,(Dw-s)/2,(Dh-s)/2,s,s)});
+   p.ov.forEach(function(it){sub=sub.then(function(){var w=it.w*Dw,h=w*it.ar;return put(it.src,it.x*Dw,it.y*Dh,w,h)})});
+   if(pn)sub=sub.then(function(){var t=textPng((idx+1)+' / '+total,20,'#444444',false,{ltr:true}),w=t.w*REFW/REFW*Dw/REFW*1,hh;w=t.w*Dw;hh=w*t.ar;var X=pn==='c'?(Dw-w)/2:pn==='r'?Dw-w-30:30;return put(t.src,X,Dh-hh-22,w,hh)});
+   return sub})})});
+  return ch.then(function(){return out.save()}).then(function(b){dl(new Blob([b],{type:'application/pdf'}),'edited.pdf');busy('✅ تم التصدير ('+list.length+' صفحة، '+Math.round(b.length/1024)+' ك.ب)')})})}).catch(function(e){busy('');toast('تعذّر التصدير: '+(e&&e.message||''))}).then(function(){btn.disabled=false})};
+
+</script></body></html>
