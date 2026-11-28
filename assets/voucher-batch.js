@@ -2,7 +2,7 @@
 (function () {
   var AR = /[؀-ۿﭐ-﷿ﹰ-﻿]/;
   var host = document.getElementById('batchpanel'); if (!host) return;
-  var ROWS = [], REC = [], SH = [], ZIPF = null;
+  var PV = null, ROWS = [], REC = [], SH = [], ZIPF = null;
   var $ = function (s) { return host.querySelector(s); };
   function nz(s) { s = String(s == null ? '' : s).replace(/[٠-٩]/g, function (c) { return c.charCodeAt(0) - 1632; }).replace(/[۰-۹]/g, function (c) { return c.charCodeAt(0) - 1776; }); if (/[ﭐ-﷿ﹰ-﻿]/.test(s)) s = s.normalize('NFKC'); return s.replace(/[‎‏‪-‮]/g, '').trim(); }
   function num(s) { var m = nz(s).replace(/[,٬\s]/g, '').replace(/٫/g, '.').match(/-?\d+(?:\.\d+)?/); return m ? parseFloat(m[0]) : NaN; }
@@ -76,7 +76,7 @@
         var wi = l.it.filter(function (q) { return q.w > .5; }).map(function (q) { return { x: q.x, e: q.x + q.w, s: q.s, lead: q.lead, trail: q.trail, h: q.h }; });
         l.it.filter(function (q) { return q.w <= .5; }).forEach(function (z) { var b = null, bd = 1e9; wi.forEach(function (q) { if (z.x >= q.x - 1.5 && z.x <= q.e + 1.5 && Math.abs(z.x - q.x) < bd) { bd = Math.abs(z.x - q.x); b = q; } }); if (b) b.s += z.s; else wi.push({ x: z.x, e: z.x, s: z.s, h: 8 }); });
         wi.sort(function (a, b) { return b.x - a.x; });
-        return wi.reduce(function (t, q, k) { if (!k) return q.s; var pv = wi[k - 1], sp = pv.e - q.e > -1 && (pv.x - q.e > Math.max(q.h, 6) * .15) || q.lead || pv.trail || (pv.s.length > 3 && q.s.length > 3); return t + (sp ? ' ' : '') + q.s; }, '');
+        return wi.reduce(function (t, q, k) { if (!k) return q.s; var pv = wi[k - 1], sp = pv.e - q.e > -1 && (pv.x - q.e > Math.max(q.h, 6) * .15) || ((q.lead || pv.trail) && pv.s.length > 1 && q.s.length > 1) || (pv.s.length > 3 && q.s.length > 3); return t + (sp ? ' ' : '') + q.s; }, '');
       }
       l.it.sort(function (a, b) { return a.x - b.x; });
       var c = null, prev = null;
@@ -137,7 +137,11 @@
     if (MAP.n === undefined && MAP.a === undefined) { var best = 0; for (var i = 0; i < Math.min(8, ROWS.length); i++) { var g = guess(ROWS[i]); if (Object.keys(g).length > Object.keys(MAP).length) { MAP = g; best = i; } } if (best) ROWS = ROWS.slice(best); }
     if (SH.length > 1) { $('#bsheet').hidden = false; $('#bsheet').innerHTML = '<label>الورقة<select id="bsel">' + SH.map(function (s, i) { return '<option value="' + i + '">' + s.n + '</option>'; }).join('') + '</select></label>'; $('#bsel').onchange = function () { loadSheet(+this.value).then(function (r) { ROWS = r; afterParse(); }); }; }
     var pv = ROWS.slice(0, 8), opts = function (sel) { var o = '<option value="">— بدون —</option>'; for (var j = 0; j < w; j++) o += '<option value="' + j + '"' + (sel === j ? ' selected' : '') + '>' + (HDR && ROWS[0][j] ? ROWS[0][j].slice(0, 28) : 'عمود ' + (j + 1)) + '</option>'; return o; };
-    $('#bprev').innerHTML = '<div class="bsc"><table class="bt"><tbody>' + pv.map(function (r, ri) { var h = '';for (var j = 0; j < w; j++) h += (ri === 0 ? '<th>' : '<td>') + (r[j] == null ? '' : r[j].replace(/</g, '&lt;')) + (ri === 0 ? '</th>' : '</td>'); return '<tr>' + h + '</tr>'; }).join('') + '</tbody></table></div><p class="hint">' + ROWS.length + ' صفًا تم قراءتها. تأكد أن الأعمدة مطابقة أدناه.</p>';
+    function pvHtml() { var inv = {}; FIELDS.forEach(function (f) { if (MAP[f[0]] !== undefined) inv[MAP[f[0]]] = (inv[MAP[f[0]]] ? inv[MAP[f[0]]] + ' + ' : '') + f[1].replace(/ \*|\s*\/.*/g, ''); });
+      var bkc = {}; ['bka', 'bks'].forEach(function (id) { var e = $('#' + id); if (e) [].forEach.call(e.selectedOptions, function (o) { bkc[+o.value] = id === 'bka' ? 'بند +' : 'خصم −'; }); });
+      var bad = '<tr>' + Array.apply(null, Array(w)).map(function (_, c) { var t = inv[c] || bkc[c] || ''; return '<td style="background:' + (inv[c] ? '#dcfce7' : bkc[c] ? '#fef9c3' : 'transparent') + ';font-size:.7rem;font-weight:700;text-align:center">' + t + '</td>'; }).join('') + '</tr>';
+      return '<div class="bsc" style="max-height:340px"><table class="bt"><thead>' + bad + '</thead><tbody>' + ROWS.slice(0, 300).map(function (r, ri) { var h = ''; for (var c = 0; c < w; c++) h += (ri === 0 ? '<th>' : '<td>') + (r[c] == null ? '' : r[c].replace(/</g, '&lt;')) + (ri === 0 ? '</th>' : '</td>'); return '<tr>' + h + '</tr>'; }).join('') + '</tbody></table></div><p class="hint">' + (ROWS.length - 1) + ' صفًا (موظف/سجل) تم استخراجها. الأخضر = الحقول المطابقة، الأصفر = بنود السند. عدّل الاختيار أدناه إن لزم.</p>'; }
+    PV = pvHtml; $('#bprev').innerHTML = pvHtml();
     $('#bmap').hidden = false;
     $('#bmap').innerHTML = '<div class="bgrid">' + FIELDS.map(function (f) { return '<label>' + f[1] + '<select data-f="' + f[0] + '">' + opts(MAP[f[0]]) + '</select></label>'; }).join('') +
       '<label class="full" style="grid-column:1/-1">أعمدة تفصيل الاستحقاقات (أجر أساسي، بدلات…) — تُعرض كبنود إضافة<select id="bka" multiple size="4">'+bkOpts(BKADD)+'</select></label><label class="full" style="grid-column:1/-1">أعمدة الخصومات (سلف، تأمينات، غياب…)<select id="bks" multiple size="4">'+bkOpts(BKSUB)+'</select></label><label>الصف الأول عناوين<select id="bh"><option value="1">نعم (تخطّيه)</option><option value="0">لا (كل الصفوف بيانات)</option></select></label>' +
@@ -147,8 +151,9 @@
       '<label>طريقة الدفع<select id="bm"><option>تحويل بنكي</option><option>نقدًا</option><option>شيك</option><option>بطاقة مدى/ائتمان</option></select></label>' +
       '<label>عدد السندات في الصفحة<select id="bn"><option value="1">1 (A4 كاملة)</option><option value="2">2 في الصفحة</option><option value="3">3 في الصفحة</option></select></label>' +
       '<label>تاريخ السندات<input type="text" id="bdt" value="' + ($('#vd') ? document.getElementById('vd').value : '') + '"></label></div><div class="acts"><button class="btn" id="bgo" type="button">⚙ إنشاء السندات</button></div>';
-    host.querySelectorAll('#bmap select[data-f]').forEach(function (s) { s.onchange = function () { MAP[s.dataset.f] = s.value === '' ? undefined : +s.value; }; });
+    host.querySelectorAll('#bmap select[data-f]').forEach(function (s) { s.onchange = function () { MAP[s.dataset.f] = s.value === '' ? undefined : +s.value; $('#bprev').innerHTML = PV(); }; });
     $('#bmadd').onclick = function () { manRow('', '+', 'f', ''); }; $('#bmgosi').onclick = function () { manRow('تأمينات اجتماعية', '-', 'p', 9.75); }; $('#bmfood').onclick = function () { manRow('بدل طعام', '+', 'f', 300); };
+    ['bka', 'bks'].forEach(function (id) { $('#' + id).onchange = function () { $('#bprev').innerHTML = PV(); }; }); $('#bprev').innerHTML = PV();
     $('#bgo').onclick = gen; $('#bres').textContent = '';
   }
   function gen() {
@@ -159,6 +164,7 @@
       if (!name || !(amt > 0) || /^(الإجمالي|اجمالي|الاجمالي|المجموع|مجموع|total|sum|grand)/i.test(name)) { skip++; return; } var gv = function (k) { return MAP[k] !== undefined ? nz(r[MAP[k]]) : ''; }, job = gv('p'), dep = gv('g'); rec.push({ bk: bk, name: name, amt: amt, job: job, dept: dep, br: gv('b'), d: MAP.d !== undefined ? nz(r[MAP.d]) : [job, dep].filter(Boolean).join(' - '), id: MAP.i !== undefined ? nz(r[MAP.i]) : '', ref: MAP.r !== undefined ? nz(r[MAP.r]) : '' }); });
     REC = rec; var tot = rec.reduce(function (a, b) { return a + b.amt; }, 0);
     $('#bres').innerHTML = rec.length ? '✅ تم تجهيز <b>' + rec.length + '</b> سندًا — إجمالي المبالغ <b>' + nf(tot) + '</b>' + (skip ? ' (تم تخطي ' + skip + ' صفًا فارغًا أو إجماليًا)' : '') : 'لم يُعثر على صفوف صالحة. تأكد من اختيار عمودي الاسم والمبلغ.';
+    if (rec.length) $('#bres').innerHTML += '<div class="bsc" style="max-height:300px;margin-top:8px"><table class="bt"><thead><tr><th>#</th><th>الاسم</th><th>الرقم</th><th>الوظيفة</th><th>القسم</th><th>الفرع</th><th>البنود</th><th>الصافي</th></tr></thead><tbody>' + rec.map(function (r, k) { return '<tr><td>' + (k + 1) + '</td><td>' + r.name.replace(/</g, '&lt;') + '</td><td>' + r.id + '</td><td>' + (r.job || '') + '</td><td>' + (r.dept || '') + '</td><td>' + (r.br || '') + '</td><td>' + r.bk.map(function (q) { return q.l + ' ' + (q.t === '-' ? '−' : '+') + q.a; }).join(' ، ') + '</td><td><b>' + nf(r.amt) + '</b></td></tr>'; }).join('') + '</tbody></table></div>';
     var act = $('#bact'); act.hidden = !rec.length; act.innerHTML = '<button class="btn" id="bpr" type="button">🖨 طباعة / حفظ PDF لكل السندات</button><button class="btn alt" id="bcsv" type="button">⬇ سجل السندات CSV</button>';
     $('#bpr').onclick = printAll; $('#bcsv').onclick = csv; build();
   }
